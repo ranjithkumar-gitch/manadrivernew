@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "159276101326",
+    "project_id": "mana-driver",
+    "storage_bucket": "mana-driver.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:159276101326:android:e4cf69e1e59df38b876a9f",
+        "android_client_info": {
+          "package_name": "com.example.mana_driver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQUFCkp60pYmkP4wOW_S1t-yHV1T_yPH4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
