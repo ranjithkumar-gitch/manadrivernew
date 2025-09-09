@@ -12,8 +12,7 @@ class AppLocalizationsTe extends AppLocalizations {
   String get appTitle => 'మన డ్రైవర్';
 
   @override
-  String get selectLanguageTitle =>
-      'మేము ఇంట్లో ఉన్నట్లు అనిపించేందుకు అనేక భాషలను మద్దతు ఇస్తున్నాము.';
+  String get selectLanguageTitle => 'మీ భాషను ఎంచుకోండి.';
 
   @override
   String get selectLanguageSubtitle =>

@@ -48,16 +48,16 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                           textcolor: korangeColor,
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      Container(
-                        margin: EdgeInsets.only(left: marginStart),
-                        child: CustomText(
-                          text: localizations.selectLanguageSubtitle,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          textcolor: kgreyColor,
-                        ),
-                      ),
+                      // const SizedBox(height: 10),
+                      // Container(
+                      //   margin: EdgeInsets.only(left: marginStart),
+                      //   child: CustomText(
+                      //     text: localizations.selectLanguageSubtitle,
+                      //     fontSize: 14,
+                      //     fontWeight: FontWeight.w400,
+                      //     textcolor: kgreyColor,
+                      //   ),
+                      // ),
                       const SizedBox(height: 50),
                       SizedBox(
                         height: 58,
@@ -88,11 +88,11 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                             ),
                             DropdownMenuItem(
                               value: 'Telugu',
-                              child: Text('Telugu'),
+                              child: Text('తెలుగు'),
                             ),
                             DropdownMenuItem(
                               value: 'Hindi',
-                              child: Text('Hindi'),
+                              child: Text('हिन्दी'),
                             ),
                           ],
                           decoration: InputDecoration(

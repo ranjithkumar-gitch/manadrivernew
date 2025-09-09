@@ -12,8 +12,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get appTitle => 'माना ड्राइवर';
 
   @override
-  String get selectLanguageTitle =>
-      'हम कई भाषाओं का समर्थन करते हैं ताकि आप घर जैसा महसूस करें।';
+  String get selectLanguageTitle => 'अपनी भाषा चुनें।';
 
   @override
   String get selectLanguageSubtitle =>

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:country_picker/country_picker.dart';
+import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/l10n/app_localizations.dart';
-
 
 class PhoneNumberInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -24,7 +24,7 @@ class PhoneNumberInputField extends StatelessWidget {
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       style: GoogleFonts.poppins(
-        color: const Color(0xFFFFA500),
+        color: korangeColor,
         fontSize: 16,
         fontWeight: FontWeight.w500,
       ),
@@ -55,7 +55,7 @@ class PhoneNumberInputField extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: const Color(0xFF7B7B7B),
+                    color: korangeColor,
                   ),
                 ),
                 const SizedBox(width: 8),

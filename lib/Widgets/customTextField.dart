@@ -23,7 +23,7 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
     this.labelColor = Colors.grey,
-    this.textColor = Colors.black87,
+    this.textColor = korangeColor,
     this.borderColor = const Color(0xFFD5D7DA),
     this.fontSize = 16,
     this.maxLines,

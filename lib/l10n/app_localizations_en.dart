@@ -12,8 +12,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Mana Driver';
 
   @override
-  String get selectLanguageTitle =>
-      'We support multiple languages to make you feel at home.';
+  String get selectLanguageTitle => 'Choose your Language.';
 
   @override
   String get selectLanguageSubtitle =>

@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _fetchCars();
     _startAutoScroll();
-    _startWatchAutoScroll();
+    // _startWatchAutoScroll();
     _startOfferAutoScroll();
   }
 
@@ -92,23 +92,23 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _startWatchAutoScroll() {
-    _watchAutoScrollTimer = Timer.periodic(Duration(seconds: 4), (timer) {
-      if (_watchPageController.hasClients) {
-        if (_watchCurrentPage < watchLearnImages.length - 1) {
-          _watchCurrentPage++;
-        } else {
-          _watchCurrentPage = 0;
-        }
+  // void _startWatchAutoScroll() {
+  //   _watchAutoScrollTimer = Timer.periodic(Duration(seconds: 4), (timer) {
+  //     if (_watchPageController.hasClients) {
+  //       if (_watchCurrentPage < watchLearnImages.length - 1) {
+  //         _watchCurrentPage++;
+  //       } else {
+  //         _watchCurrentPage = 0;
+  //       }
 
-        _watchPageController.animateToPage(
-          _watchCurrentPage,
-          duration: Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
-  }
+  //       _watchPageController.animateToPage(
+  //         _watchCurrentPage,
+  //         duration: Duration(milliseconds: 500),
+  //         curve: Curves.easeInOut,
+  //       );
+  //     }
+  //   });
+  // }
 
   void _startAutoScroll() {
     _autoScrollTimer = Timer.periodic(Duration(seconds: 4), (timer) {
@@ -157,265 +157,205 @@ class _HomeScreenState extends State<HomeScreen> {
             ? "Guest"
             : "$firstName $lastName".trim();
     final localizations = AppLocalizations.of(context)!;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: isDropLocation2Visible ? 350 : 300,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Image.asset(
-                    'images/map.png',
-                    width: double.infinity,
-                    height: 252,
-                    fit: BoxFit.cover,
-                  ),
-                  Positioned(
-                    top: 50,
-                    left: 16,
-                    right: 16,
-                    child: Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomText(
-                              text: localizations.greeting,
-                              textcolor: kseegreyColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            CustomText(
-                              text: userName,
-                              textcolor: korangeColor,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 20,
-                            ),
-                          ],
-                        ),
-                        Spacer(),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => NotificationScreen(),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: isDropLocation2Visible ? 350 : 300,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Image.asset(
+                      'images/map.png',
+                      width: double.infinity,
+                      height: 252,
+                      fit: BoxFit.cover,
+                    ),
+                    Positioned(
+                      top: 50,
+                      left: 16,
+                      right: 16,
+                      child: Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomText(
+                                text: localizations.greeting,
+                                textcolor: kseegreyColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
                               ),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                              border: Border.all(
-                                color: KnotificationcircleColor,
-                                width: 1,
+                              CustomText(
+                                text: userName,
+                                textcolor: korangeColor,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
                               ),
-                            ),
-                            child: Image.asset(
-                              'images/notification.png',
-                              width: 24,
-                              height: 24,
-                              fit: BoxFit.contain,
+                            ],
+                          ),
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => NotificationScreen(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                                border: Border.all(
+                                  color: KnotificationcircleColor,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Image.asset(
+                                'images/notification.png',
+                                width: 24,
+                                height: 24,
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top: 160,
-                    right: 12,
-                    left: 12,
-                    child: Container(
-                      width: 350,
-                      padding: EdgeInsets.fromLTRB(15, 20, 15, 20),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(color: kbordergreyColor, blurRadius: 12),
                         ],
                       ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              Image.asset(
-                                'images/pickupIcon.png',
-                                width: 28,
-                                height: 28,
-                                fit: BoxFit.contain,
-                              ),
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomText(
-                                      text: localizations.pickupLocation,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      textcolor: kgreyColor,
-                                    ),
-                                    SizedBox(height: 1),
-                                    TextField(
-                                      enabled: true,
-                                      textInputAction: TextInputAction.next,
-                                      style: GoogleFonts.poppins(
+                    ),
+                    Positioned(
+                      top: 160,
+                      right: 12,
+                      left: 12,
+                      child: Container(
+                        width: 350,
+                        padding: EdgeInsets.fromLTRB(15, 20, 15, 20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(color: kbordergreyColor, blurRadius: 12),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              children: [
+                                Image.asset(
+                                  'images/pickupIcon.png',
+                                  width: 28,
+                                  height: 28,
+                                  fit: BoxFit.contain,
+                                ),
+                                SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText(
+                                        text: localizations.pickupLocation,
                                         fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: KblackColor,
+                                        fontWeight: FontWeight.w500,
+                                        textcolor: kgreyColor,
                                       ),
-                                      decoration: InputDecoration(
-                                        hintText:
-                                            localizations.enterPickupLocation,
-                                        hintStyle: GoogleFonts.poppins(
+                                      SizedBox(height: 1),
+                                      TextField(
+                                        enabled: true,
+                                        textInputAction: TextInputAction.next,
+                                        style: GoogleFonts.poppins(
                                           fontSize: 14,
-                                          fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.w600,
                                           color: KblackColor,
                                         ),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: 0,
-                                        ),
-                                        isDense: true,
-                                        border: InputBorder.none,
-                                      ),
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (_) =>
-                                                    LocationSelectionScreen(),
+                                        decoration: InputDecoration(
+                                          hintText:
+                                              localizations.enterPickupLocation,
+                                          hintStyle: GoogleFonts.poppins(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: KblackColor,
                                           ),
-                                        );
-                                        print('Pickup location tapped');
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 3),
-
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Divider(
-                                  color: kbordergreyColor,
-                                  thickness: 1.3,
-                                ),
-                              ),
-                              SizedBox(width: 15),
-
-                              SizedBox(
-                                height: 30,
-                                width: 68,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        isDropLocation2Visible
-                                            ? Colors.red
-                                            : korangeColor,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(22),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 5,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      isDropLocation2Visible =
-                                          !isDropLocation2Visible;
-                                    });
-                                  },
-                                  child: CustomText(
-                                    text:
-                                        isDropLocation2Visible
-                                            ? 'Delete'
-                                            : 'Add',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: kwhiteColor,
+                                          contentPadding: EdgeInsets.symmetric(
+                                            vertical: 0,
+                                          ),
+                                          isDense: true,
+                                          border: InputBorder.none,
+                                        ),
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (_) =>
+                                                      LocationSelectionScreen(),
+                                            ),
+                                          );
+                                          print('Pickup location tapped');
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
+                            SizedBox(height: 3),
 
-                          SizedBox(height: 3),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(
+                                    color: kbordergreyColor,
+                                    thickness: 1.3,
+                                  ),
+                                ),
+                                SizedBox(width: 15),
 
-                          Row(
-                            children: [
-                              Image.asset(
-                                'images/dropIcon.png',
-                                width: 28,
-                                height: 28,
-                                fit: BoxFit.contain,
-                              ),
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomText(
-                                      text: localizations.dropLocation,
+                                SizedBox(
+                                  height: 30,
+                                  width: 68,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          isDropLocation2Visible
+                                              ? Colors.red
+                                              : korangeColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(22),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 5,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        isDropLocation2Visible =
+                                            !isDropLocation2Visible;
+                                      });
+                                    },
+                                    child: CustomText(
+                                      text:
+                                          isDropLocation2Visible
+                                              ? 'Delete'
+                                              : 'Add',
                                       fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      textcolor: kgreyColor,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: kwhiteColor,
                                     ),
-                                    SizedBox(height: 1),
-                                    TextField(
-                                      enabled: true,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: KblackColor,
-                                      ),
-                                      textInputAction: TextInputAction.next,
-                                      decoration: InputDecoration(
-                                        hintText:
-                                            localizations.enterDropLocation,
-                                        hintStyle: GoogleFonts.poppins(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color: KblackColor,
-                                        ),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: 0,
-                                        ),
-                                        isDense: true,
-                                        border: InputBorder.none,
-                                      ),
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (_) =>
-                                                    LocationSelectionScreen(),
-                                          ),
-                                        );
-                                        print('Drop location tapped');
-                                      },
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
 
-                          if (isDropLocation2Visible) ...[
-                            SizedBox(height: 12),
+                            SizedBox(height: 3),
+
                             Row(
                               children: [
                                 Image.asset(
@@ -431,7 +371,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       CustomText(
-                                        text: localizations.dropLocation2,
+                                        text: localizations.dropLocation,
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         textcolor: kgreyColor,
@@ -439,15 +379,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                       SizedBox(height: 1),
                                       TextField(
                                         enabled: true,
-                                        textInputAction: TextInputAction.done,
                                         style: GoogleFonts.poppins(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,
                                           color: KblackColor,
                                         ),
+                                        textInputAction: TextInputAction.next,
                                         decoration: InputDecoration(
                                           hintText:
-                                              localizations.enterDropLocation2,
+                                              localizations.enterDropLocation,
                                           hintStyle: GoogleFonts.poppins(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w400,
@@ -460,7 +400,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                           border: InputBorder.none,
                                         ),
                                         onTap: () {
-                                          print('Drop location 2 tapped');
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (_) =>
+                                                      LocationSelectionScreen(),
+                                            ),
+                                          );
+                                          print('Drop location tapped');
                                         },
                                       ),
                                     ],
@@ -468,39 +416,304 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ],
                             ),
+
+                            if (isDropLocation2Visible) ...[
+                              SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    'images/dropIcon.png',
+                                    width: 28,
+                                    height: 28,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        CustomText(
+                                          text: localizations.dropLocation2,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          textcolor: kgreyColor,
+                                        ),
+                                        SizedBox(height: 1),
+                                        TextField(
+                                          enabled: true,
+                                          textInputAction: TextInputAction.done,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: KblackColor,
+                                          ),
+                                          decoration: InputDecoration(
+                                            hintText:
+                                                localizations
+                                                    .enterDropLocation2,
+                                            hintStyle: GoogleFonts.poppins(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              color: KblackColor,
+                                            ),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                  vertical: 0,
+                                                ),
+                                            isDense: true,
+                                            border: InputBorder.none,
+                                          ),
+                                          onTap: () {
+                                            print('Drop location 2 tapped');
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ],
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 40),
-            Container(
-              margin: EdgeInsets.only(left: 15, right: 15),
-              color: kwhiteColor,
+              SizedBox(height: 40),
+              Container(
+                margin: EdgeInsets.only(left: 15, right: 15),
+                color: kwhiteColor,
 
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomText(
-                        text: localizations.myVehicles,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        textcolor: KblackColor,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomText(
+                          text: localizations.myVehicles,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          textcolor: KblackColor,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => MyVehicle()),
+                            );
+                          },
+                          child: Text(
+                            localizations.viewVehicles,
+                            style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: korangeColor,
+                              decoration: TextDecoration.underline,
+                              decorationColor: korangeColor,
+                              decorationStyle: TextDecorationStyle.solid,
+                              decorationThickness: 1.5,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 25),
+
+                    if (carList.isNotEmpty) ...[
+                      SizedBox(
+                        height: 130,
+                        child: PageView.builder(
+                          itemCount: carList.length,
+                          controller: _pageController,
+                          itemBuilder: (context, index) {
+                            final car = carList[index];
+                            return Container(
+                              margin: const EdgeInsets.only(right: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: korangeColor,
+                                  width: 1.2,
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 90,
+                                      height: 90,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        color: Colors.grey.shade100,
+                                      ),
+                                      child: Center(
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          child:
+                                              (car['images'] != null &&
+                                                      car['images'] is List &&
+                                                      car['images'].isNotEmpty)
+                                                  ? Image.network(
+                                                    car['images'][0],
+                                                    fit: BoxFit.cover,
+                                                    width: 130,
+                                                    errorBuilder:
+                                                        (
+                                                          context,
+                                                          error,
+                                                          stackTrace,
+                                                        ) => const Icon(
+                                                          Icons.car_crash,
+                                                        ),
+                                                  )
+                                                  : const Icon(
+                                                    Icons.directions_car,
+                                                  ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          CustomText(
+                                            text:
+                                                '${car['brand']} ${car['model']}',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            textcolor: KblackColor,
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Wrap(
+                                            spacing: 6,
+                                            children: [
+                                              _infoChip(car['transmission']),
+                                              _infoChip(car['fuelType']),
+                                              _infoChip(car['category']),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5),
+                                          _infoChip(car['vehicleNumber']),
+                                        ],
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (_) => VehicleDetailsScreen(
+                                                  data: car,
+                                                  docId: car['id'],
+                                                ),
+                                          ),
+                                        );
+                                      },
+                                      child: const Align(
+                                        alignment: Alignment.center,
+                                        child: Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => MyVehicle()),
-                          );
-                        },
-                        child: Text(
-                          localizations.viewVehicles,
+                      const SizedBox(height: 15),
+                      SmoothPageIndicator(
+                        controller: _pageController,
+                        count: carList.length,
+                        effect: WormEffect(
+                          dotHeight: 6,
+                          dotWidth: 30,
+                          activeDotColor: korangeColor,
+                          dotColor: Colors.grey.shade300,
+                        ),
+                      ),
+                      SizedBox(height: 25),
+
+                      SizedBox(
+                        width: 220,
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: korangeColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                          ),
+                          onPressed: () {
+                            showBookingBottomSheet(context);
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (_) => DriverAssignedScreen(),
+                            //   ),
+                            // );
+                          },
+                          child: CustomText(
+                            text: localizations.bookADriver,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            textcolor: kwhiteColor,
+                          ),
+                        ),
+                      ),
+                    ] else ...[
+                      const Center(
+                        child: CustomText(
+                          text: "No vehicles found",
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          textcolor: Colors.black,
+                        ),
+                      ),
+                    ],
+                    SizedBox(height: 20),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 20),
+              Divider(height: 4, color: KdeviderColor, thickness: 5),
+              SizedBox(height: 20),
+              Container(
+                margin: EdgeInsets.only(left: 15, right: 15),
+                color: kwhiteColor,
+
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomText(
+                          text: localizations.menuOffers,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          textcolor: KblackColor,
+                        ),
+                        Text(
+                          localizations.home_viewoffers,
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
@@ -511,339 +724,134 @@ class _HomeScreenState extends State<HomeScreen> {
                             decorationThickness: 1.5,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 25),
-
-                  if (carList.isNotEmpty) ...[
-                    SizedBox(
-                      height: 130,
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      height: 140,
                       child: PageView.builder(
-                        itemCount: carList.length,
-                        controller: _pageController,
+                        controller: _offerPageController,
+                        itemCount: offerImages.length,
                         itemBuilder: (context, index) {
-                          final car = carList[index];
-                          return Container(
-                            margin: const EdgeInsets.only(right: 8),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: korangeColor,
-                                width: 1.2,
-                              ),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 90,
-                                    height: 90,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(16),
-                                      color: Colors.grey.shade100,
-                                    ),
-                                    child: Center(
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child:
-                                            (car['images'] != null &&
-                                                    car['images'] is List &&
-                                                    car['images'].isNotEmpty)
-                                                ? Image.network(
-                                                  car['images'][0],
-                                                  fit: BoxFit.cover,
-                                                  width: 130,
-                                                  errorBuilder:
-                                                      (
-                                                        context,
-                                                        error,
-                                                        stackTrace,
-                                                      ) => const Icon(
-                                                        Icons.car_crash,
-                                                      ),
-                                                )
-                                                : const Icon(
-                                                  Icons.directions_car,
-                                                ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        CustomText(
-                                          text:
-                                              '${car['brand']} ${car['model']}',
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          textcolor: KblackColor,
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Wrap(
-                                          spacing: 6,
-                                          children: [
-                                            _infoChip(car['transmission']),
-                                            _infoChip(car['fuelType']),
-                                            _infoChip(car['category']),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 5),
-                                        _infoChip(car['vehicleNumber']),
-                                      ],
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (_) => VehicleDetailsScreen(
-                                                data: car,
-                                                docId: car['id'],
-                                              ),
-                                        ),
-                                      );
-                                    },
-                                    child: const Align(
-                                      alignment: Alignment.center,
-                                      child: Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 18,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.asset(
+                                offerImages[index],
+                                fit: BoxFit.cover,
                               ),
                             ),
                           );
                         },
                       ),
                     ),
-                    const SizedBox(height: 15),
-                    SmoothPageIndicator(
-                      controller: _pageController,
-                      count: carList.length,
-                      effect: WormEffect(
-                        dotHeight: 6,
-                        dotWidth: 30,
-                        activeDotColor: korangeColor,
-                        dotColor: Colors.grey.shade300,
-                      ),
-                    ),
-                    SizedBox(height: 25),
-
-                    SizedBox(
-                      width: 220,
-                      height: 50,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: korangeColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
-                          ),
+                    SizedBox(height: 12),
+                    Center(
+                      child: SmoothPageIndicator(
+                        controller: _offerPageController,
+                        count: offerImages.length,
+                        effect: WormEffect(
+                          dotHeight: 6,
+                          dotWidth: 40,
+                          activeDotColor: korangeColor,
+                          dotColor: Colors.grey.shade300,
                         ),
-                        onPressed: () {
-                          showBookingBottomSheet(context);
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (_) => DriverAssignedScreen(),
-                          //   ),
-                          // );
-                        },
-                        child: CustomText(
-                          text: localizations.bookADriver,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          textcolor: kwhiteColor,
-                        ),
-                      ),
-                    ),
-                  ] else ...[
-                    const Center(
-                      child: CustomText(
-                        text: "No vehicles found",
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        textcolor: Colors.black,
                       ),
                     ),
                   ],
-                  SizedBox(height: 20),
-                ],
+                ),
               ),
-            ),
 
-            SizedBox(height: 20),
-            Divider(height: 4, color: KdeviderColor, thickness: 5),
-            SizedBox(height: 20),
-            Container(
-              margin: EdgeInsets.only(left: 15, right: 15),
-              color: kwhiteColor,
+              SizedBox(height: 20),
 
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomText(
-                        text: localizations.menuOffers,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        textcolor: KblackColor,
-                      ),
-                      Text(
-                        localizations.home_viewoffers,
+              Container(
+                margin: EdgeInsets.only(left: 15, right: 15),
+                color: kwhiteColor,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // CustomText(
+                    //   text: localizations.home_watch,
+                    //   fontSize: 18,
+                    //   fontWeight: FontWeight.bold,
+                    //   textcolor: KblackColor,
+                    // ),
+                    // SizedBox(height: 15),
+                    // Container(
+                    //   height: 130,
+                    //   child: PageView.builder(
+                    //     controller: _watchPageController,
+                    //     itemCount: watchLearnImages.length,
+                    //     itemBuilder: (context, index) {
+                    //       return Padding(
+                    //         padding: const EdgeInsets.symmetric(horizontal: 6),
+                    //         child: ClipRRect(
+                    //           borderRadius: BorderRadius.circular(12),
+                    //           child: Image.asset(
+                    //             watchLearnImages[index],
+                    //             fit: BoxFit.cover,
+                    //           ),
+                    //         ),
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
+                    // SizedBox(height: 12),
+                    // Center(
+                    //   child: SmoothPageIndicator(
+                    //     controller: _watchPageController,
+                    //     count: watchLearnImages.length,
+                    //     effect: WormEffect(
+                    //       dotHeight: 6,
+                    //       dotWidth: 40,
+                    //       activeDotColor: korangeColor,
+                    //       dotColor: Colors.grey.shade300,
+                    //     ),
+                    //   ),
+                    // ),
+                    // SizedBox(height: 40),
+                    SizedBox(
+                      width: 200,
+                      child: Text(
+                        localizations.home_prem + ' ✨',
                         style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: korangeColor,
-                          decoration: TextDecoration.underline,
-                          decorationColor: korangeColor,
-                          decorationStyle: TextDecorationStyle.solid,
-                          decorationThickness: 1.5,
+                          fontSize: 25,
+                          fontWeight: FontWeight.w600,
+                          color: KbottomnaviconColor,
+                          letterSpacing: -1.0,
+                        ),
+                        textHeightBehavior: const TextHeightBehavior(
+                          applyHeightToFirstAscent: false,
+                          applyHeightToLastDescent: false,
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    height: 140,
-                    child: PageView.builder(
-                      controller: _offerPageController,
-                      itemCount: offerImages.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              offerImages[index],
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        );
-                      },
                     ),
-                  ),
-                  SizedBox(height: 12),
-                  Center(
-                    child: SmoothPageIndicator(
-                      controller: _offerPageController,
-                      count: offerImages.length,
-                      effect: WormEffect(
-                        dotHeight: 6,
-                        dotWidth: 40,
-                        activeDotColor: korangeColor,
-                        dotColor: Colors.grey.shade300,
-                      ),
+                    SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomText(
+                          text: localizations.home_india,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          textcolor: KbottomnaviconColor,
+                        ),
+                        SizedBox(width: 10),
+                        Image.asset(
+                          'images/flag.png',
+                          width: 21,
+                          height: 17,
+                          fit: BoxFit.contain,
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-
-            SizedBox(height: 20),
-            Container(
-              margin: EdgeInsets.only(left: 15, right: 15),
-              color: kwhiteColor,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomText(
-                    text: localizations.home_watch,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    textcolor: KblackColor,
-                  ),
-                  SizedBox(height: 15),
-                  Container(
-                    height: 130,
-                    child: PageView.builder(
-                      controller: _watchPageController,
-                      itemCount: watchLearnImages.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              watchLearnImages[index],
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 12),
-                  Center(
-                    child: SmoothPageIndicator(
-                      controller: _watchPageController,
-                      count: watchLearnImages.length,
-                      effect: WormEffect(
-                        dotHeight: 6,
-                        dotWidth: 40,
-                        activeDotColor: korangeColor,
-                        dotColor: Colors.grey.shade300,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 40),
-                  SizedBox(
-                    width: 200,
-                    child: Text(
-                      localizations.home_prem + ' ✨',
-                      style: GoogleFonts.poppins(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600,
-                        color: KbottomnaviconColor,
-                        letterSpacing: -1.0,
-                      ),
-                      textHeightBehavior: const TextHeightBehavior(
-                        applyHeightToFirstAscent: false,
-                        applyHeightToLastDescent: false,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomText(
-                        text: localizations.home_india,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        textcolor: KbottomnaviconColor,
-                      ),
-                      SizedBox(width: 10),
-                      Image.asset(
-                        'images/flag.png',
-                        width: 21,
-                        height: 17,
-                        fit: BoxFit.contain,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            SizedBox(height: 40),
-          ],
+              SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );
@@ -1724,11 +1732,11 @@ Widget addressCard(String title, String address) {
   );
 }
 
-final List<String> watchLearnImages = [
-  'images/driver.png',
-  'images/driver.png',
-  'images/driver.png',
-];
+// final List<String> watchLearnImages = [
+//   'images/driver.png',
+//   'images/driver.png',
+//   'images/driver.png',
+// ];
 
 final List<String> offerImages = [
   'images/offer.png',
