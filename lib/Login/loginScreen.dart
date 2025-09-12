@@ -98,13 +98,13 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                       fontWeight: FontWeight.w700,
                       textcolor: korangeColor,
                     ),
-                    const SizedBox(height: 10),
-                    CustomText(
-                      text: localizations.loginSubtitle,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      textcolor: kgreyColor,
-                    ),
+                    // const SizedBox(height: 10),
+                    // CustomText(
+                    //   text: localizations.loginSubtitle,
+                    //   fontSize: 14,
+                    //   fontWeight: FontWeight.w400,
+                    //   textcolor: kgreyColor,
+                    // ),
                     const SizedBox(height: 50),
                     PhoneNumberInputField(
                       controller: phoneController,

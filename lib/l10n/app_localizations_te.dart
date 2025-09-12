@@ -25,8 +25,7 @@ class AppLocalizationsTe extends AppLocalizations {
   String get continueButton => 'కొనసాగించండి';
 
   @override
-  String get loginTitle =>
-      'మీరు సిద్ధంగా ఉన్నప్పుడు మేము సిద్ధంగా ఉన్నాము. సైన్ ఇన్ చేసి మీ ప్రయాణాన్ని కొనసాగించండి.';
+  String get loginTitle => 'మీ మొబైల్ నంబర్‌ను నమోదు చేయండి.';
 
   @override
   String get loginSubtitle =>

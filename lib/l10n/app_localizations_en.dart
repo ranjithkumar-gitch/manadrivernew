@@ -25,8 +25,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get continueButton => 'Continue';
 
   @override
-  String get loginTitle =>
-      'We\'re ready when you are. Sign in and continue your ride.';
+  String get loginTitle => 'Enter Your Mobile Number';
 
   @override
   String get loginSubtitle =>

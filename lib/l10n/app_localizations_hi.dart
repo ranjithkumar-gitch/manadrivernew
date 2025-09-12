@@ -25,8 +25,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get continueButton => 'जारी रखें';
 
   @override
-  String get loginTitle =>
-      'हम तैयार हैं जब आप हों। साइन इन करें और अपनी यात्रा जारी रखें।';
+  String get loginTitle => 'अपना मोबाइल संख्या दर्ज करे';
 
   @override
   String get loginSubtitle =>
