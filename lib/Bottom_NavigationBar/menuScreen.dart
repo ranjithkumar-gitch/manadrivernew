@@ -16,7 +16,7 @@ import 'package:mana_driver/Sidemenu/termsAndConditions.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
-import 'package:mana_driver/Widgets/customTextField.dart';
+
 import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
 import 'package:mana_driver/Widgets/mobileNumberInputField.dart';
 import 'package:mana_driver/l10n/app_localizations.dart';
@@ -827,9 +827,39 @@ class _MenuScreenState extends State<MenuScreen> {
             actions: _dialogActions(
               P: d,
               c: c,
-              onConfirm: () {
-                Navigator.pop(context);
+              onConfirm: () async {
+                try {
+                  // final prefs = await SharedPreferences.getInstance();
+                  final docId = SharedPrefServices.getDocId();
+
+                  if (docId != null) {
+                    await FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(docId)
+                        .delete();
+                  }
+
+                  SharedPrefServices.clearUserFromSharedPrefs();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        "Your account has been deleted successfully.",
+                      ),
+                    ),
+                  );
+                } catch (e) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Failed to delete account: $e")),
+                  );
+                }
               },
+
               confirmText: "Confirm",
             ),
           ),
