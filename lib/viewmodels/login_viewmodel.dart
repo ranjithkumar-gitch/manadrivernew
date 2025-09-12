@@ -124,6 +124,7 @@ class LoginViewModel extends ChangeNotifier {
         await SharedPrefServices.setLastName(userData['lastName'] ?? "");
         await SharedPrefServices.setEmail(userData['email'] ?? "");
         await SharedPrefServices.setNumber(userData['phone'] ?? "");
+        await SharedPrefServices.setCountryCode(userData['countryCode'] ?? "");
         await SharedPrefServices.setDocID(snapshot.docs.first.id);
         await SharedPrefServices.setislogged(true);
 

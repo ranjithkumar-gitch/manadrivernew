@@ -261,11 +261,12 @@ class VehicleDetailsScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _SpecItem(
-                        iconPath: 'images/mileage.png',
-                        label: "Mileage",
-                        value: "24kmpl",
-                      ),
+                      // _SpecItem(
+                      //   iconPath: 'images/mileage.png',
+                      //   label: "Mileage",
+                      //   value: "24kmpl",
+                      // ),
+                      SizedBox(width: 15),
                       _SpecItem(
                         iconPath: 'images/fuel.png',
                         label: "Fuel Type",

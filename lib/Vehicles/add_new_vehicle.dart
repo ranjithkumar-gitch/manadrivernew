@@ -325,9 +325,9 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
 
       int pickedImagesCount =
           images.where((img) => img != null).toList().length;
-      if (pickedImagesCount < 2) {
+      if (pickedImagesCount < 1) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please upload at least 2 images")),
+          const SnackBar(content: Text("Please upload at least 1 image")),
         );
         return;
       }

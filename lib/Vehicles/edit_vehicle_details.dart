@@ -10,6 +10,7 @@ import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Vehicles/my_vehicle.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
+import 'package:dotted_border/dotted_border.dart';
 
 class EditVehicleDetails extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -284,8 +285,11 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
   List<String> availableModels = [];
   final TextEditingController vehicleNumberController = TextEditingController();
   final TextEditingController messageController = TextEditingController();
-  List<File?> images = List.generate(4, (_) => null);
-  List<String?> imageUrls = List.generate(4, (_) => null);
+
+  List<String?> imageUrls = List.filled(4, null); // existing DB images
+  List<File?> images = List.filled(4, null); // new picked images
+  List<String> imagesToDelete = []; // track images deleted from DB
+
   File? image;
 
   String? selectedFuelType;
@@ -359,32 +363,42 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
 
       int pickedImagesCount =
           images.where((img) => img != null).toList().length;
-      if (pickedImagesCount + imageUrls.where((u) => u != null).length < 2) {
+      if (pickedImagesCount + imageUrls.where((u) => u != null).length < 1) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please upload at least 2 images")),
+          const SnackBar(content: Text("Please upload at least 1 image")),
         );
         return;
       }
+      List<String> updatedImageUrls = List.filled(maxImages, "");
 
-      List<String> updatedImageUrls = List.from(imageUrls);
+      for (String url in imagesToDelete) {
+        try {
+          final ref = FirebaseStorage.instance.refFromURL(url);
+          await ref.delete();
+          print("Deleted from Firebase Storage: $url");
+        } catch (e) {
+          print("Error deleting image from storage: $e");
+        }
+      }
+
       for (int i = 0; i < images.length; i++) {
         if (images[i] != null) {
           String fileName =
-              "${SharedPrefServices.getUserId().toString()}_Vehicles/${DateTime.now().millisecondsSinceEpoch}_$i.jpg";
-
+              "${SharedPrefServices.getUserId()}_Vehicles/${DateTime.now().millisecondsSinceEpoch}_$i.jpg";
           final ref = FirebaseStorage.instance.ref().child(fileName);
-          final uploadTask = ref.putFile(images[i]!);
-
-          final snapshot = await uploadTask.whenComplete(() {});
+          final snapshot = await ref.putFile(images[i]!);
           final downloadUrl = await snapshot.ref.getDownloadURL();
-
-          if (i < updatedImageUrls.length) {
-            updatedImageUrls[i] = downloadUrl;
-          } else {
-            updatedImageUrls.add(downloadUrl);
-          }
+          updatedImageUrls[i] = downloadUrl;
+          print("Uploaded new image at index $i: $downloadUrl");
+        } else if (imageUrls[i] != null && imageUrls[i]!.isNotEmpty) {
+          updatedImageUrls[i] = imageUrls[i]!;
+          print("Kept existing image at index $i: ${imageUrls[i]}");
         }
       }
+
+      List<String> finalImageUrls =
+          updatedImageUrls.where((url) => url.isNotEmpty).toList();
+
       print("Updating Vehicle with values:");
       print("Brand: $selectedBrand");
       print("Model: $selectedModel");
@@ -405,11 +419,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
             "vehicleNumber": vehicleNumberController.text.trim(),
             "fuelType": selectedFuelType ?? "",
             "transmission": selectedTransmission ?? "",
-            "images":
-                updatedImageUrls
-                    .where((u) => u != null && u.isNotEmpty)
-                    .cast<String>()
-                    .toList(),
+            "images": finalImageUrls,
             "acAvailable": selectedAc ?? "No",
             "createdAt": FieldValue.serverTimestamp(),
           });
@@ -426,6 +436,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
     } catch (e) {
       if (!mounted) return;
       _showSnack("Error: $e");
+      print("Error: $e");
     } finally {
       if (mounted) {
         setState(() {
@@ -441,6 +452,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
     ).showSnackBar(SnackBar(content: Text(message)));
   }
 
+  int maxImages = 4;
   void _pickImage(int index) async {
     showDialog(
       context: context,
@@ -469,7 +481,14 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                       );
                       if (pickedImage != null) {
                         setState(() {
+                          // Replace the image at this index
                           images[index] = File(pickedImage.path);
+
+                          // If there was an existing DB image, mark it for deletion
+                          if (imageUrls[index] != null) {
+                            imagesToDelete.add(imageUrls[index]!);
+                            imageUrls[index] = null;
+                          }
                         });
                       }
                     },
@@ -495,6 +514,10 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                       if (pickedImage != null) {
                         setState(() {
                           images[index] = File(pickedImage.path);
+                          if (imageUrls[index] != null) {
+                            imagesToDelete.add(imageUrls[index]!);
+                            imageUrls[index] = null;
+                          }
                         });
                       }
                     },
@@ -583,79 +606,136 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount:
-                        (images.where((f) => f != null).length +
-                                    imageUrls
-                                        .where((u) => u != null && u.isNotEmpty)
-                                        .length) ==
-                                1
-                            ? 1
-                            : 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 70 / 60,
-                  ),
-                  itemCount:
-                      images.where((f) => f != null).length +
-                      imageUrls.where((u) => u != null && u.isNotEmpty).length,
-                  itemBuilder: (context, index) {
-                    return Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: KdeviderColor,
+                Builder(
+                  builder: (context) {
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, // always 2 per row
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                            childAspectRatio: 70 / 60,
                           ),
-                          child:
-                              (images[index] == null &&
-                                      imageUrls[index] == null)
-                                  ? const Center(
-                                    child: Icon(Icons.add, color: kgreyColor),
-                                  )
-                                  : ClipRRect(
+                      itemCount: maxImages,
+                      itemBuilder: (context, index) {
+                        final File? imgFile = images[index];
+                        final String? imgUrl = imageUrls[index];
+                        final hasImage =
+                            imgFile != null ||
+                            (imgUrl != null && imgUrl.isNotEmpty);
+
+                        return Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            hasImage
+                                ? Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: KdeviderColor,
+                                  ),
+                                  child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child:
-                                        images[index] != null
+                                        imgFile != null
                                             ? Image.file(
-                                              images[index]!,
+                                              imgFile,
                                               width: double.infinity,
                                               height: double.infinity,
                                               fit: BoxFit.cover,
                                             )
                                             : Image.network(
-                                              imageUrls[index]!,
+                                              imgUrl!,
                                               width: double.infinity,
                                               height: double.infinity,
                                               fit: BoxFit.cover,
                                             ),
                                   ),
-                        ),
+                                )
+                                : DottedBorder(
+                                  options: RoundedRectDottedBorderOptions(
+                                    radius: const Radius.circular(10),
+                                    dashPattern: [5, 5],
+                                    color: kgreyColor,
+                                    strokeWidth: 2,
+                                    padding: const EdgeInsets.all(0),
+                                  ),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: KdeviderColor,
+                                    ),
+                                    child: Center(
+                                      child: GestureDetector(
+                                        onTap: () => _pickImage(index),
+                                        child: Icon(
+                                          Icons.add,
+                                          color: kgreyColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
 
-                        Positioned(
-                          top: 6,
-                          right: 6,
-                          child: GestureDetector(
-                            onTap: () => _pickImage(index),
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                color: Colors.orange,
-                                shape: BoxShape.circle,
+                            if (hasImage)
+                              Positioned(
+                                top: 6,
+                                left: 6,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (imgFile != null) {
+                                        images[index] = null;
+                                      } else if (imgUrl != null &&
+                                          imgUrl.isNotEmpty) {
+                                        imagesToDelete.add(imgUrl);
+                                        print(
+                                          "Image marked for deletion: $imgUrl",
+                                        );
+                                        imageUrls[index] = null;
+                                      }
+                                    });
+                                  },
+
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.red,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    padding: const EdgeInsets.all(4),
+                                    child: const Icon(
+                                      Icons.delete,
+                                      size: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
-                              padding: const EdgeInsets.all(4),
-                              child: const Icon(
-                                Icons.edit,
-                                size: 14,
-                                color: Colors.white,
+
+                            if (imgUrl != null && imgUrl.isNotEmpty)
+                              Positioned(
+                                top: 6,
+                                right: 6,
+                                child: GestureDetector(
+                                  onTap: () => _pickImage(index),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.orange,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    padding: const EdgeInsets.all(4),
+                                    child: const Icon(
+                                      Icons.edit,
+                                      size: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      ],
+                          ],
+                        );
+                      },
                     );
                   },
                 ),
@@ -820,7 +900,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                         );
 
                         print("AC Available: $selectedAc");
-                        // _updateVehicle(widget.docId);
+                        _updateVehicle(widget.docId);
                       },
                       child: CustomText(
                         text: "Update Vehicle Details",
@@ -1006,3 +1086,37 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
     );
   }
 }
+   // List<String> updatedImageUrls = [];
+
+      // // 1️⃣ Delete marked images from DB (Firestore & optionally Storage)
+      // // 1️⃣ Delete marked images from Storage
+      // for (String url in imagesToDelete) {
+      //   try {
+      //     final ref = FirebaseStorage.instance.refFromURL(url);
+      //     await ref.delete();
+      //     print("Deleted from Firebase Storage: $url"); // ✅ successful delete
+      //   } catch (e) {
+      //     print("Error deleting image from storage: $e");
+      //   }
+      // }
+
+      // // 2️⃣ Upload newly picked images
+      // for (int i = 0; i < images.length; i++) {
+      //   if (images[i] != null) {
+      //     String fileName =
+      //         "${SharedPrefServices.getUserId()}_Vehicles/${DateTime.now().millisecondsSinceEpoch}_$i.jpg";
+      //     final ref = FirebaseStorage.instance.ref().child(fileName);
+      //     final snapshot = await ref.putFile(images[i]!);
+      //     final downloadUrl = await snapshot.ref.getDownloadURL();
+      //     updatedImageUrls.add(downloadUrl);
+      //     print("Uploaded new image: $downloadUrl"); // ✅ print uploaded image
+      //   }
+      // }
+
+      // // 3️⃣ Add remaining existing images that weren’t deleted
+      // for (var url in imageUrls) {
+      //   if (url != null && url.isNotEmpty) {
+      //     updatedImageUrls.add(url);
+      //     print("Kept existing image: $url"); // ✅ print kept image
+      //   }
+      // }

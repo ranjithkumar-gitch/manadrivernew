@@ -14,18 +14,20 @@ class SharedPrefServices {
   static const _keystatus = 'status';
   static const _keydocId = 'docID';
   static const _keyroleCode = 'roleCode';
+  static const _keycountryCode = 'countryCode';
   static const _keyislogged = 'islogged';
- 
 
   static Future init() async => prefs = await SharedPreferences.getInstance();
 
-  
   static Future setislogged(bool islogged) async {
     await prefs!.setBool(_keyislogged, islogged);
   }
 
   static Future setUserId(String userId) async =>
       await prefs!.setString(_keyuserId, userId);
+
+  static Future setCountryCode(String countryCode) async =>
+      await prefs!.setString(_keycountryCode, countryCode);
 
   static Future setRoleCode(String roleCode) async =>
       await prefs!.setString(_keyroleCode, roleCode);
@@ -45,28 +47,23 @@ class SharedPrefServices {
   static Future setEmail(String email) async =>
       await prefs!.setString(_keyemail, email);
 
- 
   static Future setStatus(String status) async =>
       await prefs!.setString(_keystatus, status);
 
-  
-
   // Getters
-
 
   static bool getislogged() => prefs!.getBool(_keyislogged) ?? false;
   static String? getUserId() => prefs!.getString(_keyuserId);
 
   static String? getFirstName() => prefs!.getString(_keyfirstName);
 
+  static String? getCountryCode() => prefs!.getString(_keycountryCode);
+
   static String? getLastName() => prefs!.getString(_keylastName);
 
   static String? getEmail() => prefs!.getString(_keyemail);
 
-
   static String? getProfileImage() => prefs!.getString(_keyprofileImage);
-
-  
 
   static String? getNumber() => prefs!.getString(_keynumber);
   static String? getDocId() => prefs!.getString(_keydocId);
@@ -82,16 +79,16 @@ class SharedPrefServices {
     await prefs!.setString(_keyfirstName, "");
     await prefs!.setString(_keylastName, "");
     await prefs!.setString(_keyemail, "");
-    
+
     await prefs!.setString(_keyprofileImage, "");
-  
+
     await prefs!.setString(_keynumber, "");
     await prefs!.setString(_keystatus, "");
     await prefs!.setString(_keyroleCode, "");
     await prefs!.setBool(_keyislogged, false);
-   
+
     await prefs!.setString(_keydocId, "");
-    
+
     print('User data reset in SharedPreferences.');
   }
 

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Login/loginScreen.dart';
@@ -16,6 +18,7 @@ import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 import 'package:mana_driver/Widgets/customTextField.dart';
 import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
+import 'package:mana_driver/Widgets/mobileNumberInputField.dart';
 import 'package:mana_driver/l10n/app_localizations.dart';
 import 'package:mana_driver/viewmodels/login_viewmodel.dart';
 import 'package:pinput/pinput.dart';
@@ -31,7 +34,7 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   String? selectedLanguage;
-  final TextEditingController nameController = TextEditingController();
+
   final List<Map<String, dynamic>> menuItems = [
     {'image': 'images/address.png', 'title': 'My Address'},
     {'image': 'images/favorite.png', 'title': 'Favourite Drivers'},
@@ -138,6 +141,7 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
+  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
@@ -148,402 +152,436 @@ class _MenuScreenState extends State<MenuScreen> {
 
     final userEmail = vm.loggedInUser?['email'] ?? "";
     return SafeArea(
-      child: SingleChildScrollView(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            double screenWidth = constraints.maxWidth;
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                double screenWidth = constraints.maxWidth;
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  const SizedBox(height: 40),
-                  _buildProfileTile(),
-                  const Divider(color: KdeviderColor),
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 40),
+                      _buildProfileTile(),
+                      const Divider(color: KdeviderColor),
 
-                  const Divider(color: KdeviderColor),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => MyAddressScreen()),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            "images/address.png",
-                            width: 24,
-                            height: 24,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: CustomText(
-                              text: localizations.menumyAddress,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              textcolor: KblackColor,
+                      const Divider(color: KdeviderColor),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => MyAddressScreen(),
                             ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(3),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "images/address.png",
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: CustomText(
+                                  text: localizations.menumyAddress,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+                              Image.asset("images/chevronRight.png", width: 20),
+                            ],
                           ),
-                          Image.asset("images/chevronRight.png", width: 20),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const Divider(color: KdeviderColor),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => FavouriteDriversScreen(),
                         ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            "images/favorite.png",
-                            width: 24,
-                            height: 24,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: CustomText(
-                              text: localizations.menuFavDrivers,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              textcolor: KblackColor,
-                            ),
-                          ),
-                          Image.asset("images/chevronRight.png", width: 20),
-                        ],
                       ),
-                    ),
-                  ),
-                  const Divider(color: KdeviderColor),
+                      const Divider(color: KdeviderColor),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => FavouriteDriversScreen(),
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(3),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "images/favorite.png",
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: CustomText(
+                                  text: localizations.menuFavDrivers,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+                              Image.asset("images/chevronRight.png", width: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Divider(color: KdeviderColor),
 
-                  InkWell(
-                    onTap:
-                        () => _showUpdateMobileDialog(
-                          uMN: localizations.menuUpdateMobileNumber,
-                          eM: localizations.menuEnterMobile,
-                          eOTP: localizations.menuEnterOTP,
-                          dR: localizations.menuDontRecieved,
-                          rS: localizations.menuResend,
-                          c: localizations.menuCancel,
-                          u: localizations.menuUpdate,
+                      InkWell(
+                        onTap:
+                            () => _showUpdateMobileDialog(
+                              uMN: localizations.menuUpdateMobileNumber,
+                              eM: localizations.menuEnterMobile,
+                              eOTP: localizations.menuEnterOTP,
+                              dR: localizations.menuDontRecieved,
+                              rS: localizations.menuResend,
+                              c: localizations.menuCancel,
+                              u: localizations.menuUpdate,
+                            ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(3),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "images/update.png",
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: CustomText(
+                                  text: localizations.menuUpdateMobileNumber,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+                              Image.asset("images/chevronRight.png", width: 20),
+                            ],
+                          ),
                         ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            "images/update.png",
-                            width: 24,
-                            height: 24,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: CustomText(
-                              text: localizations.menuUpdateMobileNumber,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              textcolor: KblackColor,
-                            ),
-                          ),
-                          Image.asset("images/chevronRight.png", width: 20),
-                        ],
                       ),
-                    ),
-                  ),
-                  const Divider(color: KdeviderColor),
-                  InkWell(
-                    onTap: () => _showLanguageDialog(),
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            "images/language.png",
-                            width: 24,
-                            height: 24,
+                      const Divider(color: KdeviderColor),
+                      InkWell(
+                        onTap: () => _showLanguageDialog(),
+                        child: Padding(
+                          padding: const EdgeInsets.all(3),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "images/language.png",
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: CustomText(
+                                  text: localizations.menuAppLanguage,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+                              Image.asset("images/chevronRight.png", width: 20),
+                            ],
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: CustomText(
-                              text: localizations.menuAppLanguage,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              textcolor: KblackColor,
-                            ),
-                          ),
-                          Image.asset("images/chevronRight.png", width: 20),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                  const Divider(color: KdeviderColor),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => OffersScreen()),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            "images/offers.png",
-                            width: 24,
-                            height: 24,
+                      const Divider(color: KdeviderColor),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => OffersScreen()),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(3),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "images/offers.png",
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: CustomText(
+                                  text: localizations.menuOffers,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+                              Image.asset("images/chevronRight.png", width: 20),
+                            ],
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: CustomText(
-                              text: localizations.menuOffers,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              textcolor: KblackColor,
-                            ),
-                          ),
-                          Image.asset("images/chevronRight.png", width: 20),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
 
-                  const Divider(color: KdeviderColor),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => ReferFriendScreen()),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            "images/refer.png",
-                            width: 24,
-                            height: 24,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: CustomText(
-                              text: localizations.menuReferaFriend,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              textcolor: KblackColor,
+                      const Divider(color: KdeviderColor),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ReferFriendScreen(),
                             ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(3),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "images/refer.png",
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: CustomText(
+                                  text: localizations.menuReferaFriend,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+                              Image.asset("images/chevronRight.png", width: 20),
+                            ],
                           ),
-                          Image.asset("images/chevronRight.png", width: 20),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                  const Divider(color: KdeviderColor),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => TermsAndConditions()),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Row(
-                        children: [
-                          Image.asset("images/info.png", width: 24, height: 24),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: CustomText(
-                              text: localizations.menuTC,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              textcolor: KblackColor,
+                      const Divider(color: KdeviderColor),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => TermsAndConditions(),
                             ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(3),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "images/info.png",
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: CustomText(
+                                  text: localizations.menuTC,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+                              Image.asset("images/chevronRight.png", width: 20),
+                            ],
                           ),
-                          Image.asset("images/chevronRight.png", width: 20),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                  const Divider(color: KdeviderColor),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => HelpAndSupport()),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            "images/support.png",
-                            width: 24,
-                            height: 24,
+                      const Divider(color: KdeviderColor),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => HelpAndSupport()),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(3),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "images/support.png",
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: CustomText(
+                                  text: localizations.menuHelpSupport,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+                              Image.asset("images/chevronRight.png", width: 20),
+                            ],
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: CustomText(
-                              text: localizations.menuHelpSupport,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              textcolor: KblackColor,
-                            ),
-                          ),
-                          Image.asset("images/chevronRight.png", width: 20),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
 
-                  const Divider(color: KdeviderColor),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => CancellationPolicyScreen(),
+                      const Divider(color: KdeviderColor),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => CancellationPolicyScreen(),
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(3),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "images/policy.png",
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: CustomText(
+                                  text: localizations.menuCancelPolicy,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+                              Image.asset("images/chevronRight.png", width: 20),
+                            ],
+                          ),
                         ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            "images/policy.png",
-                            width: 24,
-                            height: 24,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: CustomText(
-                              text: localizations.menuCancelPolicy,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              textcolor: KblackColor,
-                            ),
-                          ),
-                          Image.asset("images/chevronRight.png", width: 20),
-                        ],
                       ),
-                    ),
-                  ),
-                  const Divider(color: KdeviderColor),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => AboutManaDriverScreen(),
+                      const Divider(color: KdeviderColor),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => AboutManaDriverScreen(),
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(3),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "images/aboutMD.png",
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: CustomText(
+                                  text: localizations.menuAbtMD,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+                              Image.asset("images/chevronRight.png", width: 20),
+                            ],
+                          ),
                         ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            "images/aboutMD.png",
-                            width: 24,
-                            height: 24,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: CustomText(
-                              text: localizations.menuAbtMD,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              textcolor: KblackColor,
-                            ),
-                          ),
-                          Image.asset("images/chevronRight.png", width: 20),
-                        ],
                       ),
-                    ),
-                  ),
-                  const Divider(color: KdeviderColor),
-                  InkWell(
-                    onTap:
-                        () => _showDeleteAccountDialog(
-                          txt1: localizations.dA_t1,
-                          txt2: localizations.dA_t2,
-                          c: localizations.menuCancel,
-                          d: localizations.menuDelete,
+                      const Divider(color: KdeviderColor),
+                      InkWell(
+                        onTap:
+                            () => _showDeleteAccountDialog(
+                              txt1: localizations.dA_t1,
+                              txt2: localizations.dA_t2,
+                              c: localizations.menuCancel,
+                              d: localizations.menuDelete,
+                            ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(3),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "images/delete_acnt.png",
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: CustomText(
+                                  text: localizations.menuDeleteAccount,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+                              Image.asset("images/chevronRight.png", width: 20),
+                            ],
+                          ),
                         ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            "images/delete_acnt.png",
-                            width: 24,
-                            height: 24,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: CustomText(
-                              text: localizations.menuDeleteAccount,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              textcolor: KblackColor,
-                            ),
-                          ),
-                          Image.asset("images/chevronRight.png", width: 20),
-                        ],
                       ),
-                    ),
-                  ),
-                  const Divider(color: KdeviderColor),
-                  InkWell(
-                    onTap: () => _showLogoutDialog(context),
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            "images/logout.png",
-                            width: 24,
-                            height: 24,
+                      const Divider(color: KdeviderColor),
+                      InkWell(
+                        onTap: () => _showLogoutDialog(context),
+                        child: Padding(
+                          padding: const EdgeInsets.all(3),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "images/logout.png",
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: CustomText(
+                                  text: localizations.menuLogout,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+                              Image.asset("images/chevronRight.png", width: 20),
+                            ],
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: CustomText(
-                              text: localizations.menuLogout,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              textcolor: KblackColor,
-                            ),
-                          ),
-                          Image.asset("images/chevronRight.png", width: 20),
-                        ],
+                        ),
                       ),
-                    ),
+                      SizedBox(height: 20),
+                    ],
                   ),
-                  SizedBox(height: 20),
-                ],
+                );
+              },
+            ),
+          ),
+          if (_isLoading)
+            Container(
+              color: Colors.black54,
+              child: const Center(
+                child: CircularProgressIndicator(color: Colors.orange),
               ),
-            );
-          },
-        ),
+            ),
+        ],
       ),
     );
   }
 
-  void _showUpdateMobileDialog({
+  // Country selectedCountry = Country(
+  //   phoneCode: "91",
+  //   countryCode: "IN",
+  //   e164Sc: 0,
+  //   geographic: true,
+  //   level: 1,
+  //   name: "India",
+  //   example: "India",
+  //   displayName: "India",
+  //   displayNameNoCountryCode: "India",
+  //   e164Key: "",
+  // );
+
+  Future<void> _showUpdateMobileDialog({
     required String uMN,
     required String eM,
     required String eOTP,
@@ -551,73 +589,149 @@ class _MenuScreenState extends State<MenuScreen> {
     required String rS,
     required String c,
     required String u,
-  }) {
+  }) async {
     final otpController = TextEditingController();
+    final phoneController = TextEditingController();
+
+    String savedCountryCode = await SharedPrefServices.getCountryCode() ?? "IN";
+    String savedNumber = await SharedPrefServices.getNumber() ?? "";
+
+    Country selectedCountry = Country.parse(savedCountryCode);
+    phoneController.text = savedNumber;
+
     showDialog(
       context: context,
-      builder:
-          (_) => AlertDialog(
-            backgroundColor: kwhiteColor,
-            title: CustomText(
-              text: uMN,
-
-              textcolor: KblackColor,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CustomTextField(controller: nameController, labelText: eM),
-                const SizedBox(height: 20),
-                CustomText(
-                  text: eOTP,
-                  textcolor: KblackColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  textAlign: TextAlign.start,
-                ),
-                const SizedBox(height: 10),
-                Pinput(
-                  controller: otpController,
-                  length: 4,
-                  keyboardType: TextInputType.number,
-                  defaultPinTheme: _pinTheme(),
-                  focusedPinTheme: _focusedPinTheme(),
-                ),
-                const SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text.rich(
-                    TextSpan(
-                      text: dR,
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: kgreyColor,
-                      ),
-                      children: [
-                        TextSpan(
-                          text: rS,
-                          style: TextStyle(
-                            color: korangeColor,
-                            fontWeight: FontWeight.w600,
-                          ),
+      barrierDismissible: false,
+      builder: (_) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              backgroundColor: kwhiteColor,
+              title: CustomText(
+                text: uMN,
+                textcolor: KblackColor,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  PhoneNumberInputField(
+                    controller: phoneController,
+                    selectedCountry: selectedCountry,
+                    onCountryChanged: (Country country) {
+                      setStateDialog(() {
+                        selectedCountry = country;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  CustomText(
+                    text: eOTP,
+                    textcolor: KblackColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  const SizedBox(height: 10),
+                  Pinput(
+                    controller: otpController,
+                    length: 4,
+                    keyboardType: TextInputType.number,
+                    defaultPinTheme: _pinTheme(),
+                    focusedPinTheme: _focusedPinTheme(),
+                  ),
+                  const SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text.rich(
+                      TextSpan(
+                        text: dR,
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          color: kgreyColor,
                         ),
-                      ],
+                        children: [
+                          TextSpan(
+                            text: rS,
+                            style: TextStyle(
+                              color: korangeColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            actions: _dialogActions(
-              P: u,
-              c: c,
-              onConfirm: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
+                ],
+              ),
+              actions: _dialogActions(
+                P: u,
+                c: c,
+                onConfirm: () async {
+                  if (otpController.text.trim() != "1234") {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Invalid OTP, please try again"),
+                      ),
+                    );
+                    return;
+                  }
+
+                  // Navigator.pop(context);
+
+                  // showDialog(
+                  //   context: context,
+                  //   barrierDismissible: false,
+                  //   builder:
+                  //       (_) => AlertDialog(
+                  //         content: Row(
+                  //           mainAxisSize: MainAxisSize.min,
+                  //           children: const [
+                  //             CircularProgressIndicator(),
+                  //             SizedBox(width: 20),
+                  //             Text("Updating data..."),
+                  //           ],
+                  //         ),
+                  //       ),
+                  // );
+
+                  String? userId = await SharedPrefServices.getUserId();
+                  if (userId != null && userId.isNotEmpty) {
+                    final query =
+                        await FirebaseFirestore.instance
+                            .collection("users")
+                            .where("userId", isEqualTo: userId)
+                            .get();
+
+                    if (query.docs.isNotEmpty) {
+                      String docId = query.docs.first.id;
+                      await FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(docId)
+                          .update({
+                            "phone": phoneController.text.trim(),
+                            "countryCode": selectedCountry.countryCode,
+                          });
+                    }
+                    await SharedPrefServices.clearUserFromSharedPrefs();
+                  }
+
+                  // Navigator.pop(context);
+
+                  // if (!context.mounted) return;
+
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (_) => LoginScreen()),
+                    (route) => false,
+                  );
+                },
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -734,17 +848,17 @@ class _MenuScreenState extends State<MenuScreen> {
           Expanded(
             child: CustomCancelButton(
               text: c,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               height: 46,
               width: 140,
             ),
-
-            // CustomCancelButton(onPressed: () => Navigator.pop(context)),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: CustomButton(
-              onPressed: onConfirm,
+              onPressed: onConfirm, // update action
               text: P,
               height: 46,
               width: 140,
