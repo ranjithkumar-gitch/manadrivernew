@@ -53,6 +53,7 @@ dependencies:
   flutter_gen: ^5.11.0
   shared_preferences: ^2.5.3
   firebase_storage: ^13.0.0
+  libphonenumber_plugin: ^0.3.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
