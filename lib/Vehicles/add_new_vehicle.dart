@@ -249,6 +249,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
   String? selectedBrand;
   String? selectedModel;
   String? selectedCategory;
+  String? selectedCustomCategory;
   List<String> availableModels = [];
   final TextEditingController vehicleNumberController = TextEditingController();
   final TextEditingController messageController = TextEditingController();
@@ -263,6 +264,9 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
 
   bool _isLoading = false;
 
+  TextEditingController customModelController = TextEditingController();
+  TextEditingController customCategoryController = TextEditingController();
+
   Future<void> _addVehicle() async {
     try {
       setState(() {
@@ -275,18 +279,34 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
         return;
       }
 
-      if (selectedModel == null || selectedModel!.isEmpty) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Please select a model")));
-        return;
-      }
+      if (selectedBrand == "Others") {
+        if (customModelController.text.trim().isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Please enter a vehicle model")),
+          );
+          return;
+        }
 
-      if (selectedCategory == null || selectedCategory!.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select a category")),
-        );
-        return;
+        if (selectedCustomCategory == null || selectedCustomCategory!.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Please select a vehicle category")),
+          );
+          return;
+        }
+      } else {
+        if (selectedModel == null || selectedModel!.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Please select a model")),
+          );
+          return;
+        }
+
+        if (selectedCategory == null || selectedCategory!.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Please select a category")),
+          );
+          return;
+        }
       }
 
       if (vehicleNumberController.text.trim().isEmpty) {
@@ -351,8 +371,14 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
       await FirebaseFirestore.instance.collection("vehicles").add({
         "userId": SharedPrefServices.getUserId().toString(),
         "brand": selectedBrand,
-        "model": selectedModel,
-        "category": selectedCategory,
+        "model":
+            selectedBrand == "Others"
+                ? customModelController.text.trim()
+                : selectedModel,
+        "category":
+            selectedBrand == "Others"
+                ? selectedCustomCategory
+                : selectedCategory,
         "vehicleNumber": vehicleNumberController.text.trim(),
         "fuelType": selectedFuelType,
         "transmission": selectedTransmission,
@@ -627,96 +653,236 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                   ),
                 ),
 
+                // const SizedBox(height: 25),
+                // buildDropdownField(
+                //   label: "Vehicle Brand",
+                //   hint: "Select Brand",
+                //   items:
+                //       vehicleData
+                //           .map((e) => e['brand'] as String)
+                //           .toSet()
+                //           .toList(),
+                //   value: selectedBrand,
+                //   onChanged: (value) {
+                //     setState(() {
+                //       selectedBrand = value;
+                //       selectedModel = null;
+                //       availableModels =
+                //           vehicleData
+                //               .where((e) => e['brand'] == value)
+                //               .map((e) => e['model'] as String)
+                //               .toList();
+                //     });
+                //   },
+                // ),
                 const SizedBox(height: 25),
                 buildDropdownField(
                   label: "Vehicle Brand",
                   hint: "Select Brand",
                   items:
-                      vehicleData
-                          .map((e) => e['brand'] as String)
-                          .toSet()
-                          .toList(),
+                      (() {
+                        final List<String> brands =
+                            vehicleData
+                                .map((e) => e['brand'] as String)
+                                .toSet()
+                                .toList()
+                              ..sort(
+                                (a, b) =>
+                                    a.toLowerCase().compareTo(b.toLowerCase()),
+                              );
+
+                        if (!brands.contains("Others")) {
+                          brands.add("Others");
+                        }
+                        return brands;
+                      })(),
                   value: selectedBrand,
                   onChanged: (value) {
                     setState(() {
                       selectedBrand = value;
                       selectedModel = null;
-                      availableModels =
-                          vehicleData
-                              .where((e) => e['brand'] == value)
-                              .map((e) => e['model'] as String)
-                              .toList();
+                      selectedCategory = null;
+                      if (value != "Others") {
+                        availableModels =
+                            vehicleData
+                                .where((e) => e['brand'] == value)
+                                .map((e) => e['model'] as String)
+                                .toList();
+                      } else {
+                        availableModels = [];
+                      }
                     });
                   },
                 ),
+                if (selectedBrand != null && selectedBrand != "Others") ...[
+                  buildDropdownField(
+                    label: "Vehicle Model",
+                    hint: "Select Model",
+                    items: availableModels,
+                    value: selectedModel,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedModel = value;
 
-                buildDropdownField(
-                  label: "Vehicle Model",
-                  hint: "Select Model",
-                  items: availableModels,
-                  value: selectedModel,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedModel = value;
-
-                      selectedCategory =
-                          vehicleData
-                              .firstWhere(
-                                (e) =>
-                                    e['brand'] == selectedBrand &&
-                                    e['model'] == selectedModel,
-                              )['category']
-                              .toString();
-                    });
-                  },
-                ),
-
-                TextFormField(
-                  readOnly: true,
-                  controller: TextEditingController(
-                    text: selectedCategory ?? "",
+                        selectedCategory =
+                            vehicleData
+                                .firstWhere(
+                                  (e) =>
+                                      e['brand'] == selectedBrand &&
+                                      e['model'] == selectedModel,
+                                )['category']
+                                .toString();
+                      });
+                    },
                   ),
 
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: korangeColor,
-                  ),
-                  decoration: InputDecoration(
-                    labelText: 'Vehicle Category',
-                    hintText: 'Vehicle Category',
-                    hintStyle: TextStyle(
-                      color: kseegreyColor,
+                  TextFormField(
+                    readOnly: true,
+                    controller: TextEditingController(
+                      text: selectedCategory ?? "",
+                    ),
+
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w500,
+                      color: korangeColor,
                     ),
-                    labelStyle: TextStyle(
-                      color: kgreyColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(color: kbordergreyColor),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(color: kbordergreyColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        color: kbordergreyColor,
-                        width: 1.5,
+                    decoration: InputDecoration(
+                      labelText: 'Vehicle Category',
+                      hintText: 'Vehicle Category',
+                      hintStyle: TextStyle(
+                        color: kseegreyColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      labelStyle: TextStyle(
+                        color: kgreyColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: kbordergreyColor),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: kbordergreyColor),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: kbordergreyColor,
+                          width: 1.5,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 15),
+                  SizedBox(height: 15),
+                ],
+
+                if (selectedBrand == "Others") ...[
+                  TextFormField(
+                    controller: customModelController,
+                    keyboardType: TextInputType.text,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: korangeColor,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Enter Vehicle Model',
+                      hintText: 'Enter Vehicle Model',
+                      hintStyle: TextStyle(
+                        color: kseegreyColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      labelStyle: TextStyle(
+                        color: kgreyColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: kbordergreyColor),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: kbordergreyColor),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: kbordergreyColor,
+                          width: 1.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  DropdownButtonFormField<String>(
+                    icon: Icon(Icons.keyboard_arrow_down, color: KblackColor),
+                    decoration: InputDecoration(
+                      labelText: "Vehicle Category",
+                      labelStyle: TextStyle(
+                        color: kgreyColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: kbordergreyColor),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: kbordergreyColor),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: kbordergreyColor,
+                          width: 1.5,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    hint: CustomText(
+                      text: "Select Vehicle Category",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      textcolor: kseegreyColor,
+                    ),
+                    value: selectedCustomCategory,
+                    isExpanded: true,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCustomCategory = value;
+                      });
+                    },
+                    items:
+                        ["Light", "Premium", "Commercial"]
+                            .map(
+                              (item) => DropdownMenuItem(
+                                value: item,
+                                child: CustomText(
+                                  text: item,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  textcolor: korangeColor,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                  ),
+                  SizedBox(height: 15),
+                ],
+
                 buildTextField(
                   "Enter vehicle Number",
                   "Enter vehicle number",
                   vehicleNumberController,
+                  textCapitalization: TextCapitalization.characters,
                 ),
 
                 buildDropdownFields(
@@ -797,12 +963,14 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
     String hintText,
     TextEditingController vehicleNumberController, {
     int maxLines = 1,
+    TextCapitalization textCapitalization = TextCapitalization.none,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
         maxLines: maxLines,
         controller: vehicleNumberController,
+        textCapitalization: textCapitalization,
         style: TextStyle(
           color: korangeColor,
           fontSize: 14,

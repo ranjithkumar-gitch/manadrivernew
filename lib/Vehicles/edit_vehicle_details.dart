@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Vehicles/my_vehicle.dart';
 import 'package:mana_driver/Widgets/colors.dart';
@@ -251,6 +252,8 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
     {"brand": "BharatBenz", "model": "1923", "category": "Commercial"},
     {"brand": "BharatBenz", "model": "Buses", "category": "Commercial"},
   ];
+  final TextEditingController customModelController = TextEditingController();
+  String? selectedCustomCategory;
 
   @override
   void initState() {
@@ -263,13 +266,19 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
         widget.data['vehicleNumber']?.toString() ?? "";
     selectedFuelType = widget.data['fuelType']?.toString() ?? "";
     selectedTransmission = widget.data['transmission']?.toString() ?? "";
-    selectedAc = widget.data['acAvailable']?.toString() ?? "No"; // default "No"
+    selectedAc = widget.data['acAvailable']?.toString() ?? "No";
 
-    availableModels =
-        vehicleData
-            .where((e) => e['brand'] == selectedBrand)
-            .map((e) => e['model']?.toString() ?? "")
-            .toList();
+    if (selectedBrand == "Others") {
+      customModelController.text = widget.data['model']?.toString() ?? "";
+      selectedCustomCategory = widget.data['category']?.toString();
+      availableModels = [];
+    } else {
+      availableModels =
+          vehicleData
+              .where((e) => e['brand'] == selectedBrand)
+              .map((e) => e['model']?.toString() ?? "")
+              .toList();
+    }
 
     if (widget.data['images'] != null && widget.data['images'] is List) {
       List urls = widget.data['images'];
@@ -414,8 +423,14 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
           .doc(vehicleId)
           .update({
             "brand": selectedBrand ?? "",
-            "model": selectedModel ?? "",
-            "category": selectedCategory ?? "",
+            "model":
+                selectedBrand == "Others"
+                    ? customModelController.text.trim()
+                    : selectedModel,
+            "category":
+                selectedBrand == "Others"
+                    ? selectedCustomCategory
+                    : selectedCategory,
             "vehicleNumber": vehicleNumberController.text.trim(),
             "fuelType": selectedFuelType ?? "",
             "transmission": selectedTransmission ?? "",
@@ -431,7 +446,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MyVehicle()),
+        MaterialPageRoute(builder: (context) => BottomNavigation()),
       );
     } catch (e) {
       if (!mounted) return;
@@ -745,87 +760,290 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                   label: "Vehicle Brand",
                   hint: "Select Brand",
                   items:
-                      vehicleData
-                          .map((e) => e['brand'] as String)
-                          .toSet()
-                          .toList(),
+                      (() {
+                        final List<String> brands =
+                            vehicleData
+                                .map((e) => e['brand'] as String)
+                                .toSet()
+                                .toList()
+                              ..sort(
+                                (a, b) =>
+                                    a.toLowerCase().compareTo(b.toLowerCase()),
+                              );
+
+                        if (!brands.contains("Others")) {
+                          brands.add("Others");
+                        }
+                        return brands;
+                      })(),
                   value: selectedBrand,
                   onChanged: (value) {
                     setState(() {
                       selectedBrand = value;
                       selectedModel = null;
-                      availableModels =
-                          vehicleData
-                              .where((e) => e['brand'] == value)
-                              .map((e) => e['model'] as String)
-                              .toList();
+                      selectedCategory = null;
+
+                      if (value != "Others") {
+                        availableModels =
+                            vehicleData
+                                .where((e) => e['brand'] == value)
+                                .map((e) => e['model'] as String)
+                                .toList();
+                      } else {
+                        availableModels = [];
+                      }
                     });
                   },
                 ),
+                if (selectedBrand != null && selectedBrand != "Others") ...[
+                  buildDropdownField(
+                    label: "Vehicle Model",
+                    hint: "Select Model",
+                    items: availableModels,
+                    value: selectedModel,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedModel = value;
 
-                buildDropdownField(
-                  label: "Vehicle Model",
-                  hint: "Select Model",
-                  items: availableModels,
-                  value: selectedModel,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedModel = value;
-
-                      selectedCategory =
-                          vehicleData
-                              .firstWhere(
-                                (e) =>
-                                    e['brand'] == selectedBrand &&
-                                    e['model'] == selectedModel,
-                              )['category']
-                              .toString();
-                    });
-                  },
-                ),
-
-                TextFormField(
-                  readOnly: true,
-                  controller: TextEditingController(
-                    text: selectedCategory ?? "",
+                        selectedCategory =
+                            vehicleData
+                                .firstWhere(
+                                  (e) =>
+                                      e['brand'] == selectedBrand &&
+                                      e['model'] == selectedModel,
+                                )['category']
+                                .toString();
+                      });
+                    },
                   ),
 
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: korangeColor,
-                  ),
-                  decoration: InputDecoration(
-                    labelText: 'Vehicle Category',
-                    hintText: 'Vehicle Category',
-                    hintStyle: TextStyle(
-                      color: kseegreyColor,
+                  TextFormField(
+                    readOnly: true,
+                    controller: TextEditingController(
+                      text: selectedCategory ?? "",
+                    ),
+
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w500,
+                      color: korangeColor,
                     ),
-                    labelStyle: TextStyle(
-                      color: kgreyColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(color: kbordergreyColor),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(color: kbordergreyColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        color: kbordergreyColor,
-                        width: 1.5,
+                    decoration: InputDecoration(
+                      labelText: 'Vehicle Category',
+                      hintText: 'Vehicle Category',
+                      hintStyle: TextStyle(
+                        color: kseegreyColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      labelStyle: TextStyle(
+                        color: kgreyColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: kbordergreyColor),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: kbordergreyColor),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: kbordergreyColor,
+                          width: 1.5,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 15),
+                  SizedBox(height: 15),
+                ],
+
+                if (selectedBrand == "Others") ...[
+                  TextFormField(
+                    controller: customModelController,
+                    keyboardType: TextInputType.text,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: korangeColor,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Enter Vehicle Model',
+                      hintText: 'Enter Vehicle Model',
+                      hintStyle: TextStyle(
+                        color: kseegreyColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      labelStyle: TextStyle(
+                        color: kgreyColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: kbordergreyColor),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: kbordergreyColor),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: kbordergreyColor,
+                          width: 1.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  DropdownButtonFormField<String>(
+                    icon: Icon(Icons.keyboard_arrow_down, color: KblackColor),
+                    decoration: InputDecoration(
+                      labelText: "Vehicle Category",
+                      labelStyle: TextStyle(
+                        color: kgreyColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: kbordergreyColor),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: kbordergreyColor),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: kbordergreyColor,
+                          width: 1.5,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    hint: CustomText(
+                      text: "Select Vehicle Category",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      textcolor: kseegreyColor,
+                    ),
+                    value: selectedCustomCategory,
+                    isExpanded: true,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCustomCategory = value;
+                      });
+                    },
+                    items:
+                        ["Light", "Premium", "Commercial"]
+                            .map(
+                              (item) => DropdownMenuItem(
+                                value: item,
+                                child: CustomText(
+                                  text: item,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  textcolor: korangeColor,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                  ),
+                  SizedBox(height: 15),
+                ],
+
+                // buildDropdownField(
+                //   label: "Vehicle Brand",
+                //   hint: "Select Brand",
+                //   items:
+                //       vehicleData
+                //           .map((e) => e['brand'] as String)
+                //           .toSet()
+                //           .toList(),
+                //   value: selectedBrand,
+                //   onChanged: (value) {
+                //     setState(() {
+                //       selectedBrand = value;
+                //       selectedModel = null;
+                //       availableModels =
+                //           vehicleData
+                //               .where((e) => e['brand'] == value)
+                //               .map((e) => e['model'] as String)
+                //               .toList();
+                //     });
+                //   },
+                // ),
+
+                // buildDropdownField(
+                //   label: "Vehicle Model",
+                //   hint: "Select Model",
+                //   items: availableModels,
+                //   value: selectedModel,
+                //   onChanged: (value) {
+                //     setState(() {
+                //       selectedModel = value;
+
+                //       selectedCategory =
+                //           vehicleData
+                //               .firstWhere(
+                //                 (e) =>
+                //                     e['brand'] == selectedBrand &&
+                //                     e['model'] == selectedModel,
+                //               )['category']
+                //               .toString();
+                //     });
+                //   },
+                // ),
+
+                // TextFormField(
+                //   readOnly: true,
+                //   controller: TextEditingController(
+                //     text: selectedCategory ?? "",
+                //   ),
+
+                //   style: GoogleFonts.poppins(
+                //     fontSize: 14,
+                //     fontWeight: FontWeight.w500,
+                //     color: korangeColor,
+                //   ),
+                //   decoration: InputDecoration(
+                //     labelText: 'Vehicle Category',
+                //     hintText: 'Vehicle Category',
+                //     hintStyle: TextStyle(
+                //       color: kseegreyColor,
+                //       fontSize: 14,
+                //       fontWeight: FontWeight.w400,
+                //     ),
+                //     labelStyle: TextStyle(
+                //       color: kgreyColor,
+                //       fontSize: 14,
+                //       fontWeight: FontWeight.w400,
+                //     ),
+                //     border: OutlineInputBorder(
+                //       borderRadius: BorderRadius.circular(8),
+                //       borderSide: const BorderSide(color: kbordergreyColor),
+                //     ),
+                //     enabledBorder: OutlineInputBorder(
+                //       borderRadius: BorderRadius.circular(8),
+                //       borderSide: const BorderSide(color: kbordergreyColor),
+                //     ),
+                //     focusedBorder: OutlineInputBorder(
+                //       borderRadius: BorderRadius.circular(8),
+                //       borderSide: const BorderSide(
+                //         color: kbordergreyColor,
+                //         width: 1.5,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(height: 15),
                 buildTextField(
                   "Enter vehicle Number",
                   "Enter vehicle number",

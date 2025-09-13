@@ -13,7 +13,9 @@ import 'package:mana_driver/Vehicles/confirm_details.dart';
 import 'package:mana_driver/Vehicles/my_vehicle.dart';
 import 'package:mana_driver/Vehicles/vehicle_details.dart';
 import 'package:mana_driver/Widgets/colors.dart';
+import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
+import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
 import 'package:mana_driver/l10n/app_localizations.dart';
 import 'package:mana_driver/viewmodels/login_viewmodel.dart';
 
@@ -175,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       fit: BoxFit.cover,
                     ),
                     Positioned(
-                      top: 50,
+                      top: 30,
                       left: 16,
                       right: 16,
                       child: Row(
@@ -873,19 +875,119 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void showBookingBottomSheet(BuildContext context) {
-    TextEditingController addressTitleController = TextEditingController();
-    TextEditingController addressDetailsController = TextEditingController();
-    List<Map<String, String>> savedAddresses = [
-      {
-        "title": "Home",
-        "details":
-            "Sy.No.98, Main Rd, Near JLN House\nSerilingampally, Kondapur, 500084",
+  void showCityLimitsDialog(
+    BuildContext context,
+    int initialSelected,
+    Function(int) onSelected,
+  ) {
+    int tempSelected = initialSelected;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          insetPadding: EdgeInsets.zero,
+          child: Container(
+            height: 400,
+            padding: EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomText(
+                  text: "Select Hours",
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  textcolor: KblackColor,
+                ),
+
+                SizedBox(height: 10),
+                Expanded(
+                  child: StatefulBuilder(
+                    builder: (context, setState) {
+                      return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 3,
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                        ),
+                        itemCount: 12,
+                        itemBuilder: (context, index) {
+                          int hr = index + 1;
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                tempSelected = hr;
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color:
+                                      tempSelected == hr
+                                          ? korangeColor
+                                          : kseegreyColor,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                "$hr hr",
+                                style: TextStyle(
+                                  fontWeight:
+                                      tempSelected == hr
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                  color:
+                                      tempSelected == hr
+                                          ? korangeColor
+                                          : Colors.black,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomCancelButton(
+                        text: 'Cancel',
+                        onPressed: () => Navigator.pop(context),
+                        height: 46,
+                        width: 140,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: CustomButton(
+                        onPressed: () {
+                          onSelected(tempSelected);
+                          Navigator.pop(context);
+                        },
+                        text: 'Confirm',
+                        height: 46,
+                        width: 140,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
       },
-    ];
-    int selectedAddressIndex = 0;
+    );
+  }
+
+  void showBookingBottomSheet(BuildContext context) {
     String selectedTripMode = "Round Trip";
     String selectedTripTime = "Schedule";
+    int selectedCityHours = 1;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -903,7 +1005,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
               child: SizedBox(
-                height: 700,
+                height: 550,
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -927,14 +1029,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Expanded(
                                   child: tripOption(
-                                    "Hourly",
-                                    selected: selectedTripMode == "Hourly",
+                                    "City Limits (${selectedCityHours} hr)",
+                                    selected: selectedTripMode == "City Limits",
                                     onTap: () {
                                       setState(() {
-                                        selectedTripMode = "Hourly";
+                                        selectedTripMode = "City Limits";
                                       });
-                                      print(
-                                        "Selected Trip Mode: $selectedTripMode",
+                                      showCityLimitsDialog(
+                                        context,
+                                        selectedCityHours,
+                                        (value) {
+                                          setState(() {
+                                            selectedCityHours = value;
+                                          });
+                                        },
                                       );
                                     },
                                   ),
@@ -1054,6 +1162,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                     initialDate: selectedDate,
                                     firstDate: DateTime.now(),
                                     lastDate: DateTime(2101),
+                                    builder: (context, child) {
+                                      return Theme(
+                                        data: Theme.of(context).copyWith(
+                                          colorScheme: ColorScheme.light(
+                                            primary: korangeColor,
+                                            onPrimary: Colors.white,
+                                            onSurface: Colors.grey.shade700,
+                                          ),
+                                          textButtonTheme: TextButtonThemeData(
+                                            style: TextButton.styleFrom(
+                                              foregroundColor: korangeColor,
+                                            ),
+                                          ),
+                                        ),
+                                        child: child!,
+                                      );
+                                    },
                                   );
                                   if (picked != null) {
                                     setState(() => selectedDate = picked);
@@ -1069,11 +1194,60 @@ class _HomeScreenState extends State<HomeScreen> {
                               Divider(color: kbordergreyColor),
                               GestureDetector(
                                 onTap: () async {
-                                  final TimeOfDay? picked =
-                                      await showTimePicker(
-                                        context: context,
-                                        initialTime: selectedTime,
+                                  final TimeOfDay?
+                                  picked = await showTimePicker(
+                                    context: context,
+                                    initialTime: selectedTime,
+                                    builder: (context, child) {
+                                      return Theme(
+                                        data: Theme.of(context).copyWith(
+                                          timePickerTheme: TimePickerThemeData(
+                                            hourMinuteShape:
+                                                RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                            dayPeriodShape:
+                                                RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  side: BorderSide(
+                                                    color: korangeColor,
+                                                    width: 1,
+                                                  ),
+                                                ),
+                                            dayPeriodColor: korangeColor,
+                                            dayPeriodTextColor: Colors.white,
+                                            dialBackgroundColor:
+                                                Colors.grey[200],
+                                            dialHandColor: korangeColor,
+                                            hourMinuteTextColor:
+                                                MaterialStateColor.resolveWith((
+                                                  states,
+                                                ) {
+                                                  if (states.contains(
+                                                    MaterialState.selected,
+                                                  )) {
+                                                    return Colors.white;
+                                                  }
+                                                  return Colors.black;
+                                                }),
+                                          ),
+                                          colorScheme: ColorScheme.light(
+                                            primary: korangeColor,
+                                            onPrimary: Colors.white,
+                                            onSurface: Colors.grey.shade700,
+                                          ),
+                                          textButtonTheme: TextButtonThemeData(
+                                            style: TextButton.styleFrom(
+                                              foregroundColor: korangeColor,
+                                            ),
+                                          ),
+                                        ),
+                                        child: child!,
                                       );
+                                    },
+                                  );
                                   if (picked != null) {
                                     setState(() => selectedTime = picked);
                                   }
@@ -1099,317 +1273,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         margin: EdgeInsets.all(10),
                         child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                CustomText(
-                                  text: "Select Address",
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  textcolor: KblackColor,
-                                ),
-
-                                GestureDetector(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(25.0),
-                                        ),
-                                      ),
-                                      isScrollControlled: true,
-                                      builder: (context) {
-                                        return Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom:
-                                                MediaQuery.of(
-                                                  context,
-                                                ).viewInsets.bottom,
-                                            top: 20,
-                                            left: 20,
-                                            right: 20,
-                                          ),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              TextFormField(
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                style: GoogleFonts.poppins(
-                                                  color: KblackColor,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                controller:
-                                                    addressTitleController,
-                                                decoration: InputDecoration(
-                                                  labelText:
-                                                      "Address Title (e.g. Home, Office)",
-                                                  labelStyle: TextStyle(
-                                                    color: kgreyColor,
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                  filled: true,
-                                                  fillColor: Colors.white,
-                                                  contentPadding:
-                                                      const EdgeInsets.symmetric(
-                                                        vertical: 16,
-                                                        horizontal: 16,
-                                                      ),
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          10,
-                                                        ),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                          color:
-                                                              kbordergreyColor,
-                                                        ),
-                                                  ),
-                                                  enabledBorder: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          10,
-                                                        ),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                          color:
-                                                              kbordergreyColor,
-                                                        ),
-                                                  ),
-                                                  focusedBorder: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          10,
-                                                        ),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                          color:
-                                                              kbordergreyColor,
-                                                          width: 2,
-                                                        ),
-                                                  ),
-                                                ),
-                                              ),
-
-                                              SizedBox(height: 15),
-
-                                              TextFormField(
-                                                textInputAction:
-                                                    TextInputAction.done,
-                                                style: GoogleFonts.poppins(
-                                                  color: KblackColor,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                controller:
-                                                    addressDetailsController,
-                                                maxLines: 2,
-                                                decoration: InputDecoration(
-                                                  labelText: "Full Address",
-                                                  alignLabelWithHint: true,
-                                                  labelStyle: TextStyle(
-                                                    color: kgreyColor,
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                  filled: true,
-                                                  fillColor: Colors.white,
-                                                  contentPadding:
-                                                      const EdgeInsets.symmetric(
-                                                        vertical: 16,
-                                                        horizontal: 16,
-                                                      ),
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          10,
-                                                        ),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                          color:
-                                                              kbordergreyColor,
-                                                        ),
-                                                  ),
-                                                  enabledBorder: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          10,
-                                                        ),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                          color:
-                                                              kbordergreyColor,
-                                                        ),
-                                                  ),
-                                                  focusedBorder: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          10,
-                                                        ),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                          color:
-                                                              kbordergreyColor,
-                                                          width: 2,
-                                                        ),
-                                                  ),
-                                                ),
-                                              ),
-
-                                              SizedBox(height: 20),
-                                              SizedBox(
-                                                width: 220,
-                                                height: 50,
-                                                child: ElevatedButton(
-                                                  style: ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        korangeColor,
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            40,
-                                                          ),
-                                                    ),
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                          horizontal: 10,
-                                                          vertical: 5,
-                                                        ),
-                                                  ),
-                                                  onPressed: () {
-                                                    if (addressTitleController
-                                                            .text
-                                                            .isNotEmpty &&
-                                                        addressDetailsController
-                                                            .text
-                                                            .isNotEmpty) {
-                                                      setState(() {
-                                                        savedAddresses.add({
-                                                          "title":
-                                                              addressTitleController
-                                                                  .text,
-                                                          "details":
-                                                              addressDetailsController
-                                                                  .text,
-                                                        });
-                                                        selectedAddressIndex =
-                                                            savedAddresses
-                                                                .length -
-                                                            1;
-                                                      });
-
-                                                      addressTitleController
-                                                          .clear();
-                                                      addressDetailsController
-                                                          .clear();
-
-                                                      Navigator.pop(context);
-                                                    }
-                                                  },
-                                                  child: CustomText(
-                                                    text: "Save",
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w500,
-                                                    textcolor: kwhiteColor,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(height: 20),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                  child: Text(
-                                    'Add New Address',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                      color: korangeColor,
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: korangeColor,
-                                      decorationStyle:
-                                          TextDecorationStyle.solid,
-                                      decorationThickness: 1.5,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: savedAddresses.length,
-                              itemBuilder: (context, index) {
-                                final isSelected =
-                                    index == selectedAddressIndex;
-
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      selectedAddressIndex = index;
-                                    });
-                                  },
-                                  child: Container(
-                                    margin: EdgeInsets.only(bottom: 10),
-                                    padding: EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: kbordergreyColor,
-                                        width: 1.3,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          isSelected
-                                              ? Icons.radio_button_checked
-                                              : Icons.radio_button_off,
-                                          color: korangeColor,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              CustomText(
-                                                text:
-                                                    savedAddresses[index]['title'] ??
-                                                    '',
-                                                textcolor: korangeColor,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                              SizedBox(height: 5),
-                                              CustomText(
-                                                text:
-                                                    savedAddresses[index]['details'] ??
-                                                    '',
-                                                textcolor: kgreyColor,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-
                             SizedBox(height: 15),
-
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -1788,3 +1652,327 @@ class CarModel {
     required this.price,
   });
 }
+
+
+
+
+
+// address realted
+//
+//  // TextEditingController addressTitleController = TextEditingController();
+    // TextEditingController addressDetailsController = TextEditingController();
+    // List<Map<String, String>> savedAddresses = [
+    //   {
+    //     "title": "Home",
+    //     "details":
+    //         "Sy.No.98, Main Rd, Near JLN House\nSerilingampally, Kondapur, 500084",
+    //   },
+    // ];
+    // int selectedAddressIndex = 0; // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     CustomText(
+                            //       text: "Select Address",
+                            //       fontSize: 16,
+                            //       fontWeight: FontWeight.w600,
+                            //       textcolor: KblackColor,
+                            //     ),
+
+                            //     GestureDetector(
+                            //       onTap: () {
+                            //         showModalBottomSheet(
+                            //           context: context,
+                            //           shape: RoundedRectangleBorder(
+                            //             borderRadius: BorderRadius.vertical(
+                            //               top: Radius.circular(25.0),
+                            //             ),
+                            //           ),
+                            //           isScrollControlled: true,
+                            //           builder: (context) {
+                            //             return Padding(
+                            //               padding: EdgeInsets.only(
+                            //                 bottom:
+                            //                     MediaQuery.of(
+                            //                       context,
+                            //                     ).viewInsets.bottom,
+                            //                 top: 20,
+                            //                 left: 20,
+                            //                 right: 20,
+                            //               ),
+                            //               child: Column(
+                            //                 mainAxisSize: MainAxisSize.min,
+                            //                 children: [
+                            //                   TextFormField(
+                            //                     textInputAction:
+                            //                         TextInputAction.next,
+                            //                     style: GoogleFonts.poppins(
+                            //                       color: KblackColor,
+                            //                       fontSize: 14,
+                            //                       fontWeight: FontWeight.w500,
+                            //                     ),
+                            //                     controller:
+                            //                         addressTitleController,
+                            //                     decoration: InputDecoration(
+                            //                       labelText:
+                            //                           "Address Title (e.g. Home, Office)",
+                            //                       labelStyle: TextStyle(
+                            //                         color: kgreyColor,
+                            //                         fontSize: 15,
+                            //                         fontWeight: FontWeight.w500,
+                            //                       ),
+                            //                       filled: true,
+                            //                       fillColor: Colors.white,
+                            //                       contentPadding:
+                            //                           const EdgeInsets.symmetric(
+                            //                             vertical: 16,
+                            //                             horizontal: 16,
+                            //                           ),
+                            //                       border: OutlineInputBorder(
+                            //                         borderRadius:
+                            //                             BorderRadius.circular(
+                            //                               10,
+                            //                             ),
+                            //                         borderSide:
+                            //                             const BorderSide(
+                            //                               color:
+                            //                                   kbordergreyColor,
+                            //                             ),
+                            //                       ),
+                            //                       enabledBorder: OutlineInputBorder(
+                            //                         borderRadius:
+                            //                             BorderRadius.circular(
+                            //                               10,
+                            //                             ),
+                            //                         borderSide:
+                            //                             const BorderSide(
+                            //                               color:
+                            //                                   kbordergreyColor,
+                            //                             ),
+                            //                       ),
+                            //                       focusedBorder: OutlineInputBorder(
+                            //                         borderRadius:
+                            //                             BorderRadius.circular(
+                            //                               10,
+                            //                             ),
+                            //                         borderSide:
+                            //                             const BorderSide(
+                            //                               color:
+                            //                                   kbordergreyColor,
+                            //                               width: 2,
+                            //                             ),
+                            //                       ),
+                            //                     ),
+                            //                   ),
+
+                            //                   SizedBox(height: 15),
+
+                            //                   TextFormField(
+                            //                     textInputAction:
+                            //                         TextInputAction.done,
+                            //                     style: GoogleFonts.poppins(
+                            //                       color: KblackColor,
+                            //                       fontSize: 14,
+                            //                       fontWeight: FontWeight.w500,
+                            //                     ),
+                            //                     controller:
+                            //                         addressDetailsController,
+                            //                     maxLines: 2,
+                            //                     decoration: InputDecoration(
+                            //                       labelText: "Full Address",
+                            //                       alignLabelWithHint: true,
+                            //                       labelStyle: TextStyle(
+                            //                         color: kgreyColor,
+                            //                         fontSize: 15,
+                            //                         fontWeight: FontWeight.w500,
+                            //                       ),
+                            //                       filled: true,
+                            //                       fillColor: Colors.white,
+                            //                       contentPadding:
+                            //                           const EdgeInsets.symmetric(
+                            //                             vertical: 16,
+                            //                             horizontal: 16,
+                            //                           ),
+                            //                       border: OutlineInputBorder(
+                            //                         borderRadius:
+                            //                             BorderRadius.circular(
+                            //                               10,
+                            //                             ),
+                            //                         borderSide:
+                            //                             const BorderSide(
+                            //                               color:
+                            //                                   kbordergreyColor,
+                            //                             ),
+                            //                       ),
+                            //                       enabledBorder: OutlineInputBorder(
+                            //                         borderRadius:
+                            //                             BorderRadius.circular(
+                            //                               10,
+                            //                             ),
+                            //                         borderSide:
+                            //                             const BorderSide(
+                            //                               color:
+                            //                                   kbordergreyColor,
+                            //                             ),
+                            //                       ),
+                            //                       focusedBorder: OutlineInputBorder(
+                            //                         borderRadius:
+                            //                             BorderRadius.circular(
+                            //                               10,
+                            //                             ),
+                            //                         borderSide:
+                            //                             const BorderSide(
+                            //                               color:
+                            //                                   kbordergreyColor,
+                            //                               width: 2,
+                            //                             ),
+                            //                       ),
+                            //                     ),
+                            //                   ),
+
+                            //                   SizedBox(height: 20),
+                            //                   SizedBox(
+                            //                     width: 220,
+                            //                     height: 50,
+                            //                     child: ElevatedButton(
+                            //                       style: ElevatedButton.styleFrom(
+                            //                         backgroundColor:
+                            //                             korangeColor,
+                            //                         shape: RoundedRectangleBorder(
+                            //                           borderRadius:
+                            //                               BorderRadius.circular(
+                            //                                 40,
+                            //                               ),
+                            //                         ),
+                            //                         padding:
+                            //                             EdgeInsets.symmetric(
+                            //                               horizontal: 10,
+                            //                               vertical: 5,
+                            //                             ),
+                            //                       ),
+                            //                       onPressed: () {
+                            //                         if (addressTitleController
+                            //                                 .text
+                            //                                 .isNotEmpty &&
+                            //                             addressDetailsController
+                            //                                 .text
+                            //                                 .isNotEmpty) {
+                            //                           setState(() {
+                            //                             savedAddresses.add({
+                            //                               "title":
+                            //                                   addressTitleController
+                            //                                       .text,
+                            //                               "details":
+                            //                                   addressDetailsController
+                            //                                       .text,
+                            //                             });
+                            //                             selectedAddressIndex =
+                            //                                 savedAddresses
+                            //                                     .length -
+                            //                                 1;
+                            //                           });
+
+                            //                           addressTitleController
+                            //                               .clear();
+                            //                           addressDetailsController
+                            //                               .clear();
+
+                            //                           Navigator.pop(context);
+                            //                         }
+                            //                       },
+                            //                       child: CustomText(
+                            //                         text: "Save",
+                            //                         fontSize: 16,
+                            //                         fontWeight: FontWeight.w500,
+                            //                         textcolor: kwhiteColor,
+                            //                       ),
+                            //                     ),
+                            //                   ),
+                            //                   SizedBox(height: 20),
+                            //                 ],
+                            //               ),
+                            //             );
+                            //           },
+                            //         );
+                            //       },
+                            //       child: Text(
+                            //         'Add New Address',
+                            //         style: GoogleFonts.poppins(
+                            //           fontSize: 15,
+                            //           fontWeight: FontWeight.w500,
+                            //           color: korangeColor,
+                            //           decoration: TextDecoration.underline,
+                            //           decorationColor: korangeColor,
+                            //           decorationStyle:
+                            //               TextDecorationStyle.solid,
+                            //           decorationThickness: 1.5,
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
+                            // SizedBox(height: 10),
+
+                            // ListView.builder(
+                            //   shrinkWrap: true,
+                            //   physics: NeverScrollableScrollPhysics(),
+                            //   itemCount: savedAddresses.length,
+                            //   itemBuilder: (context, index) {
+                            //     final isSelected =
+                            //         index == selectedAddressIndex;
+
+                            //     return GestureDetector(
+                            //       onTap: () {
+                            //         setState(() {
+                            //           selectedAddressIndex = index;
+                            //         });
+                            //       },
+                            //       child: Container(
+                            //         margin: EdgeInsets.only(bottom: 10),
+                            //         padding: EdgeInsets.all(12),
+                            //         decoration: BoxDecoration(
+                            //           border: Border.all(
+                            //             color: kbordergreyColor,
+                            //             width: 1.3,
+                            //           ),
+                            //           borderRadius: BorderRadius.circular(10),
+                            //         ),
+                            //         child: Row(
+                            //           children: [
+                            //             Icon(
+                            //               isSelected
+                            //                   ? Icons.radio_button_checked
+                            //                   : Icons.radio_button_off,
+                            //               color: korangeColor,
+                            //             ),
+                            //             SizedBox(width: 10),
+                            //             Expanded(
+                            //               child: Column(
+                            //                 crossAxisAlignment:
+                            //                     CrossAxisAlignment.start,
+                            //                 children: [
+                            //                   CustomText(
+                            //                     text:
+                            //                         savedAddresses[index]['title'] ??
+                            //                         '',
+                            //                     textcolor: korangeColor,
+                            //                     fontSize: 16,
+                            //                     fontWeight: FontWeight.w600,
+                            //                   ),
+                            //                   SizedBox(height: 5),
+                            //                   CustomText(
+                            //                     text:
+                            //                         savedAddresses[index]['details'] ??
+                            //                         '',
+                            //                     textcolor: kgreyColor,
+                            //                     fontSize: 14,
+                            //                     fontWeight: FontWeight.w400,
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       ),
+                            //     );
+                            //   },
+                            // ),
