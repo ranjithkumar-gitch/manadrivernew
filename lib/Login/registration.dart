@@ -9,6 +9,7 @@ import 'package:mana_driver/Widgets/customTextField.dart';
 import 'package:mana_driver/Widgets/mobileNumberInputField.dart';
 import 'package:mana_driver/viewmodels/register_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:libphonenumber_plugin/libphonenumber_plugin.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -36,6 +37,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
     displayNameNoCountryCode: "India",
     e164Key: "",
   );
+
+  bool isValidName(String name) {
+    final n = name.trim();
+    return n.isNotEmpty && n.length >= 2;
+  }
+
+  bool isValidEmail(String email) {
+    final pattern = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return pattern.hasMatch(email.trim());
+  }
+
+  Future<bool> isValidPhone(String phone, String countryCode) async {
+    try {
+      final bool? isValid = await PhoneNumberUtil.isValidPhoneNumber(
+        phone,
+        countryCode,
+      );
+      print("Phone validation result for $phone [$countryCode] → $isValid");
+      return isValid ?? false;
+    } catch (e) {
+      print("Phone validation error: $e");
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,10 +123,74 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 40),
 
                 vm.isLoading
-                    ? const CircularProgressIndicator()
+                    ? const CircularProgressIndicator(color: korangeColor)
                     : CustomButton(
                       text: 'Register Now',
                       onPressed: () async {
+                        final firstName = firstnameController.text.trim();
+                        final lastName = lastnameController.text.trim();
+                        final email = emailController.text.trim();
+                        final phone = phoneController.text.trim();
+
+                        print("Entered first name: $firstName");
+                        print("Entered last name: $lastName");
+                        print("Entered email: $email");
+                        print("Entered phone: $phone");
+                        print(
+                          "Selected country: ${selectedCountry.name} (${selectedCountry.countryCode}) +${selectedCountry.phoneCode}",
+                        );
+
+                        // ✅ First name validation
+                        if (!isValidName(firstName)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Please enter a valid first name"),
+                            ),
+                          );
+                          return;
+                        }
+
+                        if (!isValidName(lastName)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Please enter a valid last name"),
+                            ),
+                          );
+                          return;
+                        }
+
+                        if (!isValidEmail(email)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Please enter a valid email address",
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+
+                        // ✅ Phone validation
+                        final isValid = await isValidPhone(
+                          phone,
+                          selectedCountry.countryCode,
+                        );
+                        print("Phone validation result: $isValid");
+
+                        if (!isValid) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Please enter a valid phone number for ${selectedCountry.name}",
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+
+                        print(
+                          "✅ All validations passed, proceeding with registration...",
+                        );
                         final success = await vm.register(
                           fisrtName: firstnameController.text,
                           lastName: lastnameController.text,

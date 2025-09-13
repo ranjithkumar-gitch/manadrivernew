@@ -29,25 +29,34 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   final TextEditingController otpController = TextEditingController();
   // static const String defaultOtp = "1234";
-
+  bool _isLoading = false;
   Future<void> _verifyOtp() async {
     final otp = otpController.text.trim();
+    setState(() => _isLoading = true);
+    try {
+      if (widget.isTestOtp) {
+        final vm = context.read<LoginViewModel>();
+        await vm.fetchLoggedInUser(widget.phoneNumber);
 
-    if (widget.isTestOtp) {
-      final vm = context.read<LoginViewModel>();
-      await vm.fetchLoggedInUser(widget.phoneNumber);
-      if (otp == "1234") {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => BottomNavigation()),
-        );
-      } else {
-        final localizations = AppLocalizations.of(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(localizations?.invalidOtp ?? "Invalid OTP")),
-        );
-      }
-    } else {}
+        if (otp == "1234") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => BottomNavigation()),
+          );
+        } else {
+          final localizations = AppLocalizations.of(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(localizations?.invalidOtp ?? "Invalid OTP")),
+          );
+        }
+      } else {}
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -60,120 +69,137 @@ class _OtpScreenState extends State<OtpScreen> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            return Column(
+            return Stack(
               children: [
-                const Spacer(),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomText(
-                        text:
-                            localizations?.otpTitle ??
-                            "Check your phone for the OTP and enter it below.",
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700,
-                        textcolor: korangeColor,
+                Column(
+                  children: [
+                    const Spacer(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.06,
                       ),
-                      const SizedBox(height: 10),
-                      RichText(
-                        text: TextSpan(
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: kgreyColor,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomText(
+                            text:
+                                localizations?.otpTitle ??
+                                "Check your phone for the OTP and enter it below.",
+                            fontSize: 32,
+                            fontWeight: FontWeight.w700,
+                            textcolor: korangeColor,
                           ),
-                          children: [
-                            TextSpan(
-                              text: localizations?.otpSentTo ?? "OTP sent to ",
-                            ),
-                            TextSpan(
-                              text: widget.phoneNumber,
-                              style: TextStyle(color: korangeColor),
-                            ),
-                            TextSpan(
-                              text:
-                                  localizations?.otpAutoFill ??
-                                  " this OTP will get auto entering",
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 50),
-                      Pinput(
-                        controller: otpController,
-                        length: 4,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        defaultPinTheme: PinTheme(
-                          width: 60,
-                          height: 60,
-                          textStyle: GoogleFonts.poppins(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: korangeColor,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: kbordergreyColor),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
-                        ),
-                        focusedPinTheme: PinTheme(
-                          width: 60,
-                          height: 60,
-                          textStyle: GoogleFonts.poppins(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: korangeColor, width: 2),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: RichText(
-                          text: TextSpan(
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              color: kgreyColor,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            children: [
-                              TextSpan(
-                                text:
-                                    localizations?.didNotReceiveOtp ??
-                                    "You didn’t receive OTP? ",
+                          const SizedBox(height: 10),
+                          RichText(
+                            text: TextSpan(
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: kgreyColor,
                               ),
-                              TextSpan(
-                                text: localizations?.resendOtp ?? "Resend OTP",
-                                style: TextStyle(
-                                  color: korangeColor,
-                                  fontWeight: FontWeight.w600,
+                              children: [
+                                TextSpan(
+                                  text:
+                                      localizations?.otpSentTo ??
+                                      "OTP sent to ",
                                 ),
-                              ),
-                            ],
+                                TextSpan(
+                                  text: widget.phoneNumber,
+                                  style: TextStyle(color: korangeColor),
+                                ),
+                                TextSpan(
+                                  text:
+                                      localizations?.otpAutoFill ??
+                                      " this OTP will get auto entering",
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
+                          const SizedBox(height: 50),
+                          Pinput(
+                            controller: otpController,
+                            length: 4,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            defaultPinTheme: PinTheme(
+                              width: 60,
+                              height: 60,
+                              textStyle: GoogleFonts.poppins(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: korangeColor,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: kbordergreyColor),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                              ),
+                            ),
+                            focusedPinTheme: PinTheme(
+                              width: 60,
+                              height: 60,
+                              textStyle: GoogleFonts.poppins(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: korangeColor,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: RichText(
+                              text: TextSpan(
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  color: kgreyColor,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        localizations?.didNotReceiveOtp ??
+                                        "You didn’t receive OTP? ",
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        localizations?.resendOtp ??
+                                        "Resend OTP",
+                                    style: TextStyle(
+                                      color: korangeColor,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    const Spacer(),
+                    CustomButton(
+                      text: localizations?.verifyOtp ?? 'Verify OTP',
+                      onPressed: _verifyOtp,
+                      width: 220,
+                      height: 53,
+                    ),
+                    const SizedBox(height: 32),
+                  ],
                 ),
-                const Spacer(),
-                CustomButton(
-                  text: localizations?.verifyOtp ?? 'Verify OTP',
-                  onPressed: _verifyOtp,
-                  width: 220,
-                  height: 53,
-                ),
-                const SizedBox(height: 32),
+                if (_isLoading)
+                  Center(child: CircularProgressIndicator(color: korangeColor)),
               ],
             );
           },

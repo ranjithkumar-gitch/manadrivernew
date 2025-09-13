@@ -37,6 +37,7 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
   final TextEditingController phoneController = TextEditingController(
     text: "8555005960",
   );
+  bool _isLoading = false;
 
   Future<void> _handleSendOtp(BuildContext context) async {
     final vm = context.read<LoginViewModel>();
@@ -84,121 +85,141 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
-          child: Column(
+          child: Stack(
             children: [
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomText(
-                      text: localizations.loginTitle,
-                      fontSize: 32,
-                      fontWeight: FontWeight.w700,
-                      textcolor: korangeColor,
-                    ),
-                    // const SizedBox(height: 10),
-                    // CustomText(
-                    //   text: localizations.loginSubtitle,
-                    //   fontSize: 14,
-                    //   fontWeight: FontWeight.w400,
-                    //   textcolor: kgreyColor,
-                    // ),
-                    const SizedBox(height: 50),
-                    PhoneNumberInputField(
-                      controller: phoneController,
-                      selectedCountry: vm.selectedCountry,
-                      onCountryChanged: (Country country) {
-                        vm.setCountry(country);
-                      },
-                    ),
-                    if (state.errorMessage.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          state.errorMessage,
-                          style: const TextStyle(color: Colors.red),
+              Column(
+                children: [
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomText(
+                          text: localizations.loginTitle,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w700,
+                          textcolor: korangeColor,
                         ),
-                      ),
-                  ],
-                ),
-              ),
-              const Spacer(),
+                        // const SizedBox(height: 10),
+                        // CustomText(
+                        //   text: localizations.loginSubtitle,
+                        //   fontSize: 14,
+                        //   fontWeight: FontWeight.w400,
+                        //   textcolor: kgreyColor,
+                        // ),
+                        const SizedBox(height: 50),
+                        PhoneNumberInputField(
+                          controller: phoneController,
+                          selectedCountry: vm.selectedCountry,
+                          onCountryChanged: (Country country) {
+                            vm.setCountry(country);
+                          },
+                        ),
+                        if (state.errorMessage.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              state.errorMessage,
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
 
-              CustomButton(
-                text:
-                    state.isLoading
-                        ? localizations.checking
-                        : localizations.sendOtp,
-                onPressed:
-                    state.isLoading
-                        ? null
-                        : () async {
-                          final phoneNumber = phoneController.text.trim();
-                          if (phoneNumber.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Please enter mobile number"),
-                              ),
-                            );
-                            return;
-                          }
+                  CustomButton(
+                    text:
+                        state.isLoading
+                            ? localizations.checking
+                            : localizations.sendOtp,
+                    onPressed:
+                        state.isLoading
+                            ? null
+                            : () async {
+                              final phoneNumber = phoneController.text.trim();
+                              if (phoneNumber.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Please enter mobile number"),
+                                  ),
+                                );
+                                return;
+                              }
 
-                          final exists = await _checkUserExists(phoneNumber);
+                              setState(() => _isLoading = true);
 
-                          if (exists) {
-                            await vm.fetchLoggedInUser(phoneNumber);
+                              try {
+                                final exists = await _checkUserExists(
+                                  phoneNumber,
+                                );
+
+                                if (exists) {
+                                  await context
+                                      .read<LoginViewModel>()
+                                      .fetchLoggedInUser(phoneNumber);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (_) => OtpScreen(
+                                            phoneNumber: phoneNumber,
+                                            isTestOtp: true,
+                                          ),
+                                    ),
+                                  );
+                                } else {
+                                  await _handleSendOtp(context);
+                                }
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Error: $e")),
+                                );
+                              } finally {
+                                setState(() => _isLoading = false);
+                              }
+                            },
+                    width: 220,
+                    height: 50,
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 32),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomText(
+                          text: localizations.noAccount,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          textcolor: kgreyColor,
+                        ),
+                        GestureDetector(
+                          onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder:
-                                    (_) => OtpScreen(
-                                      phoneNumber: phoneNumber,
-                                      isTestOtp: true,
-                                    ),
+                                builder: (context) => RegisterScreen(),
                               ),
                             );
-                          } else {
-                            _handleSendOtp(context);
-                          }
-                        },
-                width: 220,
-                height: 50,
-              ),
-
-              const SizedBox(height: 10),
-
-              Padding(
-                padding: const EdgeInsets.only(bottom: 32),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomText(
-                      text: localizations.noAccount,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      textcolor: kgreyColor,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RegisterScreen(),
+                          },
+                          child: CustomText(
+                            text: localizations.register,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            textcolor: korangeColor,
                           ),
-                        );
-                      },
-                      child: CustomText(
-                        text: localizations.register,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        textcolor: korangeColor,
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+              if (_isLoading)
+                Center(child: CircularProgressIndicator(color: korangeColor)),
             ],
           ),
         ),
