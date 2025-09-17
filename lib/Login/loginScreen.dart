@@ -90,6 +90,14 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
               Column(
                 children: [
                   const Spacer(),
+
+                  CustomText(
+                    text: "Mana Driver",
+                    fontSize: 32,
+                    fontWeight: FontWeight.w700,
+                    textcolor: korangeColor,
+                  ),
+                  const Spacer(),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(

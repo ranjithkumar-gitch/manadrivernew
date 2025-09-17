@@ -82,9 +82,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CustomText(
-                            text:
-                                localizations?.otpTitle ??
-                                "Check your phone for the OTP and enter it below.",
+                            text: localizations?.otpTitle ?? "Enter Your OTP",
                             fontSize: 32,
                             fontWeight: FontWeight.w700,
                             textcolor: korangeColor,

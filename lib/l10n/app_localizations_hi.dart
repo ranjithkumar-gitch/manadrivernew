@@ -28,8 +28,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get loginTitle => 'अपना मोबाइल संख्या दर्ज करे';
 
   @override
-  String get loginSubtitle =>
-      'शुरू करने के लिए अपना मोबाइल नंबर दर्ज करें, हम आपको सत्यापन के लिए एक ओटीपी भेजेंगे।';
+  String get loginSubtitle => 'अपना ओटीपी दर्ज करें';
 
   @override
   String get checking => 'जांच हो रही है...';
@@ -53,8 +52,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get invalidOtp => 'अमान्य ओटीपी';
 
   @override
-  String get otpTitle =>
-      'ओटीपी के लिए अपने फोन की जांच करें और नीचे दर्ज करें।';
+  String get otpTitle => 'अपना ओटीपी दर्ज करें';
 
   @override
   String get otpSentTo => 'ओटीपी भेजा गया ';

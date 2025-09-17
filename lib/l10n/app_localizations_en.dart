@@ -53,7 +53,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidOtp => 'Invalid OTP';
 
   @override
-  String get otpTitle => 'Check your phone for the OTP and enter it below.';
+  String get otpTitle => 'Enter Your OTP';
 
   @override
   String get otpSentTo => 'OTP sent to ';

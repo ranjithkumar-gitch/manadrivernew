@@ -28,8 +28,7 @@ class AppLocalizationsTe extends AppLocalizations {
   String get loginTitle => 'మీ మొబైల్ నంబర్‌ను నమోదు చేయండి.';
 
   @override
-  String get loginSubtitle =>
-      'ప్రారంభించడానికి మీ మొబైల్ నంబర్‌ను నమోదు చేయండి, ధృవీకరణ కోసం మేము మీకు ఓటీపీని పంపుతాము.';
+  String get loginSubtitle => 'మీ OTPని నమోదు చేయండి';
 
   @override
   String get checking => 'తనిఖీ జరుగుతోంది...';
@@ -53,8 +52,7 @@ class AppLocalizationsTe extends AppLocalizations {
   String get invalidOtp => 'చెల్లని ఓటీపీ';
 
   @override
-  String get otpTitle =>
-      'ఓటీపీ కోసం మీ ఫోన్‌ను తనిఖీ చేసి, క్రింద నమోదు చేయండి.';
+  String get otpTitle => 'మీ OTPని నమోదు చేయండి';
 
   @override
   String get otpSentTo => 'ఓటీపీ పంపబడింది ';

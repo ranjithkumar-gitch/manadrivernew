@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
@@ -971,6 +972,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
         maxLines: maxLines,
         controller: vehicleNumberController,
         textCapitalization: textCapitalization,
+        inputFormatters: [UpperCaseTextFormatter()],
         style: TextStyle(
           color: korangeColor,
           fontSize: 14,
@@ -1123,8 +1125,20 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
       ),
     );
   }
-} 
+}
 
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
+    );
+  }
+}
 
    // buildDropdownFields(
             //   "Features & Equipment",

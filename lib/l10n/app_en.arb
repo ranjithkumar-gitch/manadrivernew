@@ -15,7 +15,7 @@
   "enterMobileNumber": "Please enter mobile number",
   "mobileNumber": "Mobile Number",
   "invalidOtp": "Invalid OTP",
-  "otpTitle": "Check your phone for the OTP and enter it below.",
+  "otpTitle": "Enter Your OTP",
 "otpSentTo": "OTP sent to ",
 "otpAutoFill": " this OTP will get auto entering",
 "didNotReceiveOtp": "You didn’t receive OTP? ",
