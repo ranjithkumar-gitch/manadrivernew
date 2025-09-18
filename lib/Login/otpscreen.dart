@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
+import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
@@ -39,6 +40,7 @@ class _OtpScreenState extends State<OtpScreen> {
         await vm.fetchLoggedInUser(widget.phoneNumber);
 
         if (otp == "1234") {
+          SharedPrefServices.setislogged(true);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => BottomNavigation()),

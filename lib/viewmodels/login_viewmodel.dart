@@ -126,7 +126,7 @@ class LoginViewModel extends ChangeNotifier {
         await SharedPrefServices.setNumber(userData['phone'] ?? "");
         await SharedPrefServices.setCountryCode(userData['countryCode'] ?? "");
         await SharedPrefServices.setDocID(snapshot.docs.first.id);
-        await SharedPrefServices.setislogged(true);
+        await SharedPrefServices.setislogged(false);
 
         print("User details stored in SharedPreferences");
       } else {

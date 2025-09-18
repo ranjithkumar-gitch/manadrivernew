@@ -981,6 +981,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 ElevatedButton(
                   onPressed: () {
                     SharedPrefServices.clearUserFromSharedPrefs();
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => LoginScreen()),
