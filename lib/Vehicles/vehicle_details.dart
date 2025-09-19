@@ -889,12 +889,12 @@ class VehicleDetailsScreen extends StatelessWidget {
                                       ),
                                     ),
                                     onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => ConfirmDetails(),
-                                        ),
-                                      );
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //     builder: (_) => ConfirmDetails(),
+                                      //   ),
+                                      // );
                                     },
                                     child: CustomText(
                                       text: "Continue",

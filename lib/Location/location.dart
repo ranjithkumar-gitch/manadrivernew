@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
+import 'package:mana_driver/Bottom_NavigationBar/homeScreen.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 
@@ -6,6 +8,8 @@ class LocationSelectionScreen extends StatelessWidget {
   final TextEditingController currentLocationController =
       TextEditingController();
   final TextEditingController dropLocationController = TextEditingController();
+  final FocusNode currentFocus = FocusNode();
+  final FocusNode dropFocus = FocusNode();
 
   LocationSelectionScreen({super.key});
 
@@ -79,7 +83,13 @@ class LocationSelectionScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         TextField(
+                          focusNode: currentFocus,
                           controller: currentLocationController,
+                          textInputAction: TextInputAction.search,
+                          onSubmitted: (value) {
+                            FocusScope.of(context).requestFocus(dropFocus);
+                          },
+
                           decoration: const InputDecoration(
                             hintText: "Current Location",
                             hintStyle: TextStyle(
@@ -92,7 +102,16 @@ class LocationSelectionScreen extends StatelessWidget {
                         ),
                         const Divider(thickness: 1, color: kbordergreyColor),
                         TextField(
+                          focusNode: dropFocus,
                           controller: dropLocationController,
+                          textInputAction: TextInputAction.search,
+                          onSubmitted: (value) {
+                            Navigator.pop(context, {
+                              "current": currentLocationController.text,
+                              "drop": dropLocationController.text,
+                            });
+                          },
+
                           decoration: const InputDecoration(
                             hintText: "Drop Location",
                             hintStyle: TextStyle(

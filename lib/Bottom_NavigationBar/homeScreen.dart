@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/AppBar/notificationScreen.dart';
+import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/Location/driverAssigned.dart';
 import 'package:mana_driver/Location/location.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
@@ -42,7 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
   PageController _watchPageController = PageController(viewportFraction: 1);
   int _watchCurrentPage = 0;
   Timer? _watchAutoScrollTimer;
-
+  final TextEditingController pickupController = TextEditingController();
+  final TextEditingController dropController = TextEditingController();
+  final TextEditingController drop2Controller = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -50,6 +53,20 @@ class _HomeScreenState extends State<HomeScreen> {
     _startAutoScroll();
     // _startWatchAutoScroll();
     _startOfferAutoScroll();
+  }
+
+  Future<void> _selectLocation() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => LocationSelectionScreen()),
+    );
+
+    if (result != null && result is Map) {
+      setState(() {
+        pickupController.text = result["current"] ?? "";
+        dropController.text = result["drop"] ?? "";
+      });
+    }
   }
 
   List<Map<String, dynamic>> carList = [];
@@ -142,6 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  int selectedCarIndex = -1;
   @override
   Widget build(BuildContext context) {
     // final vm = context.watch<LoginViewModel>();
@@ -269,6 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       SizedBox(height: 1),
                                       TextField(
+                                        controller: pickupController,
                                         enabled: true,
                                         textInputAction: TextInputAction.next,
                                         style: GoogleFonts.poppins(
@@ -290,17 +309,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                           isDense: true,
                                           border: InputBorder.none,
                                         ),
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder:
-                                                  (_) =>
-                                                      LocationSelectionScreen(),
-                                            ),
-                                          );
-                                          print('Pickup location tapped');
-                                        },
+                                        onTap: _selectLocation,
+                                        // onTap: () {
+                                        //   Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //       builder:
+                                        //           (_) =>
+                                        //               LocationSelectionScreen(),
+                                        //     ),
+                                        //   );
+                                        //   print('Pickup location tapped');
+                                        // },
                                       ),
                                     ],
                                   ),
@@ -380,6 +400,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       SizedBox(height: 1),
                                       TextField(
+                                        controller: dropController,
                                         enabled: true,
                                         style: GoogleFonts.poppins(
                                           fontSize: 14,
@@ -401,17 +422,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                           isDense: true,
                                           border: InputBorder.none,
                                         ),
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder:
-                                                  (_) =>
-                                                      LocationSelectionScreen(),
-                                            ),
-                                          );
-                                          print('Drop location tapped');
-                                        },
+                                        onTap: _selectLocation,
+                                        // onTap: () {
+                                        //   Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //       builder:
+                                        //           (_) =>
+                                        //               LocationSelectionScreen(),
+                                        //     ),
+                                        //   );
+                                        //   print('Drop location tapped');
+                                        // },
                                       ),
                                     ],
                                   ),
@@ -522,6 +544,33 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
 
+                    if (selectedCarIndex != -1) ...[
+                      const SizedBox(height: 6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomText(
+                            text:
+                                '${carList[selectedCarIndex]['brand']} ${carList[selectedCarIndex]['model']}',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            textcolor: KblackColor,
+                          ),
+                          Text(
+                            'Selected',
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: korangeColor,
+
+                              decorationStyle: TextDecorationStyle.solid,
+                              decorationThickness: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+
                     SizedBox(height: 25),
 
                     if (carList.isNotEmpty) ...[
@@ -532,106 +581,155 @@ class _HomeScreenState extends State<HomeScreen> {
                           controller: _pageController,
                           itemBuilder: (context, index) {
                             final car = carList[index];
-                            return Container(
-                              margin: const EdgeInsets.only(right: 8),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: korangeColor,
-                                  width: 1.2,
-                                ),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 90,
-                                      height: 90,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        color: Colors.grey.shade100,
+                            final isSelected = selectedCarIndex == index;
+
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedCarIndex = index;
+                                });
+                              },
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color:
+                                            isSelected
+                                                ? korangeColor
+                                                : Colors.grey.shade300,
+                                        width: 1.5,
                                       ),
-                                      child: Center(
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                          child:
-                                              (car['images'] != null &&
-                                                      car['images'] is List &&
-                                                      car['images'].isNotEmpty)
-                                                  ? Image.network(
-                                                    car['images'][0],
-                                                    fit: BoxFit.cover,
-                                                    width: 130,
-                                                    errorBuilder:
-                                                        (
-                                                          context,
-                                                          error,
-                                                          stackTrace,
-                                                        ) => const Icon(
-                                                          Icons.car_crash,
-                                                        ),
-                                                  )
-                                                  : const Icon(
-                                                    Icons.directions_car,
-                                                  ),
-                                        ),
-                                      ),
+                                      borderRadius: BorderRadius.circular(16),
                                     ),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
-                                          CustomText(
-                                            text:
-                                                '${car['brand']} ${car['model']}',
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                            textcolor: KblackColor,
+                                          Container(
+                                            width: 90,
+                                            height: 90,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              color: Colors.grey.shade100,
+                                            ),
+                                            child: Center(
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                child:
+                                                    (car['images'] != null &&
+                                                            car['images']
+                                                                is List &&
+                                                            car['images']
+                                                                .isNotEmpty)
+                                                        ? Image.network(
+                                                          car['images'][0],
+                                                          fit: BoxFit.cover,
+                                                          width: 130,
+                                                          errorBuilder:
+                                                              (
+                                                                context,
+                                                                error,
+                                                                stackTrace,
+                                                              ) => const Icon(
+                                                                Icons.car_crash,
+                                                              ),
+                                                        )
+                                                        : const Icon(
+                                                          Icons.directions_car,
+                                                        ),
+                                              ),
+                                            ),
                                           ),
-                                          const SizedBox(height: 5),
-                                          Wrap(
-                                            spacing: 6,
-                                            children: [
-                                              _infoChip(car['transmission']),
-                                              _infoChip(car['fuelType']),
-                                              _infoChip(car['category']),
-                                            ],
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                CustomText(
+                                                  text:
+                                                      '${car['brand']} ${car['model']}',
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600,
+                                                  textcolor: KblackColor,
+                                                ),
+                                                const SizedBox(height: 5),
+                                                Wrap(
+                                                  spacing: 6,
+                                                  children: [
+                                                    _infoChip(
+                                                      car['transmission'],
+                                                    ),
+                                                    _infoChip(car['fuelType']),
+                                                    _infoChip(car['category']),
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 5),
+                                                _infoChip(car['vehicleNumber']),
+                                              ],
+                                            ),
                                           ),
-                                          const SizedBox(height: 5),
-                                          _infoChip(car['vehicleNumber']),
+                                          GestureDetector(
+                                            onTap: () {
+                                              //                   Navigator.push(
+                                              //                     context,
+                                              //                     MaterialPageRoute(
+                                              //                       builder:
+                                              //                           (_) => VehicleDetailsScreen(
+                                              //                             data: car,
+                                              //                             docId: car['id'],
+                                              //                           ),
+                                              //                     ),
+                                              //                   );
+                                            },
+                                            child: const Align(
+                                              alignment: Alignment.center,
+                                              child: Icon(
+                                                Icons.arrow_forward_ios,
+                                                size: 18,
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (_) => VehicleDetailsScreen(
-                                                  data: car,
-                                                  docId: car['id'],
-                                                ),
+                                  ),
+
+                                  if (isSelected)
+                                    Positioned(
+                                      top: 0,
+                                      right: 10,
+
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: korangeColor,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
                                           ),
-                                        );
-                                      },
-                                      child: const Align(
-                                        alignment: Alignment.center,
-                                        child: Icon(
-                                          Icons.arrow_forward_ios,
-                                          size: 18,
+                                        ),
+                                        child: const Text(
+                                          "Vehicle Selected",
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                ],
                               ),
                             );
                           },
@@ -655,23 +753,52 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 50,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: korangeColor,
+                            backgroundColor:
+                                (pickupController.text.isEmpty ||
+                                        dropController.text.isEmpty ||
+                                        selectedCarIndex == -1)
+                                    ? Colors
+                                        .grey // disabled
+                                    : korangeColor, // enabled
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(40),
                             ),
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 5,
                             ),
                           ),
                           onPressed: () {
+                            if (pickupController.text.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Please pick your pickup location",
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+                            if (dropController.text.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Please pick your drop location",
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+                            if (selectedCarIndex == -1) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Please select a vehicle"),
+                                ),
+                              );
+                              return;
+                            }
+
                             showBookingBottomSheet(context);
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (_) => DriverAssignedScreen(),
-                            //   ),
-                            // );
                           },
                           child: CustomText(
                             text: localizations.bookADriver,
@@ -1288,7 +1415,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
 
                                     CustomText(
-                                      text: "₹ 2,080",
+                                      text: "₹ 0.00",
                                       fontSize: 26,
                                       fontWeight: FontWeight.w700,
                                       textcolor: korangeColor,
@@ -1337,14 +1464,84 @@ class _HomeScreenState extends State<HomeScreen> {
                                         vertical: 5,
                                       ),
                                     ),
-                                    onPressed: () {
-                                      Navigator.push(
+                                    onPressed: () async {
+                                      if (pickupController.text.isEmpty ||
+                                          dropController.text.isEmpty) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              "Please select pickup & drop location",
+                                            ),
+                                          ),
+                                        );
+                                        return;
+                                      }
+
+                                      if (selectedCarIndex == -1) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              "Please select a vehicle",
+                                            ),
+                                          ),
+                                        );
+                                        return;
+                                      }
+
+                                      final selectedCarId =
+                                          carList[selectedCarIndex]['id'];
+
+                                      Map<String, dynamic> bookingData = {
+                                        "pickup": pickupController.text,
+                                        "drop": dropController.text,
+                                        "vehicleId": selectedCarId,
+                                        "tripMode": selectedTripMode,
+                                        "tripTime": selectedTripTime,
+                                        "date":
+                                            "${selectedDate.toLocal()}".split(
+                                              ' ',
+                                            )[0],
+                                        "time": selectedTime.format(context),
+                                        "status": "New",
+                                        "createdAt":
+                                            FieldValue.serverTimestamp(),
+                                        if (selectedTripMode == "City Limits")
+                                          "cityLimitHours": selectedCityHours,
+                                      };
+
+                                      print(
+                                        "Booking Data to send: $bookingData",
+                                      );
+
+                                      await FirebaseFirestore.instance
+                                          .collection('bookings')
+                                          .add(bookingData);
+
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            "Requested a driver successfully",
+                                          ),
+                                          backgroundColor: Colors.green,
+                                        ),
+                                      );
+
+                                      Navigator.pop(context);
+
+                                      Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (_) => ConfirmDetails(),
+                                          builder: (_) => BottomNavigation(),
                                         ),
                                       );
                                     },
+
                                     child: CustomText(
                                       text: "Continue",
                                       fontSize: 14,
@@ -1653,326 +1850,118 @@ class CarModel {
   });
 }
 
+// imp //ortant code for car list view in home screen
+ // SizedBox(
+                      //   height: 130,
+                      //   child: PageView.builder(
+                      //     itemCount: carList.length,
+                      //     controller: _pageController,
+                      //     itemBuilder: (context, index) {
+                      //       final car = carList[index];
+                      //       return Container(
+                      //         margin: const EdgeInsets.only(right: 8),
+                      //         decoration: BoxDecoration(
+                      //           border: Border.all(
+                      //             color: korangeColor,
+                      //             width: 1.2,
+                      //           ),
+                      //           borderRadius: BorderRadius.circular(16),
+                      //         ),
+                      //         child: Padding(
+                      //           padding: const EdgeInsets.all(8),
+                      //           child: Row(
+                      //             crossAxisAlignment: CrossAxisAlignment.center,
+                      //             children: [
+                      //               Container(
+                      //                 width: 90,
+                      //                 height: 90,
+                      //                 decoration: BoxDecoration(
+                      //                   borderRadius: BorderRadius.circular(16),
+                      //                   color: Colors.grey.shade100,
+                      //                 ),
+                      //                 child: Center(
+                      //                   child: ClipRRect(
+                      //                     borderRadius: BorderRadius.circular(
+                      //                       12,
+                      //                     ),
+                      //                     child:
+                      //                         (car['images'] != null &&
+                      //                                 car['images'] is List &&
+                      //                                 car['images'].isNotEmpty)
+                      //                             ? Image.network(
+                      //                               car['images'][0],
+                      //                               fit: BoxFit.cover,
+                      //                               width: 130,
+                      //                               errorBuilder:
+                      //                                   (
+                      //                                     context,
+                      //                                     error,
+                      //                                     stackTrace,
+                      //                                   ) => const Icon(
+                      //                                     Icons.car_crash,
+                      //                                   ),
+                      //                             )
+                      //                             : const Icon(
+                      //                               Icons.directions_car,
+                      //                             ),
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //               const SizedBox(width: 10),
+                      //               Expanded(
+                      //                 child: Column(
+                      //                   mainAxisSize: MainAxisSize.min,
+                      //                   crossAxisAlignment:
+                      //                       CrossAxisAlignment.start,
+                      //                   children: [
+                      //                     CustomText(
+                      //                       text:
+                      //                           '${car['brand']} ${car['model']}',
+                      //                       fontSize: 14,
+                      //                       fontWeight: FontWeight.w600,
+                      //                       textcolor: KblackColor,
+                      //                     ),
+                      //                     const SizedBox(height: 5),
+                      //                     Wrap(
+                      //                       spacing: 6,
+                      //                       children: [
+                      //                         _infoChip(car['transmission']),
+                      //                         _infoChip(car['fuelType']),
+                      //                         _infoChip(car['category']),
+                      //                       ],
+                      //                     ),
+                      //                     const SizedBox(height: 5),
+                      //                     _infoChip(car['vehicleNumber']),
+                      //                   ],
+                      //                 ),
+                      //               ),
+                      //               GestureDetector(
+                      //                 onTap: () {
+                      //                   Navigator.push(
+                      //                     context,
+                      //                     MaterialPageRoute(
+                      //                       builder:
+                      //                           (_) => VehicleDetailsScreen(
+                      //                             data: car,
+                      //                             docId: car['id'],
+                      //                           ),
+                      //                     ),
+                      //                   );
+                      //                 },
+                      //                 child: const Align(
+                      //                   alignment: Alignment.center,
+                      //                   child: Icon(
+                      //                     Icons.arrow_forward_ios,
+                      //                     size: 18,
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
 
 
-
-
-// address realted
-//
-//  // TextEditingController addressTitleController = TextEditingController();
-    // TextEditingController addressDetailsController = TextEditingController();
-    // List<Map<String, String>> savedAddresses = [
-    //   {
-    //     "title": "Home",
-    //     "details":
-    //         "Sy.No.98, Main Rd, Near JLN House\nSerilingampally, Kondapur, 500084",
-    //   },
-    // ];
-    // int selectedAddressIndex = 0; // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //   children: [
-                            //     CustomText(
-                            //       text: "Select Address",
-                            //       fontSize: 16,
-                            //       fontWeight: FontWeight.w600,
-                            //       textcolor: KblackColor,
-                            //     ),
-
-                            //     GestureDetector(
-                            //       onTap: () {
-                            //         showModalBottomSheet(
-                            //           context: context,
-                            //           shape: RoundedRectangleBorder(
-                            //             borderRadius: BorderRadius.vertical(
-                            //               top: Radius.circular(25.0),
-                            //             ),
-                            //           ),
-                            //           isScrollControlled: true,
-                            //           builder: (context) {
-                            //             return Padding(
-                            //               padding: EdgeInsets.only(
-                            //                 bottom:
-                            //                     MediaQuery.of(
-                            //                       context,
-                            //                     ).viewInsets.bottom,
-                            //                 top: 20,
-                            //                 left: 20,
-                            //                 right: 20,
-                            //               ),
-                            //               child: Column(
-                            //                 mainAxisSize: MainAxisSize.min,
-                            //                 children: [
-                            //                   TextFormField(
-                            //                     textInputAction:
-                            //                         TextInputAction.next,
-                            //                     style: GoogleFonts.poppins(
-                            //                       color: KblackColor,
-                            //                       fontSize: 14,
-                            //                       fontWeight: FontWeight.w500,
-                            //                     ),
-                            //                     controller:
-                            //                         addressTitleController,
-                            //                     decoration: InputDecoration(
-                            //                       labelText:
-                            //                           "Address Title (e.g. Home, Office)",
-                            //                       labelStyle: TextStyle(
-                            //                         color: kgreyColor,
-                            //                         fontSize: 15,
-                            //                         fontWeight: FontWeight.w500,
-                            //                       ),
-                            //                       filled: true,
-                            //                       fillColor: Colors.white,
-                            //                       contentPadding:
-                            //                           const EdgeInsets.symmetric(
-                            //                             vertical: 16,
-                            //                             horizontal: 16,
-                            //                           ),
-                            //                       border: OutlineInputBorder(
-                            //                         borderRadius:
-                            //                             BorderRadius.circular(
-                            //                               10,
-                            //                             ),
-                            //                         borderSide:
-                            //                             const BorderSide(
-                            //                               color:
-                            //                                   kbordergreyColor,
-                            //                             ),
-                            //                       ),
-                            //                       enabledBorder: OutlineInputBorder(
-                            //                         borderRadius:
-                            //                             BorderRadius.circular(
-                            //                               10,
-                            //                             ),
-                            //                         borderSide:
-                            //                             const BorderSide(
-                            //                               color:
-                            //                                   kbordergreyColor,
-                            //                             ),
-                            //                       ),
-                            //                       focusedBorder: OutlineInputBorder(
-                            //                         borderRadius:
-                            //                             BorderRadius.circular(
-                            //                               10,
-                            //                             ),
-                            //                         borderSide:
-                            //                             const BorderSide(
-                            //                               color:
-                            //                                   kbordergreyColor,
-                            //                               width: 2,
-                            //                             ),
-                            //                       ),
-                            //                     ),
-                            //                   ),
-
-                            //                   SizedBox(height: 15),
-
-                            //                   TextFormField(
-                            //                     textInputAction:
-                            //                         TextInputAction.done,
-                            //                     style: GoogleFonts.poppins(
-                            //                       color: KblackColor,
-                            //                       fontSize: 14,
-                            //                       fontWeight: FontWeight.w500,
-                            //                     ),
-                            //                     controller:
-                            //                         addressDetailsController,
-                            //                     maxLines: 2,
-                            //                     decoration: InputDecoration(
-                            //                       labelText: "Full Address",
-                            //                       alignLabelWithHint: true,
-                            //                       labelStyle: TextStyle(
-                            //                         color: kgreyColor,
-                            //                         fontSize: 15,
-                            //                         fontWeight: FontWeight.w500,
-                            //                       ),
-                            //                       filled: true,
-                            //                       fillColor: Colors.white,
-                            //                       contentPadding:
-                            //                           const EdgeInsets.symmetric(
-                            //                             vertical: 16,
-                            //                             horizontal: 16,
-                            //                           ),
-                            //                       border: OutlineInputBorder(
-                            //                         borderRadius:
-                            //                             BorderRadius.circular(
-                            //                               10,
-                            //                             ),
-                            //                         borderSide:
-                            //                             const BorderSide(
-                            //                               color:
-                            //                                   kbordergreyColor,
-                            //                             ),
-                            //                       ),
-                            //                       enabledBorder: OutlineInputBorder(
-                            //                         borderRadius:
-                            //                             BorderRadius.circular(
-                            //                               10,
-                            //                             ),
-                            //                         borderSide:
-                            //                             const BorderSide(
-                            //                               color:
-                            //                                   kbordergreyColor,
-                            //                             ),
-                            //                       ),
-                            //                       focusedBorder: OutlineInputBorder(
-                            //                         borderRadius:
-                            //                             BorderRadius.circular(
-                            //                               10,
-                            //                             ),
-                            //                         borderSide:
-                            //                             const BorderSide(
-                            //                               color:
-                            //                                   kbordergreyColor,
-                            //                               width: 2,
-                            //                             ),
-                            //                       ),
-                            //                     ),
-                            //                   ),
-
-                            //                   SizedBox(height: 20),
-                            //                   SizedBox(
-                            //                     width: 220,
-                            //                     height: 50,
-                            //                     child: ElevatedButton(
-                            //                       style: ElevatedButton.styleFrom(
-                            //                         backgroundColor:
-                            //                             korangeColor,
-                            //                         shape: RoundedRectangleBorder(
-                            //                           borderRadius:
-                            //                               BorderRadius.circular(
-                            //                                 40,
-                            //                               ),
-                            //                         ),
-                            //                         padding:
-                            //                             EdgeInsets.symmetric(
-                            //                               horizontal: 10,
-                            //                               vertical: 5,
-                            //                             ),
-                            //                       ),
-                            //                       onPressed: () {
-                            //                         if (addressTitleController
-                            //                                 .text
-                            //                                 .isNotEmpty &&
-                            //                             addressDetailsController
-                            //                                 .text
-                            //                                 .isNotEmpty) {
-                            //                           setState(() {
-                            //                             savedAddresses.add({
-                            //                               "title":
-                            //                                   addressTitleController
-                            //                                       .text,
-                            //                               "details":
-                            //                                   addressDetailsController
-                            //                                       .text,
-                            //                             });
-                            //                             selectedAddressIndex =
-                            //                                 savedAddresses
-                            //                                     .length -
-                            //                                 1;
-                            //                           });
-
-                            //                           addressTitleController
-                            //                               .clear();
-                            //                           addressDetailsController
-                            //                               .clear();
-
-                            //                           Navigator.pop(context);
-                            //                         }
-                            //                       },
-                            //                       child: CustomText(
-                            //                         text: "Save",
-                            //                         fontSize: 16,
-                            //                         fontWeight: FontWeight.w500,
-                            //                         textcolor: kwhiteColor,
-                            //                       ),
-                            //                     ),
-                            //                   ),
-                            //                   SizedBox(height: 20),
-                            //                 ],
-                            //               ),
-                            //             );
-                            //           },
-                            //         );
-                            //       },
-                            //       child: Text(
-                            //         'Add New Address',
-                            //         style: GoogleFonts.poppins(
-                            //           fontSize: 15,
-                            //           fontWeight: FontWeight.w500,
-                            //           color: korangeColor,
-                            //           decoration: TextDecoration.underline,
-                            //           decorationColor: korangeColor,
-                            //           decorationStyle:
-                            //               TextDecorationStyle.solid,
-                            //           decorationThickness: 1.5,
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
-                            // SizedBox(height: 10),
-
-                            // ListView.builder(
-                            //   shrinkWrap: true,
-                            //   physics: NeverScrollableScrollPhysics(),
-                            //   itemCount: savedAddresses.length,
-                            //   itemBuilder: (context, index) {
-                            //     final isSelected =
-                            //         index == selectedAddressIndex;
-
-                            //     return GestureDetector(
-                            //       onTap: () {
-                            //         setState(() {
-                            //           selectedAddressIndex = index;
-                            //         });
-                            //       },
-                            //       child: Container(
-                            //         margin: EdgeInsets.only(bottom: 10),
-                            //         padding: EdgeInsets.all(12),
-                            //         decoration: BoxDecoration(
-                            //           border: Border.all(
-                            //             color: kbordergreyColor,
-                            //             width: 1.3,
-                            //           ),
-                            //           borderRadius: BorderRadius.circular(10),
-                            //         ),
-                            //         child: Row(
-                            //           children: [
-                            //             Icon(
-                            //               isSelected
-                            //                   ? Icons.radio_button_checked
-                            //                   : Icons.radio_button_off,
-                            //               color: korangeColor,
-                            //             ),
-                            //             SizedBox(width: 10),
-                            //             Expanded(
-                            //               child: Column(
-                            //                 crossAxisAlignment:
-                            //                     CrossAxisAlignment.start,
-                            //                 children: [
-                            //                   CustomText(
-                            //                     text:
-                            //                         savedAddresses[index]['title'] ??
-                            //                         '',
-                            //                     textcolor: korangeColor,
-                            //                     fontSize: 16,
-                            //                     fontWeight: FontWeight.w600,
-                            //                   ),
-                            //                   SizedBox(height: 5),
-                            //                   CustomText(
-                            //                     text:
-                            //                         savedAddresses[index]['details'] ??
-                            //                         '',
-                            //                     textcolor: kgreyColor,
-                            //                     fontSize: 14,
-                            //                     fontWeight: FontWeight.w400,
-                            //                   ),
-                            //                 ],
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       ),
-                            //     );
-                            //   },
-                            // ),

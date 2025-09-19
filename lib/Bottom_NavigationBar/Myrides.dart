@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mana_driver/AppBar/appBar.dart';
+import 'package:mana_driver/Vehicles/confirm_details.dart';
 import 'package:mana_driver/Widgets/colors.dart';
-
 import 'package:mana_driver/Widgets/customText.dart';
 
 class MyRidesScreen extends StatefulWidget {
@@ -47,130 +48,161 @@ class _MyRidesScreenState extends State<MyRidesScreen>
     );
   }
 
-  Widget buildCard(String status, String date, String time, String price) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  Widget buildCard(Map<String, dynamic> bookingData) {
+    String status = bookingData['status'] ?? "Upcoming";
+    String date = bookingData['date'] ?? "";
+    String time = bookingData['time'] ?? "";
+    String vehicleId = bookingData['vehicleId'] ?? "";
 
-      color: kwhiteColor,
-      shape: RoundedRectangleBorder(
-        side: BorderSide(color: KcardborderColor, width: 1.0),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundImage: AssetImage('images/user.png'),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        width: 20,
-                        height: 20,
-                        decoration: BoxDecoration(shape: BoxShape.circle),
-                        child: ClipOval(
-                          child: Image.asset(
-                            'images/verified.png',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+    return FutureBuilder<DocumentSnapshot>(
+      future:
+          FirebaseFirestore.instance
+              .collection('vehicles')
+              .doc(vehicleId)
+              .get(),
+      builder: (context, snapshot) {
+        String vehicleName = "Vehicle";
 
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
+        if (snapshot.hasData && snapshot.data!.exists) {
+          final vehicleData = snapshot.data!.data() as Map<String, dynamic>;
+          vehicleName =
+              "${vehicleData['brand'] ?? ''} ${vehicleData['model'] ?? ''}";
+        }
+
+        String price = "₹ 0.00";
+
+        String userName = bookingData['driverName'] ?? "Driver not assigned";
+        String driverRating = bookingData['driverRating']?.toString() ?? "N/A";
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ConfirmDetails(bookingData: bookingData),
+              ),
+            );
+          },
+          child: Card(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            color: kwhiteColor,
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: KcardborderColor, width: 1.0),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                children: [
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomText(
-                        text: "Rajesh Kumar",
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        textcolor: korangeColor,
-                      ),
-                      Row(
+                      Stack(
+                        alignment: Alignment.bottomCenter,
                         children: [
-                          Image.asset('images/star.png'),
-                          SizedBox(width: 3),
-
-                          CustomText(
-                            text: "4.8",
-                            textcolor: kseegreyColor,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundImage: AssetImage('images/user.png'),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(shape: BoxShape.circle),
+                              child: ClipOval(
+                                child: Image.asset(
+                                  'images/verified.png',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                      CustomText(
-                        text: "Maruti Suzuki Swift-3940",
-                        textcolor: kseegreyColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomText(
+                              text: userName,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              textcolor: korangeColor,
+                            ),
+                            Row(
+                              children: [
+                                Image.asset('images/star.png'),
+                                SizedBox(width: 3),
+                                CustomText(
+                                  text: driverRating,
+                                  textcolor: kseegreyColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ],
+                            ),
+                            CustomText(
+                              text: vehicleName,
+                              textcolor: kseegreyColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              status == "Completed"
+                                  ? Color(0xFFB9FFD6)
+                                  : Color(0xFFC9DFFF),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          status,
+                          style: TextStyle(
+                            color:
+                                status == "Completed"
+                                    ? Color(0xFF00D458)
+                                    : Color(0xFF1D9BF0),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
+                  const SizedBox(height: 12),
+                  Divider(color: KdeviderColor),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Image.asset('images/calender.png'),
+                      const SizedBox(width: 5),
+                      Text(date, style: TextStyle(color: kseegreyColor)),
+                      const SizedBox(width: 12),
+                      Container(height: 20, width: 1, color: kseegreyColor),
+                      const SizedBox(width: 12),
+                      Text(time, style: TextStyle(color: kseegreyColor)),
+                      Spacer(),
+                      CustomText(
+                        text: price,
+                        textcolor: korangeColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ],
                   ),
-                  decoration: BoxDecoration(
-                    color:
-                        status == "Completed"
-                            ? Color(0xFFB9FFD6)
-                            : Color(0xFFC9DFFF),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    status,
-                    style: TextStyle(
-                      color:
-                          status == "Completed"
-                              ? Color(0xFF00D458)
-                              : Color(0xFF1D9BF0),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-            const SizedBox(height: 12),
-            Divider(color: KdeviderColor),
-            const SizedBox(height: 8),
-
-            Row(
-              children: [
-                Image.asset('images/calender.png'),
-                const SizedBox(width: 5),
-                Text(date, style: TextStyle(color: kseegreyColor)),
-                const SizedBox(width: 12),
-                Container(height: 20, width: 1, color: kseegreyColor),
-                const SizedBox(width: 12),
-                Text(time, style: TextStyle(color: kseegreyColor)),
-                Spacer(),
-                CustomText(
-                  text: price,
-                  textcolor: korangeColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  //
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -178,58 +210,78 @@ class _MyRidesScreenState extends State<MyRidesScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomMainAppBar(),
-
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Material(
-                color: Colors.white,
-                elevation: 0,
-                child: TabBar(
-                  controller: _tabController,
-                  isScrollable: true,
-                  dividerColor: Colors.transparent,
-                  indicatorColor: Colors.transparent,
-                  tabs: [
-                    buildTab("All", 0),
-                    buildTab("Upcoming", 1),
-                    buildTab("Completed", 2),
-                  ],
-                ),
+            padding: const EdgeInsets.only(top: 20),
+            child: Material(
+              color: Colors.white,
+              elevation: 0,
+              child: TabBar(
+                controller: _tabController,
+                isScrollable: true,
+                dividerColor: Colors.transparent,
+                indicatorColor: Colors.transparent,
+                tabs: [
+                  buildTab("All", 0),
+                  buildTab("New", 1),
+                  buildTab("Upcoming", 2),
+                  buildTab("Completed", 3),
+                ],
               ),
             ),
           ),
 
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                ListView(
-                  children: [
-                    buildCard("Upcoming", "July 25, 2025", "3:00 PM", "₹500/-"),
-                    buildCard(
-                      "Completed",
-                      "July 22, 2025",
-                      "5:30 PM",
-                      "₹750/-",
-                    ),
-                  ],
-                ),
-                ListView(
-                  children: [
-                    buildCard("Upcoming", "28 July 2025", "11:00 AM", "₹600"),
-                  ],
-                ),
-                ListView(
-                  children: [
-                    buildCard("Completed", "20 July 2025", "1:45 PM", "₹400"),
-                  ],
-                ),
-              ],
+            child: StreamBuilder<QuerySnapshot>(
+              stream:
+                  FirebaseFirestore.instance
+                      .collection('bookings')
+                      .orderBy('createdAt', descending: true)
+                      .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                final allBookings =
+                    snapshot.data!.docs
+                        .map((doc) => doc.data() as Map<String, dynamic>)
+                        .toList();
+
+                List<Map<String, dynamic>> filteredBookings;
+                if (selectedTabIndex == 1) {
+                  filteredBookings =
+                      allBookings.where((b) => b['status'] == 'New').toList();
+                } else if (selectedTabIndex == 2) {
+                  filteredBookings =
+                      allBookings
+                          .where(
+                            (b) =>
+                                b['status'] != 'Completed' &&
+                                b['status'] != 'New',
+                          )
+                          .toList();
+                } else if (selectedTabIndex == 3) {
+                  filteredBookings =
+                      allBookings
+                          .where((b) => b['status'] == 'Completed')
+                          .toList();
+                } else {
+                  filteredBookings = allBookings;
+                }
+
+                if (filteredBookings.isEmpty) {
+                  return Center(child: Text("No rides available"));
+                }
+
+                return ListView.builder(
+                  itemCount: filteredBookings.length,
+                  itemBuilder: (context, index) {
+                    return buildCard(filteredBookings[index]);
+                  },
+                );
+              },
             ),
           ),
         ],
