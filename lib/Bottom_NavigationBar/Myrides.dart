@@ -18,7 +18,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _tabController.addListener(() {
       setState(() {
         selectedTabIndex = _tabController.index;

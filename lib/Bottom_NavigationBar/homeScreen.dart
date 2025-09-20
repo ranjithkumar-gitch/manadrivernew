@@ -556,15 +556,23 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontWeight: FontWeight.w600,
                             textcolor: KblackColor,
                           ),
-                          Text(
-                            'Selected',
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: korangeColor,
-
-                              decorationStyle: TextDecorationStyle.solid,
-                              decorationThickness: 1.5,
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedCarIndex = -1;
+                              });
+                            },
+                            child: Text(
+                              'UnSelect',
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: korangeColor,
+                                decoration: TextDecoration.underline,
+                                decorationColor: korangeColor,
+                                decorationStyle: TextDecorationStyle.solid,
+                                decorationThickness: 1.5,
+                              ),
                             ),
                           ),
                         ],
@@ -677,25 +685,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ],
                                             ),
                                           ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              //                   Navigator.push(
-                                              //                     context,
-                                              //                     MaterialPageRoute(
-                                              //                       builder:
-                                              //                           (_) => VehicleDetailsScreen(
-                                              //                             data: car,
-                                              //                             docId: car['id'],
-                                              //                           ),
-                                              //                     ),
-                                              //                   );
-                                            },
-                                            child: const Align(
-                                              alignment: Alignment.center,
-                                              child: Icon(
-                                                Icons.arrow_forward_ios,
-                                                size: 18,
-                                              ),
+                                          const Align(
+                                            alignment: Alignment.center,
+                                            child: Icon(
+                                              Icons.arrow_forward_ios,
+                                              size: 18,
                                             ),
                                           ),
                                         ],
@@ -757,8 +751,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 (pickupController.text.isEmpty ||
                                         dropController.text.isEmpty ||
                                         selectedCarIndex == -1)
-                                    ? Colors
-                                        .grey // disabled
+                                    ? Colors.grey
                                     : korangeColor, // enabled
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(40),
@@ -1124,7 +1117,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context) {
         DateTime selectedDate = DateTime.now();
         TimeOfDay selectedTime = TimeOfDay.now();
-
+        bool isLoading = false;
         return StatefulBuilder(
           builder: (context, setState) {
             return Padding(
@@ -1283,34 +1276,49 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             children: [
                               GestureDetector(
-                                onTap: () async {
-                                  final DateTime? picked = await showDatePicker(
-                                    context: context,
-                                    initialDate: selectedDate,
-                                    firstDate: DateTime.now(),
-                                    lastDate: DateTime(2101),
-                                    builder: (context, child) {
-                                      return Theme(
-                                        data: Theme.of(context).copyWith(
-                                          colorScheme: ColorScheme.light(
-                                            primary: korangeColor,
-                                            onPrimary: Colors.white,
-                                            onSurface: Colors.grey.shade700,
-                                          ),
-                                          textButtonTheme: TextButtonThemeData(
-                                            style: TextButton.styleFrom(
-                                              foregroundColor: korangeColor,
-                                            ),
-                                          ),
-                                        ),
-                                        child: child!,
-                                      );
-                                    },
-                                  );
-                                  if (picked != null) {
-                                    setState(() => selectedDate = picked);
-                                  }
-                                },
+                                onTap:
+                                    selectedTripTime == "Now"
+                                        ? null
+                                        : () async {
+                                          final DateTime?
+                                          picked = await showDatePicker(
+                                            context: context,
+                                            initialDate: selectedDate,
+                                            firstDate: DateTime.now(),
+                                            lastDate: DateTime(2101),
+                                            builder: (context, child) {
+                                              return Theme(
+                                                data: Theme.of(
+                                                  context,
+                                                ).copyWith(
+                                                  colorScheme:
+                                                      ColorScheme.light(
+                                                        primary: korangeColor,
+                                                        onPrimary: Colors.white,
+                                                        onSurface:
+                                                            Colors
+                                                                .grey
+                                                                .shade700,
+                                                      ),
+                                                  textButtonTheme:
+                                                      TextButtonThemeData(
+                                                        style:
+                                                            TextButton.styleFrom(
+                                                              foregroundColor:
+                                                                  korangeColor,
+                                                            ),
+                                                      ),
+                                                ),
+                                                child: child!,
+                                              );
+                                            },
+                                          );
+                                          if (picked != null) {
+                                            setState(
+                                              () => selectedDate = picked,
+                                            );
+                                          }
+                                        },
                                 child: dateTimeRow(
                                   Icons.date_range,
                                   "Select Date",
@@ -1320,65 +1328,126 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Divider(color: kbordergreyColor),
                               GestureDetector(
-                                onTap: () async {
-                                  final TimeOfDay?
-                                  picked = await showTimePicker(
-                                    context: context,
-                                    initialTime: selectedTime,
-                                    builder: (context, child) {
-                                      return Theme(
-                                        data: Theme.of(context).copyWith(
-                                          timePickerTheme: TimePickerThemeData(
-                                            hourMinuteShape:
-                                                RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
+                                onTap:
+                                    selectedTripTime == "Now"
+                                        ? null
+                                        : () async {
+                                          final TimeOfDay?
+                                          picked = await showTimePicker(
+                                            context: context,
+                                            initialTime: selectedTime,
+                                            builder: (context, child) {
+                                              return Theme(
+                                                data: Theme.of(
+                                                  context,
+                                                ).copyWith(
+                                                  timePickerTheme: TimePickerThemeData(
+                                                    hourMinuteShape:
+                                                        RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                8,
+                                                              ),
+                                                        ),
+                                                    dayPeriodShape:
+                                                        RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                8,
+                                                              ),
+                                                          side: BorderSide(
+                                                            color: korangeColor,
+                                                            width: 1,
+                                                          ),
+                                                        ),
+                                                    dayPeriodColor:
+                                                        korangeColor,
+                                                    dayPeriodTextColor:
+                                                        MaterialStateColor.resolveWith(
+                                                          (states) {
+                                                            if (states.contains(
+                                                              MaterialState
+                                                                  .selected,
+                                                            )) {
+                                                              return Colors
+                                                                  .white;
+                                                            }
+                                                            return Colors.black;
+                                                          },
+                                                        ),
+                                                    dialBackgroundColor:
+                                                        Colors.grey[200],
+                                                    dialHandColor: korangeColor,
+                                                    hourMinuteTextColor:
+                                                        MaterialStateColor.resolveWith(
+                                                          (states) {
+                                                            if (states.contains(
+                                                              MaterialState
+                                                                  .selected,
+                                                            )) {
+                                                              return Colors
+                                                                  .white;
+                                                            }
+                                                            return Colors.black;
+                                                          },
+                                                        ),
+                                                  ),
+                                                  colorScheme:
+                                                      ColorScheme.light(
+                                                        primary: korangeColor,
+                                                        onPrimary: Colors.white,
+                                                        onSurface:
+                                                            Colors
+                                                                .grey
+                                                                .shade700,
+                                                      ),
+                                                  textButtonTheme:
+                                                      TextButtonThemeData(
+                                                        style:
+                                                            TextButton.styleFrom(
+                                                              foregroundColor:
+                                                                  korangeColor,
+                                                            ),
+                                                      ),
                                                 ),
-                                            dayPeriodShape:
-                                                RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  side: BorderSide(
-                                                    color: korangeColor,
-                                                    width: 1,
+                                                child: child!,
+                                              );
+                                            },
+                                          );
+                                          if (picked != null) {
+                                            final now = DateTime.now();
+                                            final selectedDateTime = DateTime(
+                                              selectedDate.year,
+                                              selectedDate.month,
+                                              selectedDate.day,
+                                              picked.hour,
+                                              picked.minute,
+                                            );
+
+                                            if (selectedDateTime.isBefore(
+                                              now,
+                                            )) {
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    "Please choose a valid future time.",
                                                   ),
                                                 ),
-                                            dayPeriodColor: korangeColor,
-                                            dayPeriodTextColor: Colors.white,
-                                            dialBackgroundColor:
-                                                Colors.grey[200],
-                                            dialHandColor: korangeColor,
-                                            hourMinuteTextColor:
-                                                MaterialStateColor.resolveWith((
-                                                  states,
-                                                ) {
-                                                  if (states.contains(
-                                                    MaterialState.selected,
-                                                  )) {
-                                                    return Colors.white;
-                                                  }
-                                                  return Colors.black;
-                                                }),
-                                          ),
-                                          colorScheme: ColorScheme.light(
-                                            primary: korangeColor,
-                                            onPrimary: Colors.white,
-                                            onSurface: Colors.grey.shade700,
-                                          ),
-                                          textButtonTheme: TextButtonThemeData(
-                                            style: TextButton.styleFrom(
-                                              foregroundColor: korangeColor,
-                                            ),
-                                          ),
-                                        ),
-                                        child: child!,
-                                      );
-                                    },
-                                  );
-                                  if (picked != null) {
-                                    setState(() => selectedTime = picked);
-                                  }
-                                },
+                                              );
+                                            } else {
+                                              setState(
+                                                () => selectedTime = picked,
+                                              );
+                                            }
+                                          }
+                                          // if (picked != null) {
+                                          //   setState(
+                                          //     () => selectedTime = picked,
+                                          //   );
+                                          // }
+                                        },
                                 child: dateTimeRow(
                                   Icons.timer,
                                   "Select Time",
@@ -1492,62 +1561,84 @@ class _HomeScreenState extends State<HomeScreen> {
                                         return;
                                       }
 
-                                      final selectedCarId =
-                                          carList[selectedCarIndex]['id'];
+                                      setState(() => isLoading = true);
 
-                                      Map<String, dynamic> bookingData = {
-                                        "pickup": pickupController.text,
-                                        "drop": dropController.text,
-                                        "vehicleId": selectedCarId,
-                                        "tripMode": selectedTripMode,
-                                        "tripTime": selectedTripTime,
-                                        "date":
-                                            "${selectedDate.toLocal()}".split(
-                                              ' ',
-                                            )[0],
-                                        "time": selectedTime.format(context),
-                                        "status": "New",
-                                        "createdAt":
-                                            FieldValue.serverTimestamp(),
-                                        if (selectedTripMode == "City Limits")
-                                          "cityLimitHours": selectedCityHours,
-                                      };
+                                      try {
+                                        final selectedCarId =
+                                            carList[selectedCarIndex]['id'];
 
-                                      print(
-                                        "Booking Data to send: $bookingData",
-                                      );
+                                        Map<String, dynamic> bookingData = {
+                                          "pickup": pickupController.text,
+                                          "drop": dropController.text,
+                                          "vehicleId": selectedCarId,
+                                          "tripMode": selectedTripMode,
+                                          "tripTime": selectedTripTime,
+                                          "date":
+                                              "${selectedDate.toLocal()}".split(
+                                                ' ',
+                                              )[0],
+                                          "time": selectedTime.format(context),
+                                          "status": "New",
+                                          "createdAt":
+                                              FieldValue.serverTimestamp(),
+                                          if (selectedTripMode == "City Limits")
+                                            "cityLimitHours": selectedCityHours,
+                                        };
 
-                                      await FirebaseFirestore.instance
-                                          .collection('bookings')
-                                          .add(bookingData);
+                                        print(
+                                          "Booking Data to send: $bookingData",
+                                        );
 
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            "Requested a driver successfully",
+                                        await FirebaseFirestore.instance
+                                            .collection('bookings')
+                                            .add(bookingData);
+
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              "Requested a driver successfully",
+                                            ),
+                                            backgroundColor: Colors.green,
                                           ),
-                                          backgroundColor: Colors.green,
-                                        ),
-                                      );
+                                        );
 
-                                      Navigator.pop(context);
+                                        Navigator.pop(context);
 
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => BottomNavigation(),
-                                        ),
-                                      );
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => BottomNavigation(),
+                                          ),
+                                        );
+                                      } catch (e) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(content: Text("Failed: $e")),
+                                        );
+                                      } finally {
+                                        setState(() => isLoading = false);
+                                      }
                                     },
 
-                                    child: CustomText(
-                                      text: "Continue",
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      textcolor: kwhiteColor,
-                                    ),
+                                    child:
+                                        isLoading
+                                            ? SizedBox(
+                                              width: 22,
+                                              height: 22,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2.5,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                            : CustomText(
+                                              text: "Continue",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              textcolor: kwhiteColor,
+                                            ),
                                   ),
                                 ),
                               ],

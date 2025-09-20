@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
@@ -27,95 +28,6 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
   final TextEditingController zipCtrl = TextEditingController();
   final TextEditingController addressCtrl = TextEditingController();
 
-  // Future<void> _addAddressDialog(
-  //   BuildContext context,
-  //   AppLocalizations localizations,
-  // ) async {
-  //   await showDialog(
-  //     context: context,
-  //     builder: (ctx) {
-  //       return AlertDialog(
-  //         backgroundColor: kwhiteColor,
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(12),
-  //         ),
-  //         title: CustomText(
-  //           text: localizations.add_new_Address,
-  //           fontSize: 18,
-  //           fontWeight: FontWeight.w600,
-  //           textcolor: KblackColor,
-  //         ),
-  //         content: SizedBox(
-  //           width: MediaQuery.of(context).size.width * 0.9, // wider
-  //           child: Form(
-  //             key: _formKey,
-  //             child: SingleChildScrollView(
-  //               child: Column(
-  //                 children: [
-  //                   CustomTextField(
-  //                     controller: titleCtrl,
-  //                     labelText: "Address Title",
-  //                   ),
-  //                   CustomTextField(
-  //                     controller: addressCtrl,
-  //                     labelText: "Address",
-  //                   ),
-  //                   CustomTextField(controller: cityCtrl, labelText: "City"),
-
-  //                   CustomTextField(controller: stateCtrl, labelText: "State"),
-  //                   CustomTextField(
-  //                     controller: countryCtrl,
-  //                     labelText: "Country",
-  //                   ),
-  //                   CustomTextField(
-  //                     controller: zipCtrl,
-  //                     labelText: "Zipcode",
-  //                     keyboardType: TextInputType.number,
-  //                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //         actions: [
-  //           SizedBox(
-  //             width: double.infinity,
-  //             height: 45,
-  //             child: CustomButton(
-  //               text: "Add",
-  //               onPressed: () async {
-  //                 if (_formKey.currentState!.validate()) {
-  //                   await FirebaseFirestore.instance
-  //                       .collection("addresses")
-  //                       .add({
-  //                         "title": titleCtrl.text,
-  //                         "Address": addressCtrl.text,
-
-  //                         "state": stateCtrl.text,
-  //                         "city": cityCtrl.text,
-  //                         "country": countryCtrl.text,
-  //                         "zipcode": zipCtrl.text,
-  //                         "createdAt": FieldValue.serverTimestamp(),
-  //                       });
-
-  //                   titleCtrl.clear();
-  //                   addressCtrl.clear();
-  //                   stateCtrl.clear();
-  //                   cityCtrl.clear();
-  //                   countryCtrl.clear();
-  //                   zipCtrl.clear();
-
-  //                   Navigator.pop(context);
-  //                 }
-  //               },
-  //             ),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
   Future<void> _addAddressDialog(
     BuildContext context,
     AppLocalizations localizations,
@@ -158,20 +70,20 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                           labelText: "City",
                         ),
                         CustomTextField(
-                          controller: stateCtrl,
-                          labelText: "State",
-                        ),
-                        CustomTextField(
-                          controller: countryCtrl,
-                          labelText: "Country",
-                        ),
-                        CustomTextField(
                           controller: zipCtrl,
                           labelText: "Zipcode",
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                           ],
+                        ),
+                        CustomTextField(
+                          controller: stateCtrl,
+                          labelText: "State",
+                        ),
+                        CustomTextField(
+                          controller: countryCtrl,
+                          labelText: "Country",
                         ),
                       ],
                     ),
@@ -201,6 +113,9 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                               await FirebaseFirestore.instance
                                   .collection("addresses")
                                   .add({
+                                    // 'userId':
+                                    //     SharedPrefServices.getUserId()
+                                    //         .toString(),
                                     "title": titleCtrl.text,
                                     "Address": addressCtrl.text,
                                     "state": stateCtrl.text,
@@ -347,17 +262,14 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
 
                       PopupMenuButton<String>(
                         color: kwhiteColor,
-                        onSelected: (value) async {
+                        onSelected: (value) {
                           if (value == "delete") {
-                            await FirebaseFirestore.instance
-                                .collection("addresses")
-                                .doc(docs[index].id)
-                                .delete();
+                            deleteDialog(context, docs[index].id);
                           }
                         },
                         itemBuilder:
-                            (context) => [
-                              const PopupMenuItem(
+                            (context) => const [
+                              PopupMenuItem(
                                 value: "delete",
                                 child: Text("Delete"),
                               ),
@@ -385,3 +297,158 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
     );
   }
 }
+
+void deleteDialog(BuildContext context, String docId) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: const Text(
+          'Are you sure you want to delete this address?',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+            fontFamily: "inter",
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              OutlinedButton(
+                onPressed: () => Navigator.pop(context),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: korangeColor),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: korangeColor, fontFamily: "inter"),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  await FirebaseFirestore.instance
+                      .collection("addresses")
+                      .doc(docId)
+                      .delete();
+
+                  Navigator.pop(context); // close dialog
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: korangeColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.white, fontFamily: "inter"),
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
+
+
+
+
+ // Future<void> _addAddressDialog(
+  //   BuildContext context,
+  //   AppLocalizations localizations,
+  // ) async {
+  //   await showDialog(
+  //     context: context,
+  //     builder: (ctx) {
+  //       return AlertDialog(
+  //         backgroundColor: kwhiteColor,
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(12),
+  //         ),
+  //         title: CustomText(
+  //           text: localizations.add_new_Address,
+  //           fontSize: 18,
+  //           fontWeight: FontWeight.w600,
+  //           textcolor: KblackColor,
+  //         ),
+  //         content: SizedBox(
+  //           width: MediaQuery.of(context).size.width * 0.9, // wider
+  //           child: Form(
+  //             key: _formKey,
+  //             child: SingleChildScrollView(
+  //               child: Column(
+  //                 children: [
+  //                   CustomTextField(
+  //                     controller: titleCtrl,
+  //                     labelText: "Address Title",
+  //                   ),
+  //                   CustomTextField(
+  //                     controller: addressCtrl,
+  //                     labelText: "Address",
+  //                   ),
+  //                   CustomTextField(controller: cityCtrl, labelText: "City"),
+
+  //                   CustomTextField(controller: stateCtrl, labelText: "State"),
+  //                   CustomTextField(
+  //                     controller: countryCtrl,
+  //                     labelText: "Country",
+  //                   ),
+  //                   CustomTextField(
+  //                     controller: zipCtrl,
+  //                     labelText: "Zipcode",
+  //                     keyboardType: TextInputType.number,
+  //                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //         actions: [
+  //           SizedBox(
+  //             width: double.infinity,
+  //             height: 45,
+  //             child: CustomButton(
+  //               text: "Add",
+  //               onPressed: () async {
+  //                 if (_formKey.currentState!.validate()) {
+  //                   await FirebaseFirestore.instance
+  //                       .collection("addresses")
+  //                       .add({
+  //                         "title": titleCtrl.text,
+  //                         "Address": addressCtrl.text,
+
+  //                         "state": stateCtrl.text,
+  //                         "city": cityCtrl.text,
+  //                         "country": countryCtrl.text,
+  //                         "zipcode": zipCtrl.text,
+  //                         "createdAt": FieldValue.serverTimestamp(),
+  //                       });
+
+  //                   titleCtrl.clear();
+  //                   addressCtrl.clear();
+  //                   stateCtrl.clear();
+  //                   cityCtrl.clear();
+  //                   countryCtrl.clear();
+  //                   zipCtrl.clear();
+
+  //                   Navigator.pop(context);
+  //                 }
+  //               },
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
