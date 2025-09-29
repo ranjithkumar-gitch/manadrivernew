@@ -235,14 +235,33 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
     );
   }
 
+  // Future<bool> _checkUserExists(String phoneNumber) async {
+  //   final snapshot =
+  //       await FirebaseFirestore.instance
+  //           .collection('users')
+  //           .where('phone', isEqualTo: phoneNumber)
+  //           .limit(1)
+  //           .get();
+  //   return snapshot.docs.isNotEmpty;
+  // }
   Future<bool> _checkUserExists(String phoneNumber) async {
-    final snapshot =
+    final driverSnap =
+        await FirebaseFirestore.instance
+            .collection('drivers')
+            .where('phone', isEqualTo: phoneNumber)
+            .limit(1)
+            .get();
+
+    if (driverSnap.docs.isNotEmpty) return true;
+
+    final ownerSnap =
         await FirebaseFirestore.instance
             .collection('users')
             .where('phone', isEqualTo: phoneNumber)
             .limit(1)
             .get();
-    return snapshot.docs.isNotEmpty;
+
+    return ownerSnap.docs.isNotEmpty;
   }
 
   Future<bool> _showExitDialog(BuildContext context) async {

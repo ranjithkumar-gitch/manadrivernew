@@ -103,35 +103,96 @@ class LoginViewModel extends ChangeNotifier {
   //   }
   // }
 
+  // Future<void> fetchLoggedInUser(String phoneNumber) async {
+  //   try {
+  //     final snapshot =
+  //         await FirebaseFirestore.instance
+  //             .collection('users')
+  //             .where('phone', isEqualTo: phoneNumber)
+  //             .limit(1)
+  //             .get();
+
+  //     if (snapshot.docs.isNotEmpty) {
+  //       final userData = snapshot.docs.first.data();
+
+  //       _loggedInUser = userData;
+  //       notifyListeners();
+
+  //       await SharedPrefServices.setUserId(userData['userId'] ?? "");
+  //       await SharedPrefServices.setRoleCode(userData['roleCode'] ?? "");
+  //       await SharedPrefServices.setFirstName(userData['firstName'] ?? "");
+  //       await SharedPrefServices.setLastName(userData['lastName'] ?? "");
+  //       await SharedPrefServices.setEmail(userData['email'] ?? "");
+  //       await SharedPrefServices.setNumber(userData['phone'] ?? "");
+  //       await SharedPrefServices.setCountryCode(userData['countryCode'] ?? "");
+  //       await SharedPrefServices.setDocID(snapshot.docs.first.id);
+  //       await SharedPrefServices.setislogged(false);
+
+  //       print("User details stored in SharedPreferences");
+  //     } else {
+  //       print("No user found for phone: $phoneNumber");
+  //     }
+  //   } catch (e) {
+  //     print("Error in fetchLoggedInUser: $e");
+  //   }
+  // }
   Future<void> fetchLoggedInUser(String phoneNumber) async {
     try {
-      final snapshot =
+      // First try to find in drivers collection
+      final driverSnap =
           await FirebaseFirestore.instance
-              .collection('users')
-              .where('phone', isEqualTo: phoneNumber)
+              .collection('drivers')
+              .where('phone', isEqualTo: normalizedPhone(phoneNumber))
               .limit(1)
               .get();
 
-      if (snapshot.docs.isNotEmpty) {
-        final userData = snapshot.docs.first.data();
-
+      if (driverSnap.docs.isNotEmpty) {
+        final userData = driverSnap.docs.first.data();
         _loggedInUser = userData;
         notifyListeners();
 
-        await SharedPrefServices.setUserId(userData['userId'] ?? "");
-        await SharedPrefServices.setRoleCode(userData['roleCode'] ?? "");
+        await SharedPrefServices.setRoleCode("Driver"); // ✅ force Driver role
+        await SharedPrefServices.setUserId(userData['driverId'] ?? "");
         await SharedPrefServices.setFirstName(userData['firstName'] ?? "");
         await SharedPrefServices.setLastName(userData['lastName'] ?? "");
         await SharedPrefServices.setEmail(userData['email'] ?? "");
         await SharedPrefServices.setNumber(userData['phone'] ?? "");
         await SharedPrefServices.setCountryCode(userData['countryCode'] ?? "");
-        await SharedPrefServices.setDocID(snapshot.docs.first.id);
+        await SharedPrefServices.setDocID(driverSnap.docs.first.id);
         await SharedPrefServices.setislogged(false);
 
-        print("User details stored in SharedPreferences");
-      } else {
-        print("No user found for phone: $phoneNumber");
+        print("Driver details stored in SharedPreferences");
+        return;
       }
+
+      // If not driver → check owners (users collection)
+      final ownerSnap =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .where('phone', isEqualTo: normalizedPhone(phoneNumber))
+              .limit(1)
+              .get();
+
+      if (ownerSnap.docs.isNotEmpty) {
+        final userData = ownerSnap.docs.first.data();
+        _loggedInUser = userData;
+        notifyListeners();
+
+        await SharedPrefServices.setRoleCode("Owner"); // ✅ force Owner role
+        await SharedPrefServices.setUserId(userData['userId'] ?? "");
+        await SharedPrefServices.setFirstName(userData['firstName'] ?? "");
+        await SharedPrefServices.setLastName(userData['lastName'] ?? "");
+        await SharedPrefServices.setEmail(userData['email'] ?? "");
+        await SharedPrefServices.setNumber(userData['phone'] ?? "");
+        await SharedPrefServices.setCountryCode(userData['countryCode'] ?? "");
+        await SharedPrefServices.setDocID(ownerSnap.docs.first.id);
+        await SharedPrefServices.setislogged(false);
+
+        print("Owner details stored in SharedPreferences");
+        return;
+      }
+
+      print("❌ No user found in drivers or users collection for $phoneNumber");
     } catch (e) {
       print("Error in fetchLoggedInUser: $e");
     }
@@ -159,5 +220,10 @@ class LoginViewModel extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  String normalizedPhone(String phone) {
+    if (phone.startsWith("+91")) return phone.substring(3); // remove +91
+    return phone;
   }
 }

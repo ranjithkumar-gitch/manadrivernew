@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mana_driver/Driver/DriverLogin/driverRegistrationpage.dart';
 
 import 'package:mana_driver/Login/loginScreen.dart';
 import 'package:mana_driver/Widgets/colors.dart';
@@ -248,6 +249,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 32),
+
+                CustomButton(
+                  text: 'Register as Driver',
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const DriverRegistrationPage(),
+                      ),
+                    );
+                  },
+                  width: 220,
+                  height: 53,
                 ),
                 const SizedBox(height: 32),
               ],

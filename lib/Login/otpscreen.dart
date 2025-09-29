@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
+import 'package:mana_driver/Driver/BottomnavigationBar/D_bottomnavigationbar.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
@@ -31,9 +32,39 @@ class _OtpScreenState extends State<OtpScreen> {
   final TextEditingController otpController = TextEditingController();
   // static const String defaultOtp = "1234";
   bool _isLoading = false;
+  // Future<void> _verifyOtp() async {
+  //   final otp = otpController.text.trim();
+  //   setState(() => _isLoading = true);
+  //   try {
+  //     if (widget.isTestOtp) {
+  //       final vm = context.read<LoginViewModel>();
+  //       await vm.fetchLoggedInUser(widget.phoneNumber);
+
+  //       if (otp == "1234") {
+  //         SharedPrefServices.setislogged(true);
+  //         Navigator.pushReplacement(
+  //           context,
+  //           MaterialPageRoute(builder: (_) => BottomNavigation()),
+  //         );
+  //       } else {
+  //         final localizations = AppLocalizations.of(context);
+  //         ScaffoldMessenger.of(context).showSnackBar(
+  //           SnackBar(content: Text(localizations?.invalidOtp ?? "Invalid OTP")),
+  //         );
+  //       }
+  //     } else {}
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(
+  //       context,
+  //     ).showSnackBar(SnackBar(content: Text("Error: $e")));
+  //   } finally {
+  //     setState(() => _isLoading = false);
+  //   }
+  // }
   Future<void> _verifyOtp() async {
     final otp = otpController.text.trim();
     setState(() => _isLoading = true);
+
     try {
       if (widget.isTestOtp) {
         final vm = context.read<LoginViewModel>();
@@ -41,17 +72,36 @@ class _OtpScreenState extends State<OtpScreen> {
 
         if (otp == "1234") {
           SharedPrefServices.setislogged(true);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => BottomNavigation()),
-          );
+
+          final role =
+              await SharedPrefServices.getRoleCode(); // ✅ fetch saved role
+
+          if (role == "Driver") {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => D_BottomNavigation()),
+            );
+          } else if (role == "Owner") {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => BottomNavigation()),
+            );
+          } else {
+            // fallback if role is missing
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => BottomNavigation()),
+            );
+          }
         } else {
           final localizations = AppLocalizations.of(context);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(localizations?.invalidOtp ?? "Invalid OTP")),
           );
         }
-      } else {}
+      } else {
+        // 🔹 here handle real Firebase OTP verification if not testOtp
+      }
     } catch (e) {
       ScaffoldMessenger.of(
         context,
