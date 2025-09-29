@@ -138,7 +138,6 @@ class LoginViewModel extends ChangeNotifier {
   // }
   Future<void> fetchLoggedInUser(String phoneNumber) async {
     try {
-      // First try to find in drivers collection
       final driverSnap =
           await FirebaseFirestore.instance
               .collection('drivers')
@@ -151,14 +150,42 @@ class LoginViewModel extends ChangeNotifier {
         _loggedInUser = userData;
         notifyListeners();
 
-        await SharedPrefServices.setRoleCode("Driver"); // ✅ force Driver role
+        await SharedPrefServices.setRoleCode("Driver");
         await SharedPrefServices.setUserId(userData['driverId'] ?? "");
+        await SharedPrefServices.setProfileImage(userData['profileUrl'] ?? "");
+
         await SharedPrefServices.setFirstName(userData['firstName'] ?? "");
         await SharedPrefServices.setLastName(userData['lastName'] ?? "");
         await SharedPrefServices.setEmail(userData['email'] ?? "");
         await SharedPrefServices.setNumber(userData['phone'] ?? "");
         await SharedPrefServices.setCountryCode(userData['countryCode'] ?? "");
+        await SharedPrefServices.setDOB(userData['dob'] ?? "");
+        await SharedPrefServices.setvehicleType(userData['vehicleType'] ?? "");
+        await SharedPrefServices.setdrivingLicence(
+          userData['licenceNumber'] ?? "",
+        );
+        await SharedPrefServices.setlicenceFront(
+          userData['licenceFrontUrl'] ?? "",
+        );
+        await SharedPrefServices.setlicenceBack(
+          userData['licenceBackUrl'] ?? "",
+        );
+        if (userData['bankAccount'] != null) {
+          final bankData = userData['bankAccount'] as Map<String, dynamic>;
+
+          await SharedPrefServices.setbankNmae(bankData['bankName'] ?? "");
+          await SharedPrefServices.setaccountNumber(
+            bankData['accountNumber'] ?? "",
+          );
+          await SharedPrefServices.setaccountHolderName(
+            bankData['holderName'] ?? "",
+          );
+          await SharedPrefServices.setbranchName(bankData['branch'] ?? "");
+          await SharedPrefServices.setifscCode(bankData['ifsc'] ?? "");
+        }
+
         await SharedPrefServices.setDocID(driverSnap.docs.first.id);
+
         await SharedPrefServices.setislogged(false);
 
         print("Driver details stored in SharedPreferences");

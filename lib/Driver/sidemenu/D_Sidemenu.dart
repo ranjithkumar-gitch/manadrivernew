@@ -37,6 +37,10 @@
 //   }
 // }
 import 'package:flutter/material.dart';
+import 'package:mana_driver/Driver/sidemenu/D_Helpandsupport.dart';
+import 'package:mana_driver/Driver/sidemenu/D_Termsandconditions.dart';
+import 'package:mana_driver/Driver/sidemenu/Driverprofilepage.dart';
+import 'package:mana_driver/Driver/sidemenu/MyDocuments.dart';
 import 'package:mana_driver/Login/loginScreen.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Sidemenu/profilePage.dart';
@@ -67,9 +71,16 @@ class D_SideMenu extends StatelessWidget {
                       child: Stack(
                         alignment: Alignment.bottomCenter,
                         children: [
-                          const CircleAvatar(
+                          CircleAvatar(
                             radius: 40,
-                            backgroundImage: AssetImage("images/user.png"),
+                            backgroundImage:
+                                SharedPrefServices.getProfileImage() != null &&
+                                        SharedPrefServices.getProfileImage()!
+                                            .isNotEmpty
+                                    ? NetworkImage(
+                                      SharedPrefServices.getProfileImage()!,
+                                    )
+                                    : null,
                           ),
 
                           Positioned(
@@ -96,14 +107,15 @@ class D_SideMenu extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const ProfileScreen(),
+                            builder: (_) => const DriversProfilescreen(),
                           ),
                         );
                       },
                       child: Column(
                         children: [
-                          const CustomText(
-                            text: "Rajesh Kumar",
+                          CustomText(
+                            text:
+                                "${SharedPrefServices.getFirstName()} ${SharedPrefServices.getLastName()}",
                             textcolor: korangeColor,
                             fontSize: 22,
                             fontWeight: FontWeight.w600,
@@ -159,7 +171,12 @@ class D_SideMenu extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const DocumentsPage()),
+              );
+            },
           ),
           ListTile(
             leading: Image.asset("images/help&support.png"),
@@ -169,7 +186,12 @@ class D_SideMenu extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => D_HelpAndSupport()),
+              );
+            },
           ),
           ListTile(
             leading: Image.asset("images/Terms&conditions.png"),
@@ -179,7 +201,12 @@ class D_SideMenu extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => D_TermsAndConditions()),
+              );
+            },
           ),
           ListTile(
             leading: Image.asset("images/privacy.png"),

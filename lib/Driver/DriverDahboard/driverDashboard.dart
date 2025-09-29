@@ -400,7 +400,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
                               // Namaskaram + Guest
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
+                                children: [
                                   CustomText(
                                     text: "Namaskaram",
                                     textcolor: kseegreyColor,
@@ -408,7 +408,8 @@ class _DriverDashboardState extends State<DriverDashboard> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                   CustomText(
-                                    text: "Guest",
+                                    text:
+                                        "${SharedPrefServices.getFirstName() ?? ''} ${SharedPrefServices.getLastName() ?? ''}",
                                     textcolor: kwhiteColor,
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
