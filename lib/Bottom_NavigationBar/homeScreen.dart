@@ -58,8 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _fetchCars();
-    _startAutoScroll();
-    // _startWatchAutoScroll();
+    // _startAutoScroll();
     _startOfferAutoScroll();
   }
 
@@ -559,22 +558,30 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontWeight: FontWeight.w600,
                             textcolor: KblackColor,
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedCarIndex = -1;
-                              });
-                            },
-                            child: Text(
-                              'UnSelect',
-                              style: GoogleFonts.poppins(
+                          SizedBox(
+                            height: 30,
+                            width: 75,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: korangeColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(22),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 3,
+                                  vertical: 5,
+                                ),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  selectedCarIndex = -1;
+                                });
+                              },
+                              child: CustomText(
+                                text: 'Unselect',
                                 fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: korangeColor,
-                                decoration: TextDecoration.underline,
-                                decorationColor: korangeColor,
-                                decorationStyle: TextDecorationStyle.solid,
-                                decorationThickness: 1.5,
+                                fontWeight: FontWeight.w400,
+                                textcolor: kwhiteColor,
                               ),
                             ),
                           ),
@@ -1152,7 +1159,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Expanded(
                                   child: tripOption(
-                                    "City Limits (${selectedCityHours} hr)",
+                                    selectedTripMode == "City Limits"
+                                        ? "City Limits (${selectedCityHours} hr)"
+                                        : "City Limits",
                                     selected: selectedTripMode == "City Limits",
                                     onTap: () {
                                       setState(() {

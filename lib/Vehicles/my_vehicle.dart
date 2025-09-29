@@ -121,15 +121,14 @@ class _MyVehicleState extends State<MyVehicle> {
                   children: [
                     const SizedBox(height: 20),
                     CustomText(
-                      text: 'Recent Added Cars',
+                      text: 'Recent Added Vehicles',
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                       textcolor: KblackColor,
                     ),
                     const SizedBox(height: 5),
                     CustomText(
-                      text:
-                          'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+                      text: 'List of vehicles you added recently.',
                       fontSize: 12,
                       fontWeight: FontWeight.w300,
                       textcolor: kgreyColor,
