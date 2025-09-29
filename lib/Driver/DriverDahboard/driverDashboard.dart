@@ -145,6 +145,26 @@ class _DriverDashboardState extends State<DriverDashboard> {
     }
   }
 
+  void _updateBookingStatus(String bookingId, String newStatus) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('bookings')
+          .doc(bookingId)
+          .update({'status': newStatus});
+
+      setState(() {
+        int index = carList.indexWhere((car) => car['id'] == bookingId);
+        if (index != -1) {
+          carList[index]['status'] = newStatus;
+        }
+      });
+
+      _fetchCars();
+    } catch (e) {
+      debugPrint("Error updating booking: $e");
+    }
+  }
+
   void _startOfferAutoScroll() {
     _offerAutoScrollTimer = Timer.periodic(Duration(seconds: 4), (timer) {
       if (_offerPageController.hasClients) {
@@ -195,30 +215,6 @@ class _DriverDashboardState extends State<DriverDashboard> {
 
   int selectedCarIndex = -1;
   bool isLoading = false;
-  Future<void> _updateBookingStatus(String bookingId, String newStatus) async {
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      await FirebaseFirestore.instance
-          .collection("bookings")
-          .doc(bookingId)
-          .update({'status': newStatus});
-
-      setState(() {
-        final index = carList.indexWhere((car) => car['id'] == bookingId);
-        if (index != -1) carList[index]['status'] = newStatus;
-
-        isLoading = false;
-      });
-    } catch (e) {
-      debugPrint("Error updating status: $e");
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
