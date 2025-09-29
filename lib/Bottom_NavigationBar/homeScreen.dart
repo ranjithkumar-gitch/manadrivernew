@@ -34,6 +34,14 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isDropLocation2Visible = false;
   PageController _pageController = PageController(viewportFraction: 1);
   int _currentPage = 0;
+
+  String pickupLat = "";
+  String pickupLng = "";
+  String dropLat = "";
+  String dropLng = "";
+  String drop2Lat = "";
+  String drop2Lng = "";
+
   Timer? _autoScrollTimer;
 
   PageController _offerPageController = PageController(viewportFraction: 1);
@@ -55,6 +63,20 @@ class _HomeScreenState extends State<HomeScreen> {
     _startOfferAutoScroll();
   }
 
+  // Future<void> _selectLocation() async {
+  //   final result = await Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (_) => LocationSelectionScreen()),
+  //   );
+
+  //   if (result != null && result is Map) {
+  //     setState(() {
+  //       pickupController.text = result["current"] ?? "";
+  //       dropController.text = result["drop"] ?? "";
+  //     });
+  //   }
+  // }
+
   Future<void> _selectLocation() async {
     final result = await Navigator.push(
       context,
@@ -65,6 +87,34 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         pickupController.text = result["current"] ?? "";
         dropController.text = result["drop"] ?? "";
+
+        if (result.containsKey("drop2") &&
+            result["drop2"].toString().isNotEmpty) {
+          drop2Controller.text = result["drop2"];
+          isDropLocation2Visible = true;
+        } else {
+          drop2Controller.clear();
+          isDropLocation2Visible = false;
+        }
+
+        pickupLat = result["pickupLat"] ?? "";
+        pickupLng = result["pickupLng"] ?? "";
+        dropLat = result["dropLat"] ?? "";
+        dropLng = result["dropLng"] ?? "";
+        drop2Lat = result["drop2Lat"] ?? "";
+        drop2Lng = result["drop2Lng"] ?? "";
+
+        print(
+          "Pickup: ${pickupController.text} | Lat: $pickupLat | Lng: $pickupLng",
+        );
+        print(
+          "DropLocation 1: ${dropController.text} | Lat: $dropLat | Lng: $dropLng",
+        );
+        if (isDropLocation2Visible) {
+          print(
+            "DropLocation 2: ${drop2Controller.text} | Lat: $drop2Lat | Lng: $drop2Lng",
+          );
+        }
       });
     }
   }
@@ -111,24 +161,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // void _startWatchAutoScroll() {
-  //   _watchAutoScrollTimer = Timer.periodic(Duration(seconds: 4), (timer) {
-  //     if (_watchPageController.hasClients) {
-  //       if (_watchCurrentPage < watchLearnImages.length - 1) {
-  //         _watchCurrentPage++;
-  //       } else {
-  //         _watchCurrentPage = 0;
-  //       }
-
-  //       _watchPageController.animateToPage(
-  //         _watchCurrentPage,
-  //         duration: Duration(milliseconds: 500),
-  //         curve: Curves.easeInOut,
-  //       );
-  //     }
-  //   });
-  // }
-
   void _startAutoScroll() {
     _autoScrollTimer = Timer.periodic(Duration(seconds: 4), (timer) {
       if (_pageController.hasClients) {
@@ -162,14 +194,6 @@ class _HomeScreenState extends State<HomeScreen> {
   int selectedCarIndex = -1;
   @override
   Widget build(BuildContext context) {
-    // final vm = context.watch<LoginViewModel>();
-    // final userName =
-    //     "${vm.loggedInUser?['firstName'] ?? ''} ${vm.loggedInUser?['lastName'] ?? ''}"
-    //             .trim()
-    //             .isEmpty
-    //         ? "Guest"
-    //         : "${vm.loggedInUser?['firstName'] ?? ''} ${vm.loggedInUser?['lastName'] ?? ''}"
-    //             .trim();
     final firstName = SharedPrefServices.getFirstName() ?? "";
     final lastName = SharedPrefServices.getLastName() ?? "";
     final userName =
@@ -310,17 +334,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                           border: InputBorder.none,
                                         ),
                                         onTap: _selectLocation,
-                                        // onTap: () {
-                                        //   Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //       builder:
-                                        //           (_) =>
-                                        //               LocationSelectionScreen(),
-                                        //     ),
-                                        //   );
-                                        //   print('Pickup location tapped');
-                                        // },
                                       ),
                                     ],
                                   ),
@@ -337,42 +350,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                     thickness: 1.3,
                                   ),
                                 ),
-                                SizedBox(width: 15),
+                                // SizedBox(width: 15),
 
-                                SizedBox(
-                                  height: 30,
-                                  width: 68,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          isDropLocation2Visible
-                                              ? Colors.red
-                                              : korangeColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(22),
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 5,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        isDropLocation2Visible =
-                                            !isDropLocation2Visible;
-                                      });
-                                    },
-                                    child: CustomText(
-                                      text:
-                                          isDropLocation2Visible
-                                              ? 'Delete'
-                                              : 'Add',
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      textcolor: kwhiteColor,
-                                    ),
-                                  ),
-                                ),
+                                // SizedBox(
+                                //   height: 30,
+                                //   width: 68,
+                                //   child: ElevatedButton(
+                                //     style: ElevatedButton.styleFrom(
+                                //       backgroundColor:
+                                //           isDropLocation2Visible
+                                //               ? Colors.red
+                                //               : korangeColor,
+                                //       shape: RoundedRectangleBorder(
+                                //         borderRadius: BorderRadius.circular(22),
+                                //       ),
+                                //       padding: EdgeInsets.symmetric(
+                                //         horizontal: 10,
+                                //         vertical: 5,
+                                //       ),
+                                //     ),
+                                //     onPressed: () {
+                                //       setState(() {
+                                //         isDropLocation2Visible =
+                                //             !isDropLocation2Visible;
+                                //       });
+                                //     },
+                                //     child: CustomText(
+                                //       text:
+                                //           isDropLocation2Visible
+                                //               ? 'Delete'
+                                //               : 'Add',
+                                //       fontSize: 14,
+                                //       fontWeight: FontWeight.w400,
+                                //       textcolor: kwhiteColor,
+                                //     ),
+                                //   ),
+                                // ),
                               ],
                             ),
 
@@ -423,17 +436,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                           border: InputBorder.none,
                                         ),
                                         onTap: _selectLocation,
-                                        // onTap: () {
-                                        //   Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //       builder:
-                                        //           (_) =>
-                                        //               LocationSelectionScreen(),
-                                        //     ),
-                                        //   );
-                                        //   print('Drop location tapped');
-                                        // },
                                       ),
                                     ],
                                   ),
@@ -466,6 +468,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         SizedBox(height: 1),
                                         TextField(
                                           enabled: true,
+                                          controller: drop2Controller,
                                           textInputAction: TextInputAction.done,
                                           style: GoogleFonts.poppins(
                                             fontSize: 14,
@@ -1570,6 +1573,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Map<String, dynamic> bookingData = {
                                           "pickup": pickupController.text,
                                           "drop": dropController.text,
+                                          "drop2":
+                                              isDropLocation2Visible
+                                                  ? drop2Controller.text
+                                                  : '',
+                                          "pickupLat": pickupLat,
+                                          "pickupLng": pickupLng,
+                                          "dropLat": dropLat,
+                                          "dropLng": dropLng,
+                                          "drop2Lat": drop2Lat,
+                                          "drop2Lng": drop2Lng,
                                           "vehicleId": selectedCarId,
                                           "tripMode": selectedTripMode,
                                           "tripTime": selectedTripTime,
@@ -1941,6 +1954,25 @@ class CarModel {
   });
 }
 
+
+
+// void _startWatchAutoScroll() {
+  //   _watchAutoScrollTimer = Timer.periodic(Duration(seconds: 4), (timer) {
+  //     if (_watchPageController.hasClients) {
+  //       if (_watchCurrentPage < watchLearnImages.length - 1) {
+  //         _watchCurrentPage++;
+  //       } else {
+  //         _watchCurrentPage = 0;
+  //       }
+
+  //       _watchPageController.animateToPage(
+  //         _watchCurrentPage,
+  //         duration: Duration(milliseconds: 500),
+  //         curve: Curves.easeInOut,
+  //       );
+  //     }
+  //   });
+  // }
 // imp //ortant code for car list view in home screen
  // SizedBox(
                       //   height: 130,

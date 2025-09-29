@@ -69,7 +69,11 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     String driverPhone = data['driverPhone'] ?? '+91 XXXXX XXXXX';
     String driverEmail = data['driverEmail'] ?? 'example@email.com';
     String pickupLocation = data['pickup'] ?? '';
+    String tripMode = data['tripMode'] ?? '';
+    String tripTime = data['tripTime'] ?? '';
+    String citylimithours = data['cityLimitHours'].toString();
     String dropLocation = data['drop'] ?? '';
+    String drop2Location = data['drop2'] ?? '';
     String date = data['date'] ?? 'DD/MM/YYYY';
     String time = data['time'] ?? 'HH:MM';
     String servicePrice = data['servicePrice']?.toString() ?? '0.00';
@@ -224,7 +228,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                     children: [
                       Row(
                         children: [
-                          _buildDot(Colors.red),
+                          _buildDot(Colors.green),
                           const SizedBox(width: 8),
                           const CustomText(
                             text: "Pickup Location",
@@ -247,12 +251,18 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                           textcolor: KblackColor,
                         ),
                       ),
+
                       Row(
                         children: [
-                          _buildDot(Colors.green),
+                          _buildDot(
+                            drop2Location.isEmpty ? Colors.red : Colors.grey,
+                          ),
                           const SizedBox(width: 8),
-                          const CustomText(
-                            text: "Drop Location",
+                          CustomText(
+                            text:
+                                drop2Location.isEmpty
+                                    ? "Drop Location"
+                                    : "Drop Location 1",
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             textcolor: kseegreyColor,
@@ -272,6 +282,38 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                           textcolor: KblackColor,
                         ),
                       ),
+
+                      if (drop2Location.isNotEmpty)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                _buildDot(Colors.red),
+                                const SizedBox(width: 8),
+                                const CustomText(
+                                  text: "Drop Location 2",
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: kseegreyColor,
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 15,
+                                top: 5,
+                                bottom: 10,
+                              ),
+                              child: CustomText(
+                                text: drop2Location,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                textcolor: KblackColor,
+                              ),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 ],
@@ -279,6 +321,69 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
             ),
             const Divider(thickness: 3, color: KlightgreyColor),
             const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CustomText(
+                    text: "Trip Details",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    textcolor: korangeColor,
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Image.asset(
+                        "images/calender_drvr.png",
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      CustomText(
+                        text: tripMode,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        textcolor: KblackColor,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  Row(
+                    children: [
+                      Image.asset("images/time.png", height: 20, width: 20),
+                      const SizedBox(width: 8),
+                      CustomText(
+                        text: tripTime,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        textcolor: KblackColor,
+                      ),
+                    ],
+                  ),
+                  if (tripTime == "City Limits" &&
+                      citylimithours.toString().isNotEmpty) ...[
+                    const SizedBox(height: 15),
+                    Row(
+                      children: [
+                        Image.asset("images/time.png", height: 20, width: 20),
+                        const SizedBox(width: 8),
+                        CustomText(
+                          text: '${citylimithours.toString()} Hours',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          textcolor: KblackColor,
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(height: 15),
+            const Divider(thickness: 3, color: KlightgreyColor),
+
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15),
               child: Column(
