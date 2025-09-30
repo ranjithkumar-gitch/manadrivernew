@@ -100,7 +100,7 @@ class LoginViewModel extends ChangeNotifier {
     try {
       final withCode = normalizedPhone(phoneNumber);
       final withoutCode = phoneNumber;
-      // Check drivers collection
+
       final driverSnap =
           await FirebaseFirestore.instance
               .collection('drivers')
@@ -118,7 +118,6 @@ class LoginViewModel extends ChangeNotifier {
         return;
       }
 
-      // Check users collection
       final ownerSnap =
           await FirebaseFirestore.instance
               .collection('users')
@@ -136,7 +135,7 @@ class LoginViewModel extends ChangeNotifier {
         return;
       }
 
-      print("❌ No user found in drivers or users collection for $phoneNumber");
+      print("No user found in drivers or users collection for $phoneNumber");
     } catch (e) {
       print("Error in fetchLoggedInUser: $e");
     }

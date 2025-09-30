@@ -46,7 +46,7 @@ class _DAppbarState extends State<DAppbar> {
           ),
           actions: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 CustomCancelButton(
                   text: 'No',

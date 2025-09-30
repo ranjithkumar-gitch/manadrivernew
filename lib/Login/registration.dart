@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mana_driver/Driver/DriverLogin/driverRegistrationpage.dart';
 
@@ -127,7 +128,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 vm.isLoading
                     ? const CircularProgressIndicator(color: korangeColor)
                     : CustomButton(
-                      text: 'Register Now',
+                      text: 'Register as Owner',
                       onPressed: () async {
                         final firstName = firstnameController.text.trim();
                         final lastName = lastnameController.text.trim();
@@ -172,7 +173,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return;
                         }
 
-                        // ✅ Phone validation
                         final isValid = await isValidPhone(
                           phone,
                           selectedCountry.countryCode,
@@ -193,61 +193,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         print(
                           "✅ All validations passed, proceeding with registration...",
                         );
-                        // final success = await vm.register(
-                        //   fisrtName: firstnameController.text,
-                        //   lastName: lastnameController.text,
-                        //   email: emailController.text,
-                        //   phone: phoneController.text,
-                        //   countryCode: selectedCountry.countryCode,
-                        // );
 
-                        // if (success) {
-                        //   if (mounted) {
-                        //     // Navigator.push(
-                        //     //   context,
-                        //     //   MaterialPageRoute(
-                        //     //     builder: (_) => const LoginScreen(),
-                        //     //   ),
-                        //     // );
-                        //     // inside register button
-                        //     Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //         builder:
-                        //             (_) => OtpScreen(
-                        //               phoneNumber:
-                        //                   "+${selectedCountry.phoneCode}${phoneController.text}",
-                        //               isTestOtp: true, // ✅ use static OTP mode
-                        //             ),
-                        //       ),
-                        //     );
-                        //   }
-                        // } else {
-                        //   final msg = vm.errorMessage ?? 'Registration failed';
-                        //   if (mounted) {
-                        //     ScaffoldMessenger.of(
-                        //       context,
-                        //     ).showSnackBar(SnackBar(content: Text(msg)));
-                        //   }
-                        // }
-                        if (mounted) {
-                          Navigator.push(
+                        try {
+                          final ownerSnap =
+                              await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .where('phone', isEqualTo: phone)
+                                  .limit(1)
+                                  .get();
+
+                          if (ownerSnap.docs.isNotEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  "Mobile number already exists as Owner",
+                                ),
+                              ),
+                            );
+                            return;
+                          }
+
+                          if (mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (_) => OtpScreen(
+                                      phoneNumber:
+                                      "${phoneController.text.trim()}",
+                                      firstName: firstName,
+                                      lastName: lastName,
+                                      email: email,
+                                      countryCode: selectedCountry.countryCode,
+                                      isTestOtp: true,
+                                    ),
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(
                             context,
-                            MaterialPageRoute(
-                              builder:
-                                  (_) => OtpScreen(
-                                    phoneNumber:
-                                        "+${selectedCountry.phoneCode}${phoneController.text}",
-                                    firstName: firstnameController.text.trim(),
-                                    lastName: lastnameController.text.trim(),
-                                    email: emailController.text.trim(),
-                                    countryCode: selectedCountry.countryCode,
-                                    isTestOtp: true, // ✅ use static OTP mode
-                                  ),
-                            ),
-                          );
-                        }
+                          ).showSnackBar(SnackBar(content: Text("Error: $e")));
+                        } finally {}
                       },
+
                       width: 220,
                       height: 53,
                     ),

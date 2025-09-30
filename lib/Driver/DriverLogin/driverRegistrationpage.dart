@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,6 +9,7 @@ import 'package:mana_driver/Driver/D_Models/Driver_ViewModel.dart';
 import 'package:mana_driver/Driver/DriverLogin/registrationotpscreen.dart';
 import 'package:mana_driver/Driver/Widgets/D_customTextfield.dart';
 import 'package:mana_driver/Widgets/colors.dart';
+import 'package:mana_driver/Widgets/mobileNumberInputField.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -42,6 +45,19 @@ class _DriverRegistrationPageState extends State<DriverRegistrationPage> {
     final picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked != null) onPicked(File(picked.path));
   }
+
+  Country selectedCountry = Country(
+    phoneCode: "91",
+    countryCode: "IN",
+    e164Sc: 0,
+    geographic: true,
+    level: 1,
+    name: "India",
+    example: "India",
+    displayName: "India",
+    displayNameNoCountryCode: "India",
+    e164Key: "",
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -129,11 +145,16 @@ class _DriverRegistrationPageState extends State<DriverRegistrationPage> {
                     controller: emailController,
                   ),
                   const SizedBox(height: 10),
-                  D_CustomTextField(
-                    labelText: "Phone Number",
+                  PhoneNumberInputField(
                     controller: phoneController,
+                    selectedCountry: selectedCountry,
+                    onCountryChanged: (Country country) {
+                      setState(() {
+                        selectedCountry = country;
+                      });
+                    },
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 15),
 
                   TextField(
                     controller: dobController,
@@ -381,31 +402,60 @@ class _DriverRegistrationPageState extends State<DriverRegistrationPage> {
                   const SizedBox(height: 40),
                   Center(
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (_validateInputs()) {
-                          Navigator.push(
+                      onPressed: () async {
+                        if (!_validateInputs()) return;
+
+                        final phone = phoneController.text.trim();
+
+                        try {
+                          final driverSnap =
+                              await FirebaseFirestore.instance
+                                  .collection('drivers')
+                                  .where('phone', isEqualTo: phone)
+                                  .limit(1)
+                                  .get();
+
+                          if (driverSnap.docs.isNotEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  "Mobile number already exists as Driver",
+                                ),
+                              ),
+                            );
+                            return;
+                          }
+
+                          if (mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (_) => DriverOtpScreen(
+                                      firstName: firstNameController.text,
+                                      lastName: lastNameController.text,
+                                      email: emailController.text,
+                                      phoneNumber: phone,
+                                      countryCode: selectedCountry.countryCode,
+                                      dob: dobController.text,
+                                      vehicleType: vehicleType ?? "",
+                                      licenceNumber: licenceController.text,
+                                      profileImage: profileImage,
+                                      licenceFront: licenceFront,
+                                      licenceBack: licenceBack,
+                                      holderName: holderController.text,
+                                      accountNumber: accountController.text,
+                                      ifsc: ifscController.text,
+                                      bankName: bankController.text,
+                                      branchName: branchController.text,
+                                    ),
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(
                             context,
-                            MaterialPageRoute(
-                              builder:
-                                  (_) => DriverOtpScreen(
-                                    firstName: firstNameController.text,
-                                    lastName: lastNameController.text,
-                                    email: emailController.text,
-                                    phoneNumber: phoneController.text,
-                                    dob: dobController.text,
-                                    vehicleType: vehicleType ?? "",
-                                    licenceNumber: licenceController.text,
-                                    profileImage: profileImage,
-                                    licenceFront: licenceFront,
-                                    licenceBack: licenceBack,
-                                    holderName: holderController.text,
-                                    accountNumber: accountController.text,
-                                    ifsc: ifscController.text,
-                                    bankName: bankController.text,
-                                    branchName: branchController.text,
-                                  ),
-                            ),
-                          );
+                          ).showSnackBar(SnackBar(content: Text("Error: $e")));
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -446,6 +496,7 @@ class _DriverRegistrationPageState extends State<DriverRegistrationPage> {
       ).showSnackBar(const SnackBar(content: Text("Please enter last name")));
       return false;
     }
+
     if (emailController.text.isEmpty ||
         !RegExp(
           r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}',
@@ -455,7 +506,9 @@ class _DriverRegistrationPageState extends State<DriverRegistrationPage> {
       ).showSnackBar(const SnackBar(content: Text("Please enter valid email")));
       return false;
     }
-    if (phoneController.text.isEmpty || phoneController.text.length < 10) {
+    if (phoneController.text.isEmpty ||
+        phoneController.text.length < 10 ||
+        phoneController.text.length > 10) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please enter valid phone number")),
       );

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mana_driver/Login/otp_login.dart';
 import 'package:mana_driver/Login/registration.dart';
 import 'package:mana_driver/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -136,35 +137,32 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                                 );
 
                                 if (exists) {
-                                  final vm = context.read<LoginViewModel>();
-
-                                  // Fetch logged in user data
-                                  await vm.fetchLoggedInUser(phoneNumber);
-
-                                  // Navigate to OTP screen with all required info
+                                  
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder:
-                                          (_) => OtpScreen(
+                                          (_) => OtpLogin(
                                             phoneNumber: phoneNumber,
-                                            firstName:
-                                                vm.loggedInUser?['firstName'] ??
-                                                '',
-                                            lastName:
-                                                vm.loggedInUser?['lastName'] ??
-                                                '',
-                                            email:
-                                                vm.loggedInUser?['email'] ?? '',
-                                            countryCode:
-                                                vm.loggedInUser?['countryCode'] ??
-                                                '',
-                                            isTestOtp: true,
                                           ),
+                                      // OtpScreen(
+                                      //   phoneNumber: phoneNumber,
+                                      //   firstName:
+                                      //       vm.loggedInUser?['firstName'] ??
+                                      //       '',
+                                      //   lastName:
+                                      //       vm.loggedInUser?['lastName'] ??
+                                      //       '',
+                                      //   email:
+                                      //       vm.loggedInUser?['email'] ?? '',
+                                      //   countryCode:
+                                      //       vm.loggedInUser?['countryCode'] ??
+                                      //       '',
+                                      //   isTestOtp: true,
+                                      // ),
                                     ),
                                   );
                                 } else {
-                                  // User not found
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(

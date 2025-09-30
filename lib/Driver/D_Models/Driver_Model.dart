@@ -12,10 +12,12 @@ class DriverModel {
   String? licenceBackUrl;
   BankAccount? bankAccount;
   String? roleCode;
+  String? countryCode;
+  bool? isOnline;
 
   DriverModel({
     this.userId,
-
+    this.isOnline,
     this.firstName,
     this.lastName,
     this.email,
@@ -28,13 +30,15 @@ class DriverModel {
     this.licenceBackUrl,
     this.bankAccount,
     this.roleCode,
+    this.countryCode,
   });
 
   Map<String, dynamic> toJson() => {
     "userId": userId,
-
+    "isOnline": false,
     "firstName": firstName,
     "lastName": lastName,
+    'countryCode': countryCode,
     "email": email,
     "phone": phone,
     "dob": dob,

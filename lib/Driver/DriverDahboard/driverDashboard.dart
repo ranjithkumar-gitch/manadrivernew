@@ -151,12 +151,13 @@ class _DriverDashboardState extends State<DriverDashboard> {
   void _updateBookingStatus(String bookingId, String newStatus) async {
     try {
       String driverId = SharedPrefServices.getUserId().toString();
+      String driverDocId = SharedPrefServices.getDocId().toString();
       await FirebaseFirestore.instance
           .collection('bookings')
           .doc(bookingId)
           .update({
             'status': newStatus,
-            'driverdocId': await SharedPrefServices.getDocId(),
+            'driverdocId': driverDocId,
             'driverId': driverId,
           });
 
@@ -248,7 +249,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
           ),
           actions: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 CustomCancelButton(
                   text: 'No',
@@ -843,10 +844,10 @@ class _DriverDashboardState extends State<DriverDashboard> {
                                                         ),
                                                       ),
                                                       onPressed: () {
-                                                        _updateBookingStatus(
-                                                          car['id'],
-                                                          'Declined',
-                                                        );
+                                                        // _updateBookingStatus(
+                                                        //   car['id'],
+                                                        //   'Declined',
+                                                        // );
                                                       },
                                                       child: const CustomText(
                                                         text: "Decline",
@@ -871,6 +872,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
                                                             await SharedPrefServices.getisOnline();
 
                                                         if (!isOnline) {
+                                                          // Offline dialog
                                                           showDialog(
                                                             context: context,
                                                             builder:
@@ -883,8 +885,8 @@ class _DriverDashboardState extends State<DriverDashboard> {
                                                                           15,
                                                                         ),
                                                                   ),
-                                                                  title: Center(
-                                                                    child: const CustomText(
+                                                                  title: const Center(
+                                                                    child: CustomText(
                                                                       text:
                                                                           "Cannot Accept Booking",
                                                                       fontSize:
@@ -909,26 +911,90 @@ class _DriverDashboardState extends State<DriverDashboard> {
                                                                         Colors
                                                                             .black,
                                                                   ),
-
                                                                   actions: [
                                                                     CustomButton(
-                                                                      onPressed: () async {
+                                                                      text:
+                                                                          'OK',
+                                                                      onPressed: () {
                                                                         Navigator.pop(
                                                                           context,
                                                                         );
                                                                       },
-
-                                                                      text:
-                                                                          'OK',
                                                                     ),
                                                                   ],
                                                                 ),
                                                           );
                                                         } else {
-                                                          // Proceed if online
-                                                          _updateBookingStatus(
-                                                            car['id'],
-                                                            'Accepted',
+                                                          showDialog(
+                                                            context: context,
+                                                            builder:
+                                                                (
+                                                                  context,
+                                                                ) => AlertDialog(
+                                                                  shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          15,
+                                                                        ),
+                                                                  ),
+                                                                  title: const Center(
+                                                                    child: CustomText(
+                                                                      text:
+                                                                          "Confirm Ride",
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      textcolor:
+                                                                          Colors
+                                                                              .black,
+                                                                    ),
+                                                                  ),
+                                                                  content: const CustomText(
+                                                                    text:
+                                                                        "Are you sure you want to accept this ride?",
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    textcolor:
+                                                                        Colors
+                                                                            .black,
+                                                                  ),
+                                                                  actions: [
+                                                                    Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceEvenly,
+                                                                      children: [
+                                                                        CustomCancelButton(
+                                                                          text:
+                                                                              'No',
+                                                                          onPressed: () {
+                                                                            Navigator.pop(
+                                                                              context,
+                                                                            );
+                                                                          },
+                                                                        ),
+                                                                        CustomButton(
+                                                                          text:
+                                                                              'Yes',
+                                                                          onPressed: () {
+                                                                            Navigator.pop(
+                                                                              context,
+                                                                            ); // close dialog
+                                                                            _updateBookingStatus(
+                                                                              car['id'],
+                                                                              'Accepted',
+                                                                            );
+                                                                          },
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
                                                           );
                                                         }
                                                       },

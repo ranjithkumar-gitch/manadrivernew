@@ -8,6 +8,7 @@ import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
+import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
 
 class D_Bookings extends StatefulWidget {
   const D_Bookings({super.key});
@@ -29,13 +30,14 @@ class _D_BookingsState extends State<D_Bookings> {
   Future<void> _updateBookingStatus(String bookingId, String newStatus) async {
     try {
       final driverId = await SharedPrefServices.getUserId();
+      final driverDocId = await SharedPrefServices.getDocId();
 
       await FirebaseFirestore.instance
           .collection('bookings')
           .doc(bookingId)
           .update({
             'status': newStatus,
-            'driverdocId': await SharedPrefServices.getDocId(),
+            'driverdocId': driverDocId,
             'driverId': driverId,
           });
 
@@ -420,10 +422,10 @@ class _D_BookingsState extends State<D_Bookings> {
                                                         ),
                                                       ),
                                                   onPressed: () {
-                                                    _updateBookingStatus(
-                                                      car['id'],
-                                                      'Declined',
-                                                    );
+                                                    // _updateBookingStatus(
+                                                    //   car['id'],
+                                                    //   'Declined',
+                                                    // );
                                                   },
                                                   child: const CustomText(
                                                     text: "Decline",
@@ -446,6 +448,7 @@ class _D_BookingsState extends State<D_Bookings> {
                                                         await SharedPrefServices.getisOnline();
 
                                                     if (!isOnline) {
+                                                      // Offline dialog
                                                       showDialog(
                                                         context: context,
                                                         builder:
@@ -458,8 +461,8 @@ class _D_BookingsState extends State<D_Bookings> {
                                                                       15,
                                                                     ),
                                                               ),
-                                                              title: Center(
-                                                                child: const CustomText(
+                                                              title: const Center(
+                                                                child: CustomText(
                                                                   text:
                                                                       "Cannot Accept Booking",
                                                                   fontSize: 15,
@@ -482,26 +485,87 @@ class _D_BookingsState extends State<D_Bookings> {
                                                                     Colors
                                                                         .black,
                                                               ),
-
                                                               actions: [
                                                                 CustomButton(
-                                                                  onPressed:
-                                                                      () async {
-                                                                        Navigator.pop(
-                                                                          context,
-                                                                        );
-                                                                      },
-
                                                                   text: 'OK',
+                                                                  onPressed: () {
+                                                                    Navigator.pop(
+                                                                      context,
+                                                                    );
+                                                                  },
                                                                 ),
                                                               ],
                                                             ),
                                                       );
                                                     } else {
-                                                      // Proceed if online
-                                                      _updateBookingStatus(
-                                                        car['id'],
-                                                        'Accepted',
+                                                      showDialog(
+                                                        context: context,
+                                                        builder:
+                                                            (
+                                                              context,
+                                                            ) => AlertDialog(
+                                                              shape: RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      15,
+                                                                    ),
+                                                              ),
+                                                              title: const Center(
+                                                                child: CustomText(
+                                                                  text:
+                                                                      "Confirm Ride",
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  textcolor:
+                                                                      Colors
+                                                                          .black,
+                                                                ),
+                                                              ),
+                                                              content: const CustomText(
+                                                                text:
+                                                                    "Are you sure you want to accept this ride?",
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                textcolor:
+                                                                    Colors
+                                                                        .black,
+                                                              ),
+                                                              actions: [
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceEvenly,
+                                                                  children: [
+                                                                    CustomCancelButton(
+                                                                      text:
+                                                                          'No',
+                                                                      onPressed: () {
+                                                                        Navigator.pop(
+                                                                          context,
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                    CustomButton(
+                                                                      text:
+                                                                          'Yes',
+                                                                      onPressed: () {
+                                                                        Navigator.pop(
+                                                                          context,
+                                                                        ); // close dialog
+                                                                        _updateBookingStatus(
+                                                                          car['id'],
+                                                                          'Accepted',
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
                                                       );
                                                     }
                                                   },
