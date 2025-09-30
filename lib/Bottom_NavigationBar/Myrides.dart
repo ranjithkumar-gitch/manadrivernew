@@ -55,45 +55,49 @@ class _MyRidesScreenState extends State<MyRidesScreen>
     String time = bookingData['time'] ?? "";
     String vehicleId = bookingData['vehicleId'] ?? "";
     String driverDocId = bookingData['driverdocId'] ?? "";
-    print(driverDocId);
+    String driverRating = bookingData['driverRating']?.toString() ?? "N/A";
 
-    return FutureBuilder<DocumentSnapshot>(
+    return FutureBuilder<DocumentSnapshot?>(
       future:
-          FirebaseFirestore.instance
-              .collection('vehicles')
-              .doc(vehicleId)
-              .get(),
+          vehicleId.isNotEmpty
+              ? FirebaseFirestore.instance
+                  .collection('vehicles')
+                  .doc(vehicleId)
+                  .get()
+              : Future.value(null),
       builder: (context, vehicleSnapshot) {
-        String vehicleName = "Vehicle";
-        if (vehicleSnapshot.hasData && vehicleSnapshot.data!.exists) {
+        String vehicleName = "Vehicle not assigned";
+        if (vehicleSnapshot.hasData &&
+            vehicleSnapshot.data != null &&
+            vehicleSnapshot.data!.exists) {
           final vehicleData =
               vehicleSnapshot.data!.data() as Map<String, dynamic>;
           vehicleName =
               "${vehicleData['brand'] ?? ''} ${vehicleData['model'] ?? ''}";
         }
 
-        return FutureBuilder<DocumentSnapshot>(
+        return FutureBuilder<DocumentSnapshot?>(
           future:
-              FirebaseFirestore.instance
-                  .collection('drivers')
-                  .doc(driverDocId)
-                  .get(),
+              driverDocId.isNotEmpty
+                  ? FirebaseFirestore.instance
+                      .collection('drivers')
+                      .doc(driverDocId)
+                      .get()
+                  : Future.value(null),
           builder: (context, driverSnapshot) {
             String userName = "Driver not assigned";
-            String driverRating =
-                bookingData['driverRating']?.toString() ?? "N/A";
 
-            if (driverSnapshot.hasData && driverSnapshot.data!.exists) {
+            String profileUrl = "";
+            if (driverSnapshot.hasData &&
+                driverSnapshot.data != null &&
+                driverSnapshot.data!.exists) {
               final driverData =
                   driverSnapshot.data!.data() as Map<String, dynamic>;
-              print("Driver Data: $driverData");
-
               userName =
                   "${driverData['firstName'] ?? ''} ${driverData['lastName'] ?? ''}"
                       .trim();
+              profileUrl = driverData['profileUrl'] ?? "";
             }
-
-            print(userName);
 
             String price = "₹ 0.00";
 
@@ -127,28 +131,8 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                               CircleAvatar(
                                 radius: 30,
                                 backgroundImage:
-                                    driverSnapshot.hasData &&
-                                            driverSnapshot.data!.exists &&
-                                            (driverSnapshot.data!.data()
-                                                    as Map<
-                                                      String,
-                                                      dynamic
-                                                    >)['profileUrl'] !=
-                                                null &&
-                                            ((driverSnapshot.data!.data()
-                                                        as Map<
-                                                          String,
-                                                          dynamic
-                                                        >)['profileUrl']
-                                                    as String)
-                                                .isNotEmpty
-                                        ? NetworkImage(
-                                          (driverSnapshot.data!.data()
-                                              as Map<
-                                                String,
-                                                dynamic
-                                              >)['profileUrl'],
-                                        )
+                                    profileUrl.isNotEmpty
+                                        ? NetworkImage(profileUrl)
                                         : AssetImage('images/user.png')
                                             as ImageProvider,
                               ),
@@ -157,9 +141,6 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                                 child: Container(
                                   width: 20,
                                   height: 20,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                  ),
                                   child: ClipOval(
                                     child: Image.asset(
                                       'images/verified.png',

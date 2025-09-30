@@ -544,78 +544,81 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
             ),
             const SizedBox(height: 15),
             const Divider(thickness: 3, color: KlightgreyColor),
-            Padding(
-              padding: const EdgeInsets.only(right: 15, left: 15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const CustomText(
-                    text: "Driver Details",
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    textcolor: korangeColor,
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Image.asset("images/person.png", height: 20, width: 20),
-                      const SizedBox(width: 8),
-                      CustomText(
-                        text:
-                            driverData != null
-                                ? "${driverData!['firstName'] ?? ''} ${driverData!['lastName'] ?? ''}"
-                                : driverName,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        textcolor: KblackColor,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Image.asset(
-                        "images/call_drvr.png",
-                        height: 20,
-                        width: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      CustomText(
-                        text:
-                            driverData != null
-                                ? driverData!['phone'] ?? ''
-                                : '',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        textcolor: KblackColor,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Image.asset(
-                        "images/email_drvr.png",
-                        height: 20,
-                        width: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      CustomText(
-                        text:
-                            driverData != null
-                                ? driverData!['email'] ?? ''
-                                : '',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        textcolor: KblackColor,
-                      ),
-                    ],
-                  ),
-                ],
+            if (driverData != null && driverData!.isNotEmpty) ...[
+              const SizedBox(height: 15),
+              Padding(
+                padding: const EdgeInsets.only(right: 15, left: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CustomText(
+                      text: "Driver Details",
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      textcolor: korangeColor,
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Image.asset("images/person.png", height: 20, width: 20),
+                        const SizedBox(width: 8),
+                        CustomText(
+                          text:
+                              driverData != null
+                                  ? "${driverData!['firstName'] ?? ''} ${driverData!['lastName'] ?? ''}"
+                                  : driverName,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          textcolor: KblackColor,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Image.asset(
+                          "images/call_drvr.png",
+                          height: 20,
+                          width: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        CustomText(
+                          text:
+                              driverData != null
+                                  ? driverData!['phone'] ?? ''
+                                  : '',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          textcolor: KblackColor,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Image.asset(
+                          "images/email_drvr.png",
+                          height: 20,
+                          width: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        CustomText(
+                          text:
+                              driverData != null
+                                  ? driverData!['email'] ?? ''
+                                  : '',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          textcolor: KblackColor,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 15),
-            const Divider(thickness: 3, color: KlightgreyColor),
+              const SizedBox(height: 15),
+              const Divider(thickness: 3, color: KlightgreyColor),
+            ],
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15),
               child: Column(
