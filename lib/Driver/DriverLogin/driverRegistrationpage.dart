@@ -761,7 +761,7 @@ class _DriverRegistrationPageState extends State<DriverRegistrationPage> {
                       },
 
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
+                        backgroundColor: korangeColor,
                         minimumSize: const Size(double.infinity, 50),
                       ),
                       child: const Text(

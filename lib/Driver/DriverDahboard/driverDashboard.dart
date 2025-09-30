@@ -49,7 +49,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
   void initState() {
     super.initState();
     _fetchCars();
-    _startAutoScroll();
+    // _startAutoScroll();
 
     _startOfferAutoScroll();
   }
@@ -399,7 +399,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
                                 children: [
                                   CustomText(
                                     text: "Namaskaram",
-                                    textcolor: kseegreyColor,
+                                    textcolor: kwhiteColor,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -540,6 +540,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
                             child: PageView.builder(
                               itemCount: carList.length,
                               controller: _pageController,
+
                               itemBuilder: (context, index) {
                                 final car = carList[index];
                                 // final isSelected = selectedCarIndex == index;

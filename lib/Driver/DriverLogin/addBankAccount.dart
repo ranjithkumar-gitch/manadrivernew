@@ -181,6 +181,7 @@ import 'package:mana_driver/Driver/BottomnavigationBar/D_bottomnavigationbar.dar
 import 'package:mana_driver/Driver/D_Models/Driver_Model.dart';
 import 'package:mana_driver/Driver/D_Models/Driver_ViewModel.dart';
 import 'package:mana_driver/Driver/Widgets/D_customTextfield.dart';
+import 'package:mana_driver/Login/loginScreen.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
@@ -336,11 +337,11 @@ class _AddBankAccountState extends State<AddBankAccount> {
                       // Navigate to bottom navigation
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (_) => D_BottomNavigation()),
+                        MaterialPageRoute(builder: (_) => LoginScreen()),
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
+                      backgroundColor: korangeColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(70),
                       ),
