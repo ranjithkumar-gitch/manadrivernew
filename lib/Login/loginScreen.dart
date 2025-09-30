@@ -137,7 +137,6 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                                 );
 
                                 if (exists) {
-                                  
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -213,6 +212,14 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                  Text(
+                    'APK Release v1.0.3',
+                    style: GoogleFonts.poppins(
+                      color: kgreyColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
