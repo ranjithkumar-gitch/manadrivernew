@@ -44,7 +44,11 @@ class RegisterViewModel extends ChangeNotifier {
           await FirebaseFirestore.instance.collection('users').get();
       final totalCount = snapshot.docs.length;
 
-      final generatedUserId = "MD${totalCount + 1}";
+      final now = DateTime.now();
+      final formattedDate =
+          "${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}"
+          "${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}${now.second.toString().padLeft(2, '0')}";
+      final generatedUserId = "Owner_$formattedDate";
 
       final id = const Uuid().v4();
       final user = UserModel(

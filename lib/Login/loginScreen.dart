@@ -39,33 +39,6 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
   );
   bool _isLoading = false;
 
-  Future<void> _handleSendOtp(BuildContext context) async {
-    final vm = context.read<LoginViewModel>();
-
-    await vm.checkPhoneAndSendOtp(
-      phoneNumber: phoneController.text,
-      context: context,
-      onCodeSent: (verificationId) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder:
-                (_) => OtpScreen(
-                  // verificationId: verificationId,
-                  phoneNumber:
-                      "+${vm.selectedCountry.phoneCode}${phoneController.text}",
-                ),
-          ),
-        );
-      },
-      onError: (error) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(error)));
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
@@ -136,20 +109,19 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                     ),
                   ),
                   const Spacer(),
-
                   CustomButton(
                     text:
-                        state.isLoading
+                        _isLoading
                             ? localizations.checking
                             : localizations.sendOtp,
                     onPressed:
-                        state.isLoading
+                        _isLoading
                             ? null
                             : () async {
                               final phoneNumber = phoneController.text.trim();
                               if (phoneNumber.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
+                                  const SnackBar(
                                     content: Text("Please enter mobile number"),
                                   ),
                                 );
@@ -164,21 +136,42 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                                 );
 
                                 if (exists) {
-                                  await context
-                                      .read<LoginViewModel>()
-                                      .fetchLoggedInUser(phoneNumber);
+                                  final vm = context.read<LoginViewModel>();
+
+                                  // Fetch logged in user data
+                                  await vm.fetchLoggedInUser(phoneNumber);
+
+                                  // Navigate to OTP screen with all required info
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder:
                                           (_) => OtpScreen(
                                             phoneNumber: phoneNumber,
+                                            firstName:
+                                                vm.loggedInUser?['firstName'] ??
+                                                '',
+                                            lastName:
+                                                vm.loggedInUser?['lastName'] ??
+                                                '',
+                                            email:
+                                                vm.loggedInUser?['email'] ?? '',
+                                            countryCode:
+                                                vm.loggedInUser?['countryCode'] ??
+                                                '',
                                             isTestOtp: true,
                                           ),
                                     ),
                                   );
                                 } else {
-                                  await _handleSendOtp(context);
+                                  // User not found
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        "User not found. Please register first.",
+                                      ),
+                                    ),
+                                  );
                                 }
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(

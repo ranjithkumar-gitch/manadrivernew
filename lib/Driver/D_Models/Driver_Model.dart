@@ -1,4 +1,5 @@
 class DriverModel {
+  String? userId;
   String? firstName;
   String? lastName;
   String? email;
@@ -13,6 +14,8 @@ class DriverModel {
   String? roleCode;
 
   DriverModel({
+    this.userId,
+
     this.firstName,
     this.lastName,
     this.email,
@@ -28,6 +31,8 @@ class DriverModel {
   });
 
   Map<String, dynamic> toJson() => {
+    "userId": userId,
+
     "firstName": firstName,
     "lastName": lastName,
     "email": email,

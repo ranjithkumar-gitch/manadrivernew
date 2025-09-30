@@ -21,8 +21,7 @@ class DriverViewModel extends ChangeNotifier {
     try {
       await FirebaseFirestore.instance
           .collection("drivers")
-          .doc(driver.phone)
-          .set(driver.toJson());
+          .add(driver.toJson());
     } catch (e) {
       debugPrint("Error saving driver: $e");
     }

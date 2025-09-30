@@ -1,41 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:mana_driver/Widgets/colors.dart';
-
-// class D_SideMenu extends StatelessWidget {
-//   const D_SideMenu({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Drawer(
-//       child: ListView(
-//         padding: EdgeInsets.zero,
-//         children: [
-//           const DrawerHeader(
-//             decoration: BoxDecoration(color: korangeColor),
-//             child: Text(
-//               'Menu',
-//               style: TextStyle(color: Colors.white, fontSize: 24),
-//             ),
-//           ),
-//           ListTile(
-//             leading: const Icon(Icons.home),
-//             title: const Text('Home'),
-//             onTap: () {
-//               Navigator.pop(context);
-//             },
-//           ),
-//           ListTile(
-//             leading: const Icon(Icons.settings),
-//             title: const Text('Settings'),
-//             onTap: () {
-//               Navigator.pop(context);
-//             },
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 import 'package:flutter/material.dart';
 import 'package:mana_driver/Driver/sidemenu/D_Helpandsupport.dart';
 import 'package:mana_driver/Driver/sidemenu/D_Termsandconditions.dart';
@@ -43,7 +5,7 @@ import 'package:mana_driver/Driver/sidemenu/Driverprofilepage.dart';
 import 'package:mana_driver/Driver/sidemenu/MyDocuments.dart';
 import 'package:mana_driver/Login/loginScreen.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/Sidemenu/profilePage.dart';
+
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 
@@ -57,13 +19,11 @@ class D_SideMenu extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          // Custom Header
           Container(
             color: kwhiteColor,
             padding: const EdgeInsets.symmetric(vertical: 30),
             child: Column(
               children: [
-                // Profile Image with check icon
                 Row(
                   children: [
                     Padding(
@@ -139,10 +99,8 @@ class D_SideMenu extends StatelessWidget {
             ),
           ),
 
-          // Divider
           const Divider(),
 
-          // Menu Items (7)
           ListTile(
             leading: Image.asset("images/mybookings.png"),
             title: const CustomText(

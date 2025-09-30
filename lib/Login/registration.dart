@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mana_driver/Driver/DriverLogin/driverRegistrationpage.dart';
 
 import 'package:mana_driver/Login/loginScreen.dart';
+import 'package:mana_driver/Login/otpscreen.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
@@ -41,7 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool isValidName(String name) {
     final n = name.trim();
-    return n.isNotEmpty && n.length >= 2;
+    return n.isNotEmpty;
   }
 
   bool isValidEmail(String email) {
@@ -192,30 +193,59 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         print(
                           "✅ All validations passed, proceeding with registration...",
                         );
-                        final success = await vm.register(
-                          fisrtName: firstnameController.text,
-                          lastName: lastnameController.text,
-                          email: emailController.text,
-                          phone: phoneController.text,
-                          countryCode: selectedCountry.countryCode,
-                        );
+                        // final success = await vm.register(
+                        //   fisrtName: firstnameController.text,
+                        //   lastName: lastnameController.text,
+                        //   email: emailController.text,
+                        //   phone: phoneController.text,
+                        //   countryCode: selectedCountry.countryCode,
+                        // );
 
-                        if (success) {
-                          if (mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const LoginScreen(),
-                              ),
-                            );
-                          }
-                        } else {
-                          final msg = vm.errorMessage ?? 'Registration failed';
-                          if (mounted) {
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(SnackBar(content: Text(msg)));
-                          }
+                        // if (success) {
+                        //   if (mounted) {
+                        //     // Navigator.push(
+                        //     //   context,
+                        //     //   MaterialPageRoute(
+                        //     //     builder: (_) => const LoginScreen(),
+                        //     //   ),
+                        //     // );
+                        //     // inside register button
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder:
+                        //             (_) => OtpScreen(
+                        //               phoneNumber:
+                        //                   "+${selectedCountry.phoneCode}${phoneController.text}",
+                        //               isTestOtp: true, // ✅ use static OTP mode
+                        //             ),
+                        //       ),
+                        //     );
+                        //   }
+                        // } else {
+                        //   final msg = vm.errorMessage ?? 'Registration failed';
+                        //   if (mounted) {
+                        //     ScaffoldMessenger.of(
+                        //       context,
+                        //     ).showSnackBar(SnackBar(content: Text(msg)));
+                        //   }
+                        // }
+                        if (mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (_) => OtpScreen(
+                                    phoneNumber:
+                                        "+${selectedCountry.phoneCode}${phoneController.text}",
+                                    firstName: firstnameController.text.trim(),
+                                    lastName: lastnameController.text.trim(),
+                                    email: emailController.text.trim(),
+                                    countryCode: selectedCountry.countryCode,
+                                    isTestOtp: true, // ✅ use static OTP mode
+                                  ),
+                            ),
+                          );
                         }
                       },
                       width: 220,
