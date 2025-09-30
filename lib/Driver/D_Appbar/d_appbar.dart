@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mana_driver/AppBar/notificationScreen.dart';
+import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Widgets/colors.dart';
+import 'package:mana_driver/Widgets/customButton.dart';
+import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
 
 class DAppbar extends StatefulWidget implements PreferredSizeWidget {
   const DAppbar({super.key});
@@ -14,6 +18,80 @@ class DAppbar extends StatefulWidget implements PreferredSizeWidget {
 
 class _DAppbarState extends State<DAppbar> {
   bool isOnline = false;
+  void _loadOnlineStatus() async {
+    final status = await SharedPrefServices.getisOnline();
+    setState(() {
+      isOnline = status;
+    });
+  }
+
+  void _showOnlineDialog() {
+    final nextStatus = isOnline ? "Offline" : "Online";
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Center(
+            child: Text(
+              'Are you sure you want to be   $nextStatus?',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                fontFamily: "inter",
+              ),
+            ),
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomCancelButton(
+                  text: 'No',
+                  onPressed: () => Navigator.pop(context),
+                ),
+
+                CustomButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+
+                    setState(() {
+                      isOnline = !isOnline;
+                    });
+
+                    await SharedPrefServices.setisOnline(isOnline);
+
+                    await _updateOnlineStatusOnServer(isOnline);
+                  },
+
+                  text: 'Yes',
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _updateOnlineStatusOnServer(bool status) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('drivers')
+          .doc(SharedPrefServices.getDocId())
+          .update({'isOnline': status});
+    } catch (e) {
+      print("Failed to update server: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadOnlineStatus();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +103,6 @@ class _DAppbarState extends State<DAppbar> {
         children: [
           Row(
             children: [
-              // Drawer Button
               Builder(
                 builder:
                     (context) => GestureDetector(
@@ -51,9 +128,7 @@ class _DAppbarState extends State<DAppbar> {
               // Online/Offline Switch
               GestureDetector(
                 onTap: () {
-                  setState(() {
-                    isOnline = !isOnline;
-                  });
+                  _showOnlineDialog();
                 },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),

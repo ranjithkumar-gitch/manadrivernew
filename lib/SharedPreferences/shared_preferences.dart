@@ -28,10 +28,16 @@ class SharedPrefServices {
 
   static const _keyislogged = 'islogged';
 
+  static const _keyisOnline = 'isOnline';
+
   static Future init() async => prefs = await SharedPreferences.getInstance();
 
   static Future setislogged(bool islogged) async {
     await prefs!.setBool(_keyislogged, islogged);
+  }
+
+  static Future setisOnline(bool isOnline) async {
+    await prefs!.setBool(_keyisOnline, isOnline);
   }
 
   static Future setUserId(String userId) async =>
@@ -92,6 +98,7 @@ class SharedPrefServices {
   // Getters
 
   static bool getislogged() => prefs!.getBool(_keyislogged) ?? false;
+  static bool getisOnline() => prefs!.getBool(_keyisOnline) ?? false;
   static String? getUserId() => prefs!.getString(_keyuserId);
   static String? getdob() => prefs!.getString(_keydob);
   static String? getdrivingLicence() => prefs!.getString(_keydrivingLicence);

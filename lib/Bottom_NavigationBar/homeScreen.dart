@@ -1580,6 +1580,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                             carList[selectedCarIndex]['id'];
 
                                         Map<String, dynamic> bookingData = {
+                                          'ownerdocId':
+                                              SharedPrefServices.getDocId()
+                                                  .toString(),
+                                          'ownerId':
+                                              SharedPrefServices.getUserId()
+                                                  .toString(),
+                                          'driverId': '',
+                                          'driverdocId': '',
                                           "pickup": pickupController.text,
                                           "drop": dropController.text,
                                           "drop2":

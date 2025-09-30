@@ -8,6 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/AppBar/notificationScreen.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
+import 'package:mana_driver/Driver/BottomnavigationBar/D_Bookings.dart';
+import 'package:mana_driver/Driver/BottomnavigationBar/booking_details.dart';
 import 'package:mana_driver/Driver/sidemenu/D_Sidemenu.dart';
 
 import 'package:mana_driver/Location/location.dart';
@@ -48,6 +50,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
   @override
   void initState() {
     super.initState();
+    _loadOnlineStatus();
     _fetchCars();
     // _startAutoScroll();
 
@@ -147,10 +150,15 @@ class _DriverDashboardState extends State<DriverDashboard> {
 
   void _updateBookingStatus(String bookingId, String newStatus) async {
     try {
+      String driverId = SharedPrefServices.getUserId().toString();
       await FirebaseFirestore.instance
           .collection('bookings')
           .doc(bookingId)
-          .update({'status': newStatus});
+          .update({
+            'status': newStatus,
+            'driverdocId': await SharedPrefServices.getDocId(),
+            'driverId': driverId,
+          });
 
       setState(() {
         int index = carList.indexWhere((car) => car['id'] == bookingId);
@@ -183,6 +191,13 @@ class _DriverDashboardState extends State<DriverDashboard> {
     });
   }
 
+  void _loadOnlineStatus() async {
+    final status = await SharedPrefServices.getisOnline();
+    setState(() {
+      isOnline = status ?? false;
+    });
+  }
+
   void _startAutoScroll() {
     _autoScrollTimer = Timer.periodic(Duration(seconds: 4), (timer) {
       if (_pageController.hasClients) {
@@ -199,6 +214,79 @@ class _DriverDashboardState extends State<DriverDashboard> {
         );
       }
     });
+  }
+
+  String formatDate(String date) {
+    try {
+      final dt = DateTime.parse(date);
+      return '${dt.day.toString().padLeft(2, '0')}-'
+          '${dt.month.toString().padLeft(2, '0')}-'
+          '${dt.year}';
+    } catch (e) {
+      return date;
+    }
+  }
+
+  void _showOnlineDialog() {
+    final nextStatus = isOnline ? "Offline" : "Online";
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Center(
+            child: Text(
+              'Are you sure you want to be   $nextStatus?',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                fontFamily: "inter",
+              ),
+            ),
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomCancelButton(
+                  text: 'No',
+                  onPressed: () => Navigator.pop(context),
+                ),
+
+                CustomButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+
+                    setState(() {
+                      isOnline = !isOnline;
+                    });
+
+                    await SharedPrefServices.setisOnline(isOnline);
+
+                    await _updateOnlineStatusOnServer(isOnline);
+                  },
+
+                  text: 'Yes',
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _updateOnlineStatusOnServer(bool status) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('drivers')
+          .doc(SharedPrefServices.getDocId())
+          .update({'isOnline': status});
+    } catch (e) {
+      print("Failed to update server: $e");
+    }
   }
 
   @override
@@ -279,9 +367,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
 
                                   GestureDetector(
                                     onTap: () {
-                                      setState(() {
-                                        isOnline = !isOnline;
-                                      });
+                                      _showOnlineDialog(); // tap -> dialog
                                     },
                                     child: AnimatedContainer(
                                       duration: const Duration(
@@ -301,7 +387,6 @@ class _DriverDashboardState extends State<DriverDashboard> {
                                       ),
                                       child: Stack(
                                         children: [
-                                          // Sliding circle
                                           AnimatedAlign(
                                             duration: const Duration(
                                               milliseconds: 300,
@@ -319,11 +404,8 @@ class _DriverDashboardState extends State<DriverDashboard> {
                                                 borderRadius:
                                                     BorderRadius.circular(16),
                                               ),
-                                              alignment: Alignment.center,
                                             ),
                                           ),
-
-                                          // Background text
                                           Align(
                                             alignment: Alignment.center,
                                             child: Text(
@@ -338,6 +420,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
                                       ),
                                     ),
                                   ),
+
                                   const SizedBox(width: 12),
 
                                   // Help Icon
@@ -515,7 +598,9 @@ class _DriverDashboardState extends State<DriverDashboard> {
                               onTap: () {
                                 // Navigator.push(
                                 //   context,
-                                //   MaterialPageRoute(builder: (_) => MyVehicle()),
+                                //   MaterialPageRoute(
+                                //     builder: (_) => Dashboard(),
+                                //   ),
                                 // );
                               },
                               child: Text(
@@ -536,7 +621,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
                         SizedBox(height: 20),
                         if (carList.isNotEmpty) ...[
                           SizedBox(
-                            height: 160,
+                            height: 180,
                             child: PageView.builder(
                               itemCount: carList.length,
                               controller: _pageController,
@@ -547,11 +632,25 @@ class _DriverDashboardState extends State<DriverDashboard> {
 
                                 final vehicle = car['vehicleDetails'] ?? {};
 
+                                final brandModelText =
+                                    '${vehicle['brand'] ?? 'NA'} ${vehicle['model'] ?? 'NA'}';
+                                final extraHeight =
+                                    brandModelText.length > 20 ? 10.0 : 0.0;
+
                                 return GestureDetector(
                                   onTap: () {
-                                    setState(() {
-                                      selectedCarIndex = index;
-                                    });
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (_) => BookingDetails(
+                                              bookingData: car,
+                                            ),
+                                      ),
+                                    );
+                                    // setState(() {
+                                    //   selectedCarIndex = index;
+                                    // });
                                   },
                                   child: Stack(
                                     clipBehavior: Clip.none,
@@ -568,7 +667,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
                                           ),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.all(8),
+                                          padding: const EdgeInsets.all(7),
                                           child: Column(
                                             children: [
                                               Row(
@@ -626,9 +725,9 @@ class _DriverDashboardState extends State<DriverDashboard> {
                                                   const SizedBox(width: 10),
                                                   Expanded(
                                                     child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .start,
@@ -648,49 +747,64 @@ class _DriverDashboardState extends State<DriverDashboard> {
                                                         const SizedBox(
                                                           height: 5,
                                                         ),
-                                                        Wrap(
-                                                          spacing: 6,
+                                                        Row(
                                                           children: [
-                                                            Row(
-                                                              children: [
-                                                                Image.asset(
-                                                                  'images/onTime.png',
-                                                                  width: 14,
-                                                                  height: 14,
-                                                                  fit:
-                                                                      BoxFit
-                                                                          .contain,
-                                                                ),
-                                                                const SizedBox(
-                                                                  width: 4,
-                                                                ),
-                                                                CustomText(
-                                                                  text:
-                                                                      car['time'] ??
-                                                                      'NA',
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  textcolor:
-                                                                      kseegreyColor,
-                                                                ),
-                                                                CustomText(
-                                                                  text:
-                                                                      '  . 45 Km',
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  textcolor:
-                                                                      kseegreyColor,
-                                                                ),
-                                                              ],
+                                                            Image.asset(
+                                                              'images/onTime.png',
+                                                              width: 14,
+                                                              height: 14,
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 2,
+                                                            ),
+                                                            CustomText(
+                                                              text:
+                                                                  '${car['date'] != null ? formatDate(car['date']) : 'NA'},',
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              textcolor:
+                                                                  kseegreyColor,
+                                                            ),
+
+                                                            // Image.asset(
+                                                            //   'images/onTime.png',
+                                                            //   width: 14,
+                                                            //   height: 14,
+                                                            // ),
+                                                            const SizedBox(
+                                                              width: 2,
+                                                            ),
+                                                            CustomText(
+                                                              text:
+                                                                  car['time'] ??
+                                                                  'NA',
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              textcolor:
+                                                                  kseegreyColor,
                                                             ),
                                                           ],
                                                         ),
                                                         const SizedBox(
-                                                          height: 10,
+                                                          height: 5,
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            CustomText(
+                                                              text:
+                                                                  '${car['distance'] ?? '45'} Km',
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              textcolor:
+                                                                  kseegreyColor,
+                                                            ),
+                                                          ],
                                                         ),
                                                         // vehicle number safe
                                                       ],
@@ -752,12 +866,71 @@ class _DriverDashboardState extends State<DriverDashboard> {
                                                             backgroundColor:
                                                                 KbtngreenColor,
                                                           ),
-                                                      onPressed: () {
-                                                        _updateBookingStatus(
-                                                          car['id'],
-                                                          'Accepted',
-                                                        );
-                                                        // Handle accept action
+                                                      onPressed: () async {
+                                                        final isOnline =
+                                                            await SharedPrefServices.getisOnline();
+
+                                                        if (!isOnline) {
+                                                          showDialog(
+                                                            context: context,
+                                                            builder:
+                                                                (
+                                                                  context,
+                                                                ) => AlertDialog(
+                                                                  shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          15,
+                                                                        ),
+                                                                  ),
+                                                                  title: Center(
+                                                                    child: const CustomText(
+                                                                      text:
+                                                                          "Cannot Accept Booking",
+                                                                      fontSize:
+                                                                          15,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      textcolor:
+                                                                          Colors
+                                                                              .black,
+                                                                    ),
+                                                                  ),
+                                                                  content: const CustomText(
+                                                                    text:
+                                                                        'Please turn online first to accept bookings.',
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    textcolor:
+                                                                        Colors
+                                                                            .black,
+                                                                  ),
+
+                                                                  actions: [
+                                                                    CustomButton(
+                                                                      onPressed: () async {
+                                                                        Navigator.pop(
+                                                                          context,
+                                                                        );
+                                                                      },
+
+                                                                      text:
+                                                                          'OK',
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                          );
+                                                        } else {
+                                                          // Proceed if online
+                                                          _updateBookingStatus(
+                                                            car['id'],
+                                                            'Accepted',
+                                                          );
+                                                        }
                                                       },
                                                       child: const Text(
                                                         "Accept",

@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:mana_driver/Driver/BottomnavigationBar/booking_details.dart';
 import 'package:mana_driver/Driver/D_Appbar/d_appbar.dart';
 import 'package:mana_driver/Driver/sidemenu/D_Sidemenu.dart';
+import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Widgets/colors.dart';
+import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 
 class D_Bookings extends StatefulWidget {
@@ -25,29 +28,42 @@ class _D_BookingsState extends State<D_Bookings> {
 
   Future<void> _updateBookingStatus(String bookingId, String newStatus) async {
     try {
+      final driverId = await SharedPrefServices.getUserId();
+
       await FirebaseFirestore.instance
           .collection('bookings')
           .doc(bookingId)
-          .update({'status': newStatus});
+          .update({
+            'status': newStatus,
+            'driverdocId': await SharedPrefServices.getDocId(),
+            'driverId': driverId,
+          });
 
       setState(() {
         final index = carList.indexWhere((car) => car['id'] == bookingId);
         if (index != -1) {
           carList[index]['status'] = newStatus;
+          carList[index]['driverId'] = driverId;
         }
       });
     } catch (e) {
       debugPrint('Error updating booking status: $e');
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Failed to update status')));
+      ).showSnackBar(const SnackBar(content: Text('Failed to update status')));
     }
   }
 
   Future<void> _fetchCars() async {
     try {
+      final driverId = await SharedPrefServices.getUserId();
+
       QuerySnapshot snapshot =
-          await FirebaseFirestore.instance.collection("bookings").get();
+          await FirebaseFirestore.instance
+              .collection("bookings")
+              .where("driverId", whereIn: ["", driverId])
+              .orderBy('createdAt', descending: true)
+              .get();
 
       List<Map<String, dynamic>> loadedCars = await Future.wait(
         snapshot.docs.map((doc) async {
@@ -93,7 +109,6 @@ class _D_BookingsState extends State<D_Bookings> {
         carList = loadedCars;
       });
 
-      // print first booking + vehicle details safely
       if (carList.isNotEmpty) {
         var first = carList.first;
         debugPrint("👉 First Booking:");
@@ -139,7 +154,7 @@ class _D_BookingsState extends State<D_Bookings> {
     String status = '';
     switch (selectedIndex) {
       case 0:
-        status = 'New'; // Upcoming
+        status = 'New';
         break;
       case 1:
         status = 'Accepted';
@@ -152,6 +167,17 @@ class _D_BookingsState extends State<D_Bookings> {
         break;
     }
     return carList.where((car) => car['status'] == status).toList();
+  }
+
+  String formatDate(String date) {
+    try {
+      final dt = DateTime.parse(date);
+      return '${dt.day.toString().padLeft(2, '0')}-'
+          '${dt.month.toString().padLeft(2, '0')}-'
+          '${dt.year}';
+    } catch (e) {
+      return date; // fallback
+    }
   }
 
   @override
@@ -243,156 +269,254 @@ class _D_BookingsState extends State<D_Bookings> {
 
                             return Column(
                               children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey.shade300,
-                                      width: 1.5,
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (_) => BookingDetails(
+                                              bookingData: car,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey.shade300,
+                                        width: 1.5,
+                                      ),
+                                      borderRadius: BorderRadius.circular(16),
                                     ),
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  padding: const EdgeInsets.all(8),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 80,
-                                            height: 70,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                              color: Colors.grey.shade100,
+                                    padding: const EdgeInsets.all(8),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 80,
+                                              height: 70,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                                color: Colors.grey.shade100,
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                child:
+                                                    (vehicle['images'] !=
+                                                                null &&
+                                                            vehicle['images']
+                                                                is List &&
+                                                            vehicle['images']
+                                                                .isNotEmpty)
+                                                        ? Image.network(
+                                                          vehicle['images'][0] ??
+                                                              '',
+                                                          fit: BoxFit.cover,
+                                                          width: 130,
+                                                          errorBuilder:
+                                                              (
+                                                                _,
+                                                                __,
+                                                                ___,
+                                                              ) => const Icon(
+                                                                Icons.car_crash,
+                                                              ),
+                                                        )
+                                                        : const Icon(
+                                                          Icons.directions_car,
+                                                        ),
+                                              ),
                                             ),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              child:
-                                                  (vehicle['images'] != null &&
-                                                          vehicle['images']
-                                                              is List &&
-                                                          vehicle['images']
-                                                              .isNotEmpty)
-                                                      ? Image.network(
-                                                        vehicle['images'][0] ??
-                                                            '',
-                                                        fit: BoxFit.cover,
-                                                        width: 130,
-                                                        errorBuilder:
-                                                            (
-                                                              _,
-                                                              __,
-                                                              ___,
-                                                            ) => const Icon(
-                                                              Icons.car_crash,
-                                                            ),
-                                                      )
-                                                      : const Icon(
-                                                        Icons.directions_car,
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  CustomText(
+                                                    text:
+                                                        '${vehicle['brand'] ?? 'NA'} ${vehicle['model'] ?? 'NA'}',
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                    textcolor: KblackColor,
+                                                  ),
+                                                  const SizedBox(height: 5),
+                                                  Row(
+                                                    children: [
+                                                      Image.asset(
+                                                        'images/onTime.png',
+                                                        width: 14,
+                                                        height: 14,
                                                       ),
+                                                      const SizedBox(width: 2),
+                                                      CustomText(
+                                                        text:
+                                                            '${car['date'] != null ? formatDate(car['date']) : 'NA'},',
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        textcolor:
+                                                            kseegreyColor,
+                                                      ),
+
+                                                      // Image.asset(
+                                                      //   'images/onTime.png',
+                                                      //   width: 14,
+                                                      //   height: 14,
+                                                      // ),
+                                                      const SizedBox(width: 2),
+                                                      CustomText(
+                                                        text:
+                                                            car['time'] ?? 'NA',
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        textcolor:
+                                                            kseegreyColor,
+                                                      ),
+                                                      CustomText(
+                                                        text:
+                                                            ' . ${car['distance'] ?? '45'} Km',
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        textcolor:
+                                                            kseegreyColor,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
                                             ),
+                                            const Icon(
+                                              Icons.arrow_forward_ios,
+                                              size: 18,
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        if (car['status'] == 'New')
+                                          DottedLine(
+                                            dashColor: kbordergreyColor,
+                                            dashLength: 10,
+                                            dashGapLength: 6,
                                           ),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                CustomText(
-                                                  text:
-                                                      '${vehicle['brand'] ?? 'NA'} ${vehicle['model'] ?? 'NA'}',
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  textcolor: KblackColor,
+                                        if (car['status'] == 'New')
+                                          const SizedBox(height: 10),
+                                        if (car['status'] == 'New')
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: OutlinedButton(
+                                                  style:
+                                                      OutlinedButton.styleFrom(
+                                                        side: const BorderSide(
+                                                          color:
+                                                              KorangeColorNew,
+                                                        ),
+                                                      ),
+                                                  onPressed: () {
+                                                    _updateBookingStatus(
+                                                      car['id'],
+                                                      'Declined',
+                                                    );
+                                                  },
+                                                  child: const CustomText(
+                                                    text: "Decline",
+                                                    textcolor: KorangeColorNew,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
                                                 ),
-                                                const SizedBox(height: 5),
-                                                Row(
-                                                  children: [
-                                                    Image.asset(
-                                                      'images/onTime.png',
-                                                      width: 14,
-                                                      height: 14,
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Expanded(
+                                                child: ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            KbtngreenColor,
+                                                      ),
+                                                  onPressed: () async {
+                                                    final isOnline =
+                                                        await SharedPrefServices.getisOnline();
+
+                                                    if (!isOnline) {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder:
+                                                            (
+                                                              context,
+                                                            ) => AlertDialog(
+                                                              shape: RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      15,
+                                                                    ),
+                                                              ),
+                                                              title: Center(
+                                                                child: const CustomText(
+                                                                  text:
+                                                                      "Cannot Accept Booking",
+                                                                  fontSize: 15,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  textcolor:
+                                                                      Colors
+                                                                          .black,
+                                                                ),
+                                                              ),
+                                                              content: const CustomText(
+                                                                text:
+                                                                    'Please turn online first to accept bookings.',
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                textcolor:
+                                                                    Colors
+                                                                        .black,
+                                                              ),
+
+                                                              actions: [
+                                                                CustomButton(
+                                                                  onPressed:
+                                                                      () async {
+                                                                        Navigator.pop(
+                                                                          context,
+                                                                        );
+                                                                      },
+
+                                                                  text: 'OK',
+                                                                ),
+                                                              ],
+                                                            ),
+                                                      );
+                                                    } else {
+                                                      // Proceed if online
+                                                      _updateBookingStatus(
+                                                        car['id'],
+                                                        'Accepted',
+                                                      );
+                                                    }
+                                                  },
+                                                  child: const Text(
+                                                    "Accept",
+                                                    style: TextStyle(
+                                                      color: kwhiteColor,
                                                     ),
-                                                    const SizedBox(width: 4),
-                                                    CustomText(
-                                                      text: car['time'] ?? 'NA',
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      textcolor: kseegreyColor,
-                                                    ),
-                                                    CustomText(
-                                                      text:
-                                                          '  . ${car['distance'] ?? '45'} Km',
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      textcolor: kseegreyColor,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const Icon(
-                                            Icons.arrow_forward_ios,
-                                            size: 18,
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 10),
-                                      DottedLine(
-                                        dashColor: kbordergreyColor,
-                                        dashLength: 10,
-                                        dashGapLength: 6,
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: OutlinedButton(
-                                              style: OutlinedButton.styleFrom(
-                                                side: const BorderSide(
-                                                  color: KorangeColorNew,
+                                                  ),
                                                 ),
                                               ),
-                                              onPressed: () {
-                                                _updateBookingStatus(
-                                                  car['id'],
-                                                  'Declined',
-                                                );
-                                              },
-                                              child: const CustomText(
-                                                text: "Decline",
-                                                textcolor: KorangeColorNew,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
+                                            ],
                                           ),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: KbtngreenColor,
-                                              ),
-                                              onPressed: () {
-                                                _updateBookingStatus(
-                                                  car['id'],
-                                                  'Accepted',
-                                                );
-                                              },
-                                              child: const Text(
-                                                "Accept",
-                                                style: TextStyle(
-                                                  color: kwhiteColor,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 SizedBox(height: 10),

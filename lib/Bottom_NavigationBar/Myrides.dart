@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mana_driver/AppBar/appBar.dart';
+import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Vehicles/confirm_details.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
@@ -206,6 +207,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
     );
   }
 
+  final currentUserId = SharedPrefServices.getUserId().toString();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -225,18 +227,19 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                 tabs: [
                   buildTab("All", 0),
                   buildTab("New", 1),
-                  buildTab("Upcoming", 2),
+                  buildTab("Accepted", 2),
                   buildTab("Completed", 3),
                 ],
               ),
             ),
           ),
-
+ 
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream:
                   FirebaseFirestore.instance
                       .collection('bookings')
+                      .where('ownerId', isEqualTo: currentUserId)
                       .orderBy('createdAt', descending: true)
                       .snapshots(),
               builder: (context, snapshot) {
