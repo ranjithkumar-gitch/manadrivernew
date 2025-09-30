@@ -18,17 +18,17 @@ class _D_SettindsState extends State<D_Settinds> {
         title: Stack(
           alignment: Alignment.center,
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: InkWell(
-                onTap: () => Navigator.pop(context),
-                child: Image.asset(
-                  "images/chevronLeft.png",
-                  width: 24,
-                  height: 24,
-                ),
-              ),
-            ),
+            // Align(
+            //   alignment: Alignment.centerLeft,
+            //   child: InkWell(
+            //     onTap: () => Navigator.pop(context),
+            //     child: Image.asset(
+            //       "images/chevronLeft.png",
+            //       width: 24,
+            //       height: 24,
+            //     ),
+            //   ),
+            // ),
             Center(
               child: Text(
                 "Settings",

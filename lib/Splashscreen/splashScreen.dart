@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
+import 'package:mana_driver/Driver/BottomnavigationBar/D_bottomnavigationbar.dart';
 import 'package:mana_driver/Login/selectLanguage.dart';
 
 import 'package:mana_driver/OnBoardingScreens/onboarding_screens.dart';
@@ -29,15 +30,21 @@ class _SplashScreenState extends State<SplashScreen> {
 
     await SharedPrefServices.init();
     bool isLoggedIn = SharedPrefServices.getislogged();
+    String role = SharedPrefServices.getRoleCode().toString();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusManager.instance.primaryFocus?.unfocus();
     });
 
-    if (isLoggedIn) {
+    if (isLoggedIn && role == "Owner") {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => BottomNavigation()),
+      );
+    } else if (isLoggedIn && role == "Driver") {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => D_BottomNavigation()),
       );
     } else {
       Navigator.pushReplacement(
