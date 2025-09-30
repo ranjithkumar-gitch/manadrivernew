@@ -23,11 +23,14 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
   late Map<String, dynamic> data;
   Map<String, dynamic>? vehicleData;
 
+  Map<String, dynamic>? driverData;
+
   @override
   void initState() {
     super.initState();
     data = widget.bookingData;
     fetchVehicleData();
+    fetchDriver();
   }
 
   void fetchVehicleData() async {
@@ -42,6 +45,24 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
       if (snapshot.exists) {
         setState(() {
           vehicleData = snapshot.data() as Map<String, dynamic>;
+        });
+      }
+    }
+  }
+
+  void fetchDriver() async {
+    String driverId = widget.bookingData['driverdocId'] ?? '';
+    print('Driver ID: $driverId'); // Debug print
+    if (driverId.isNotEmpty) {
+      DocumentSnapshot snapshot =
+          await FirebaseFirestore.instance
+              .collection('drivers')
+              .doc(driverId)
+              .get();
+
+      if (snapshot.exists) {
+        setState(() {
+          driverData = snapshot.data() as Map<String, dynamic>;
         });
       }
     }
@@ -362,15 +383,15 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                       ),
                     ],
                   ),
-                  if (tripTime == "City Limits" &&
-                      citylimithours.toString().isNotEmpty) ...[
+                  if (tripMode == "City Limits" &&
+                      citylimithours.isNotEmpty) ...[
                     const SizedBox(height: 15),
                     Row(
                       children: [
                         Image.asset("images/time.png", height: 20, width: 20),
                         const SizedBox(width: 8),
                         CustomText(
-                          text: '${citylimithours.toString()} Hours',
+                          text: 'City Limit : $citylimithours Hours',
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           textcolor: KblackColor,
@@ -378,6 +399,24 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                       ],
                     ),
                   ],
+
+                  //   if (tripTime == "City Limits" &&
+                  //       citylimithours.toString().isNotEmpty) ...[
+                  //     const SizedBox(height: 15),
+                  //     Row(
+                  //       children: [
+                  //         Image.asset("images/time.png", height: 20, width: 20),
+                  //         const SizedBox(width: 8),
+                  //         CustomText(
+                  //           text: '${citylimithours.toString()} Hours',
+                  //           fontSize: 14,
+                  //           fontWeight: FontWeight.w400,
+                  //           textcolor: KblackColor,
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ],
                 ],
               ),
             ),
@@ -494,6 +533,78 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                       const SizedBox(width: 8),
                       CustomText(
                         text: SharedPrefServices.getEmail() ?? driverEmail,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        textcolor: KblackColor,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 15),
+            const Divider(thickness: 3, color: KlightgreyColor),
+            Padding(
+              padding: const EdgeInsets.only(right: 15, left: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CustomText(
+                    text: "Driver Details",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    textcolor: korangeColor,
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Image.asset("images/person.png", height: 20, width: 20),
+                      const SizedBox(width: 8),
+                      CustomText(
+                        text:
+                            driverData != null
+                                ? "${driverData!['firstName'] ?? ''} ${driverData!['lastName'] ?? ''}"
+                                : driverName,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        textcolor: KblackColor,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Image.asset(
+                        "images/call_drvr.png",
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      CustomText(
+                        text:
+                            driverData != null
+                                ? driverData!['phone'] ?? ''
+                                : '',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        textcolor: KblackColor,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Image.asset(
+                        "images/email_drvr.png",
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      CustomText(
+                        text:
+                            driverData != null
+                                ? driverData!['email'] ?? ''
+                                : '',
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         textcolor: KblackColor,

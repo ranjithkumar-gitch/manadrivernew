@@ -398,15 +398,15 @@ class _BookingDetailsState extends State<BookingDetails> {
                       ),
                     ],
                   ),
-                  if (tripTime == "City Limits" &&
-                      citylimithours.toString().isNotEmpty) ...[
+                  if (tripMode == "City Limits" &&
+                      citylimithours.isNotEmpty) ...[
                     const SizedBox(height: 15),
                     Row(
                       children: [
                         Image.asset("images/time.png", height: 20, width: 20),
                         const SizedBox(width: 8),
                         CustomText(
-                          text: '${citylimithours.toString()} Hours',
+                          text: 'City Limit : $citylimithours Hours',
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           textcolor: KblackColor,

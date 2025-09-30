@@ -54,6 +54,8 @@ class _MyRidesScreenState extends State<MyRidesScreen>
     String date = bookingData['date'] ?? "";
     String time = bookingData['time'] ?? "";
     String vehicleId = bookingData['vehicleId'] ?? "";
+    String driverDocId = bookingData['driverdocId'] ?? "";
+    print(driverDocId);
 
     return FutureBuilder<DocumentSnapshot>(
       future:
@@ -61,147 +63,197 @@ class _MyRidesScreenState extends State<MyRidesScreen>
               .collection('vehicles')
               .doc(vehicleId)
               .get(),
-      builder: (context, snapshot) {
+      builder: (context, vehicleSnapshot) {
         String vehicleName = "Vehicle";
-
-        if (snapshot.hasData && snapshot.data!.exists) {
-          final vehicleData = snapshot.data!.data() as Map<String, dynamic>;
+        if (vehicleSnapshot.hasData && vehicleSnapshot.data!.exists) {
+          final vehicleData =
+              vehicleSnapshot.data!.data() as Map<String, dynamic>;
           vehicleName =
               "${vehicleData['brand'] ?? ''} ${vehicleData['model'] ?? ''}";
         }
 
-        String price = "₹ 0.00";
+        return FutureBuilder<DocumentSnapshot>(
+          future:
+              FirebaseFirestore.instance
+                  .collection('drivers')
+                  .doc(driverDocId)
+                  .get(),
+          builder: (context, driverSnapshot) {
+            String userName = "Driver not assigned";
+            String driverRating =
+                bookingData['driverRating']?.toString() ?? "N/A";
 
-        String userName = bookingData['driverName'] ?? "Driver not assigned";
-        String driverRating = bookingData['driverRating']?.toString() ?? "N/A";
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ConfirmDetails(bookingData: bookingData),
-              ),
-            );
-          },
-          child: Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            color: kwhiteColor,
-            shape: RoundedRectangleBorder(
-              side: BorderSide(color: KcardborderColor, width: 1.0),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            if (driverSnapshot.hasData && driverSnapshot.data!.exists) {
+              final driverData =
+                  driverSnapshot.data!.data() as Map<String, dynamic>;
+              print("Driver Data: $driverData");
+
+              userName =
+                  "${driverData['firstName'] ?? ''} ${driverData['lastName'] ?? ''}"
+                      .trim();
+            }
+
+            print(userName);
+
+            String price = "₹ 0.00";
+
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => ConfirmDetails(bookingData: bookingData),
+                  ),
+                );
+              },
+              child: Card(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                color: kwhiteColor,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: KcardborderColor, width: 1.0),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
                     children: [
-                      Stack(
-                        alignment: Alignment.bottomCenter,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CircleAvatar(
-                            radius: 30,
-                            backgroundImage: AssetImage('images/user.png'),
-                          ),
-                          Align(
+                          Stack(
                             alignment: Alignment.bottomCenter,
-                            child: Container(
-                              width: 20,
-                              height: 20,
-                              decoration: BoxDecoration(shape: BoxShape.circle),
-                              child: ClipOval(
-                                child: Image.asset(
-                                  'images/verified.png',
-                                  fit: BoxFit.cover,
+                            children: [
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundImage:
+                                    driverSnapshot.hasData &&
+                                            driverSnapshot.data!.exists &&
+                                            (driverSnapshot.data!.data()
+                                                    as Map<
+                                                      String,
+                                                      dynamic
+                                                    >)['profileUrl'] !=
+                                                null &&
+                                            ((driverSnapshot.data!.data()
+                                                        as Map<
+                                                          String,
+                                                          dynamic
+                                                        >)['profileUrl']
+                                                    as String)
+                                                .isNotEmpty
+                                        ? NetworkImage(
+                                          (driverSnapshot.data!.data()
+                                              as Map<
+                                                String,
+                                                dynamic
+                                              >)['profileUrl'],
+                                        )
+                                        : AssetImage('images/user.png')
+                                            as ImageProvider,
+                              ),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  width: 20,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: ClipOval(
+                                    child: Image.asset(
+                                      'images/verified.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomText(
-                              text: userName,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              textcolor: korangeColor,
-                            ),
-                            Row(
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Image.asset('images/star.png'),
-                                SizedBox(width: 3),
                                 CustomText(
-                                  text: driverRating,
+                                  text: userName,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  textcolor: korangeColor,
+                                ),
+                                Row(
+                                  children: [
+                                    Image.asset('images/star.png'),
+                                    SizedBox(width: 3),
+                                    CustomText(
+                                      text: driverRating,
+                                      textcolor: kseegreyColor,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ],
+                                ),
+                                CustomText(
+                                  text: vehicleName,
                                   textcolor: kseegreyColor,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ],
                             ),
-                            CustomText(
-                              text: vehicleName,
-                              textcolor: kseegreyColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color:
-                              status == "Completed"
-                                  ? Color(0xFFB9FFD6)
-                                  : Color(0xFFC9DFFF),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          status,
-                          style: TextStyle(
-                            color:
-                                status == "Completed"
-                                    ? Color(0xFF00D458)
-                                    : Color(0xFF1D9BF0),
-                            fontWeight: FontWeight.w500,
                           ),
-                        ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color:
+                                  status == "Completed"
+                                      ? Color(0xFFB9FFD6)
+                                      : Color(0xFFC9DFFF),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              status,
+                              style: TextStyle(
+                                color:
+                                    status == "Completed"
+                                        ? Color(0xFF00D458)
+                                        : Color(0xFF1D9BF0),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Divider(color: KdeviderColor),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Image.asset('images/calender.png'),
+                          const SizedBox(width: 5),
+                          Text(date, style: TextStyle(color: kseegreyColor)),
+                          const SizedBox(width: 12),
+                          Container(height: 20, width: 1, color: kseegreyColor),
+                          const SizedBox(width: 12),
+                          Text(time, style: TextStyle(color: kseegreyColor)),
+                          Spacer(),
+                          CustomText(
+                            text: price,
+                            textcolor: korangeColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  Divider(color: KdeviderColor),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Image.asset('images/calender.png'),
-                      const SizedBox(width: 5),
-                      Text(date, style: TextStyle(color: kseegreyColor)),
-                      const SizedBox(width: 12),
-                      Container(height: 20, width: 1, color: kseegreyColor),
-                      const SizedBox(width: 12),
-                      Text(time, style: TextStyle(color: kseegreyColor)),
-                      Spacer(),
-                      CustomText(
-                        text: price,
-                        textcolor: korangeColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ],
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -233,7 +285,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
               ),
             ),
           ),
- 
+
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream:
