@@ -31,10 +31,12 @@ class _SplashScreenState extends State<SplashScreen> {
     await SharedPrefServices.init();
     bool isLoggedIn = SharedPrefServices.getislogged();
     String role = SharedPrefServices.getRoleCode().toString();
-
+   
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusManager.instance.primaryFocus?.unfocus();
     });
+    print("isLoggedIn: $isLoggedIn");
+    print("role: $role");
 
     if (isLoggedIn && role == "Owner") {
       Navigator.pushReplacement(
