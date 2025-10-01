@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await SharedPrefServices.init();
     bool isLoggedIn = SharedPrefServices.getislogged();
     String role = SharedPrefServices.getRoleCode().toString();
-   
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusManager.instance.primaryFocus?.unfocus();
     });

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/services/repository.dart';
 import 'package:uuid/uuid.dart';
 import '../models/user_model.dart';
@@ -63,7 +64,7 @@ class RegisterViewModel extends ChangeNotifier {
       );
 
       await _firebaseService.createUser(user: user, collectionPrefix: 'users');
-
+      SharedPrefServices.setUserId(generatedUserId);
       _setLoading(false);
       return true;
     } catch (e) {

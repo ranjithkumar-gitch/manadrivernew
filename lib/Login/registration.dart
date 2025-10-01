@@ -219,8 +219,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               MaterialPageRoute(
                                 builder:
                                     (_) => OtpScreen(
-                                      phoneNumber:
-                                      "${phoneController.text.trim()}",
+                                      phoneNumber: phoneController.text.trim(),
                                       firstName: firstName,
                                       lastName: lastName,
                                       email: email,

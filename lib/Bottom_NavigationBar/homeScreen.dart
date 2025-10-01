@@ -56,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController drop2Controller = TextEditingController();
   @override
   void initState() {
+    print("Home Scree user id ${SharedPrefServices.getUserId().toString()}");
     super.initState();
     _fetchCars();
     // _startAutoScroll();
