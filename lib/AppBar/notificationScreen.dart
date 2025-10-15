@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customButton.dart';
+
 import 'package:mana_driver/Widgets/customText.dart';
 
 class NotificationScreen extends StatefulWidget {

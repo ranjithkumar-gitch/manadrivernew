@@ -6,8 +6,6 @@ import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 import 'package:mana_driver/Widgets/customTextField.dart';
 import 'package:mana_driver/l10n/app_localizations.dart';
-import 'package:mana_driver/viewmodels/login_viewmodel.dart';
-import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

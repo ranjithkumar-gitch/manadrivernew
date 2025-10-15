@@ -1,10 +1,9 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mana_driver/Bottom_NavigationBar/homeScreen.dart';
-import 'package:mana_driver/Vehicles/confirm_details.dart';
+
 import 'package:mana_driver/Vehicles/edit_vehicle_details.dart';
-import 'package:mana_driver/Vehicles/my_vehicle.dart';
+
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
@@ -361,33 +360,33 @@ class VehicleDetailsScreen extends StatelessWidget {
             const SizedBox(height: 30),
 
             // Button
-            Center(
-              child: SizedBox(
-                width: 220,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: korangeColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
-                    ),
-                  ),
-                  onPressed: () {
-                    showBookingBottomSheet(context);
-                  },
-                  child: CustomText(
-                    text: "Book a Driver",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    textcolor: kwhiteColor,
-                  ),
-                ),
-              ),
-            ),
+            // Center(
+            //   child: SizedBox(
+            //     width: 220,
+            //     height: 50,
+            //     child: ElevatedButton(
+            //       style: ElevatedButton.styleFrom(
+            //         backgroundColor: korangeColor,
+            //         shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(40),
+            //         ),
+            //         padding: const EdgeInsets.symmetric(
+            //           horizontal: 10,
+            //           vertical: 5,
+            //         ),
+            //       ),
+            //       onPressed: () {
+            //         showBookingBottomSheet(context);
+            //       },
+            //       child: CustomText(
+            //         text: "Book a Driver",
+            //         fontSize: 14,
+            //         fontWeight: FontWeight.w500,
+            //         textcolor: kwhiteColor,
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -1147,37 +1146,37 @@ Widget addressCard(String title, String address) {
   );
 }
 
-Widget _section({required String title, required Widget child}) {
-  return Container(
-    width: double.infinity,
+// Widget _section({required String title, required Widget child}) {
+//   return Container(
+//     width: double.infinity,
 
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: kbordergreyColor, width: 1),
-    ),
-    child: Container(
-      margin: const EdgeInsets.only(bottom: 10, left: 5, right: 5, top: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: CustomText(
-              text: title,
-              textcolor: korangeColor,
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-            ),
-          ),
+//     decoration: BoxDecoration(
+//       color: Colors.white,
+//       borderRadius: BorderRadius.circular(12),
+//       border: Border.all(color: kbordergreyColor, width: 1),
+//     ),
+//     child: Container(
+//       margin: const EdgeInsets.only(bottom: 10, left: 5, right: 5, top: 10),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Padding(
+//             padding: const EdgeInsets.only(left: 10),
+//             child: CustomText(
+//               text: title,
+//               textcolor: korangeColor,
+//               fontWeight: FontWeight.w600,
+//               fontSize: 16,
+//             ),
+//           ),
 
-          const SizedBox(height: 12),
-          Padding(padding: const EdgeInsets.only(left: 10), child: child),
-        ],
-      ),
-    ),
-  );
-}
+//           const SizedBox(height: 12),
+//           Padding(padding: const EdgeInsets.only(left: 10), child: child),
+//         ],
+//       ),
+//     ),
+//   );
+// }
 
 class _SpecItem extends StatelessWidget {
   final String iconPath;

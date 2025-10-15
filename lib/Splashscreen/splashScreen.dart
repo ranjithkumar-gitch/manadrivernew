@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
-import 'package:mana_driver/Driver/BottomnavigationBar/D_bottomnavigationbar.dart';
+
 import 'package:mana_driver/Login/selectLanguage.dart';
 
-import 'package:mana_driver/OnBoardingScreens/onboarding_screens.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 
@@ -42,11 +40,6 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => BottomNavigation()),
-      );
-    } else if (isLoggedIn && role == "Driver") {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => D_BottomNavigation()),
       );
     } else {
       Navigator.pushReplacement(

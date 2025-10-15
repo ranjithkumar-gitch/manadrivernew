@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/Vehicles/my_vehicle.dart';
+
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -581,6 +581,78 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                 ),
 
                 const SizedBox(height: 10),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: List.generate(
+                //     4,
+                //     (index) => Padding(
+                //       padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                //       child: GestureDetector(
+                //         onTap: () => _pickImage(index),
+                //         child: DottedBorder(
+                //           options: RoundedRectDottedBorderOptions(
+                //             radius: const Radius.circular(10),
+                //             dashPattern: [5, 5],
+                //             color: kgreyColor,
+                //             strokeWidth: 2,
+                //             padding: const EdgeInsets.all(0),
+                //           ),
+                //           child: Container(
+                //             width: 70,
+                //             height: 60,
+                //             decoration: BoxDecoration(
+                //               borderRadius: BorderRadius.circular(10),
+                //               color: KdeviderColor,
+                //             ),
+                //             child:
+                //                 images[index] == null
+                //                     ? const Icon(Icons.add, color: kgreyColor)
+                //                     : Stack(
+                //                       clipBehavior: Clip.none,
+                //                       children: [
+                //                         ClipRRect(
+                //                           borderRadius: BorderRadius.circular(
+                //                             10,
+                //                           ),
+                //                           child: Image.file(
+                //                             images[index]!,
+                //                             width: 70,
+                //                             height: 60,
+                //                             fit: BoxFit.cover,
+                //                           ),
+                //                         ),
+
+                //                         Positioned(
+                //                           top: -5,
+                //                           right: 0,
+                //                           child: GestureDetector(
+                //                             onTap: () {
+                //                               setState(() {
+                //                                 images[index] = null;
+                //                               });
+                //                             },
+                //                             child: Container(
+                //                               decoration: BoxDecoration(
+                //                                 color: korangeColor,
+                //                                 shape: BoxShape.circle,
+                //                               ),
+                //                               padding: const EdgeInsets.all(2),
+                //                               child: const Icon(
+                //                                 Icons.delete,
+                //                                 size: 14,
+                //                                 color: Colors.white,
+                //                               ),
+                //                             ),
+                //                           ),
+                //                         ),
+                //                       ],
+                //                     ),
+                //           ),
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
@@ -621,14 +693,16 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                                             fit: BoxFit.cover,
                                           ),
                                         ),
-
                                         Positioned(
                                           top: -5,
                                           right: 0,
                                           child: GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                images[index] = null;
+                                                images.removeAt(index);
+                                                images.add(
+                                                  null,
+                                                ); // shift and keep 4
                                               });
                                             },
                                             child: Container(

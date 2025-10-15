@@ -60,7 +60,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
 
   Future<void> _onSuggestionTap(AutocompletePrediction p) async {
     final response = await places.fetchPlace(
-      p.placeId!,
+      p.placeId,
       fields: [PlaceField.Location, PlaceField.Name],
     );
 
@@ -68,17 +68,17 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
 
     setState(() {
       if (isCurrent) {
-        currentLocationController.text = p.fullText ?? "";
+        currentLocationController.text = p.fullText;
         pickupLat = place?.latLng?.lat.toString() ?? "";
         pickupLng = place?.latLng?.lng.toString() ?? "";
         isPickupSelection = false;
       } else {
         if (showSecondDrop && secondDropFocus.hasFocus) {
-          secondDropController.text = p.fullText ?? "";
+          secondDropController.text = p.fullText;
           drop2Lat = place?.latLng?.lat.toString() ?? "";
           drop2Lng = place?.latLng?.lng.toString() ?? "";
         } else {
-          dropLocationController.text = p.fullText ?? "";
+          dropLocationController.text = p.fullText;
           dropLat = place?.latLng?.lat.toString() ?? "";
           dropLng = place?.latLng?.lng.toString() ?? "";
         }
@@ -495,7 +495,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                               color: korangeColor,
                             ),
                             title: Text(
-                              p.fullText ?? "",
+                              p.fullText,
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,

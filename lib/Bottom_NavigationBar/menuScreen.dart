@@ -20,7 +20,7 @@ import 'package:mana_driver/Widgets/customText.dart';
 import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
 import 'package:mana_driver/Widgets/mobileNumberInputField.dart';
 import 'package:mana_driver/l10n/app_localizations.dart';
-import 'package:mana_driver/viewmodels/login_viewmodel.dart';
+
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:mana_driver/services/locale_provider.dart';
@@ -50,11 +50,11 @@ class _MenuScreenState extends State<MenuScreen> {
     {'image': 'images/logout.png', 'title': 'Logout'},
   ];
 
-  @override
-  void instate() {
-    super.initState();
-    //  getProfileData();
-  }
+  // @override
+  // void instate() {
+  //   super.initState();
+  //   //  getProfileData();
+  // }
 
   String maskEmail(String email) {
     if (email.isEmpty) return "";
@@ -145,19 +145,19 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final vm = context.watch<LoginViewModel>();
-    final userName =
-        "${vm.loggedInUser?['firstName'] ?? ''} ${vm.loggedInUser?['lastName'] ?? ''}"
-            .trim();
+    // final vm = context.watch<LoginViewModel>();
+    // final userName =
+    //     "${vm.loggedInUser?['firstName'] ?? ''} ${vm.loggedInUser?['lastName'] ?? ''}"
+    //         .trim();
 
-    final userEmail = vm.loggedInUser?['email'] ?? "";
+    // final userEmail = vm.loggedInUser?['email'] ?? "";
     return SafeArea(
       child: Stack(
         children: [
           SingleChildScrollView(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                double screenWidth = constraints.maxWidth;
+                // double screenWidth = constraints.maxWidth;
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),

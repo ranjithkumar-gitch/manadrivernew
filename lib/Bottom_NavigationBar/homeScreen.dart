@@ -7,20 +7,18 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/AppBar/notificationScreen.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
-import 'package:mana_driver/Location/driverAssigned.dart';
+
 import 'package:mana_driver/Location/location.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/Vehicles/confirm_details.dart';
+
 import 'package:mana_driver/Vehicles/my_vehicle.dart';
-import 'package:mana_driver/Vehicles/vehicle_details.dart';
+
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
 import 'package:mana_driver/l10n/app_localizations.dart';
-import 'package:mana_driver/viewmodels/login_viewmodel.dart';
 
-import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,7 +31,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool isDropLocation2Visible = false;
   PageController _pageController = PageController(viewportFraction: 1);
-  int _currentPage = 0;
+  // int _currentPage = 0;
 
   String pickupLat = "";
   String pickupLng = "";
@@ -49,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Timer? _offerAutoScrollTimer;
 
   PageController _watchPageController = PageController(viewportFraction: 1);
-  int _watchCurrentPage = 0;
+  // int _watchCurrentPage = 0;
   Timer? _watchAutoScrollTimer;
   final TextEditingController pickupController = TextEditingController();
   final TextEditingController dropController = TextEditingController();
@@ -161,23 +159,23 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _startAutoScroll() {
-    _autoScrollTimer = Timer.periodic(Duration(seconds: 4), (timer) {
-      if (_pageController.hasClients) {
-        if (_currentPage < carList.length - 1) {
-          _currentPage++;
-        } else {
-          _currentPage = 0;
-        }
+  // void _startAutoScroll() {
+  //   _autoScrollTimer = Timer.periodic(Duration(seconds: 4), (timer) {
+  //     if (_pageController.hasClients) {
+  //       if (_currentPage < carList.length - 1) {
+  //         _currentPage++;
+  //       } else {
+  //         _currentPage = 0;
+  //       }
 
-        _pageController.animateToPage(
-          _currentPage,
-          duration: Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
-  }
+  //       _pageController.animateToPage(
+  //         _currentPage,
+  //         duration: Duration(milliseconds: 500),
+  //         curve: Curves.easeInOut,
+  //       );
+  //     }
+  //   });
+  // }
 
   @override
   void dispose() {

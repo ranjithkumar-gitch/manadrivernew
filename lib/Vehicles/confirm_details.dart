@@ -1,12 +1,10 @@
-//
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Sidemenu/cancellationPolicyScreen.dart';
 import 'package:mana_driver/Vehicles/payment_gateway.dart';
-import 'package:mana_driver/Vehicles/vehicle_details.dart';
+
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 

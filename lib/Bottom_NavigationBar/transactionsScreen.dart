@@ -15,7 +15,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomMainAppBar(),
+      // appBar: const CustomMainAppBar(),
+      appBar: const CustomMainAppBar(title: "Transactions"),
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

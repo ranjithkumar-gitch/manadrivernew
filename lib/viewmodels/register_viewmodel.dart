@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/services/repository.dart';
-import 'package:uuid/uuid.dart';
+
 import '../models/user_model.dart';
 
 class RegisterViewModel extends ChangeNotifier {
@@ -41,9 +40,9 @@ class RegisterViewModel extends ChangeNotifier {
       if (email.trim().isEmpty) throw Exception('Email required');
       if (phone.trim().isEmpty) throw Exception('Phone required');
 
-      final snapshot =
-          await FirebaseFirestore.instance.collection('users').get();
-      final totalCount = snapshot.docs.length;
+      // final snapshot =
+      //     await FirebaseFirestore.instance.collection('users').get();
+      // final totalCount = snapshot.docs.length;
 
       final now = DateTime.now();
       final formattedDate =
@@ -51,7 +50,7 @@ class RegisterViewModel extends ChangeNotifier {
           "${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}${now.second.toString().padLeft(2, '0')}";
       final generatedUserId = "Owner_$formattedDate";
 
-      final id = const Uuid().v4();
+      // final id = const Uuid().v4();
       final user = UserModel(
         userId: generatedUserId,
         roleCode: "Owner",

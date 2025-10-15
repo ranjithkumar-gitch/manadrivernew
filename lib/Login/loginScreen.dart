@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:country_picker/country_picker.dart';
 import '../services/repository.dart';
 import '../viewmodels/login_viewmodel.dart';
-import 'otpscreen.dart';
+
 import '../Widgets/colors.dart';
 import '../Widgets/customButton.dart';
 import '../Widgets/customText.dart';
@@ -65,11 +65,11 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                 children: [
                   const Spacer(),
 
-                  CustomText(
-                    text: "Mana Driver",
-                    fontSize: 32,
-                    fontWeight: FontWeight.w700,
-                    textcolor: korangeColor,
+                  Image.asset(
+                    'images/rydyn.png',
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.contain,
                   ),
                   const Spacer(),
                   Padding(
@@ -233,34 +233,34 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
     );
   }
 
-  // Future<bool> _checkUserExists(String phoneNumber) async {
-  //   final snapshot =
-  //       await FirebaseFirestore.instance
-  //           .collection('users')
-  //           .where('phone', isEqualTo: phoneNumber)
-  //           .limit(1)
-  //           .get();
-  //   return snapshot.docs.isNotEmpty;
-  // }
   Future<bool> _checkUserExists(String phoneNumber) async {
-    final driverSnap =
-        await FirebaseFirestore.instance
-            .collection('drivers')
-            .where('phone', isEqualTo: phoneNumber)
-            .limit(1)
-            .get();
-
-    if (driverSnap.docs.isNotEmpty) return true;
-
-    final ownerSnap =
+    final snapshot =
         await FirebaseFirestore.instance
             .collection('users')
             .where('phone', isEqualTo: phoneNumber)
             .limit(1)
             .get();
-
-    return ownerSnap.docs.isNotEmpty;
+    return snapshot.docs.isNotEmpty;
   }
+  // Future<bool> _checkUserExists(String phoneNumber) async {
+  //   final driverSnap =
+  //       await FirebaseFirestore.instance
+  //           .collection('drivers')
+  //           .where('phone', isEqualTo: phoneNumber)
+  //           .limit(1)
+  //           .get();
+
+  //   if (driverSnap.docs.isNotEmpty) return true;
+
+  //   final ownerSnap =
+  //       await FirebaseFirestore.instance
+  //           .collection('users')
+  //           .where('phone', isEqualTo: phoneNumber)
+  //           .limit(1)
+  //           .get();
+
+  //   return ownerSnap.docs.isNotEmpty;
+  // }
 
   Future<bool> _showExitDialog(BuildContext context) async {
     return (await showDialog(

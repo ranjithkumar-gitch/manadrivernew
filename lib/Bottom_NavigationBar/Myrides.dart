@@ -244,7 +244,9 @@ class _MyRidesScreenState extends State<MyRidesScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomMainAppBar(),
+      // appBar: const CustomMainAppBar(),
+      appBar: const CustomMainAppBar(title: "My Rides"),
+
       body: Column(
         children: [
           Padding(

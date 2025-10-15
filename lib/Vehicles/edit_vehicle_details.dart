@@ -8,10 +8,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/Vehicles/my_vehicle.dart';
+
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
-import 'package:dotted_border/dotted_border.dart';
 
 class EditVehicleDetails extends StatefulWidget {
   final Map<String, dynamic> data;

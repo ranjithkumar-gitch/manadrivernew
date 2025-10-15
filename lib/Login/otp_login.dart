@@ -1,14 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
-import 'package:mana_driver/Driver/BottomnavigationBar/D_bottomnavigationbar.dart';
+
 import 'package:mana_driver/Login/selectLanguage.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
+
 import 'package:mana_driver/viewmodels/login_viewmodel.dart';
-import 'package:mana_driver/viewmodels/register_viewmodel.dart';
+
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +27,25 @@ class OtpLogin extends StatefulWidget {
 class _OtpLoginState extends State<OtpLogin> {
   final TextEditingController otpController = TextEditingController();
   bool _isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+    _checkUserRole();
+  }
+
+  Future<void> _checkUserRole() async {
+    final role = await SharedPrefServices.getRoleCode();
+
+    if (role != "Owner" && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("This screen is only for Owners."),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      Navigator.pop(context); // or redirect to login/home
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -163,14 +181,7 @@ class _OtpLoginState extends State<OtpLogin> {
 
                               if (!mounted) return;
 
-                              if (role == "Driver") {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => D_BottomNavigation(),
-                                  ),
-                                );
-                              } else if (role == "Owner") {
+                              if (role == "Owner") {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
