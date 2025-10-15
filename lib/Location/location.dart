@@ -4,6 +4,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:mana_driver/Location/map_screen.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class LocationSelectionScreen extends StatefulWidget {
   const LocationSelectionScreen({super.key});
@@ -32,6 +34,9 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   String drop2Lat = "";
   String drop2Lng = "";
 
+  String? distanceText;
+  String? durationText;
+
   bool showSecondDrop = false;
   TextEditingController secondDropController = TextEditingController();
   FocusNode secondDropFocus = FocusNode();
@@ -40,6 +45,78 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   void initState() {
     super.initState();
     places = FlutterGooglePlacesSdk("AIzaSyDMihIxRDdcdyNby8aKMLIwsBFGLGuhLFI");
+  }
+
+  Future<void> _calculateDistance() async {
+    if (pickupLat.isEmpty ||
+        pickupLng.isEmpty ||
+        dropLat.isEmpty ||
+        dropLng.isEmpty) {
+      print("coordinates missing");
+      return;
+    }
+
+    const apiKey = "AIzaSyDMihIxRDdcdyNby8aKMLIwsBFGLGuhLFI";
+
+    double totalDistanceMeters = 0;
+    double totalDurationSeconds = 0;
+
+    Future<void> fetchAndAddDistance(
+      String originLat,
+      String originLng,
+      String destLat,
+      String destLng,
+    ) async {
+      final url = Uri.parse(
+        "https://maps.googleapis.com/maps/api/distancematrix/json?"
+        "origins=$originLat,$originLng&destinations=$destLat,$destLng&mode=driving&key=$apiKey",
+      );
+
+      print("Fetching segment: $originLat,$originLng → $destLat,$destLng");
+      final response = await http.get(url);
+      print("Status Code: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        if (data["rows"] != null &&
+            data["rows"].isNotEmpty &&
+            data["rows"][0]["elements"] != null &&
+            data["rows"][0]["elements"].isNotEmpty) {
+          final element = data["rows"][0]["elements"][0];
+
+          if (element["status"] == "OK") {
+            totalDistanceMeters += element["distance"]["value"];
+            totalDurationSeconds += element["duration"]["value"];
+            print(
+              " Distance: ${element["distance"]["text"]} | Duration: ${element["duration"]["text"]}",
+            );
+          } else {
+            print("  status not OK: ${element["status"]}");
+          }
+        } else {
+          print(" No valid elements returned from API");
+        }
+      } else {
+        print(" Request failed with status: ${response.statusCode}");
+      }
+    }
+
+    await fetchAndAddDistance(pickupLat, pickupLng, dropLat, dropLng);
+
+    if (showSecondDrop && drop2Lat.isNotEmpty && drop2Lng.isNotEmpty) {
+      await fetchAndAddDistance(dropLat, dropLng, drop2Lat, drop2Lng);
+    }
+
+    final totalKm = (totalDistanceMeters / 1000).toStringAsFixed(1);
+    final totalMin = (totalDurationSeconds / 60).toStringAsFixed(0);
+
+    setState(() {
+      distanceText = "$totalKm km";
+      durationText = "$totalMin mins";
+    });
+
+    print("Total Distance: $distanceText & Total Duration: $durationText");
   }
 
   Future<void> _onChanged(
@@ -83,24 +160,13 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
           dropLng = place?.latLng?.lng.toString() ?? "";
         }
       }
-      predictions.clear();
+      // predictions.clear();
+      predictions = [];
     });
+    if (pickupLat.isNotEmpty && dropLat.isNotEmpty) {
+      _calculateDistance();
+    }
   }
-
-  // void _onSuggestionTap(AutocompletePrediction p) {
-  //   setState(() {
-  //     if (isCurrent) {
-  //       currentLocationController.text = p.fullText ?? "";
-  //     } else {
-  //       if (showSecondDrop && secondDropFocus.hasFocus) {
-  //         secondDropController.text = p.fullText ?? "";
-  //       } else {
-  //         dropLocationController.text = p.fullText ?? "";
-  //       }
-  //     }
-  //     predictions.clear();
-  //   });
-  // }
 
   Future<void> _openMap({
     required bool isPickup,
@@ -140,23 +206,6 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
       ),
     );
 
-    // if (result != null) {
-    //   setState(() {
-    //     if (isPickup) {
-    //       currentLocationController.text = result['locationName'];
-    //       pickupLat = result['latitude'].toString();
-    //       pickupLng = result['longitude'].toString();
-    //       isPickupSelection = false;
-    //     } else if (isSecondDrop) {
-    //       secondDropController.text = result['locationName'];
-    //     } else {
-    //       dropLocationController.text = result['locationName'];
-    //       dropLat = result['latitude'].toString();
-    //       dropLng = result['longitude'].toString();
-    //     }
-    //   });
-    // }
-
     if (result != null) {
       setState(() {
         if (isPickup) {
@@ -174,6 +223,9 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
           dropLng = result['longitude'].toString();
         }
       });
+      if (pickupLat.isNotEmpty && dropLat.isNotEmpty) {
+        _calculateDistance();
+      }
     }
   }
 
@@ -298,13 +350,27 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                     vertical: 5,
                                   ),
                                 ),
-                                onPressed: () {
+                                // onPressed: () {
+                                //   setState(() {
+                                //     showSecondDrop = !showSecondDrop;
+                                //     if (!showSecondDrop)
+                                //       secondDropController.clear();
+                                //   });
+                                // },
+                                onPressed: () async {
                                   setState(() {
                                     showSecondDrop = !showSecondDrop;
-                                    if (!showSecondDrop)
+
+                                    if (!showSecondDrop) {
                                       secondDropController.clear();
+                                      drop2Lat = "";
+                                      drop2Lng = "";
+                                    }
                                   });
+
+                                  await _calculateDistance();
                                 },
+
                                 child: CustomText(
                                   text: showSecondDrop ? 'Delete' : 'Add',
                                   fontSize: 14,
@@ -371,6 +437,28 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
               ),
             ),
             const SizedBox(height: 16),
+            if (distanceText != null && durationText != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomText(
+                      text: "Distance: $distanceText",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      textcolor: Colors.black87,
+                    ),
+                    CustomText(
+                      text: "Time: $durationText",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      textcolor: Colors.black87,
+                    ),
+                  ],
+                ),
+              ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -448,6 +536,8 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                 "dropLng": dropLng,
                                 "drop2Lat": drop2Lat,
                                 "drop2Lng": drop2Lng,
+                                "distance": distanceText ?? "",
+                                "duration": durationText ?? "",
                               });
                             }
                             : null,
@@ -526,8 +616,36 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
 }
 
 
-
-
+ // if (result != null) {
+    //   setState(() {
+    //     if (isPickup) {
+    //       currentLocationController.text = result['locationName'];
+    //       pickupLat = result['latitude'].toString();
+    //       pickupLng = result['longitude'].toString();
+    //       isPickupSelection = false;
+    //     } else if (isSecondDrop) {
+    //       secondDropController.text = result['locationName'];
+    //     } else {
+    //       dropLocationController.text = result['locationName'];
+    //       dropLat = result['latitude'].toString();
+    //       dropLng = result['longitude'].toString();
+    //     }
+    //   });
+    // }
+ // void _onSuggestionTap(AutocompletePrediction p) {
+  //   setState(() {
+  //     if (isCurrent) {
+  //       currentLocationController.text = p.fullText ?? "";
+  //     } else {
+  //       if (showSecondDrop && secondDropFocus.hasFocus) {
+  //         secondDropController.text = p.fullText ?? "";
+  //       } else {
+  //         dropLocationController.text = p.fullText ?? "";
+  //       }
+  //     }
+  //     predictions.clear();
+  //   });
+  // }
 
 //  previous code //
 // InkWell(

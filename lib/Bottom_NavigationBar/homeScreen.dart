@@ -39,6 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String dropLng = "";
   String drop2Lat = "";
   String drop2Lng = "";
+  String distance = "";
+  String time = "";
 
   Timer? _autoScrollTimer;
 
@@ -102,6 +104,9 @@ class _HomeScreenState extends State<HomeScreen> {
         drop2Lat = result["drop2Lat"] ?? "";
         drop2Lng = result["drop2Lng"] ?? "";
 
+        distance = result["distance"] ?? "";
+        time = result["duration"] ?? "";
+
         print(
           "Pickup: ${pickupController.text} | Lat: $pickupLat | Lng: $pickupLng",
         );
@@ -113,6 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
             "DropLocation 2: ${drop2Controller.text} | Lat: $drop2Lat | Lng: $drop2Lng",
           );
         }
+        print("Distance: $distance");
+        print(" Duration: $time");
       });
     }
   }
@@ -1587,6 +1594,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   .toString(),
                                           'driverId': '',
                                           'driverdocId': '',
+                                          "distance": distance,
+                                          "duration": time,
                                           "pickup": pickupController.text,
                                           "drop": dropController.text,
                                           "drop2":
