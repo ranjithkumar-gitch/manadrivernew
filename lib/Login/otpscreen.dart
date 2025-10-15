@@ -205,21 +205,21 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-  @override
-  void initState() {
-    super.initState();
-    _checkRole();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _checkRole();
+  // }
 
-  Future<void> _checkRole() async {
-    final role = await SharedPrefServices.getRoleCode();
-    if (role == "Driver" && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("This screen is only for owners.")),
-      );
-      Navigator.pop(context);
-    }
-  }
+  // Future<void> _checkRole() async {
+  //   final role = await SharedPrefServices.getRoleCode();
+  //   if (role == "Driver" && mounted) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text("This screen is only for owners.")),
+  //     );
+  //     Navigator.pop(context);
+  //   }
+  // }
 
   final TextEditingController otpController = TextEditingController();
   bool _isLoading = false;

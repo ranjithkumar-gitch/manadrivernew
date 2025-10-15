@@ -27,25 +27,25 @@ class OtpLogin extends StatefulWidget {
 class _OtpLoginState extends State<OtpLogin> {
   final TextEditingController otpController = TextEditingController();
   bool _isLoading = false;
-  @override
-  void initState() {
-    super.initState();
-    _checkUserRole();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _checkUserRole();
+  // }
 
-  Future<void> _checkUserRole() async {
-    final role = await SharedPrefServices.getRoleCode();
+  // Future<void> _checkUserRole() async {
+  //   final role = await SharedPrefServices.getRoleCode();
 
-    if (role != "Owner" && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("This screen is only for Owners."),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
-      Navigator.pop(context); // or redirect to login/home
-    }
-  }
+  //   if (role != "Owner" && mounted) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text("This screen is only for Owners."),
+  //         backgroundColor: Colors.redAccent,
+  //       ),
+  //     );
+  //     Navigator.pop(context); // or redirect to login/home
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
