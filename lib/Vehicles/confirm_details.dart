@@ -9,6 +9,7 @@ import 'package:mana_driver/Vehicles/payment_gateway.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ConfirmDetails extends StatefulWidget {
   final Map<String, dynamic> bookingData;
@@ -367,7 +368,46 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                   child: Image.asset("images/chat.png"),
                                 ),
                                 const SizedBox(width: 5),
-                                Image.asset("images/call.png"),
+                                GestureDetector(
+                                  onTap: () async {
+                                    final driverPhone =
+                                        driverData?['phone'] ?? '';
+                                    if (driverPhone.isNotEmpty) {
+                                      final Uri callUri = Uri(
+                                        scheme: 'tel',
+                                        path: driverPhone,
+                                      );
+                                      if (await canLaunchUrl(callUri)) {
+                                        await launchUrl(callUri);
+                                      } else {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              "Unable to open dialer.",
+                                            ),
+                                            behavior: SnackBarBehavior.floating,
+                                            backgroundColor: Colors.redAccent,
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            "Owner phone number not available.",
+                                          ),
+                                          behavior: SnackBarBehavior.floating,
+                                          backgroundColor: Colors.redAccent,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: Image.asset("images/call.png"),
+                                ),
                               ],
                             ),
                           ],
