@@ -184,6 +184,7 @@ class LoginViewModel extends ChangeNotifier {
     String docId,
   ) async {
     await SharedPrefServices.setRoleCode(userData['roleCode'] ?? "");
+    await SharedPrefServices.setProfileImage(userData['profilePic'] ?? "");
     await SharedPrefServices.setUserId(userData['userId'] ?? "");
     await SharedPrefServices.setFirstName(userData['firstName'] ?? "");
     await SharedPrefServices.setLastName(userData['lastName'] ?? "");
@@ -213,6 +214,3 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-
-

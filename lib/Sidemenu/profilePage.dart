@@ -142,15 +142,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             : null,
                   ),
 
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: CircleAvatar(
-                      backgroundColor: korangeColor,
-                      radius: 18,
-                      child: Image.asset("images/camera.png"),
-                    ),
-                  ),
+                  // Positioned(
+                  //   right: 0,
+                  //   bottom: 0,
+                  //   child: CircleAvatar(
+                  //     backgroundColor: korangeColor,
+                  //     radius: 18,
+                  //     child: Image.asset("images/camera.png"),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
