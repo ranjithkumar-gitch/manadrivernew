@@ -20,6 +20,10 @@ import 'package:firebase_database/firebase_database.dart';
 class ChatScreen extends StatefulWidget {
   final String bookingId;
 
+  // final String driverId;
+
+  final Map<String, dynamic>? driverData;
+
   final String driverId;
 
   final String ownerId;
@@ -32,6 +36,8 @@ class ChatScreen extends StatefulWidget {
     super.key,
 
     required this.bookingId,
+
+    required this.driverData,
 
     required this.driverId,
 
@@ -101,22 +107,42 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     }, SetOptions(merge: true));
   }
 
-  void _setUserOnline() async {
+  // void _setUserOnline() async {
+  //   final userId = await SharedPrefServices.getUserId();
+
+  //   FirebaseFirestore.instance.collection('userStatus').doc(userId).set({
+  //     'isOnline': true,
+
+  //     'lastSeen': FieldValue.serverTimestamp(),
+  //   }, SetOptions(merge: true));
+  // }
+
+  // void _setUserOffline() async {
+  //   final userId = await SharedPrefServices.getUserId();
+
+  //   FirebaseFirestore.instance.collection('userStatus').doc(userId).set({
+  //     'isOnline': false,
+
+  //     'lastSeen': FieldValue.serverTimestamp(),
+  //   }, SetOptions(merge: true));
+  // }
+
+  Future<void> _setUserOnline() async {
     final userId = await SharedPrefServices.getUserId();
+    if (userId == null || userId.isEmpty) return;
 
-    FirebaseFirestore.instance.collection('userStatus').doc(userId).set({
+    await FirebaseFirestore.instance.collection('userStatus').doc(userId).set({
       'isOnline': true,
-
       'lastSeen': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
   }
 
-  void _setUserOffline() async {
+  Future<void> _setUserOffline() async {
     final userId = await SharedPrefServices.getUserId();
+    if (userId == null || userId.isEmpty) return;
 
-    FirebaseFirestore.instance.collection('userStatus').doc(userId).set({
+    await FirebaseFirestore.instance.collection('userStatus').doc(userId).set({
       'isOnline': false,
-
       'lastSeen': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
   }
@@ -257,115 +283,133 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(65),
-
         child: AppBar(
           backgroundColor: Colors.white,
-
           elevation: 0,
-
           iconTheme: const IconThemeData(color: Colors.black),
-
           titleSpacing: 0,
-
-          title: Row(
-            children: [
-              CircleAvatar(
-                radius: 22,
-
-                backgroundImage:
-                    widget.ownerProfile.isNotEmpty
-                        ? NetworkImage(widget.ownerProfile)
-                        : const AssetImage("images/person.png")
-                            as ImageProvider,
-              ),
-
-              const SizedBox(width: 10),
-
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-
-                children: [
-                  Text(
-                    widget.ownerName,
-
-                    style: GoogleFonts.poppins(
-                      fontSize: 15,
-
-                      fontWeight: FontWeight.w600,
-
-                      color: Colors.black87,
+          title: StreamBuilder<DocumentSnapshot>(
+            stream:
+                FirebaseFirestore.instance
+                    .collection('drivers')
+                    .doc(widget.driverId)
+                    .snapshots(),
+            builder: (context, userSnapshot) {
+              if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
+                return Row(
+                  children: [
+                    const CircleAvatar(
+                      radius: 22,
+                      backgroundImage: AssetImage("images/person.png"),
                     ),
+                    const SizedBox(width: 10),
+                    Text(
+                      "Driver",
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      "(Offline)",
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                );
+              }
+
+              final userData =
+                  userSnapshot.data!.data() as Map<String, dynamic>;
+              final driverName =
+                  "${userData['firstName'] ?? ''} ${userData['lastName'] ?? ''}"
+                      .trim();
+              final driverProfile = userData['profileUrl'] ?? "";
+
+              return Row(
+                children: [
+                  CircleAvatar(
+                    radius: 22,
+                    backgroundImage:
+                        driverProfile.isNotEmpty
+                            ? NetworkImage(driverProfile)
+                            : const AssetImage("images/person.png")
+                                as ImageProvider,
                   ),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        driverName.isNotEmpty ? driverName : "Driver",
+                        style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      StreamBuilder<DocumentSnapshot>(
+                        stream:
+                            FirebaseFirestore.instance
+                                .collection('userStatus')
+                                .doc(widget.driverData!['userId'])
+                                .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData || !snapshot.data!.exists) {
+                            return Text(
+                              "Offline",
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            );
+                          }
 
-                  StreamBuilder<DocumentSnapshot>(
-                    stream:
-                        FirebaseFirestore.instance
-                            .collection('userStatus')
-                            .doc(widget.ownerId)
-                            .snapshots(),
+                          final statusData =
+                              snapshot.data!.data() as Map<String, dynamic>;
+                          final bool isOnline = statusData['isOnline'] ?? false;
+                          final Timestamp? lastSeen = statusData['lastSeen'];
 
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData || !snapshot.data!.exists) {
-                        return Text(
-                          "Offline",
-
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-
-                            color: Colors.grey,
-                          ),
-                        );
-                      }
-
-                      final data =
-                          snapshot.data!.data() as Map<String, dynamic>;
-
-                      final bool isOnline = data['isOnline'] ?? false;
-
-                      final Timestamp? lastSeen = data['lastSeen'];
-
-                      if (isOnline) {
-                        return Text(
-                          "Online",
-
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-
-                            color: Colors.green,
-
-                            fontWeight: FontWeight.w500,
-                          ),
-                        );
-                      } else if (lastSeen != null) {
-                        final formatted = DateFormat(
-                          'hh:mm a',
-                        ).format(lastSeen.toDate());
-
-                        return Text(
-                          "Last seen at $formatted",
-
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-
-                            color: Colors.grey,
-                          ),
-                        );
-                      } else {
-                        return Text(
-                          "Offline",
-
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-
-                            color: Colors.grey,
-                          ),
-                        );
-                      }
-                    },
+                          if (isOnline) {
+                            return Text(
+                              "Online",
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                color: Colors.green,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            );
+                          } else if (lastSeen != null) {
+                            final formatted = DateFormat(
+                              'hh:mm a',
+                            ).format(lastSeen.toDate());
+                            return Text(
+                              "Last seen at $formatted",
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            );
+                          } else {
+                            return Text(
+                              "Offline",
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ],
-              ),
-            ],
+              );
+            },
           ),
         ),
       ),
@@ -611,6 +655,137 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 }
 
+class ChatBubble extends StatelessWidget {
+  final String message;
+  final String imageUrl;
+  final bool isSentByMe;
+  final DateTime timestamp;
+  final bool isDelivered;
+  final bool isRead;
+
+  const ChatBubble({
+    super.key,
+    required this.message,
+    required this.imageUrl,
+    required this.isSentByMe,
+    required this.timestamp,
+    this.isDelivered = false,
+    this.isRead = false,
+  });
+
+  String format12HourTime(DateTime dateTime) =>
+      DateFormat('h:mm a').format(dateTime);
+
+  @override
+  Widget build(BuildContext context) {
+    Widget tickIcon = const SizedBox();
+    if (!isDelivered) {
+      tickIcon = const Icon(Icons.done, size: 14, color: Colors.grey);
+    } else if (isDelivered && !isRead) {
+      tickIcon = const Icon(Icons.done_all, size: 14, color: Colors.grey);
+    } else {
+      tickIcon = const Icon(Icons.done_all, size: 14, color: Colors.blue);
+    }
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+      child: Row(
+        mainAxisAlignment:
+            isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color:
+                    isSentByMe
+                        ? const Color(0xFFE7FFDB)
+                        : const Color(0xFFFFFFFF),
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(12),
+                  topRight: const Radius.circular(12),
+                  bottomLeft: Radius.circular(isSentByMe ? 12 : 0),
+                  bottomRight: Radius.circular(isSentByMe ? 0 : 12),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 2,
+                    offset: const Offset(1, 1),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment:
+                    isSentByMe
+                        ? CrossAxisAlignment.end
+                        : CrossAxisAlignment.start,
+                children: [
+                  if (imageUrl.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          imageUrl,
+                          width: 200,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: 200,
+                              height: 120,
+                              color: Colors.grey.shade300,
+                              alignment: Alignment.center,
+                              child: const Icon(
+                                Icons.broken_image,
+                                color: Colors.grey,
+                                size: 40,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+
+                  if (message.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 50.0),
+                      child: Text(
+                        message,
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          color: Colors.black87,
+                          height: 1.4,
+                        ),
+                      ),
+                    ),
+
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const SizedBox(width: 8),
+                      Text(
+                        format12HourTime(timestamp),
+                        style: GoogleFonts.poppins(
+                          fontSize: 11,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      if (isSentByMe) ...[const SizedBox(width: 4), tickIcon],
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 // class ChatBubble extends StatelessWidget {
 //   final String message;
 
@@ -748,133 +923,3 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 //     );
 //   }
 // }
-class ChatBubble extends StatelessWidget {
-  final String message;
-  final String imageUrl;
-  final bool isSentByMe;
-  final DateTime timestamp;
-  final bool isDelivered;
-  final bool isRead;
-
-  const ChatBubble({
-    super.key,
-    required this.message,
-    required this.imageUrl,
-    required this.isSentByMe,
-    required this.timestamp,
-    this.isDelivered = false,
-    this.isRead = false,
-  });
-
-  String format12HourTime(DateTime dateTime) =>
-      DateFormat('h:mm a').format(dateTime);
-
-  @override
-  Widget build(BuildContext context) {
-    Widget tickIcon = const SizedBox();
-    if (!isDelivered) {
-      tickIcon = const Icon(Icons.done, size: 14, color: Colors.grey);
-    } else if (isDelivered && !isRead) {
-      tickIcon = const Icon(Icons.done_all, size: 14, color: Colors.grey);
-    } else {
-      tickIcon = const Icon(Icons.done_all, size: 14, color: Colors.blue);
-    }
-
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-      child: Row(
-        mainAxisAlignment:
-            isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Flexible(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color:
-                    isSentByMe
-                        ? const Color(0xFFE7FFDB)
-                        : const Color(0xFFFFFFFF),
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(12),
-                  topRight: const Radius.circular(12),
-                  bottomLeft: Radius.circular(isSentByMe ? 12 : 0),
-                  bottomRight: Radius.circular(isSentByMe ? 0 : 12),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 2,
-                    offset: const Offset(1, 1),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment:
-                    isSentByMe
-                        ? CrossAxisAlignment.end
-                        : CrossAxisAlignment.start,
-                children: [
-                  if (imageUrl.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          imageUrl,
-                          width: 200,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: 200,
-                              height: 120,
-                              color: Colors.grey.shade300,
-                              alignment: Alignment.center,
-                              child: const Icon(
-                                Icons.broken_image,
-                                color: Colors.grey,
-                                size: 40,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-
-                  if (message.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 50.0),
-                      child: Text(
-                        message,
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          color: Colors.black87,
-                          height: 1.4,
-                        ),
-                      ),
-                    ),
-
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      const SizedBox(width: 8),
-                      Text(
-                        format12HourTime(timestamp),
-                        style: GoogleFonts.poppins(
-                          fontSize: 11,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                      if (isSentByMe) ...[const SizedBox(width: 4), tickIcon],
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

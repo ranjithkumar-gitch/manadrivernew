@@ -99,7 +99,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Ride cancelled successfully')),
         );
-        Navigator.pop(context); // Go back to previous screen
+        Navigator.pop(context);
       }
     } catch (e) {
       ScaffoldMessenger.of(
@@ -110,7 +110,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
 
   void fetchDriver() async {
     String driverId = widget.bookingData['driverdocId'] ?? '';
-    print('Driver ID: $driverId'); // Debug print
+    print('Driver ID: $driverId');
     if (driverId.isNotEmpty) {
       DocumentSnapshot snapshot =
           await FirebaseFirestore.instance
@@ -137,7 +137,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     final data = widget.bookingData;
     final bookingStatus = data['status'] ?? 'New';
     final driverAssigned = driverData != null && driverData!.isNotEmpty;
-
+    print('$bookingId,$driverData,$ownerId');
     final appBarTitle =
         driverAssigned ? "Driver Assigned" : "Driver not assigned";
 
@@ -178,7 +178,16 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
       bottomButtonText = 'Ride $rideStatus';
       bottomButtonAction = null;
     }
+    String driverFullName =
+        (driverData != null
+                ? "${driverData!['firstName'] ?? ''} ${driverData!['lastName'] ?? ''}"
+                : 'Driver Name')
+            .trim();
+    String driverEmail =
+        driverData != null ? "${driverData!['email'] ?? ''}" : 'Driver Email';
 
+    String driverContact =
+        driverData != null ? "${driverData!['phone'] ?? ''}" : 'Driver Phone';
     String vehicleName =
         vehicleData != null
             ? "${vehicleData!['brand'] ?? ''} ${vehicleData!['model'] ?? ''}"
@@ -197,7 +206,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
             : 'images/swift.png';
     String driverName = data['driverName'] ?? 'Driver not assigned';
     String driverPhone = data['driverPhone'] ?? '+91 XXXXX XXXXX';
-    String driverEmail = data['driverEmail'] ?? 'example@email.com';
+    // String driverEmail = data['driverEmail'] ?? 'example@email.com';
     String pickupLocation = data['pickup'] ?? '';
     String tripMode = data['tripMode'] ?? '';
     String tripTime = data['tripTime'] ?? '';
@@ -346,6 +355,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                         builder:
                                             (_) => ChatScreen(
                                               bookingId: bookingId,
+                                              driverData: driverData,
                                               driverId: driverId,
                                               ownerId: ownerId,
                                               ownerName: ownerName,

@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 
@@ -34,6 +38,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController emailController;
   late TextEditingController phoneController;
   bool isSaving = false;
+
+  File? image;
   @override
   void initState() {
     super.initState();
@@ -52,56 +58,169 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.dispose();
   }
 
+  void _pickImage() async {
+    showDialog(
+      context: context,
+      builder:
+          (context) => SimpleDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            title: Center(
+              child: CustomText(
+                text: "Select Image From",
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                textcolor: KblackColor,
+              ),
+            ),
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // 📸 Camera Option
+                  SimpleDialogOption(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      final pickedImage = await ImagePicker().pickImage(
+                        source: ImageSource.camera,
+                        imageQuality: 80,
+                      );
+                      if (pickedImage != null) {
+                        setState(() {
+                          image = File(pickedImage.path);
+                        });
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        const Icon(Icons.camera, size: 18, color: korangeColor),
+                        const SizedBox(width: 8),
+                        CustomText(
+                          text: "Camera",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          textcolor: Colors.black,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  SimpleDialogOption(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      final pickedImage = await ImagePicker().pickImage(
+                        source: ImageSource.gallery,
+                        imageQuality: 80,
+                      );
+                      if (pickedImage != null) {
+                        setState(() {
+                          image = File(pickedImage.path);
+                        });
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.photo_library,
+                          size: 18,
+                          color: korangeColor,
+                        ),
+                        const SizedBox(width: 8),
+                        CustomText(
+                          text: "Gallery",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          textcolor: Colors.black,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+    );
+  }
+
+  Future<File?> pickImage(BuildContext context) async {
+    File? image;
+    try {
+      final pickedImage = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+      );
+      if (pickedImage != null) {
+        image = File(pickedImage.path);
+      }
+    } catch (e) {}
+
+    return image;
+  }
+
   Future<void> saveProfile() async {
     final vm = Provider.of<LoginViewModel>(context, listen: false);
 
     setState(() => isSaving = true);
 
     try {
-      setState(() {
-        isSaving = true;
-      });
-      // final userId = vm.loggedInUser?['id'];
       final userId = SharedPrefServices.getDocId();
       print("User ID: $userId");
-      if (userId != null) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userId)
-            .update({
-              'firstName': firstnameController.text.trim(),
-              'lastName': lastnameController.text.trim(),
-              'email': emailController.text.trim(),
-            });
 
-        vm.updateUser({
-          'firstName': firstnameController.text.trim(),
-          'lastName': lastnameController.text.trim(),
-          'email': emailController.text.trim(),
-          'phone': phoneController.text.trim(),
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated successfully!')),
-        );
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => BottomNavigation()),
-        );
-      } else {
+      if (userId == null) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('User not found')));
+        return;
       }
+
+      final Map<String, dynamic> updateData = {
+        'firstName': firstnameController.text.trim(),
+        'lastName': lastnameController.text.trim(),
+        'email': emailController.text.trim(),
+      };
+
+      if (image != null) {
+        final storageRef = FirebaseStorage.instance.ref().child(
+          'ownerprofileImages/$userId.jpg',
+        );
+
+        await storageRef.putFile(image!);
+        final imageUrl = await storageRef.getDownloadURL();
+
+        updateData['profilePic'] = imageUrl;
+        await SharedPrefServices.setProfileImage(imageUrl);
+      }
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .set(updateData, SetOptions(merge: true));
+
+      vm.updateUser({
+        'firstName': firstnameController.text.trim(),
+        'lastName': lastnameController.text.trim(),
+        'email': emailController.text.trim(),
+        'phone': phoneController.text.trim(),
+        if (image != null)
+          'profilePic':
+              SharedPrefServices.getProfileImage(), // update locally too
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated successfully!')),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => BottomNavigation()),
+      );
     } catch (e) {
+      print("Error updating profile: $e");
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Error updating profile: $e')));
     } finally {
-      setState(() {
-        isSaving = false;
-      });
+      setState(() => isSaving = false);
     }
   }
 
@@ -173,17 +292,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           radius: 55,
                           backgroundColor: KlightgreyColor,
                           backgroundImage:
-                              SharedPrefServices.getProfileImage() != null &&
+                              image != null
+                                  ? FileImage(image!)
+                                  : (SharedPrefServices.getProfileImage() !=
+                                          null &&
                                       SharedPrefServices.getProfileImage()!
-                                          .isNotEmpty
+                                          .isNotEmpty)
                                   ? NetworkImage(
-                                    SharedPrefServices.getProfileImage()!,
-                                  )
+                                        SharedPrefServices.getProfileImage()!,
+                                      )
+                                      as ImageProvider
                                   : null,
                           child:
-                              (SharedPrefServices.getProfileImage() == null ||
-                                      SharedPrefServices.getProfileImage()!
-                                          .isEmpty)
+                              (image == null &&
+                                      (SharedPrefServices.getProfileImage() ==
+                                              null ||
+                                          SharedPrefServices.getProfileImage()!
+                                              .isEmpty))
                                   ? Text(
                                     _getUserInitials(),
                                     style: const TextStyle(
@@ -196,12 +321,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
 
                         Positioned(
-                          right: 0,
                           bottom: 0,
-                          child: CircleAvatar(
-                            backgroundColor: korangeColor,
-                            radius: 18,
-                            child: Image.asset("images/camera.png"),
+                          right: 0,
+                          child: GestureDetector(
+                            onTap: _pickImage,
+                            child: CircleAvatar(
+                              backgroundColor: korangeColor,
+                              radius: 18,
+                              child: Image.asset("images/camera.png"),
+                            ),
                           ),
                         ),
                       ],
