@@ -61,6 +61,7 @@ dependencies:
   flutter_google_places_sdk: ^0.4.2+1
   geocoding: ^4.0.0
   flutter_launcher_icons: ^0.14.4
+  firebase_database: ^12.0.3
 
 
  

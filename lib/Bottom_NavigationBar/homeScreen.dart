@@ -1596,6 +1596,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           'driverdocId': '',
                                           "distance": distance,
                                           "duration": time,
+                                          "ownerOTP": "",
                                           "pickup": pickupController.text,
                                           "drop": dropController.text,
                                           "drop2":

@@ -282,10 +282,16 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                   return Center(child: CircularProgressIndicator());
                 }
 
+                // final allBookings =
+                //     snapshot.data!.docs
+                //         .map((doc) => doc.data() as Map<String, dynamic>)
+                //         .toList();
                 final allBookings =
-                    snapshot.data!.docs
-                        .map((doc) => doc.data() as Map<String, dynamic>)
-                        .toList();
+                    snapshot.data!.docs.map((doc) {
+                      final data = doc.data() as Map<String, dynamic>;
+                      data['bookingId'] = doc.id; // 🔥 include document ID
+                      return data;
+                    }).toList();
 
                 List<Map<String, dynamic>> filteredBookings;
                 if (selectedTabIndex == 1) {

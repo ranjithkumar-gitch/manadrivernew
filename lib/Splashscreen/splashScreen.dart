@@ -79,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 repeatForever: true,
                 animatedTexts: [
                   ColorizeAnimatedText(
-                    'Mana Driver',
+                    'rydyn',
                     textStyle: colorizeTextStyle,
                     colors: colorizeColors,
                     textAlign: TextAlign.center,
