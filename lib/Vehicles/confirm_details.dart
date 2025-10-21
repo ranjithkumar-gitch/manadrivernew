@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:mana_driver/Location/driverAssigned.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Sidemenu/cancellationPolicyScreen.dart';
 import 'package:mana_driver/Vehicles/chat.dart';
@@ -63,7 +64,6 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
       return;
     }
 
-    // Confirm cancel dialog
     final confirm = await showDialog<bool>(
       context: context,
       builder:
@@ -73,13 +73,36 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
               'Are you sure you want to cancel this ride? This action cannot be undone.',
             ),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('No'),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text('Yes, Cancel Ride'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  OutlinedButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: korangeColor),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'No',
+                      style: TextStyle(color: korangeColor),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: korangeColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Yes',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -211,6 +234,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     String pickupLocation = data['pickup'] ?? '';
     String tripMode = data['tripMode'] ?? '';
     String tripTime = data['tripTime'] ?? '';
+    String ownerOTP = data['ownerOTP'].toString();
     String citylimithours = data['cityLimitHours'].toString();
     String dropLocation = data['drop'] ?? '';
     String drop2Location = data['drop2'] ?? '';
@@ -421,8 +445,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                       child: Row(
                         children: [
                           Container(
-                            width: 24,
-                            height: 24,
+                            width: 50,
+                            height: 50,
                             decoration: BoxDecoration(
                               color: Colors.grey.shade100,
                               borderRadius: BorderRadius.circular(12),
@@ -441,7 +465,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                       ),
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 8),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -467,7 +491,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                       width: 1,
                                       color: kseegreyColor,
                                     ),
-                                    SizedBox(width: 12),
+                                    SizedBox(width: 8),
                                     CustomText(
                                       text: category,
                                       fontSize: 12,
@@ -487,61 +511,129 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                     const SizedBox(height: 12),
                     const Divider(thickness: 3, color: KlightgreyColor),
 
-                    // if (driverAssigned) ...[
-                    //   Card(
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(12),
-                    //     ),
+                    if (rideStatus == 'Completed') ...[
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
 
-                    //     child: Padding(
-                    //       padding: const EdgeInsets.all(12),
-                    //       child: Row(
-                    //         children: [
-                    //           Image.asset(
-                    //             "images/review.png",
-                    //             height: 50,
-                    //             width: 50,
-                    //           ),
-                    //           const SizedBox(width: 12),
-                    //           Expanded(
-                    //             child: Column(
-                    //               crossAxisAlignment: CrossAxisAlignment.start,
-                    //               children: const [
-                    //                 CustomText(
-                    //                   text: "Write a review?",
-                    //                   fontSize: 16,
-                    //                   fontWeight: FontWeight.w600,
-                    //                   textcolor: korangeColor,
-                    //                 ),
-                    //                 CustomText(
-                    //                   text: "How was your experience?",
-                    //                   fontSize: 12,
-                    //                   fontWeight: FontWeight.w400,
-                    //                   textcolor: kseegreyColor,
-                    //                 ),
-                    //               ],
-                    //             ),
-                    //           ),
-                    //           ElevatedButton(
-                    //             onPressed: () => _showRatingDialog(context),
-                    //             style: ElevatedButton.styleFrom(
-                    //               backgroundColor: korangeColor,
-                    //               shape: RoundedRectangleBorder(
-                    //                 borderRadius: BorderRadius.circular(46),
-                    //               ),
-                    //             ),
-                    //             child: const CustomText(
-                    //               text: "Give a rate",
-                    //               fontSize: 14,
-                    //               fontWeight: FontWeight.w500,
-                    //               textcolor: kwhiteColor,
-                    //             ),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ],
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "images/review.png",
+                                height: 50,
+                                width: 50,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    CustomText(
+                                      text: "Write a review?",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      textcolor: korangeColor,
+                                    ),
+                                    CustomText(
+                                      text: "How was your experience?",
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: kseegreyColor,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () => _showRatingDialog(context),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: korangeColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(46),
+                                  ),
+                                ),
+                                child: const CustomText(
+                                  text: "Give a rate",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  textcolor: kwhiteColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ] else if (rideStatus == 'Accepted') ...[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15, right: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const CustomText(
+                              text: "Verification code to start the ride",
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              textcolor: korangeColor,
+                            ),
+                            const SizedBox(height: 10),
+
+                            CustomText(
+                              text:
+                                  "Share this OTP with your driver to start the ride.",
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              textcolor: KblackColor.withOpacity(0.6),
+                            ),
+
+                            const SizedBox(height: 20),
+
+                            Center(
+                              child: Container(
+                                width: double.infinity,
+                                margin: const EdgeInsets.only(
+                                  right: 20,
+                                  left: 20,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 18,
+                                  horizontal: 40,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: korangeColor.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: korangeColor,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    CustomText(
+                                      text: "4-Digit OTP",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      textcolor: KblackColor.withOpacity(0.7),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    CustomText(
+                                      text: ownerOTP,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      textcolor: korangeColor,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      const Divider(thickness: 3, color: KlightgreyColor),
+                    ],
 
                     // const SizedBox(height: 6),
                     // const Divider(thickness: 3, color: KlightgreyColor),
@@ -1106,6 +1198,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: korangeColor,
+            disabledBackgroundColor:
+                rideStatus == 'Ongoing' ? Colors.green.shade500 : korangeColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(40),
             ),
@@ -1175,192 +1269,194 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     );
   }
 
-  // void _showRatingDialog(BuildContext context) {
-  //   int selectedStars = 0;
-  //   final TextEditingController commentController = TextEditingController();
-  //   final List<FeedbackOption> feedbackOptions = [
-  //     FeedbackOption(
-  //       label: "Polite Driver",
-  //       imagePath: "images/politeDriver.png",
-  //     ),
-  //     FeedbackOption(label: "Cleanliness", imagePath: "images/cleanlines.png"),
-  //     FeedbackOption(label: "Smooth Driving", imagePath: "images/home.png"),
-  //     FeedbackOption(label: "On Time", imagePath: "images/onTime.png"),
-  //   ];
+  void _showRatingDialog(BuildContext context) {
+    int selectedStars = 0;
+    final TextEditingController commentController = TextEditingController();
+    final List<FeedbackOption> feedbackOptions = [
+      FeedbackOption(
+        label: "Polite Driver",
+        imagePath: "images/politeDriver.png",
+      ),
+      FeedbackOption(label: "Cleanliness", imagePath: "images/cleanlines.png"),
+      FeedbackOption(label: "Smooth Driving", imagePath: "images/home.png"),
+      FeedbackOption(label: "On Time", imagePath: "images/onTime.png"),
+    ];
 
-  //   final Set<String> selectedFeedback = {};
+    final Set<String> selectedFeedback = {};
 
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return StatefulBuilder(
-  //         builder: (context, setState) {
-  //           return AlertDialog(
-  //             backgroundColor: kwhiteColor,
-  //             shape: RoundedRectangleBorder(
-  //               borderRadius: BorderRadius.circular(12),
-  //             ),
-  //             contentPadding: const EdgeInsets.all(20),
-  //             content: SingleChildScrollView(
-  //               child: Column(
-  //                 mainAxisSize: MainAxisSize.min,
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: [
-  //                   const CustomText(
-  //                     text: "How was your trip with\nRamesh Kumar",
-  //                     fontSize: 18,
-  //                     fontWeight: FontWeight.w600,
-  //                     textcolor: korangeColor,
-  //                   ),
-  //                   const SizedBox(height: 12),
-  //                   const CustomText(
-  //                     text: "Tap to rate your driver",
-  //                     textcolor: KblackColor,
-  //                     fontSize: 14,
-  //                     fontWeight: FontWeight.w500,
-  //                   ),
-  //                   const SizedBox(height: 12),
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: kwhiteColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              contentPadding: const EdgeInsets.all(20),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CustomText(
+                      text: "How was your trip with\nRamesh Kumar",
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      textcolor: korangeColor,
+                    ),
+                    const SizedBox(height: 12),
+                    const CustomText(
+                      text: "Tap to rate your driver",
+                      textcolor: KblackColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    const SizedBox(height: 12),
 
-  //                   Row(
-  //                     children: List.generate(5, (index) {
-  //                       return IconButton(
-  //                         icon: Icon(
-  //                           index < selectedStars
-  //                               ? Icons.star
-  //                               : Icons.star_border,
-  //                           color: Colors.orange,
-  //                           size: 28,
-  //                         ),
-  //                         onPressed: () {
-  //                           setState(() {
-  //                             selectedStars = index + 1;
-  //                           });
-  //                         },
-  //                       );
-  //                     }),
-  //                   ),
+                    Row(
+                      children: List.generate(5, (index) {
+                        return IconButton(
+                          icon: Icon(
+                            index < selectedStars
+                                ? Icons.star
+                                : Icons.star_border,
+                            color: Colors.orange,
+                            size: 28,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              selectedStars = index + 1;
+                            });
+                          },
+                        );
+                      }),
+                    ),
 
-  //                   const SizedBox(height: 16),
-  //                   const CustomText(
-  //                     text: "Give Feedback",
-  //                     fontSize: 14,
-  //                     fontWeight: FontWeight.w500,
-  //                     textcolor: KblackColor,
-  //                   ),
-  //                   const SizedBox(height: 12),
+                    const SizedBox(height: 16),
+                    const CustomText(
+                      text: "Give Feedback",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      textcolor: KblackColor,
+                    ),
+                    const SizedBox(height: 12),
 
-  //                   Wrap(
-  //                     spacing: 10,
-  //                     runSpacing: 10,
-  //                     children:
-  //                         feedbackOptions.map((option) {
-  //                           final isSelected = selectedFeedback.contains(
-  //                             option.label,
-  //                           );
-  //                           return GestureDetector(
-  //                             onTap: () {
-  //                               setState(() {
-  //                                 if (isSelected) {
-  //                                   selectedFeedback.remove(option.label);
-  //                                 } else {
-  //                                   selectedFeedback.add(option.label);
-  //                                 }
-  //                               });
-  //                             },
-  //                             child: Container(
-  //                               padding: const EdgeInsets.symmetric(
-  //                                 horizontal: 12,
-  //                                 vertical: 8,
-  //                               ),
-  //                               decoration: BoxDecoration(
-  //                                 border: Border.all(
-  //                                   color:
-  //                                       isSelected
-  //                                           ? korangeColor
-  //                                           : kbordergreyColor,
-  //                                 ),
-  //                                 borderRadius: BorderRadius.circular(20),
-  //                                 color:
-  //                                     isSelected ? Colors.orange.shade50 : null,
-  //                               ),
-  //                               child: Row(
-  //                                 mainAxisSize: MainAxisSize.min,
-  //                                 children: [
-  //                                   Image.asset(
-  //                                     option.imagePath,
-  //                                     height: 20,
-  //                                     width: 20,
-  //                                     color:
-  //                                         isSelected
-  //                                             ? korangeColor
-  //                                             : kseegreyColor,
-  //                                   ),
-  //                                   const SizedBox(width: 6),
-  //                                   CustomText(
-  //                                     text: option.label,
-  //                                     fontSize: 14,
-  //                                     fontWeight: FontWeight.w500,
-  //                                     textcolor:
-  //                                         isSelected
-  //                                             ? korangeColor
-  //                                             : KblackColor,
-  //                                   ),
-  //                                 ],
-  //                               ),
-  //                             ),
-  //                           );
-  //                         }).toList(),
-  //                   ),
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      children:
+                          feedbackOptions.map((option) {
+                            final isSelected = selectedFeedback.contains(
+                              option.label,
+                            );
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  if (isSelected) {
+                                    selectedFeedback.remove(option.label);
+                                  } else {
+                                    selectedFeedback.add(option.label);
+                                  }
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color:
+                                        isSelected
+                                            ? korangeColor
+                                            : kbordergreyColor,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                  color:
+                                      isSelected ? Colors.orange.shade50 : null,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset(
+                                      option.imagePath,
+                                      height: 20,
+                                      width: 20,
+                                      color:
+                                          isSelected
+                                              ? korangeColor
+                                              : kseegreyColor,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    CustomText(
+                                      text: option.label,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      textcolor:
+                                          isSelected
+                                              ? korangeColor
+                                              : KblackColor,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                    ),
 
-  //                   const SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
-  //                   TextField(
-  //                     controller: commentController,
-  //                     maxLines: 3,
-  //                     decoration: InputDecoration(
-  //                       hintText: "Leave a comment (optional)",
-  //                       hintStyle: TextStyle(
-  //                         color: kseegreyColor,
-  //                         fontSize: 12,
-  //                         fontWeight: FontWeight.w400,
-  //                       ),
-  //                       border: OutlineInputBorder(
-  //                         borderRadius: BorderRadius.circular(10),
-  //                         borderSide: BorderSide(color: kbordergreyColor),
-  //                       ),
-  //                       enabledBorder: OutlineInputBorder(
-  //                         borderRadius: BorderRadius.circular(10),
-  //                         borderSide: BorderSide(color: kbordergreyColor),
-  //                       ),
-  //                       focusedBorder: OutlineInputBorder(
-  //                         borderRadius: BorderRadius.circular(10),
-  //                         borderSide: const BorderSide(
-  //                           color: kbordergreyColor,
-  //                           width: 2,
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
+                    TextField(
+                      controller: commentController,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        hintText: "Leave a comment (optional)",
+                        hintStyle: TextStyle(
+                          color: kseegreyColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: kbordergreyColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: kbordergreyColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(
+                            color: kbordergreyColor,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
 
-  //                   const SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-  //                   Center(
-  //                     child: CustomButton(
-  //                       text: 'Submit',
-  //                       onPressed: () {},
-  //                       width: 220,
-  //                       height: 50,
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           );
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
+                    Center(
+                      child: CustomButton(
+                        text: 'Submit',
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        width: 220,
+                        height: 50,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 }
 
 // class FeedbackOption {

@@ -35,9 +35,7 @@ class _LoginScreenBody extends StatefulWidget {
 }
 
 class _LoginScreenBodyState extends State<_LoginScreenBody> {
-  final TextEditingController phoneController = TextEditingController(
-    text: "8555005960",
-  );
+  final TextEditingController phoneController = TextEditingController(text: "");
   bool _isLoading = false;
 
   @override

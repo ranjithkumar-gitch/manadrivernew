@@ -32,10 +32,11 @@ class _MyRidesScreenState extends State<MyRidesScreen>
     return Tab(
       child: Container(
         width: 134,
+
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected ? Color(0xFFFF6B00) : Color(0xFFF3F4F8),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(30),
         ),
         child: Center(
           child: CustomText(
@@ -193,7 +194,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                                   status == "Completed"
                                       ? Color(0xFFB9FFD6)
                                       : Color(0xFFC9DFFF),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(30),
                             ),
                             child: Text(
                               status,
@@ -255,6 +256,9 @@ class _MyRidesScreenState extends State<MyRidesScreen>
               color: Colors.white,
               elevation: 0,
               child: TabBar(
+                tabAlignment: TabAlignment.start,
+                padding: EdgeInsets.zero,
+                labelPadding: EdgeInsets.only(left: 15),
                 controller: _tabController,
                 isScrollable: true,
                 dividerColor: Colors.transparent,
