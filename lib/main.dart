@@ -12,7 +12,7 @@ import 'package:mana_driver/services/locale_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:mana_driver/Splashscreen/splashScreen.dart';
 import 'package:mana_driver/firebase_options.dart';
- 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefServices.init();

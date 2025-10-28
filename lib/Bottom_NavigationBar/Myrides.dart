@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mana_driver/AppBar/appBar.dart';
@@ -24,6 +25,30 @@ class _MyRidesScreenState extends State<MyRidesScreen>
       setState(() {
         selectedTabIndex = _tabController.index;
       });
+    });
+    _listenAndDeleteCompletedChats();
+  }
+
+  void _listenAndDeleteCompletedChats() {
+    FirebaseFirestore.instance.collection('bookings').snapshots().listen((
+      snapshot,
+    ) async {
+      print("📦 Received ${snapshot.docs.length} bookings from Firestore");
+
+      for (var doc in snapshot.docs) {
+        final data = doc.data();
+        final bookingId = doc.id;
+        final status = data['status'] ?? '';
+        final chatDeleted = data['chatDeleted'] ?? false;
+
+        if (status == 'Completed' && chatDeleted == false) {
+          await ChatCleanupService.deleteChatIfBookingCompleted(bookingId);
+        } else if (status == 'Completed' && chatDeleted == true) {
+          print("Booking $bookingId already cleaned up (chatDeleted = true)");
+        } else {
+          print("Booking $bookingId not completed yet — skipping cleanup.\n");
+        }
+      }
     });
   }
 
@@ -57,7 +82,8 @@ class _MyRidesScreenState extends State<MyRidesScreen>
     String vehicleId = bookingData['vehicleId'] ?? "";
     String driverDocId = bookingData['driverdocId'] ?? "";
     String driverRating = bookingData['driverRating']?.toString() ?? "N/A";
-
+    // String price = bookingData['fare'] ?? "";
+    double price = double.parse(bookingData['fare']?.toString() ?? '0.00');
     return FutureBuilder<DocumentSnapshot?>(
       future:
           vehicleId.isNotEmpty
@@ -100,8 +126,6 @@ class _MyRidesScreenState extends State<MyRidesScreen>
               profileUrl = driverData['profileUrl'] ?? "";
             }
 
-            String price = "₹ 0.00";
-
             return GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -134,22 +158,23 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                                 backgroundImage:
                                     profileUrl.isNotEmpty
                                         ? NetworkImage(profileUrl)
-                                        : AssetImage('images/user.png')
+                                        : AssetImage('images/avathar1.jpeg')
                                             as ImageProvider,
                               ),
-                              Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Container(
-                                  width: 20,
-                                  height: 20,
-                                  child: ClipOval(
-                                    child: Image.asset(
-                                      'images/verified.png',
-                                      fit: BoxFit.cover,
+                              if (profileUrl.isNotEmpty)
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                    width: 20,
+                                    height: 20,
+                                    child: ClipOval(
+                                      child: Image.asset(
+                                        'images/verified.png',
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
                             ],
                           ),
                           const SizedBox(width: 12),
@@ -223,9 +248,9 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                           Text(time, style: TextStyle(color: kseegreyColor)),
                           Spacer(),
                           CustomText(
-                            text: price,
+                            text: "₹ ${price.toStringAsFixed(2)}/-",
                             textcolor: korangeColor,
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.w600,
                           ),
                         ],
@@ -286,14 +311,10 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                   return Center(child: CircularProgressIndicator());
                 }
 
-                // final allBookings =
-                //     snapshot.data!.docs
-                //         .map((doc) => doc.data() as Map<String, dynamic>)
-                //         .toList();
                 final allBookings =
                     snapshot.data!.docs.map((doc) {
                       final data = doc.data() as Map<String, dynamic>;
-                      data['bookingId'] = doc.id; // 🔥 include document ID
+                      data['bookingId'] = doc.id;
                       return data;
                     }).toList();
 
@@ -337,3 +358,163 @@ class _MyRidesScreenState extends State<MyRidesScreen>
     );
   }
 }
+
+class ChatCleanupService {
+  static Future<void> deleteChatIfBookingCompleted(String bookingId) async {
+    try {
+      debugPrint("🔍 Checking booking status for $bookingId...");
+
+      final bookingSnapshot =
+          await FirebaseFirestore.instance
+              .collection('bookings')
+              .doc(bookingId)
+              .get();
+
+      if (!bookingSnapshot.exists) {
+        debugPrint(" Booking not found for ID: $bookingId");
+        return;
+      }
+
+      final bookingData = bookingSnapshot.data()!;
+      final status = bookingData['status'] ?? '';
+
+      if (status == 'Completed') {
+        debugPrint("🧹 Deleting chats for booking $bookingId...");
+
+        final messagesSnapshot =
+            await FirebaseFirestore.instance
+                .collection('privateChats')
+                .doc(bookingId)
+                .collection('messages')
+                .get();
+
+        int deletedMessages = 0;
+        int deletedImages = 0;
+
+        for (final doc in messagesSnapshot.docs) {
+          final data = doc.data();
+          final imageUrl = data['imageUrl'] ?? '';
+
+          if (imageUrl.isNotEmpty) {
+            try {
+              final ref = FirebaseStorage.instance.refFromURL(imageUrl);
+              await ref.delete();
+              deletedImages++;
+            } catch (e) {}
+          }
+
+          await doc.reference.delete();
+          deletedMessages++;
+        }
+
+        await _deleteTypingStatusSubcollection(bookingId);
+
+        await FirebaseFirestore.instance
+            .collection('privateChats')
+            .doc(bookingId)
+            .delete();
+
+        await FirebaseFirestore.instance
+            .collection('bookings')
+            .doc(bookingId)
+            .update({'chatDeleted': true});
+
+        debugPrint("Entire chat document deleted successfully.");
+      } else {
+        debugPrint(" not completed. Skipping cleanup.");
+      }
+    } catch (e) {}
+  }
+
+  static Future<void> _deleteTypingStatusSubcollection(String bookingId) async {
+    try {
+      final typingSnapshot =
+          await FirebaseFirestore.instance
+              .collection('privateChats')
+              .doc(bookingId)
+              .collection('typingStatus')
+              .get();
+
+      for (final doc in typingSnapshot.docs) {
+        await doc.reference.delete();
+        debugPrint("Deleted typingStatus/${doc.id}");
+      }
+    } catch (e) {}
+  }
+}
+
+
+
+// class ChatCleanupService {
+//   static Future<void> deleteChatIfBookingCompleted(String bookingId) async {
+//     try {
+//       debugPrint("🔍 Checking booking status for $bookingId...");
+
+//       final bookingSnapshot =
+//           await FirebaseFirestore.instance
+//               .collection('bookings')
+//               .doc(bookingId)
+//               .get();
+
+//       if (!bookingSnapshot.exists) {
+//         debugPrint("❌ Booking not found for ID: $bookingId");
+//         return;
+//       }
+
+//       final bookingData = bookingSnapshot.data()!;
+//       final status = bookingData['status'] ?? '';
+
+//       if (status == 'Completed') {
+//         debugPrint("🧹 Deleting chats for booking $bookingId...");
+
+//         final messagesSnapshot =
+//             await FirebaseFirestore.instance
+//                 .collection('privateChats')
+//                 .doc(bookingId)
+//                 .collection('messages')
+//                 .get();
+
+//         int deletedMessages = 0;
+//         int deletedImages = 0;
+
+//         for (final doc in messagesSnapshot.docs) {
+//           final data = doc.data();
+//           final imageUrl = data['imageUrl'] ?? '';
+
+//           if (imageUrl.isNotEmpty) {
+//             try {
+//               final ref = FirebaseStorage.instance.refFromURL(imageUrl);
+//               await ref.delete();
+//               deletedImages++;
+//               debugPrint("🖼️ Deleted image: $imageUrl");
+//             } catch (e) {
+//               debugPrint("⚠️ Failed to delete image: $e");
+//             }
+//           }
+
+//           await doc.reference.delete();
+//           deletedMessages++;
+//         }
+
+//         await FirebaseFirestore.instance
+//             .collection('privateChats')
+//             .doc(bookingId)
+//             .delete();
+
+//         await FirebaseFirestore.instance
+//             .collection('bookings')
+//             .doc(bookingId)
+//             .update({'chatDeleted': true});
+
+//         debugPrint(
+//           "✅ Deleted $deletedMessages messages & $deletedImages images for booking $bookingId",
+//         );
+//         debugPrint("🚮 Entire chat document deleted successfully.");
+//       } else {
+//         debugPrint("ℹ️ Booking not completed. Skipping cleanup.");
+//       }
+//     } catch (e) {
+//       debugPrint("❌ Error deleting chat for booking $bookingId: $e");
+//     }
+//   }
+// }

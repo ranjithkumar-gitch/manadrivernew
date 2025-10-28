@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:math' as math;
+import 'package:intl/intl.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_line/dotted_line.dart';
@@ -909,46 +911,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // CustomText(
-                    //   text: localizations.home_watch,
-                    //   fontSize: 18,
-                    //   fontWeight: FontWeight.bold,
-                    //   textcolor: KblackColor,
-                    // ),
-                    // SizedBox(height: 15),
-                    // Container(
-                    //   height: 130,
-                    //   child: PageView.builder(
-                    //     controller: _watchPageController,
-                    //     itemCount: watchLearnImages.length,
-                    //     itemBuilder: (context, index) {
-                    //       return Padding(
-                    //         padding: const EdgeInsets.symmetric(horizontal: 6),
-                    //         child: ClipRRect(
-                    //           borderRadius: BorderRadius.circular(12),
-                    //           child: Image.asset(
-                    //             watchLearnImages[index],
-                    //             fit: BoxFit.cover,
-                    //           ),
-                    //         ),
-                    //       );
-                    //     },
-                    //   ),
-                    // ),
-                    // SizedBox(height: 12),
-                    // Center(
-                    //   child: SmoothPageIndicator(
-                    //     controller: _watchPageController,
-                    //     count: watchLearnImages.length,
-                    //     effect: WormEffect(
-                    //       dotHeight: 6,
-                    //       dotWidth: 40,
-                    //       activeDotColor: korangeColor,
-                    //       dotColor: Colors.grey.shade300,
-                    //     ),
-                    //   ),
-                    // ),
-                    // SizedBox(height: 40),
                     SizedBox(
                       width: 200,
                       child: Text(
@@ -1120,10 +1082,85 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  String _fmt(double v) {
+    final f = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '₹',
+      decimalDigits: 2,
+    );
+    return f.format(v);
+  }
+
+  Map<String, dynamic> calculateFare(String distanceStr) {
+    final cleaned = distanceStr.toLowerCase().replaceAll('km', '').trim();
+    final dist = double.tryParse(cleaned) ?? 0.0;
+
+    double remaining = dist;
+    double total = 0.0;
+    final List<Map<String, dynamic>> parts = [];
+
+    if (remaining <= 0) {
+      return {'distance': dist, 'total': 0.0, 'breakup': parts};
+    }
+
+    final slab1Km = math.min(remaining, 100.0);
+    final slab1Rate = 12.0;
+    final slab1Amt = slab1Km * slab1Rate;
+    if (slab1Km > 0) {
+      parts.add({
+        'label': '0 - 100 km',
+        'km': slab1Km,
+        'rate': slab1Rate,
+        'amount': slab1Amt,
+      });
+      total += slab1Amt;
+      remaining -= slab1Km;
+    }
+
+    if (remaining > 0) {
+      final slab2Km = math.min(remaining, 100.0);
+      final slab2Rate = 11.0;
+      final slab2Amt = slab2Km * slab2Rate;
+      parts.add({
+        'label': '100 - 200 km',
+        'km': slab2Km,
+        'rate': slab2Rate,
+        'amount': slab2Amt,
+      });
+      total += slab2Amt;
+      remaining -= slab2Km;
+    }
+
+    // slab 3: above 200 @ 10
+    if (remaining > 0) {
+      final slab3Km = remaining;
+      final slab3Rate = 10.0;
+      final slab3Amt = slab3Km * slab3Rate;
+      parts.add({
+        'label': '> 200 km',
+        'km': slab3Km,
+        'rate': slab3Rate,
+        'amount': slab3Amt,
+      });
+      total += slab3Amt;
+      remaining -= slab3Km;
+    }
+
+    // round to 2 decimals
+    total = double.parse(total.toStringAsFixed(2));
+    for (var p in parts) {
+      p['amount'] = double.parse((p['amount'] as double).toStringAsFixed(2));
+      p['km'] = double.parse((p['km'] as double).toStringAsFixed(2));
+    }
+
+    return {'distance': dist, 'total': total, 'breakup': parts};
+  }
+
   void showBookingBottomSheet(BuildContext context) {
     String selectedTripMode = "Round Trip";
     String selectedTripTime = "Schedule";
     int selectedCityHours = 1;
+    final fareMap = calculateFare(distance);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -1502,7 +1539,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
 
                                     CustomText(
-                                      text: "₹ 0.00",
+                                      text:
+                                          selectedTripMode == "One way"
+                                              ? "₹${(fareMap['total'] ?? 0.0).toStringAsFixed(2)}"
+                                              : "₹0.00",
+
                                       fontSize: 26,
                                       fontWeight: FontWeight.w700,
                                       textcolor: korangeColor,
@@ -1512,7 +1553,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       children: [
                                         GestureDetector(
                                           onTap: () {
-                                            showPaymentSheet(context);
+                                            showPaymentSheet(
+                                              context,
+                                              fareMap,
+                                              selectedTripMode,
+                                            );
                                           },
                                           child: Text(
                                             'View Breakup',
@@ -1604,6 +1649,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ? drop2Controller.text
                                                   : '',
                                           "pickupLat": pickupLat,
+                                          "paymentStatus": "",
+                                          "chatDeleted": false,
                                           "pickupLng": pickupLng,
                                           "dropLat": dropLat,
                                           "dropLng": dropLng,
@@ -1612,6 +1659,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           "vehicleId": selectedCarId,
                                           "tripMode": selectedTripMode,
                                           "tripTime": selectedTripTime,
+                                          'fare': fareMap['total'] ?? 0.0,
                                           "date":
                                               "${selectedDate.toLocal()}".split(
                                                 ' ',
@@ -1696,7 +1744,32 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void showPaymentSheet(BuildContext context) {
+  void showPaymentSheet(
+    BuildContext context,
+    Map<String, dynamic> fareMap,
+    String selectedTripMode,
+  ) {
+    final List<Map<String, dynamic>> parts = List<Map<String, dynamic>>.from(
+      fareMap['breakup'] ?? [],
+    );
+
+    final bool isOneWay = selectedTripMode == "One way";
+
+    // values will show 0 if not one way
+    final double servicePrice =
+        isOneWay ? ((fareMap['total'] ?? 0.0) as double) : 0.0;
+    final double addons =
+        isOneWay ? ((fareMap['addons'] ?? 0.0) as double) : 0.0;
+    final double taxes = isOneWay ? ((fareMap['taxes'] ?? 0.0) as double) : 0.0;
+    final double walletPoints =
+        isOneWay ? ((fareMap['wallet'] ?? 0.0) as double) : 0.0;
+
+    final double totalPrice = double.parse(
+      (servicePrice + addons + taxes - walletPoints).toStringAsFixed(2),
+    );
+
+    String _rupee(double v) => "₹${v.toStringAsFixed(2)}";
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -1706,7 +1779,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (_) {
         return Container(
           margin: EdgeInsets.all(10),
-          height: 230,
+          height: 250,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1721,15 +1794,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
+                  const CustomText(
+                    text: "Distance",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    textcolor: KblackColor,
+                  ),
                   CustomText(
+                    text: distance,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    textcolor: KblackColor,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const CustomText(
                     text: "Service Price",
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     textcolor: KblackColor,
                   ),
                   CustomText(
-                    text: "₹1,799.00",
+                    text: _rupee(servicePrice),
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     textcolor: KblackColor,
@@ -1740,33 +1832,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  CustomText(
+                children: [
+                  const CustomText(
                     text: "Add-on’s",
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     textcolor: KblackColor,
                   ),
                   CustomText(
-                    text: "₹119.00",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textcolor: KblackColor,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  CustomText(
-                    text: "Fee & Taxes",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textcolor: KblackColor,
-                  ),
-                  CustomText(
-                    text: "₹100.00",
+                    text: _rupee(addons),
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     textcolor: KblackColor,
@@ -1777,15 +1851,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
+                  const CustomText(
+                    text: "Fee & Taxes",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    textcolor: KblackColor,
+                  ),
                   CustomText(
+                    text: _rupee(taxes),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    textcolor: KblackColor,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const CustomText(
                     text: "Wallet Points",
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     textcolor: KblackColor,
                   ),
                   CustomText(
-                    text: "₹00.00",
+                    text: _rupee(walletPoints),
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     textcolor: KblackColor,
@@ -1797,17 +1890,18 @@ class _HomeScreenState extends State<HomeScreen> {
               const DottedLine(dashColor: kseegreyColor),
               const SizedBox(height: 8),
 
+              // Total Price (computed)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  CustomText(
+                children: [
+                  const CustomText(
                     text: "Total Price",
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                     textcolor: korangeColor,
                   ),
                   CustomText(
-                    text: "₹2,080.00",
+                    text: _rupee(totalPrice),
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                     textcolor: korangeColor,
@@ -1824,6 +1918,108 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+
+  // void showPaymentSheet(BuildContext context, Map<String, dynamic> fareMap) {
+  //   final List<Map<String, dynamic>> parts = List<Map<String, dynamic>>.from(
+  //     fareMap['breakup'] ?? [],
+  //   );
+  //   final double total = (fareMap['total'] ?? 0.0) as double;
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //     ),
+  //     builder: (_) {
+  //       return Container(
+  //         margin: EdgeInsets.all(10),
+  //         // adjust height if many breakup rows
+  //         constraints: BoxConstraints(maxHeight: 420),
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             SizedBox(height: 15),
+  //             const CustomText(
+  //               text: "Payment Breakup",
+  //               fontSize: 16,
+  //               fontWeight: FontWeight.w600,
+  //               textcolor: KblackColor,
+  //             ),
+  //             const SizedBox(height: 12),
+
+  //             // breakup rows
+  //             ...parts.map((p) {
+  //               final label = p['label'] ?? '';
+  //               final km = p['km'] ?? 0.0;
+  //               final rate = p['rate'] ?? 0.0;
+  //               final amt = p['amount'] ?? 0.0;
+  //               return Padding(
+  //                 padding: const EdgeInsets.symmetric(vertical: 6.0),
+  //                 child: Row(
+  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                   children: [
+  //                     Expanded(
+  //                       child: Column(
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         children: [
+  //                           CustomText(
+  //                             text: label,
+  //                             fontSize: 14,
+  //                             fontWeight: FontWeight.w500,
+  //                             textcolor: KblackColor,
+  //                           ),
+  //                           SizedBox(height: 4),
+  //                           Text(
+  //                             "${km.toString()} km × ₹${rate.toStringAsFixed(2)} / km",
+  //                             style: GoogleFonts.poppins(
+  //                               fontSize: 12,
+  //                               color: kgreyColor,
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     CustomText(
+  //                       text: _fmt(amt as double),
+  //                       fontSize: 14,
+  //                       fontWeight: FontWeight.w500,
+  //                       textcolor: KblackColor,
+  //                     ),
+  //                   ],
+  //                 ),
+  //               );
+  //             }).toList(),
+
+  //             const SizedBox(height: 12),
+  //             const DottedLine(dashColor: kseegreyColor),
+  //             const SizedBox(height: 8),
+
+  //             Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 CustomText(
+  //                   text: "Total Price",
+  //                   fontSize: 16,
+  //                   fontWeight: FontWeight.w700,
+  //                   textcolor: korangeColor,
+  //                 ),
+  //                 CustomText(
+  //                   text: _fmt(total),
+  //                   fontSize: 16,
+  //                   fontWeight: FontWeight.w700,
+  //                   textcolor: korangeColor,
+  //                 ),
+  //               ],
+  //             ),
+  //             const SizedBox(height: 8),
+  //             const DottedLine(dashColor: kseegreyColor),
+  //             SizedBox(height: 10),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }
 
 Widget tripOption(String label, {bool selected = false, VoidCallback? onTap}) {

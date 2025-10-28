@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:mana_driver/Bottom_NavigationBar/Myrides.dart';
 import 'package:mana_driver/Location/driverAssigned.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Sidemenu/cancellationPolicyScreen.dart';
@@ -11,6 +12,7 @@ import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class ConfirmDetails extends StatefulWidget {
   final Map<String, dynamic> bookingData;
@@ -29,12 +31,150 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
   String status = "";
   Map<String, dynamic>? driverData;
   bool isLoading = false;
+  late Razorpay _razorpay;
   @override
   void initState() {
     super.initState();
     data = widget.bookingData;
     fetchVehicleData();
     fetchDriver();
+    _listenAndDeleteCompletedChats();
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  void _listenAndDeleteCompletedChats() {
+    print("👂 Listening for booking status changes...");
+
+    FirebaseFirestore.instance.collection('bookings').snapshots().listen((
+      snapshot,
+    ) async {
+      print("📦 Received ${snapshot.docs.length} bookings from Firestore");
+
+      for (var doc in snapshot.docs) {
+        final data = doc.data();
+        final bookingId = doc.id;
+        final status = data['status'] ?? '';
+        final chatDeleted = data['chatDeleted'] ?? false;
+
+        // Print current state of each booking
+        print(
+          "➡️ Booking ID: $bookingId | Status: $status | chatDeleted: $chatDeleted",
+        );
+
+        // Check condition for deletion
+        if (status == 'Completed' && chatDeleted == false) {
+          print("🧹 Booking $bookingId is completed but chat not deleted yet.");
+          print("🚀 Initiating chat cleanup for booking: $bookingId...");
+
+          await ChatCleanupService.deleteChatIfBookingCompleted(bookingId);
+
+          print("✅ Cleanup triggered for booking: $bookingId\n");
+        } else if (status == 'Completed' && chatDeleted == true) {
+          print("✅ Booking $bookingId already cleaned up (chatDeleted = true)");
+        } else {
+          print(
+            "ℹ️ Booking $bookingId not completed yet — skipping cleanup.\n",
+          );
+        }
+      }
+    });
+  }
+
+  void _openCheckout(double amount) {
+    var options = {
+      'key': 'rzp_test_RYV8adyj8P0Z18',
+      'amount': (amount * 100).toInt(),
+      'name': 'Rydyn',
+      'description': 'Ride Payment',
+      'prefill': {'contact': '9999999999', 'email': 'test@rydyn.com'},
+    };
+
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint('Razorpay error: $e');
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    try {
+      debugPrint('✅ Payment Successful: ${response.paymentId}');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Payment Successful: ${response.paymentId}")),
+      );
+
+      double amount = double.tryParse(data['fare'].toString()) ?? 0.0;
+
+      final transactionData = {
+        'transactionId': response.paymentId,
+        'bookingDocId': widget.bookingData['bookingId'] ?? 'Unknown',
+        'amount': amount,
+        'status': 'Success',
+        'paymentMethod': 'Razorpay',
+        'timestamp': FieldValue.serverTimestamp(),
+      };
+
+      await FirebaseFirestore.instance
+          .collection('transactions')
+          .add(transactionData);
+
+      debugPrint("Transaction saved in Firestore: $transactionData");
+
+      final bookingId = widget.bookingData['bookingId'];
+      if (bookingId != null && bookingId.toString().isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection('bookings')
+            .doc(bookingId)
+            .update({'paymentStatus': 'Success'});
+
+        debugPrint("✅ Booking $bookingId paymentStatus updated to 'Success'");
+      } else {
+        debugPrint("⚠️ Booking ID missing — paymentStatus not updated");
+      }
+
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const PaymentGateway()),
+        );
+      }
+    } catch (e) {
+      debugPrint("❌ Error saving transaction: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error saving transaction details")),
+      );
+
+      final bookingId = widget.bookingData['bookingId'];
+      if (bookingId != null && bookingId.toString().isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection('bookings')
+            .doc(bookingId)
+            .update({'paymentStatus': 'Failure'});
+
+        debugPrint("❌ Booking $bookingId paymentStatus updated to 'Failure'");
+      }
+    }
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    debugPrint(' Failed: ${response.message}');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Payment Failed: ${response.message}")),
+    );
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    debugPrint('⚡ External Wallet Selected: ${response.walletName}');
+  }
+
+  @override
+  void dispose() {
+    _razorpay.clear();
+    super.dispose();
   }
 
   void fetchVehicleData() async {
@@ -162,42 +302,36 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     final bookingStatus = data['status'] ?? 'New';
     final driverAssigned = driverData != null && driverData!.isNotEmpty;
     print('$bookingId,$driverData,$ownerId');
-    final appBarTitle =
-        driverAssigned ? "Driver Assigned" : "Driver not assigned";
-
-    // String bottomButtonText = 'Cancel Ride';
-    // VoidCallback? bottomButtonAction = () {
-    //   ScaffoldMessenger.of(
-    //     context,
-    //   ).showSnackBar(const SnackBar(content: Text("Ride Cancelled")));
-    // };
-
-    // if (driverAssigned && bookingStatus == 'Ongoing') {
-    //   bottomButtonText = 'Proceed to Pay';
-    //   bottomButtonAction = () {
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       const SnackBar(content: Text("Proceeding to payment...")),
-    //     );
-    //     // Example navigation:
-    //     // Navigator.push(context, MaterialPageRoute(builder: (_) => PaymentGateway()));
-    //   };
-    // }
+    // final appBarTitle =
+    //     driverAssigned ? "Driver Assigned" : "Driver not assigned";
     final rideStatus = widget.bookingData['status'] ?? '';
 
+    String appBarTitle = '';
+    if (rideStatus == 'New') {
+      appBarTitle = "Driver Not Assigned";
+    } else if (rideStatus == 'Accepted') {
+      appBarTitle = "Driver Assigned";
+    } else if (rideStatus == 'Completed') {
+      appBarTitle = "Ride Completed";
+    } else {
+      appBarTitle = "Ride $rideStatus";
+    }
+
+    String paymentStatus = data['paymentStatus'] ?? '';
     String bottomButtonText = '';
     VoidCallback? bottomButtonAction;
 
     if (rideStatus == 'New') {
       bottomButtonText = 'Cancel Ride';
       bottomButtonAction = () => cancelRide(context);
-    } else if (rideStatus == 'Completed') {
+    } else if (rideStatus == 'Completed' && paymentStatus != 'Success') {
       bottomButtonText = 'Proceed to Payment';
       bottomButtonAction = () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const PaymentGateway()),
-        );
+        _openCheckout(double.parse(data['fare']?.toString() ?? '0.00'));
       };
+    } else if (rideStatus == 'Completed' && paymentStatus == 'Success') {
+      bottomButtonText = 'Payment Completed';
+      bottomButtonAction = null;
     } else {
       bottomButtonText = 'Ride $rideStatus';
       bottomButtonAction = null;
@@ -212,6 +346,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
 
     String driverContact =
         driverData != null ? "${driverData!['phone'] ?? ''}" : 'Driver Phone';
+
     String vehicleName =
         vehicleData != null
             ? "${vehicleData!['brand'] ?? ''} ${vehicleData!['model'] ?? ''}"
@@ -240,7 +375,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     String drop2Location = data['drop2'] ?? '';
     String date = data['date'] ?? 'DD/MM/YYYY';
     String time = data['time'] ?? 'HH:MM';
-    String servicePrice = data['servicePrice']?.toString() ?? '0.00';
+    String servicePrice = data['fare']?.toString() ?? '0.00';
     String addonPrice = data['addonPrice']?.toString() ?? '0.00';
     String taxes = data['taxes']?.toString() ?? '0.00';
     String walletPoints = data['walletPoints']?.toString() ?? '0.00';
@@ -363,13 +498,14 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                               ],
                             ),
                           ),
-                          Container(
-                            height: 50,
-                            width: 1,
-                            color: Colors.grey.shade300,
-                          ),
-                          const SizedBox(width: 12),
-                          if (driverAssigned) ...[
+                          if (driverAssigned && rideStatus != 'Completed') ...[
+                            Container(
+                              height: 50,
+                              width: 1,
+                              color: Colors.grey.shade300,
+                            ),
+                            const SizedBox(width: 12),
+
                             Row(
                               children: [
                                 GestureDetector(
@@ -1152,7 +1288,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                 textcolor: korangeColor,
                               ),
                               CustomText(
-                                text: "₹$totalPrice",
+                                text: "₹$servicePrice",
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
                                 textcolor: korangeColor,

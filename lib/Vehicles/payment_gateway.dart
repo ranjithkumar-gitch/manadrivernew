@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/Location/driverAssigned.dart';
 
 import 'package:mana_driver/Widgets/colors.dart';
@@ -13,6 +14,20 @@ class PaymentGateway extends StatefulWidget {
 }
 
 class _PaymentGatewayState extends State<PaymentGateway> {
+  void initState() {
+    super.initState();
+
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => BottomNavigation()),
+          (route) => false,
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,17 +45,17 @@ class _PaymentGatewayState extends State<PaymentGateway> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: Image.asset(
-                    "images/chevronLeft.png",
-                    width: 24,
-                    height: 24,
-                  ),
-                ),
-              ),
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: InkWell(
+              //     onTap: () => Navigator.pop(context),
+              //     child: Image.asset(
+              //       "images/chevronLeft.png",
+              //       width: 24,
+              //       height: 24,
+              //     ),
+              //   ),
+              // ),
               Center(
                 child: CustomText(
                   text: "Payment",
@@ -68,7 +83,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
           SizedBox(height: 15),
           GestureDetector(
             onTap: () {
-              _showDriverDialog(context);
+              // _showDriverDialog(context);
             },
             child: Center(
               child: Text(
