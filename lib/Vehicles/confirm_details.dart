@@ -46,12 +46,12 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
   }
 
   void _listenAndDeleteCompletedChats() {
-    print("👂 Listening for booking status changes...");
+    print("Listening for booking status changes...");
 
     FirebaseFirestore.instance.collection('bookings').snapshots().listen((
       snapshot,
     ) async {
-      print("📦 Received ${snapshot.docs.length} bookings from Firestore");
+      print(" Received ${snapshot.docs.length} bookings from Firestore");
 
       for (var doc in snapshot.docs) {
         final data = doc.data();
@@ -59,33 +59,21 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
         final status = data['status'] ?? '';
         final chatDeleted = data['chatDeleted'] ?? false;
 
-        // Print current state of each booking
         print(
-          "➡️ Booking ID: $bookingId | Status: $status | chatDeleted: $chatDeleted",
+          " Booking ID: $bookingId | Status: $status | chatDeleted: $chatDeleted",
         );
 
-        // Check condition for deletion
         if (status == 'Completed' && chatDeleted == false) {
-          print("🧹 Booking $bookingId is completed but chat not deleted yet.");
-          print("🚀 Initiating chat cleanup for booking: $bookingId...");
-
           await ChatCleanupService.deleteChatIfBookingCompleted(bookingId);
-
-          print("✅ Cleanup triggered for booking: $bookingId\n");
         } else if (status == 'Completed' && chatDeleted == true) {
-          print("✅ Booking $bookingId already cleaned up (chatDeleted = true)");
-        } else {
-          print(
-            "ℹ️ Booking $bookingId not completed yet — skipping cleanup.\n",
-          );
-        }
+        } else {}
       }
     });
   }
 
   void _openCheckout(double amount) {
     var options = {
-      'key': 'rzp_test_RYV8adyj8P0Z18',
+      'key': 'rzp_test_RZa3mGbco9w4Ms',
       'amount': (amount * 100).toInt(),
       'name': 'Rydyn',
       'description': 'Ride Payment',
@@ -101,7 +89,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     try {
-      debugPrint('✅ Payment Successful: ${response.paymentId}');
+      debugPrint('Payment Successful: ${response.paymentId}');
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Payment Successful: ${response.paymentId}")),
@@ -131,9 +119,9 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
             .doc(bookingId)
             .update({'paymentStatus': 'Success'});
 
-        debugPrint("✅ Booking $bookingId paymentStatus updated to 'Success'");
+        debugPrint(" Booking $bookingId paymentStatus updated to 'Success'");
       } else {
-        debugPrint("⚠️ Booking ID missing — paymentStatus not updated");
+        debugPrint(" Booking ID missing — paymentStatus not updated");
       }
 
       if (mounted) {
@@ -143,7 +131,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
         );
       }
     } catch (e) {
-      debugPrint("❌ Error saving transaction: $e");
+      debugPrint("Error saving transaction: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error saving transaction details")),
       );
@@ -155,7 +143,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
             .doc(bookingId)
             .update({'paymentStatus': 'Failure'});
 
-        debugPrint("❌ Booking $bookingId paymentStatus updated to 'Failure'");
+        debugPrint(" Booking $bookingId paymentStatus updated to 'Failure'");
       }
     }
   }
@@ -168,7 +156,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    debugPrint('⚡ External Wallet Selected: ${response.walletName}');
+    debugPrint(' External Wallet Selected: ${response.walletName}');
   }
 
   @override
@@ -431,18 +419,6 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: [
-                          // const CircleAvatar(
-                          //   radius: 40,
-                          //   backgroundImage: AssetImage("images/avathar1.jpeg"),
-                          // ),
-                          // CircleAvatar(
-                          //   radius: 40,
-                          //   backgroundImage:
-                          //       driverData != null && driverData!['profileUrl'] != null
-                          //           ? NetworkImage(driverData!['profileUrl'])
-                          //           : AssetImage("images/avathar1.jpeg")
-                          //               as ImageProvider,
-                          // ),
                           CircleAvatar(
                             radius: 40,
                             backgroundImage:
