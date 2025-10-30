@@ -22,7 +22,11 @@ class PhoneNumberInputField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.number,
-      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(10),
+      ],
+
       style: GoogleFonts.poppins(
         color: korangeColor,
         fontSize: 16,
