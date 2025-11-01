@@ -151,8 +151,38 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       final bookingData = bookingSnap.data() as Map<String, dynamic>;
       final driverId = bookingData['driverId'] ?? '';
       final ownerId = bookingData['ownerId'] ?? '';
+      final vehicleId = bookingData['vehicleId'] ?? '';
+      final driverDocId = bookingData['driverdocId'] ?? '';
+
+      String driverName = 'NA';
+      if (driverDocId.isNotEmpty) {
+        final driverSnap =
+            await FirebaseFirestore.instance
+                .collection('drivers')
+                .doc(driverDocId)
+                .get();
+        if (driverSnap.exists) {
+          final driverData = driverSnap.data() as Map<String, dynamic>;
+          driverName = '${driverData['firstName']} ${driverData['lastName']}';
+        }
+      }
+
+      String vehicleName = 'NA';
+      if (vehicleId.isNotEmpty) {
+        final vehicleSnap =
+            await FirebaseFirestore.instance
+                .collection('vehicles')
+                .doc(vehicleId)
+                .get();
+        if (vehicleSnap.exists) {
+          final vehicleData = vehicleSnap.data() as Map<String, dynamic>;
+          vehicleName = '${vehicleData['brand']} ${vehicleData['model']}';
+        }
+      }
 
       if (currentUserId == driverId || currentUserId == ownerId) {
+        tx['driverName'] = driverName;
+        tx['vehicleName'] = vehicleName;
         filtered.add(tx);
       }
     }
@@ -169,9 +199,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         tx['timestamp'] != null
             ? (tx['timestamp'] as Timestamp).toDate()
             : DateTime.now();
+    final driverName = tx['driverName'] ?? 'Unknown Driver';
+    final vehicleName = tx['vehicleName'] ?? 'Unknown Vehicle';
 
     final dateString =
-        "${timestamp.day} ${_monthName(timestamp.month)} ${timestamp.year}";
+        "${timestamp.day.toString().padLeft(2, '0')}/${timestamp.month.toString().padLeft(2, '0')}/${timestamp.year}";
+
     final hour =
         timestamp.hour > 12
             ? timestamp.hour - 12
@@ -211,21 +244,59 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomText(
-                  text: timeString,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  textcolor: kseegreyColor,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Image.asset('images/idcard.png'),
+                        const SizedBox(width: 8),
+                        CustomText(
+                          text: driverName,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          textcolor: kseegreyColor,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Image.asset('images/car.png'),
+                        const SizedBox(width: 8),
+                        CustomText(
+                          text: vehicleName,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          textcolor: kseegreyColor,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                CustomText(
-                  text: dateString,
-                  textcolor: kseegreyColor,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
+
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText(
+                      text: timeString,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                      textcolor: kseegreyColor,
+                    ),
+                    const SizedBox(height: 3),
+                    CustomText(
+                      text: dateString,
+                      textcolor: kseegreyColor,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -239,12 +310,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      text: "₹${amount.toStringAsFixed(2)}",
+                      text: "₹${amount.toStringAsFixed(2)}/-",
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       textcolor: korangeColor,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 3),
                     CustomText(
                       text: paymentMethod,
                       fontSize: 12,
