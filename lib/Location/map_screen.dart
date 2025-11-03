@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:mana_driver/Location/location.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 
@@ -80,6 +81,28 @@ class _MapPickScreenState extends State<MapPickScreen> {
       }
     } catch (e) {
       debugPrint("Error getting location: $e");
+      await showDialog(
+        context: context,
+        builder:
+            (context) => AlertDialog(
+              title: const Text("Enable Location Services"),
+              content: const Text(
+                "Unable to get your current location. Please turn on location services and try again.",
+              ),
+              actions: [
+                TextButton(
+                  onPressed:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LocationSelectionScreen(),
+                        ),
+                      ),
+                  child: const Text("OK"),
+                ),
+              ],
+            ),
+      );
     }
   }
 
