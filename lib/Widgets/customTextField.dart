@@ -30,7 +30,7 @@ class CustomTextField extends StatelessWidget {
     this.inputFormatters,
     this.validator,
     this.labelColor = Colors.grey,
-    this.textColor = korangeColor,
+    this.textColor = KblackColor,
     this.borderColor = const Color(0xFFD5D7DA),
     this.fontSize = 16,
   });

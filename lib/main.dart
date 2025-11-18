@@ -2,11 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/l10n/app_localizations.dart';
 import 'package:mana_driver/services/repository.dart';
-import 'package:mana_driver/viewmodels/login_viewmodel.dart';   
+import 'package:mana_driver/viewmodels/login_viewmodel.dart';
 import 'package:mana_driver/viewmodels/register_viewmodel.dart';
 import 'package:mana_driver/services/locale_provider.dart';
 import 'package:provider/provider.dart';

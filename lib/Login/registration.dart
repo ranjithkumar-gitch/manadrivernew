@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:mana_driver/Login/loginScreen.dart';
 import 'package:mana_driver/Login/otpscreen.dart';
@@ -142,7 +143,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           "Selected country: ${selectedCountry.name} (${selectedCountry.countryCode}) +${selectedCountry.phoneCode}",
                         );
 
-                        // ✅ First name validation
                         if (!isValidName(firstName)) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -190,7 +190,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         }
 
                         print(
-                          "✅ All validations passed, proceeding with registration...",
+                          " All validations passed, proceeding with registration...",
                         );
 
                         try {
@@ -202,12 +202,98 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   .get();
 
                           if (ownerSnap.docs.isNotEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  "Mobile number already exists as Owner",
-                                ),
-                              ),
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  title: Center(
+                                    child: Text(
+                                      "Mobile Number Exists",
+                                      style: GoogleFonts.poppins(
+                                        color: korangeColor,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  content: Text(
+                                    "This mobile number is already registered as an Owner.",
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text(
+                                        'OK',
+                                        style: GoogleFonts.poppins(
+                                          color: korangeColor,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                            return;
+                          }
+
+                          final driverSnap =
+                              await FirebaseFirestore.instance
+                                  .collection('drivers')
+                                  .where('phone', isEqualTo: phone)
+                                  .limit(1)
+                                  .get();
+
+                          if (driverSnap.docs.isNotEmpty) {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  title: Center(
+                                    child: Text(
+                                      "Mobile Number Exists",
+                                      style: GoogleFonts.poppins(
+                                        color: korangeColor,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  content: Text(
+                                    "This mobile number is already registered as a Driver.",
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text(
+                                        'OK',
+                                        style: GoogleFonts.poppins(
+                                          color: korangeColor,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                             return;
                           }

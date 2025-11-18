@@ -108,7 +108,7 @@ class _OtpLoginState extends State<OtpLogin> {
                               textStyle: GoogleFonts.poppins(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
-                                color: korangeColor,
+                                color: KblackColor,
                               ),
                               decoration: BoxDecoration(
                                 border: Border.all(color: kbordergreyColor),

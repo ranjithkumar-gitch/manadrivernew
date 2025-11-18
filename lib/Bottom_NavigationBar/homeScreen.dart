@@ -554,49 +554,48 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
 
-                    if (selectedCarIndex != -1) ...[
-                      const SizedBox(height: 6),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CustomText(
-                            text:
-                                '${carList[selectedCarIndex]['brand']} ${carList[selectedCarIndex]['model']}',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            textcolor: KblackColor,
-                          ),
-                          SizedBox(
-                            height: 30,
-                            width: 75,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: korangeColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(22),
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 3,
-                                  vertical: 5,
-                                ),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  selectedCarIndex = -1;
-                                });
-                              },
-                              child: CustomText(
-                                text: 'Unselect',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                textcolor: kwhiteColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-
+                    // if (selectedCarIndex != -1) ...[
+                    //   const SizedBox(height: 6),
+                    //   Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       CustomText(
+                    //         text:
+                    //             '${carList[selectedCarIndex]['brand']} ${carList[selectedCarIndex]['model']}',
+                    //         fontSize: 14,
+                    //         fontWeight: FontWeight.w600,
+                    //         textcolor: KblackColor,
+                    //       ),
+                    //       SizedBox(
+                    //         height: 30,
+                    //         width: 75,
+                    //         child: ElevatedButton(
+                    //           style: ElevatedButton.styleFrom(
+                    //             backgroundColor: korangeColor,
+                    //             shape: RoundedRectangleBorder(
+                    //               borderRadius: BorderRadius.circular(22),
+                    //             ),
+                    //             padding: EdgeInsets.symmetric(
+                    //               horizontal: 3,
+                    //               vertical: 5,
+                    //             ),
+                    //           ),
+                    //           onPressed: () {
+                    //             setState(() {
+                    //               selectedCarIndex = -1;
+                    //             });
+                    //           },
+                    //           child: CustomText(
+                    //             text: 'Unselect',
+                    //             fontSize: 14,
+                    //             fontWeight: FontWeight.w400,
+                    //             textcolor: kwhiteColor,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ],
                     SizedBox(height: 25),
 
                     if (carList.isNotEmpty) ...[
@@ -612,7 +611,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             return GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  selectedCarIndex = index;
+                                  selectedCarIndex =
+                                      selectedCarIndex == index ? -1 : index;
                                 });
                               },
                               child: Stack(
@@ -770,7 +770,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         dropController.text.isEmpty ||
                                         selectedCarIndex == -1)
                                     ? Colors.grey
-                                    : korangeColor, // enabled
+                                    : korangeColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(40),
                             ),
@@ -1131,7 +1131,6 @@ class _HomeScreenState extends State<HomeScreen> {
       remaining -= slab2Km;
     }
 
-    // slab 3: above 200 @ 10
     if (remaining > 0) {
       final slab3Km = remaining;
       final slab3Rate = 10.0;
@@ -1146,7 +1145,6 @@ class _HomeScreenState extends State<HomeScreen> {
       remaining -= slab3Km;
     }
 
-    // round to 2 decimals
     total = double.parse(total.toStringAsFixed(2));
     for (var p in parts) {
       p['amount'] = double.parse((p['amount'] as double).toStringAsFixed(2));

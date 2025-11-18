@@ -142,30 +142,61 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                                           (_) => OtpLogin(
                                             phoneNumber: phoneNumber,
                                           ),
-                                      // OtpScreen(
-                                      //   phoneNumber: phoneNumber,
-                                      //   firstName:
-                                      //       vm.loggedInUser?['firstName'] ??
-                                      //       '',
-                                      //   lastName:
-                                      //       vm.loggedInUser?['lastName'] ??
-                                      //       '',
-                                      //   email:
-                                      //       vm.loggedInUser?['email'] ?? '',
-                                      //   countryCode:
-                                      //       vm.loggedInUser?['countryCode'] ??
-                                      //       '',
-                                      //   isTestOtp: true,
-                                      // ),
                                     ),
                                   );
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        "User not found. Please register first.",
-                                      ),
-                                    ),
+                                  // ScaffoldMessenger.of(context).showSnackBar(
+                                  //   const SnackBar(
+                                  //     content: Text(
+                                  //       "User not found. Please register first.",
+                                  //     ),
+                                  //   ),
+                                  // );
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
+                                        content: Text(
+                                          "Please register before logging in.",
+                                          style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        title: Center(
+                                          child: Text(
+                                            "New User",
+                                            style: GoogleFonts.poppins(
+                                              color: korangeColor,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text(
+                                              'OK',
+                                              style: GoogleFonts.poppins(
+                                                color: korangeColor,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
                                   );
                                 }
                               } catch (e) {

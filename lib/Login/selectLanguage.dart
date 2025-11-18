@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -48,80 +49,75 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                           textcolor: korangeColor,
                         ),
                       ),
-                      // const SizedBox(height: 10),
-                      // Container(
-                      //   margin: EdgeInsets.only(left: marginStart),
-                      //   child: CustomText(
-                      //     text: localizations.selectLanguageSubtitle,
-                      //     fontSize: 14,
-                      //     fontWeight: FontWeight.w400,
-                      //     textcolor: kgreyColor,
-                      //   ),
-                      // ),
+
                       const SizedBox(height: 50),
                       SizedBox(
                         height: 58,
-                        child: DropdownButtonFormField<String>(
-                          isExpanded: true,
-                          value: selectedLanguage,
-                          onChanged: (newValue) {
-                            if (newValue == null) return;
-                            setState(() {
-                              selectedLanguage = newValue;
-                            });
-                            final localeProvider = Provider.of<LocaleProvider>(
-                              context,
-                              listen: false,
-                            );
-                            if (newValue == 'English') {
-                              localeProvider.setLocale(const Locale('en'));
-                            } else if (newValue == 'Hindi') {
-                              localeProvider.setLocale(const Locale('hi'));
-                            } else if (newValue == 'Telugu') {
-                              localeProvider.setLocale(const Locale('te'));
-                            }
-                          },
-                          items: [
-                            DropdownMenuItem(
-                              value: 'English',
-                              child: Text('English'),
-                            ),
-                            DropdownMenuItem(
-                              value: 'Telugu',
-                              child: Text('తెలుగు'),
-                            ),
-                            DropdownMenuItem(
-                              value: 'Hindi',
-                              child: Text('हिन्दी'),
-                            ),
-                          ],
-                          decoration: InputDecoration(
-                            hintText: localizations.chooseLanguage,
-                            hintStyle: GoogleFonts.poppins(
-                              color: kseegreyColor,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 16,
-                            ),
-                            fillColor: kwhiteColor,
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFE0E0E0),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: true,
+                            value: selectedLanguage,
+                            items: [
+                              DropdownMenuItem(
+                                value: 'English',
+                                child: Text('English'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Telugu',
+                                child: Text('తెలుగు'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Hindi',
+                                child: Text('हिन्दी'),
+                              ),
+                            ],
+                            onChanged: (newValue) {
+                              if (newValue == null) return;
+                              setState(() {
+                                selectedLanguage = newValue;
+                              });
+
+                              final localeProvider =
+                                  Provider.of<LocaleProvider>(
+                                    context,
+                                    listen: false,
+                                  );
+
+                              if (newValue == 'English') {
+                                localeProvider.setLocale(const Locale('en'));
+                              } else if (newValue == 'Hindi') {
+                                localeProvider.setLocale(const Locale('hi'));
+                              } else if (newValue == 'Telugu') {
+                                localeProvider.setLocale(const Locale('te'));
+                              }
+                            },
+
+                            dropdownStyleData: DropdownStyleData(
+                              direction: DropdownDirection.textDirection,
+                              offset: const Offset(0, -5),
+                              maxHeight: 200,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
                               ),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFD5D7DA),
+
+                            buttonStyleData: ButtonStyleData(
+                              height: 58,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Color(0xFFD5D7DA)),
                               ),
                             ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFD5D7DA),
+
+                            menuItemStyleData: const MenuItemStyleData(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 12,
                               ),
                             ),
                           ),
@@ -175,3 +171,72 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
     );
   }
 }
+// SizedBox(
+                      //   height: 58,
+                      //   child: DropdownButtonFormField<String>(
+                      //     isExpanded: true,
+                      //     value: selectedLanguage,
+
+                      //     onChanged: (newValue) {
+                      //       if (newValue == null) return;
+                      //       setState(() {
+                      //         selectedLanguage = newValue;
+                      //       });
+                      //       final localeProvider = Provider.of<LocaleProvider>(
+                      //         context,
+                      //         listen: false,
+                      //       );
+                      //       if (newValue == 'English') {
+                      //         localeProvider.setLocale(const Locale('en'));
+                      //       } else if (newValue == 'Hindi') {
+                      //         localeProvider.setLocale(const Locale('hi'));
+                      //       } else if (newValue == 'Telugu') {
+                      //         localeProvider.setLocale(const Locale('te'));
+                      //       }
+                      //     },
+                      //     items: [
+                      //       DropdownMenuItem(
+                      //         value: 'English',
+                      //         child: Text('English'),
+                      //       ),
+                      //       DropdownMenuItem(
+                      //         value: 'Telugu',
+                      //         child: Text('తెలుగు'),
+                      //       ),
+                      //       DropdownMenuItem(
+                      //         value: 'Hindi',
+                      //         child: Text('हिन्दी'),
+                      //       ),
+                      //     ],
+                      //     decoration: InputDecoration(
+                      //       hintText: localizations.chooseLanguage,
+                      //       hintStyle: GoogleFonts.poppins(
+                      //         color: kseegreyColor,
+                      //       ),
+                      //       contentPadding: const EdgeInsets.symmetric(
+                      //         horizontal: 12,
+                      //         vertical: 16,
+                      //       ),
+                      //       fillColor: kwhiteColor,
+                      //       filled: true,
+                      //       border: OutlineInputBorder(
+                      //         borderRadius: BorderRadius.circular(10),
+                      //         borderSide: const BorderSide(
+                      //           color: Color(0xFFE0E0E0),
+                      //         ),
+                      //       ),
+                      //       enabledBorder: OutlineInputBorder(
+                      //         borderRadius: BorderRadius.circular(10),
+                      //         borderSide: const BorderSide(
+                      //           color: Color(0xFFD5D7DA),
+                      //         ),
+                      //       ),
+                      //       focusedBorder: OutlineInputBorder(
+                      //         borderRadius: BorderRadius.circular(10),
+                      //         borderSide: const BorderSide(
+                      //           color: Color(0xFFD5D7DA),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),

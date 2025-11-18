@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Login/loginScreen.dart';
@@ -752,18 +753,78 @@ class _MenuScreenState extends State<MenuScreen> {
                   fontWeight: FontWeight.w600,
                 ),
                 const SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  isExpanded: true,
-                  value: selectedLanguage,
-                  onChanged:
-                      (newValue) => setState(() => selectedLanguage = newValue),
-                  items: const [
-                    DropdownMenuItem(value: 'English', child: Text('English')),
-                    DropdownMenuItem(value: 'Telugu', child: Text('Telugu')),
-                    DropdownMenuItem(value: 'Hindi', child: Text('Hindi')),
-                  ],
-                  decoration: _dropdownDecoration('Choose Language'),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton2<String>(
+                    isExpanded: true,
+                    value: selectedLanguage,
+                    items: [
+                      DropdownMenuItem(
+                        value: 'English',
+                        child: Text('English'),
+                      ),
+                      DropdownMenuItem(value: 'Telugu', child: Text('తెలుగు')),
+                      DropdownMenuItem(value: 'Hindi', child: Text('हिन्दी')),
+                    ],
+                    onChanged: (newValue) {
+                      if (newValue == null) return;
+                      setState(() {
+                        selectedLanguage = newValue;
+                      });
+
+                      final localeProvider = Provider.of<LocaleProvider>(
+                        context,
+                        listen: false,
+                      );
+
+                      if (newValue == 'English') {
+                        localeProvider.setLocale(const Locale('en'));
+                      } else if (newValue == 'Hindi') {
+                        localeProvider.setLocale(const Locale('hi'));
+                      } else if (newValue == 'Telugu') {
+                        localeProvider.setLocale(const Locale('te'));
+                      }
+                    },
+
+                    dropdownStyleData: DropdownStyleData(
+                      direction: DropdownDirection.textDirection,
+                      offset: const Offset(0, -5),
+                      maxHeight: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                      ),
+                    ),
+
+                    buttonStyleData: ButtonStyleData(
+                      height: 58,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Color(0xFFD5D7DA)),
+                      ),
+                    ),
+
+                    menuItemStyleData: const MenuItemStyleData(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 12,
+                      ),
+                    ),
+                  ),
                 ),
+                // DropdownButtonFormField<String>(
+                //   isExpanded: true,
+                //   value: selectedLanguage,
+                //   onChanged:
+                //       (newValue) => setState(() => selectedLanguage = newValue),
+                //   items: const [
+                //     DropdownMenuItem(value: 'English', child: Text('English')),
+                //     DropdownMenuItem(value: 'Telugu', child: Text('Telugu')),
+                //     DropdownMenuItem(value: 'Hindi', child: Text('Hindi')),
+                //   ],
+                //   decoration: _dropdownDecoration('Choose Language'),
+                // ),
               ],
             ),
             actions: _dialogActions(
@@ -905,7 +966,7 @@ class _MenuScreenState extends State<MenuScreen> {
     textStyle: GoogleFonts.poppins(
       fontSize: 20,
       fontWeight: FontWeight.w600,
-      color: korangeColor,
+      color: KblackColor,
     ),
     decoration: BoxDecoration(
       border: Border.all(color: kbordergreyColor),
