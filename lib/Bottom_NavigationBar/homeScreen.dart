@@ -65,20 +65,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _startOfferAutoScroll();
   }
 
-  // Future<void> _selectLocation() async {
-  //   final result = await Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (_) => LocationSelectionScreen()),
-  //   );
-
-  //   if (result != null && result is Map) {
-  //     setState(() {
-  //       pickupController.text = result["current"] ?? "";
-  //       dropController.text = result["drop"] ?? "";
-  //     });
-  //   }
-  // }
-
   Future<void> _selectLocation() async {
     final result = await Navigator.push(
       context,
@@ -554,48 +540,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
 
-                    // if (selectedCarIndex != -1) ...[
-                    //   const SizedBox(height: 6),
-                    //   Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //     children: [
-                    //       CustomText(
-                    //         text:
-                    //             '${carList[selectedCarIndex]['brand']} ${carList[selectedCarIndex]['model']}',
-                    //         fontSize: 14,
-                    //         fontWeight: FontWeight.w600,
-                    //         textcolor: KblackColor,
-                    //       ),
-                    //       SizedBox(
-                    //         height: 30,
-                    //         width: 75,
-                    //         child: ElevatedButton(
-                    //           style: ElevatedButton.styleFrom(
-                    //             backgroundColor: korangeColor,
-                    //             shape: RoundedRectangleBorder(
-                    //               borderRadius: BorderRadius.circular(22),
-                    //             ),
-                    //             padding: EdgeInsets.symmetric(
-                    //               horizontal: 3,
-                    //               vertical: 5,
-                    //             ),
-                    //           ),
-                    //           onPressed: () {
-                    //             setState(() {
-                    //               selectedCarIndex = -1;
-                    //             });
-                    //           },
-                    //           child: CustomText(
-                    //             text: 'Unselect',
-                    //             fontSize: 14,
-                    //             fontWeight: FontWeight.w400,
-                    //             textcolor: kwhiteColor,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ],
                     SizedBox(height: 25),
 
                     if (carList.isNotEmpty) ...[
@@ -1091,74 +1035,70 @@ class _HomeScreenState extends State<HomeScreen> {
     return f.format(v);
   }
 
-  Map<String, dynamic> calculateFare(String distanceStr) {
+  Map<String, dynamic> calculateFare(
+    String distanceStr, {
+    bool isRoundTrip = false,
+    bool isHourlyTrip = false,
+  }) {
     final cleaned = distanceStr.toLowerCase().replaceAll('km', '').trim();
-    final dist = double.tryParse(cleaned) ?? 0.0;
+    double dist = double.tryParse(cleaned) ?? 0.0;
 
-    double remaining = dist;
-    double total = 0.0;
-    final List<Map<String, dynamic>> parts = [];
+    if (isHourlyTrip) {
+      return {
+        'distance': dist,
+        'rate': 549,
+        'total': 549.0,
+        'breakup': [
+          {'km': dist, 'rate': 549, 'amount': 549},
+        ],
+      };
+    }
+    if (isRoundTrip) {
+      dist = dist * 2;
+    }
+    double rate = 0.0;
 
-    if (remaining <= 0) {
-      return {'distance': dist, 'total': 0.0, 'breakup': parts};
+    if (isRoundTrip) {
+      if (dist <= 100) {
+        rate = 11.0;
+      } else {
+        rate = 10.0;
+      }
     }
 
-    final slab1Km = math.min(remaining, 100.0);
-    final slab1Rate = 12.0;
-    final slab1Amt = slab1Km * slab1Rate;
-    if (slab1Km > 0) {
-      parts.add({
-        'label': '0 - 100 km',
-        'km': slab1Km,
-        'rate': slab1Rate,
-        'amount': slab1Amt,
-      });
-      total += slab1Amt;
-      remaining -= slab1Km;
+    if (!isRoundTrip) {
+      if (dist <= 100) {
+        rate = 12.0;
+      } else if (dist <= 200) {
+        rate = 11.0;
+      } else {
+        rate = 10.0;
+      }
     }
 
-    if (remaining > 0) {
-      final slab2Km = math.min(remaining, 100.0);
-      final slab2Rate = 11.0;
-      final slab2Amt = slab2Km * slab2Rate;
-      parts.add({
-        'label': '100 - 200 km',
-        'km': slab2Km,
-        'rate': slab2Rate,
-        'amount': slab2Amt,
-      });
-      total += slab2Amt;
-      remaining -= slab2Km;
-    }
+    double total = dist * rate;
 
-    if (remaining > 0) {
-      final slab3Km = remaining;
-      final slab3Rate = 10.0;
-      final slab3Amt = slab3Km * slab3Rate;
-      parts.add({
-        'label': '> 200 km',
-        'km': slab3Km,
-        'rate': slab3Rate,
-        'amount': slab3Amt,
-      });
-      total += slab3Amt;
-      remaining -= slab3Km;
-    }
-
-    total = double.parse(total.toStringAsFixed(2));
-    for (var p in parts) {
-      p['amount'] = double.parse((p['amount'] as double).toStringAsFixed(2));
-      p['km'] = double.parse((p['km'] as double).toStringAsFixed(2));
-    }
-
-    return {'distance': dist, 'total': total, 'breakup': parts};
+    return {
+      'distance': dist,
+      'rate': rate,
+      'total': double.parse(total.toStringAsFixed(2)),
+      'breakup': [
+        {'km': dist, 'rate': rate, 'amount': total},
+      ],
+    };
   }
 
   void showBookingBottomSheet(BuildContext context) {
-    String selectedTripMode = "Round Trip";
+    String selectedTripMode = "One Way";
     String selectedTripTime = "Schedule";
     int selectedCityHours = 1;
-    final fareMap = calculateFare(distance);
+    // final fareMap = calculateFare(distance);
+    Map<String, dynamic> fareMap = calculateFare(
+      distance,
+      isRoundTrip: selectedTripMode == "Round Trip",
+      isHourlyTrip: selectedTripMode == 'Hourly Trip',
+    );
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -1168,9 +1108,41 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context) {
         DateTime selectedDate = DateTime.now();
         TimeOfDay selectedTime = TimeOfDay.now();
+
+        DateTime? arrivalDate;
+        TimeOfDay? arrivalTime;
+
         bool isLoading = false;
+
+        int calculateConvenienceFee(DateTime depart, DateTime arrival) {
+          final d1 = DateTime(depart.year, depart.month, depart.day);
+          final d2 = DateTime(arrival.year, arrival.month, arrival.day);
+
+          int days = d2.difference(d1).inDays;
+
+          if (days == 0) {
+            return 200;
+          } else {
+            return days * 500;
+          }
+        }
+
         return StatefulBuilder(
           builder: (context, setState) {
+            int convenienceFee = 0;
+
+            if (selectedTripMode == "Round Trip" &&
+                arrivalDate != null &&
+                arrivalTime != null) {
+              convenienceFee = calculateConvenienceFee(
+                selectedDate,
+                arrivalDate!,
+              );
+            }
+
+            double finalRoundTripFare =
+                (fareMap['total'] ?? 0.0) + convenienceFee;
+
             return Padding(
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -1200,22 +1172,19 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Expanded(
                                   child: tripOption(
-                                    selectedTripMode == "City Limits"
-                                        ? "City Limits (${selectedCityHours} hr)"
-                                        : "City Limits",
-                                    selected: selectedTripMode == "City Limits",
+                                    "One Way",
+                                    selected: selectedTripMode == "One Way",
                                     onTap: () {
                                       setState(() {
-                                        selectedTripMode = "City Limits";
+                                        selectedTripMode = "One Way";
+                                        fareMap = calculateFare(
+                                          distance,
+                                          isRoundTrip: false,
+                                        );
                                       });
-                                      showCityLimitsDialog(
-                                        context,
-                                        selectedCityHours,
-                                        (value) {
-                                          setState(() {
-                                            selectedCityHours = value;
-                                          });
-                                        },
+
+                                      print(
+                                        "Selected Trip Mode: $selectedTripMode",
                                       );
                                     },
                                   ),
@@ -1227,6 +1196,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     onTap: () {
                                       setState(() {
                                         selectedTripMode = "Round Trip";
+                                        fareMap = calculateFare(
+                                          distance,
+                                          isRoundTrip: true,
+                                        );
                                       });
                                       print(
                                         "Selected Trip Mode: $selectedTripMode",
@@ -1240,32 +1213,33 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Expanded(
                                   child: tripOption(
-                                    "One way",
-                                    selected: selectedTripMode == "One way",
+                                    selectedTripMode == "Hourly Trip"
+                                        ? "Hourly Trip (${selectedCityHours} hr)"
+                                        : "Hourly Trip",
+                                    selected: selectedTripMode == "Hourly Trip",
                                     onTap: () {
                                       setState(() {
-                                        selectedTripMode = "One way";
+                                        selectedTripMode = "Hourly Trip";
+                                        selectedCityHours = 3;
                                       });
-                                      print(
-                                        "Selected Trip Mode: $selectedTripMode",
-                                      );
                                     },
                                   ),
                                 ),
-                                Expanded(
-                                  child: tripOption(
-                                    "Out Station",
-                                    selected: selectedTripMode == "Out Station",
-                                    onTap: () {
-                                      setState(() {
-                                        selectedTripMode = "Out Station";
-                                      });
-                                      print(
-                                        "Selected Trip Mode: $selectedTripMode",
-                                      );
-                                    },
+
+                                if (selectedTripMode == "Hourly Trip")
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: Text(
+                                        " Every 1 hr ₹ 129/- ",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey.shade800,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
                               ],
                             ),
                           ],
@@ -1297,6 +1271,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               onTap: () {
                                 setState(() {
                                   selectedTripTime = "Now";
+                                  selectedDate = DateTime.now();
+                                  selectedTime = TimeOfDay.now();
+
+                                  if (selectedTripMode == "Round Trip") {
+                                    arrivalDate = null;
+                                    arrivalTime = null;
+                                  }
                                 });
                                 print("Selected Trip Time: $selectedTripTime");
                               },
@@ -1314,7 +1295,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: Container(
@@ -1327,7 +1307,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              CustomText(
+                                text:
+                                    selectedTripMode == "Round Trip"
+                                        ? "Departure Date & Time"
+                                        : "Select Date & Time",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                textcolor: KblackColor,
+                              ),
+
+                              SizedBox(height: 10),
+
                               GestureDetector(
                                 onTap:
                                     selectedTripTime == "Now"
@@ -1366,6 +1359,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               );
                                             },
                                           );
+
                                           if (picked != null) {
                                             setState(
                                               () => selectedDate = picked,
@@ -1379,7 +1373,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       "${selectedDate.toLocal()}".split(' ')[0],
                                 ),
                               ),
+
                               Divider(color: kbordergreyColor),
+
                               GestureDetector(
                                 onTap:
                                     selectedTripTime == "Now"
@@ -1468,38 +1464,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             },
                                           );
                                           if (picked != null) {
-                                            final now = DateTime.now();
-                                            final selectedDateTime = DateTime(
-                                              selectedDate.year,
-                                              selectedDate.month,
-                                              selectedDate.day,
-                                              picked.hour,
-                                              picked.minute,
+                                            setState(
+                                              () => selectedTime = picked,
                                             );
-
-                                            if (selectedDateTime.isBefore(
-                                              now,
-                                            )) {
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    "Please choose a valid future time.",
-                                                  ),
-                                                ),
-                                              );
-                                            } else {
-                                              setState(
-                                                () => selectedTime = picked,
-                                              );
-                                            }
                                           }
-                                          // if (picked != null) {
-                                          //   setState(
-                                          //     () => selectedTime = picked,
-                                          //   );
-                                          // }
                                         },
                                 child: dateTimeRow(
                                   Icons.timer,
@@ -1511,6 +1479,329 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
+
+                      if (selectedTripMode == "Round Trip")
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: kbordergreyColor,
+                                width: 1.3,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    CustomText(
+                                      text: "Arrival Date & Time",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      textcolor: KblackColor,
+                                    ),
+                                    SizedBox(width: 5),
+                                    CustomText(
+                                      text: "*",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      textcolor: KredColor,
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+
+                                GestureDetector(
+                                  onTap:
+                                      selectedTripTime == "Now"
+                                          ? null
+                                          : () async {
+                                            final DateTime?
+                                            picked = await showDatePicker(
+                                              context: context,
+                                              initialDate:
+                                                  arrivalDate ?? selectedDate,
+                                              firstDate: selectedDate,
+                                              lastDate: DateTime(2101),
+                                              builder: (context, child) {
+                                                return Theme(
+                                                  data: Theme.of(
+                                                    context,
+                                                  ).copyWith(
+                                                    colorScheme:
+                                                        ColorScheme.light(
+                                                          primary: korangeColor,
+                                                          onPrimary:
+                                                              Colors.white,
+                                                          onSurface:
+                                                              Colors
+                                                                  .grey
+                                                                  .shade700,
+                                                        ),
+                                                    textButtonTheme:
+                                                        TextButtonThemeData(
+                                                          style:
+                                                              TextButton.styleFrom(
+                                                                foregroundColor:
+                                                                    korangeColor,
+                                                              ),
+                                                        ),
+                                                  ),
+                                                  child: child!,
+                                                );
+                                              },
+                                            );
+
+                                            if (picked != null) {
+                                              setState(() {
+                                                arrivalDate = picked;
+
+                                                if (selectedTripMode ==
+                                                    "Round Trip") {
+                                                  convenienceFee =
+                                                      calculateConvenienceFee(
+                                                        selectedDate,
+                                                        arrivalDate!,
+                                                      );
+                                                  finalRoundTripFare =
+                                                      (fareMap['total'] ??
+                                                          0.0) +
+                                                      convenienceFee;
+                                                }
+                                              });
+                                            }
+                                          },
+                                  child: dateTimeRow(
+                                    Icons.date_range,
+                                    "Arrival Date",
+                                    value:
+                                        arrivalDate == null
+                                            ? "---"
+                                            : "${arrivalDate!.toLocal()}".split(
+                                              ' ',
+                                            )[0],
+                                  ),
+                                ),
+
+                                Divider(color: kbordergreyColor),
+
+                                GestureDetector(
+                                  onTap:
+                                      selectedTripTime == "Now"
+                                          ? null
+                                          : () async {
+                                            if (arrivalDate == null) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            12,
+                                                          ),
+                                                    ),
+                                                    title: Text(
+                                                      "Arrival Date Required",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                    content: Text(
+                                                      "Please select the arrival date before choosing the arrival time.",
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed:
+                                                            () => Navigator.pop(
+                                                              context,
+                                                            ),
+                                                        child: Text(
+                                                          "OK",
+                                                          style: TextStyle(
+                                                            color: korangeColor,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                              return;
+                                            }
+                                            String formatTo12Hour(DateTime dt) {
+                                              int hour =
+                                                  dt.hour > 12
+                                                      ? dt.hour - 12
+                                                      : dt.hour == 0
+                                                      ? 12
+                                                      : dt.hour;
+                                              String minute = dt.minute
+                                                  .toString()
+                                                  .padLeft(2, '0');
+                                              String period =
+                                                  dt.hour >= 12 ? "PM" : "AM";
+                                              return "$hour:$minute $period";
+                                            }
+
+                                            final TimeOfDay?
+                                            picked = await showTimePicker(
+                                              context: context,
+                                              initialTime:
+                                                  arrivalTime ?? selectedTime,
+                                              builder: (context, child) {
+                                                return Theme(
+                                                  data: Theme.of(
+                                                    context,
+                                                  ).copyWith(
+                                                    timePickerTheme:
+                                                        TimePickerThemeData(
+                                                          hourMinuteShape:
+                                                              RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      8,
+                                                                    ),
+                                                              ),
+                                                          dialBackgroundColor:
+                                                              Colors.grey[200],
+                                                          dialHandColor:
+                                                              korangeColor,
+                                                        ),
+                                                    colorScheme:
+                                                        ColorScheme.light(
+                                                          primary: korangeColor,
+                                                        ),
+                                                  ),
+                                                  child: child!,
+                                                );
+                                              },
+                                            );
+
+                                            if (picked != null) {
+                                              final departDT = DateTime(
+                                                selectedDate.year,
+                                                selectedDate.month,
+                                                selectedDate.day,
+                                                selectedTime.hour,
+                                                selectedTime.minute,
+                                              );
+
+                                              final int etaMinutes =
+                                                  int.tryParse(
+                                                    time.replaceAll(
+                                                      RegExp(r'[^0-9]'),
+                                                      '',
+                                                    ),
+                                                  ) ??
+                                                  0;
+
+                                              final minArrivalDT = departDT.add(
+                                                Duration(minutes: etaMinutes),
+                                              );
+
+                                              final arrivalDT = DateTime(
+                                                arrivalDate!.year,
+                                                arrivalDate!.month,
+                                                arrivalDate!.day,
+                                                picked.hour,
+                                                picked.minute,
+                                              );
+
+                                              if (arrivalDT.isBefore(
+                                                minArrivalDT,
+                                              )) {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              12,
+                                                            ),
+                                                      ),
+                                                      title: Text(
+                                                        "Invalid Arrival Time",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                      content: Text(
+                                                        "Arrival time must be after ETA (${formatTo12Hour(minArrivalDT)}).",
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed:
+                                                              () =>
+                                                                  Navigator.pop(
+                                                                    context,
+                                                                  ),
+                                                          child: Text(
+                                                            "OK",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  korangeColor,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                                return;
+                                              }
+
+                                              setState(() {
+                                                arrivalTime = picked;
+
+                                                if (selectedTripMode ==
+                                                        "Round Trip" &&
+                                                    arrivalDate != null) {
+                                                  convenienceFee =
+                                                      calculateConvenienceFee(
+                                                        selectedDate,
+                                                        arrivalDate!,
+                                                      );
+                                                  finalRoundTripFare =
+                                                      (fareMap['total'] ??
+                                                          0.0) +
+                                                      convenienceFee;
+
+                                                  print(
+                                                    " Convenience Fee: $convenienceFee",
+                                                  );
+                                                  print(
+                                                    " Total Fare (Included Convenience): $finalRoundTripFare",
+                                                  );
+                                                  print(
+                                                    " Base Fare: ${fareMap['total']}",
+                                                  );
+                                                }
+                                              });
+                                            }
+                                          },
+                                  child: dateTimeRow(
+                                    Icons.timer,
+                                    "Arrival Time",
+                                    value:
+                                        arrivalTime == null
+                                            ? "---"
+                                            : arrivalTime!.format(context),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
                       SizedBox(height: 10),
                       Divider(
                         color: kbordergreyColor,
@@ -1538,9 +1829,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                     CustomText(
                                       text:
-                                          selectedTripMode == "One way"
+                                          selectedTripMode == "Round Trip"
+                                              ? (arrivalDate != null &&
+                                                      arrivalTime != null)
+                                                  ? "₹${((fareMap['total'] ?? 0.0) + convenienceFee).toStringAsFixed(2)}"
+                                                  : "₹0.00"
+                                              : selectedTripMode == "One Way"
                                               ? "₹${(fareMap['total'] ?? 0.0).toStringAsFixed(2)}"
-                                              : "₹0.00",
+                                              : selectedTripMode ==
+                                                  "Hourly Trip"
+                                              ? "₹549.00"
+                                              : "",
 
                                       fontSize: 26,
                                       fontWeight: FontWeight.w700,
@@ -1555,6 +1854,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                               context,
                                               fareMap,
                                               selectedTripMode,
+                                              finalRoundTripFare,
+                                              convenienceFee.toDouble(),
+                                              arrivalDate,
+                                              arrivalTime,
                                             );
                                           },
                                           child: Text(
@@ -1621,12 +1924,105 @@ class _HomeScreenState extends State<HomeScreen> {
                                         );
                                         return;
                                       }
+                                      if (selectedTripMode == "Round Trip") {
+                                        if (arrivalDate == null ||
+                                            arrivalTime == null) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                title: Text(
+                                                  "Arrival Details Required",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                content: Text(
+                                                  "Please select both arrival date and arrival time to continue.",
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed:
+                                                        () => Navigator.pop(
+                                                          context,
+                                                        ),
+                                                    child: Text(
+                                                      "OK",
+                                                      style: TextStyle(
+                                                        color: korangeColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                          return;
+                                        }
+                                      }
 
                                       setState(() => isLoading = true);
 
                                       try {
                                         final selectedCarId =
                                             carList[selectedCarIndex]['id'];
+
+                                        String arrivalDateStr = "";
+                                        String arrivalTimeStr = "";
+
+                                        if (selectedTripMode == "Round Trip") {
+                                          arrivalDateStr =
+                                              "${arrivalDate!.toLocal()}".split(
+                                                ' ',
+                                              )[0];
+                                          arrivalTimeStr = arrivalTime!.format(
+                                            context,
+                                          );
+                                        }
+
+                                        double finalFare = 0.0;
+
+                                        if (selectedTripMode == "Round Trip") {
+                                          finalFare =
+                                              finalRoundTripFare.toDouble();
+                                        } else if (selectedTripMode ==
+                                            "Hourly Trip") {
+                                          finalFare = 549.0;
+                                        } else {
+                                          finalFare =
+                                              (fareMap['total'] ?? 0.0)
+                                                  .toDouble();
+                                        }
+
+                                        String convertMinutes(
+                                          String durationText,
+                                        ) {
+                                          final cleaned = durationText
+                                              .toLowerCase()
+                                              .replaceAll(
+                                                RegExp(r'[^0-9]'),
+                                                '',
+                                              );
+                                          int minutes =
+                                              int.tryParse(cleaned) ?? 0;
+
+                                          if (minutes < 60)
+                                            return "$minutes mins";
+
+                                          int hrs = minutes ~/ 60;
+                                          int mins = minutes % 60;
+
+                                          if (mins == 0) {
+                                            return "$hrs hr";
+                                          } else {
+                                            return "$hrs hr $mins mins";
+                                          }
+                                        }
 
                                         Map<String, dynamic> bookingData = {
                                           'ownerdocId':
@@ -1637,8 +2033,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   .toString(),
                                           'driverId': '',
                                           'driverdocId': '',
-                                          "distance": distance,
-                                          "duration": time,
+                                          "distance":
+                                              selectedTripMode == "Round Trip"
+                                                  ? "${(double.tryParse(distance.replaceAll('km', '').trim()) ?? 0.0) * 2} km"
+                                                  : distance,
+
+                                          "duration": convertMinutes(time),
                                           "ownerOTP": "",
                                           "pickup": pickupController.text,
                                           "drop": dropController.text,
@@ -1657,16 +2057,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                           "vehicleId": selectedCarId,
                                           "tripMode": selectedTripMode,
                                           "tripTime": selectedTripTime,
-                                          'fare': fareMap['total'] ?? 0.0,
+                                          'fare': finalFare,
+                                          "serviceFare":
+                                              selectedTripMode == "Hourly Trip"
+                                                  ? finalFare
+                                                  : fareMap['total'],
+
                                           "date":
                                               "${selectedDate.toLocal()}".split(
                                                 ' ',
                                               )[0],
                                           "time": selectedTime.format(context),
                                           "status": "New",
+                                          if (selectedTripMode ==
+                                              "Round Trip") ...{
+                                            "arrivalDate": arrivalDateStr,
+                                            "arrivalTime": arrivalTimeStr,
+                                            "convenienceFee":
+                                                convenienceFee.toDouble(),
+                                          },
                                           "createdAt":
                                               FieldValue.serverTimestamp(),
-                                          if (selectedTripMode == "City Limits")
+                                          if (selectedTripMode == "Hourly Trip")
                                             "cityLimitHours": selectedCityHours,
                                         };
 
@@ -1746,25 +2158,46 @@ class _HomeScreenState extends State<HomeScreen> {
     BuildContext context,
     Map<String, dynamic> fareMap,
     String selectedTripMode,
+    double? finalRoundTripFare,
+    double convenienceFee,
+    DateTime? arrivalDate,
+    TimeOfDay? arrivalTime,
   ) {
     final List<Map<String, dynamic>> parts = List<Map<String, dynamic>>.from(
       fareMap['breakup'] ?? [],
     );
 
-    final bool isOneWay = selectedTripMode == "One way";
+    // final bool isOneWay = selectedTripMode == "One Way";
 
-    // values will show 0 if not one way
-    final double servicePrice =
-        isOneWay ? ((fareMap['total'] ?? 0.0) as double) : 0.0;
-    final double addons =
-        isOneWay ? ((fareMap['addons'] ?? 0.0) as double) : 0.0;
-    final double taxes = isOneWay ? ((fareMap['taxes'] ?? 0.0) as double) : 0.0;
-    final double walletPoints =
-        isOneWay ? ((fareMap['wallet'] ?? 0.0) as double) : 0.0;
+    // final bool isHourly = selectedTripMode == "Hourly Trip";
+    double servicePrice = 0.0;
+    double convFee = 0.0;
 
-    final double totalPrice = double.parse(
-      (servicePrice + addons + taxes - walletPoints).toStringAsFixed(2),
-    );
+    if (selectedTripMode == "Hourly Trip") {
+      servicePrice = 549;
+    } else if (selectedTripMode == "One Way") {
+      servicePrice = (fareMap['total'] ?? 0.0).toDouble();
+    } else if (selectedTripMode == "Round Trip") {
+      if (arrivalDate != null && arrivalTime != null) {
+        servicePrice = (fareMap['total'] ?? 0.0).toDouble();
+        convFee = convenienceFee;
+      }
+    }
+
+    final double totalPrice = servicePrice + convFee;
+
+    // this old code //
+    // final double servicePrice =
+    //     isOneWay ? ((fareMap['total'] ?? 0.0) as double) : 0.0;
+    // final double addons =
+    //     isOneWay ? ((fareMap['addons'] ?? 0.0) as double) : 0.0;
+    // final double taxes = isOneWay ? ((fareMap['taxes'] ?? 0.0) as double) : 0.0;
+    // final double walletPoints =
+    //     isOneWay ? ((fareMap['wallet'] ?? 0.0) as double) : 0.0;
+
+    // final double totalPrice = double.parse(
+    //   (servicePrice + addons + taxes - walletPoints).toStringAsFixed(2),
+    // );
 
     String _rupee(double v) => "₹${v.toStringAsFixed(2)}";
 
@@ -1777,7 +2210,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (_) {
         return Container(
           margin: EdgeInsets.all(10),
-          height: 250,
+          height: 220,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1789,6 +2222,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 textcolor: KblackColor,
               ),
               const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const CustomText(
+                    text: "Trip Mode",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    textcolor: KblackColor,
+                  ),
+                  CustomText(
+                    text: selectedTripMode,
+
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    textcolor: KblackColor,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1800,7 +2252,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     textcolor: KblackColor,
                   ),
                   CustomText(
-                    text: distance,
+                    text:
+                        selectedTripMode == "Round Trip"
+                            ? "${(double.tryParse(distance.replaceAll('km', '').trim()) ?? 0.0) * 2} km"
+                            : distance,
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     textcolor: KblackColor,
@@ -1827,68 +2282,85 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               const SizedBox(height: 8),
+              if (selectedTripMode == "Round Trip" && convFee > 0)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const CustomText(
+                      text: "Convenience Fee",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      textcolor: KblackColor,
+                    ),
+                    CustomText(
+                      text: _rupee(convFee),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      textcolor: KblackColor,
+                    ),
+                  ],
+                ),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const CustomText(
-                    text: "Add-on’s",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textcolor: KblackColor,
-                  ),
-                  CustomText(
-                    text: _rupee(addons),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textcolor: KblackColor,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     const CustomText(
+              //       text: "Add-on’s",
+              //       fontSize: 14,
+              //       fontWeight: FontWeight.w400,
+              //       textcolor: KblackColor,
+              //     ),
+              //     CustomText(
+              //       text: _rupee(addons),
+              //       fontSize: 14,
+              //       fontWeight: FontWeight.w400,
+              //       textcolor: KblackColor,
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(height: 8),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const CustomText(
-                    text: "Fee & Taxes",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textcolor: KblackColor,
-                  ),
-                  CustomText(
-                    text: _rupee(taxes),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textcolor: KblackColor,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     const CustomText(
+              //       text: "Fee & Taxes",
+              //       fontSize: 14,
+              //       fontWeight: FontWeight.w400,
+              //       textcolor: KblackColor,
+              //     ),
+              //     CustomText(
+              //       text: _rupee(taxes),
+              //       fontSize: 14,
+              //       fontWeight: FontWeight.w400,
+              //       textcolor: KblackColor,
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(height: 8),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const CustomText(
-                    text: "Wallet Points",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textcolor: KblackColor,
-                  ),
-                  CustomText(
-                    text: _rupee(walletPoints),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textcolor: KblackColor,
-                  ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     const CustomText(
+              //       text: "Wallet Points",
+              //       fontSize: 14,
+              //       fontWeight: FontWeight.w400,
+              //       textcolor: KblackColor,
+              //     ),
+              //     CustomText(
+              //       text: _rupee(walletPoints),
+              //       fontSize: 14,
+              //       fontWeight: FontWeight.w400,
+              //       textcolor: KblackColor,
+              //     ),
+              //   ],
+              // ),
               const SizedBox(height: 15),
 
               const DottedLine(dashColor: kseegreyColor),
               const SizedBox(height: 8),
 
-              // Total Price (computed)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -1909,15 +2381,164 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 8),
 
               const DottedLine(dashColor: kseegreyColor),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
             ],
           ),
         );
       },
     );
   }
+}
 
-  // void showPaymentSheet(BuildContext context, Map<String, dynamic> fareMap) {
+Widget tripOption(String label, {bool selected = false, VoidCallback? onTap}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            selected ? Icons.radio_button_checked : Icons.radio_button_off,
+            color: selected ? korangeColor : kgreyColor,
+          ),
+          SizedBox(width: 10),
+          CustomText(
+            text: label,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            textcolor: KblackColor,
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget dateTimeRow(IconData icon, String label, {String? value}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Icon(icon, color: korangeColor),
+            SizedBox(width: 10),
+            CustomText(
+              text: label,
+              textcolor: KblackColor,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            CustomText(
+              text: value ?? "",
+              textcolor: KblackColor,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+            ),
+            SizedBox(width: 5),
+            Icon(Icons.keyboard_arrow_right),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+Widget addressCard(String title, String address) {
+  return Container(
+    padding: EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      border: Border.all(color: kbordergreyColor, width: 1.3),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: Row(
+      children: [
+        Icon(Icons.radio_button_checked, color: korangeColor),
+        SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomText(
+                text: title,
+                textcolor: korangeColor,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+
+              SizedBox(height: 5),
+              CustomText(
+                text: address,
+                textcolor: kgreyColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+final List<String> offerImages = [
+  'images/offer.png',
+  'images/offer.png',
+  'images/offer.png',
+];
+
+List<CarModel> carList = [
+  CarModel(
+    imagePath: 'images/swift.png',
+    name: 'Maruti Swift Dzire VXI',
+    kmsDriven: '76,225 km',
+    transmission: 'Manual',
+    fuelType: 'Petrol',
+    price: '₹7,957',
+  ),
+  CarModel(
+    imagePath: 'images/mahindra.png',
+    name: 'Mahindra MARAZZO M2 7STR',
+    kmsDriven: '45,120 km',
+    transmission: 'Automatic',
+    fuelType: 'Diesel',
+    price: '₹9,995',
+  ),
+  CarModel(
+    imagePath: 'images/tata.png',
+    name: 'Tata Nexon XZ+',
+    kmsDriven: '60,000 km',
+    transmission: 'Manual',
+    fuelType: 'Petrol',
+    price: '₹9,100',
+  ),
+];
+
+class CarModel {
+  final String imagePath;
+  final String name;
+  final String kmsDriven;
+  final String transmission;
+  final String fuelType;
+  final String price;
+
+  CarModel({
+    required this.imagePath,
+    required this.name,
+    required this.kmsDriven,
+    required this.transmission,
+    required this.fuelType,
+    required this.price,
+  });
+}
+
+ // void showPaymentSheet(BuildContext context, Map<String, dynamic> fareMap) {
   //   final List<Map<String, dynamic>> parts = List<Map<String, dynamic>>.from(
   //     fareMap['breakup'] ?? [],
   //   );
@@ -2018,163 +2639,6 @@ class _HomeScreenState extends State<HomeScreen> {
   //     },
   //   );
   // }
-}
-
-Widget tripOption(String label, {bool selected = false, VoidCallback? onTap}) {
-  return GestureDetector(
-    onTap: onTap,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            selected ? Icons.radio_button_checked : Icons.radio_button_off,
-            color: selected ? korangeColor : kgreyColor,
-          ),
-          SizedBox(width: 10),
-          CustomText(
-            text: label,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            textcolor: KblackColor,
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-Widget dateTimeRow(IconData icon, String label, {String? value}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            Icon(icon, color: korangeColor),
-            SizedBox(width: 10),
-            CustomText(
-              text: label,
-              textcolor: KblackColor,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            CustomText(
-              text: value ?? "",
-              textcolor: KblackColor,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-            SizedBox(width: 5),
-            Icon(Icons.keyboard_arrow_right),
-          ],
-        ),
-      ],
-    ),
-  );
-}
-
-Widget addressCard(String title, String address) {
-  return Container(
-    padding: EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      border: Border.all(color: kbordergreyColor, width: 1.3),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: Row(
-      children: [
-        Icon(Icons.radio_button_checked, color: korangeColor),
-        SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomText(
-                text: title,
-                textcolor: korangeColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-
-              SizedBox(height: 5),
-              CustomText(
-                text: address,
-                textcolor: kgreyColor,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-// final List<String> watchLearnImages = [
-//   'images/driver.png',
-//   'images/driver.png',
-//   'images/driver.png',
-// ];
-
-final List<String> offerImages = [
-  'images/offer.png',
-  'images/offer.png',
-  'images/offer.png',
-];
-
-List<CarModel> carList = [
-  CarModel(
-    imagePath: 'images/swift.png',
-    name: 'Maruti Swift Dzire VXI',
-    kmsDriven: '76,225 km',
-    transmission: 'Manual',
-    fuelType: 'Petrol',
-    price: '₹7,957',
-  ),
-  CarModel(
-    imagePath: 'images/mahindra.png',
-    name: 'Mahindra MARAZZO M2 7STR',
-    kmsDriven: '45,120 km',
-    transmission: 'Automatic',
-    fuelType: 'Diesel',
-    price: '₹9,995',
-  ),
-  CarModel(
-    imagePath: 'images/tata.png',
-    name: 'Tata Nexon XZ+',
-    kmsDriven: '60,000 km',
-    transmission: 'Manual',
-    fuelType: 'Petrol',
-    price: '₹9,100',
-  ),
-];
-
-class CarModel {
-  final String imagePath;
-  final String name;
-  final String kmsDriven;
-  final String transmission;
-  final String fuelType;
-  final String price;
-
-  CarModel({
-    required this.imagePath,
-    required this.name,
-    required this.kmsDriven,
-    required this.transmission,
-    required this.fuelType,
-    required this.price,
-  });
-}
-
-
 
 // void _startWatchAutoScroll() {
   //   _watchAutoScrollTimer = Timer.periodic(Duration(seconds: 4), (timer) {

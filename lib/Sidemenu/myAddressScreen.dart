@@ -206,11 +206,13 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
             final docs = snapshot.data!.docs;
 
             if (docs.isEmpty) {
-              return CustomText(
-                text: "No addresses added yet",
-                textcolor: kseegreyColor,
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
+              return Center(
+                child: CustomText(
+                  text: "No address added yet",
+                  textcolor: kseegreyColor,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                ),
               );
             }
 
@@ -356,98 +358,3 @@ void deleteDialog(BuildContext context, String docId) {
     },
   );
 }
-
-
-
-
-
-
- // Future<void> _addAddressDialog(
-  //   BuildContext context,
-  //   AppLocalizations localizations,
-  // ) async {
-  //   await showDialog(
-  //     context: context,
-  //     builder: (ctx) {
-  //       return AlertDialog(
-  //         backgroundColor: kwhiteColor,
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(12),
-  //         ),
-  //         title: CustomText(
-  //           text: localizations.add_new_Address,
-  //           fontSize: 18,
-  //           fontWeight: FontWeight.w600,
-  //           textcolor: KblackColor,
-  //         ),
-  //         content: SizedBox(
-  //           width: MediaQuery.of(context).size.width * 0.9, // wider
-  //           child: Form(
-  //             key: _formKey,
-  //             child: SingleChildScrollView(
-  //               child: Column(
-  //                 children: [
-  //                   CustomTextField(
-  //                     controller: titleCtrl,
-  //                     labelText: "Address Title",
-  //                   ),
-  //                   CustomTextField(
-  //                     controller: addressCtrl,
-  //                     labelText: "Address",
-  //                   ),
-  //                   CustomTextField(controller: cityCtrl, labelText: "City"),
-
-  //                   CustomTextField(controller: stateCtrl, labelText: "State"),
-  //                   CustomTextField(
-  //                     controller: countryCtrl,
-  //                     labelText: "Country",
-  //                   ),
-  //                   CustomTextField(
-  //                     controller: zipCtrl,
-  //                     labelText: "Zipcode",
-  //                     keyboardType: TextInputType.number,
-  //                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //         actions: [
-  //           SizedBox(
-  //             width: double.infinity,
-  //             height: 45,
-  //             child: CustomButton(
-  //               text: "Add",
-  //               onPressed: () async {
-  //                 if (_formKey.currentState!.validate()) {
-  //                   await FirebaseFirestore.instance
-  //                       .collection("addresses")
-  //                       .add({
-  //                         "title": titleCtrl.text,
-  //                         "Address": addressCtrl.text,
-
-  //                         "state": stateCtrl.text,
-  //                         "city": cityCtrl.text,
-  //                         "country": countryCtrl.text,
-  //                         "zipcode": zipCtrl.text,
-  //                         "createdAt": FieldValue.serverTimestamp(),
-  //                       });
-
-  //                   titleCtrl.clear();
-  //                   addressCtrl.clear();
-  //                   stateCtrl.clear();
-  //                   cityCtrl.clear();
-  //                   countryCtrl.clear();
-  //                   zipCtrl.clear();
-
-  //                   Navigator.pop(context);
-  //                 }
-  //               },
-  //             ),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }

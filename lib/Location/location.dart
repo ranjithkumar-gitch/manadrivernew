@@ -230,6 +230,24 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   }
 
   //
+  String convertMinutes(String durationText) {
+    final cleaned = durationText.toLowerCase().replaceAll(
+      RegExp(r'[^0-9]'),
+      '',
+    );
+    int minutes = int.tryParse(cleaned) ?? 0;
+
+    if (minutes < 60) return "$minutes mins";
+
+    int hrs = minutes ~/ 60;
+    int mins = minutes % 60;
+
+    if (mins == 0) {
+      return "$hrs hr";
+    } else {
+      return "$hrs hr $mins mins";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -450,7 +468,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                       textcolor: Colors.black87,
                     ),
                     CustomText(
-                      text: "Time: $durationText",
+                      text: "Time: ${convertMinutes(durationText!)}",
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       textcolor: Colors.black87,

@@ -16,7 +16,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefServices.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // await FirebaseAuth.instance.signInAnonymously()  ;
+
   runApp(const MyApp());
 }
 

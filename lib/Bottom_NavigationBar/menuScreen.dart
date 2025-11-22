@@ -34,7 +34,7 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  String? selectedLanguage;
+  String selectedLanguage = 'English';
 
   final List<Map<String, dynamic>> menuItems = [
     {'image': 'images/address.png', 'title': 'My Address'},
@@ -569,19 +569,6 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  // Country selectedCountry = Country(
-  //   phoneCode: "91",
-  //   countryCode: "IN",
-  //   e164Sc: 0,
-  //   geographic: true,
-  //   level: 1,
-  //   name: "India",
-  //   example: "India",
-  //   displayName: "India",
-  //   displayNameNoCountryCode: "India",
-  //   e164Key: "",
-  // );
-
   Future<void> _showUpdateMobileDialog({
     required String uMN,
     required String eM,
@@ -679,24 +666,6 @@ class _MenuScreenState extends State<MenuScreen> {
                     return;
                   }
 
-                  // Navigator.pop(context);
-
-                  // showDialog(
-                  //   context: context,
-                  //   barrierDismissible: false,
-                  //   builder:
-                  //       (_) => AlertDialog(
-                  //         content: Row(
-                  //           mainAxisSize: MainAxisSize.min,
-                  //           children: const [
-                  //             CircularProgressIndicator(),
-                  //             SizedBox(width: 20),
-                  //             Text("Updating data..."),
-                  //           ],
-                  //         ),
-                  //       ),
-                  // );
-
                   String? userId = await SharedPrefServices.getUserId();
                   if (userId != null && userId.isNotEmpty) {
                     final query =
@@ -718,10 +687,6 @@ class _MenuScreenState extends State<MenuScreen> {
                     await SharedPrefServices.clearUserFromSharedPrefs();
                   }
 
-                  // Navigator.pop(context);
-
-                  // if (!context.mounted) return;
-
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (_) => LoginScreen()),
@@ -736,7 +701,13 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  void _showLanguageDialog() {
+  Future<void> _showLanguageDialog() async {
+    String? savedLang = await SharedPrefServices.getSaveLanguage();
+    if (savedLang != null) {
+      setState(() {
+        selectedLanguage = savedLang;
+      });
+    }
     showDialog(
       context: context,
       builder:
@@ -754,102 +725,130 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonHideUnderline(
-                  child: DropdownButton2<String>(
-                    isExpanded: true,
-                    value: selectedLanguage,
-                    items: [
-                      DropdownMenuItem(
-                        value: 'English',
-                        child: Text('English'),
-                      ),
-                      DropdownMenuItem(value: 'Telugu', child: Text('తెలుగు')),
-                      DropdownMenuItem(value: 'Hindi', child: Text('हिन्दी')),
-                    ],
-                    onChanged: (newValue) {
-                      if (newValue == null) return;
-                      setState(() {
-                        selectedLanguage = newValue;
-                      });
+                  child: StatefulBuilder(
+                    builder: (context, setStateSB) {
+                      return DropdownButton2<String>(
+                        isExpanded: true,
+                        value: selectedLanguage,
+                        items: [
+                          DropdownMenuItem(
+                            value: 'English',
+                            child: Text(
+                              'English',
+                              style: GoogleFonts.poppins(
+                                color: KblackColor,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Telugu',
+                            child: Text('తెలుగు'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Hindi',
+                            child: Text('हिन्दी'),
+                          ),
+                        ],
+                        onChanged: (newValue) {
+                          if (newValue == null) return;
 
-                      final localeProvider = Provider.of<LocaleProvider>(
-                        context,
-                        listen: false,
+                          setStateSB(() {
+                            selectedLanguage = newValue;
+                          });
+                        },
+                        dropdownStyleData: DropdownStyleData(
+                          direction: DropdownDirection.textDirection,
+                          offset: const Offset(0, -5),
+                          maxHeight: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
+                        ),
+                        buttonStyleData: ButtonStyleData(
+                          height: 58,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Color(0xFFD5D7DA)),
+                          ),
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 12,
+                          ),
+                        ),
                       );
-
-                      if (newValue == 'English') {
-                        localeProvider.setLocale(const Locale('en'));
-                      } else if (newValue == 'Hindi') {
-                        localeProvider.setLocale(const Locale('hi'));
-                      } else if (newValue == 'Telugu') {
-                        localeProvider.setLocale(const Locale('te'));
-                      }
                     },
-
-                    dropdownStyleData: DropdownStyleData(
-                      direction: DropdownDirection.textDirection,
-                      offset: const Offset(0, -5),
-                      maxHeight: 200,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                      ),
-                    ),
-
-                    buttonStyleData: ButtonStyleData(
-                      height: 58,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Color(0xFFD5D7DA)),
-                      ),
-                    ),
-
-                    menuItemStyleData: const MenuItemStyleData(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 12,
-                      ),
-                    ),
                   ),
                 ),
-                // DropdownButtonFormField<String>(
-                //   isExpanded: true,
-                //   value: selectedLanguage,
-                //   onChanged:
-                //       (newValue) => setState(() => selectedLanguage = newValue),
-                //   items: const [
-                //     DropdownMenuItem(value: 'English', child: Text('English')),
-                //     DropdownMenuItem(value: 'Telugu', child: Text('Telugu')),
-                //     DropdownMenuItem(value: 'Hindi', child: Text('Hindi')),
-                //   ],
-                //   decoration: _dropdownDecoration('Choose Language'),
-                // ),
+
+                // onChanged: (newValue) {
+                //   if (newValue == null) return;
+                //   setState(() {
+                //     selectedLanguage = newValue;
+                //   });
+
+                //   final localeProvider = Provider.of<LocaleProvider>(
+                //     context,
+                //     listen: false,
+                //   );
+
+                //   if (newValue == 'English') {
+                //     localeProvider.setLocale(const Locale('en'));
+                //   } else if (newValue == 'Hindi') {
+                //     localeProvider.setLocale(const Locale('hi'));
+                //   } else if (newValue == 'Telugu') {
+                //     localeProvider.setLocale(const Locale('te'));
+                //   }
+                // },
               ],
             ),
             actions: _dialogActions(
               P: "Update",
               c: "Cancel",
               onConfirm: () {
-                if (selectedLanguage != null) {
-                  final localeProvider = Provider.of<LocaleProvider>(
-                    context,
-                    listen: false,
-                  );
-                  if (selectedLanguage == 'English') {
-                    localeProvider.setLocale(const Locale('en'));
-                  } else if (selectedLanguage == 'Hindi') {
-                    localeProvider.setLocale(const Locale('hi'));
-                  } else if (selectedLanguage == 'Telugu') {
-                    localeProvider.setLocale(const Locale('te'));
-                  }
+                final localeProvider = Provider.of<LocaleProvider>(
+                  context,
+                  listen: false,
+                );
+
+                if (selectedLanguage == 'English') {
+                  localeProvider.setLocale(const Locale('en'));
+                } else if (selectedLanguage == 'Hindi') {
+                  localeProvider.setLocale(const Locale('hi'));
+                } else if (selectedLanguage == 'Telugu') {
+                  localeProvider.setLocale(const Locale('te'));
                 }
+
+                SharedPrefServices.setSaveLanguage(selectedLanguage);
+
                 Navigator.pop(context);
               },
             ),
           ),
     );
   }
+
+  // onConfirm: () {
+  //   if (selectedLanguage != null) {
+  //     final localeProvider = Provider.of<LocaleProvider>(
+  //       context,
+  //       listen: false,
+  //     );
+  //     if (selectedLanguage == 'English') {
+  //       localeProvider.setLocale(const Locale('en'));
+  //     } else if (selectedLanguage == 'Hindi') {
+  //       localeProvider.setLocale(const Locale('hi'));
+  //     } else if (selectedLanguage == 'Telugu') {
+  //       localeProvider.setLocale(const Locale('te'));
+  //     }
+  //   }
+  //   Navigator.pop(context);
+  // },
 
   void _showDeleteAccountDialog({
     required String txt1,

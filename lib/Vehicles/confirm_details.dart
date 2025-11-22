@@ -357,17 +357,20 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     String pickupLocation = data['pickup'] ?? '';
     String tripMode = data['tripMode'] ?? '';
     String tripTime = data['tripTime'] ?? '';
+    String distance = data['distance'] ?? '';
     String ownerOTP = data['ownerOTP'].toString();
     String citylimithours = data['cityLimitHours'].toString();
     String dropLocation = data['drop'] ?? '';
     String drop2Location = data['drop2'] ?? '';
     String date = data['date'] ?? 'DD/MM/YYYY';
+    String arrivalDate = data['arrivalDate'] ?? 'DD/MM/YYYY';
+    String arrivalTime = data['arrivalTime'] ?? 'DD/MM/YYYY';
     String time = data['time'] ?? 'HH:MM';
-    String servicePrice = data['fare']?.toString() ?? '0.00';
-    String addonPrice = data['addonPrice']?.toString() ?? '0.00';
+    String servicePrice = data['serviceFare']?.toString() ?? '0.00';
+    String convenienceFee = data['convenienceFee']?.toString() ?? '0.00';
     String taxes = data['taxes']?.toString() ?? '0.00';
     String walletPoints = data['walletPoints']?.toString() ?? '0.00';
-    String totalPrice = data['totalPrice']?.toString() ?? '0.00';
+    String totalPrice = data['fare']?.toString() ?? '0.00';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -437,17 +440,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // CustomText(
-                                //   text: driverName,
-                                //   fontSize: 15,
-                                //   fontWeight: FontWeight.w600,
-                                //   textcolor: korangeColor,
-                                // ),
                                 CustomText(
-                                  // text:
-                                  //     driverData != null
-                                  //         ? "${driverData!['firstName'] ?? ''} ${driverData!['lastName'] ?? ''}"
-                                  //         : 'Driver not assigned',
                                   text:
                                       driverAssigned
                                           ? "${driverData!['firstName'] ?? ''} ${driverData!['lastName'] ?? ''}"
@@ -459,18 +452,6 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                 ),
 
                                 const SizedBox(height: 4),
-                                // Row(
-                                //   children: [
-                                //     Image.asset("images/rating.png"),
-                                //     const SizedBox(width: 4),
-                                //     const Text("4.8"),
-                                //     const SizedBox(width: 16),
-                                //     Image.asset("images/rides.png"),
-
-                                //     const SizedBox(width: 4),
-                                //     const Text("Rides"),
-                                //   ],
-                                // ),
                               ],
                             ),
                           ),
@@ -911,7 +892,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                               ),
                             ],
                           ),
-                          if (tripMode == "City Limits" &&
+                          if (tripMode == "Hourly Trip" &&
                               citylimithours.isNotEmpty) ...[
                             const SizedBox(height: 15),
                             Row(
@@ -923,7 +904,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                 ),
                                 const SizedBox(width: 8),
                                 CustomText(
-                                  text: 'City Limit : $citylimithours Hours',
+                                  text: 'Hourly Trip : $citylimithours Hours',
                                   fontSize: 14,
                                   fontWeight: FontWeight.w400,
                                   textcolor: KblackColor,
@@ -931,24 +912,6 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                               ],
                             ),
                           ],
-
-                          //   if (tripTime == "City Limits" &&
-                          //       citylimithours.toString().isNotEmpty) ...[
-                          //     const SizedBox(height: 15),
-                          //     Row(
-                          //       children: [
-                          //         Image.asset("images/time.png", height: 20, width: 20),
-                          //         const SizedBox(width: 8),
-                          //         CustomText(
-                          //           text: '${citylimithours.toString()} Hours',
-                          //           fontSize: 14,
-                          //           fontWeight: FontWeight.w400,
-                          //           textcolor: KblackColor,
-                          //         ),
-                          //       ],
-                          //     ),
-                          //   ],
-                          // ],
                         ],
                       ),
                     ),
@@ -966,7 +929,15 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                             fontWeight: FontWeight.w600,
                             textcolor: korangeColor,
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 10),
+                          if (tripMode == "Round Trip")
+                            CustomText(
+                              text: "Depature",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              textcolor: Colors.grey.shade700,
+                            ),
+                          const SizedBox(height: 10),
                           Row(
                             children: [
                               Image.asset(
@@ -1000,6 +971,55 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                               ),
                             ],
                           ),
+                          if (tripMode == "Round Trip") ...[
+                            const SizedBox(height: 15),
+                            CustomText(
+                              text: "Arrival",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              textcolor: Colors.grey.shade700,
+                            ),
+                            const SizedBox(height: 10),
+
+                            Row(
+                              children: [
+                                Image.asset(
+                                  "images/calender_drvr.png",
+                                  height: 20,
+                                  width: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                CustomText(
+                                  text:
+                                      arrivalDate != null
+                                          ? "${arrivalDate}".split(' ')[0]
+                                          : "---",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 15),
+
+                            Row(
+                              children: [
+                                Image.asset(
+                                  "images/time.png",
+                                  height: 20,
+                                  width: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                CustomText(
+                                  text:
+                                      arrivalTime != null ? arrivalTime : "---",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ],
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -1180,6 +1200,25 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                             textcolor: korangeColor,
                           ),
                           const SizedBox(height: 12),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const CustomText(
+                                text: "Distance",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                textcolor: KblackColor,
+                              ),
+                              CustomText(
+                                text: "$distance",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                textcolor: KblackColor,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -1202,56 +1241,56 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const CustomText(
-                                text: "Add-on’s",
+                                text: "Convenience Fee",
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                                 textcolor: KblackColor,
                               ),
                               CustomText(
-                                text: "₹$addonPrice",
+                                text: "₹$convenienceFee",
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                                 textcolor: KblackColor,
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const CustomText(
-                                text: "Fee & Taxes",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                textcolor: KblackColor,
-                              ),
-                              CustomText(
-                                text: "₹$taxes",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                textcolor: KblackColor,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const CustomText(
-                                text: "Wallet Points",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                textcolor: KblackColor,
-                              ),
-                              CustomText(
-                                text: "₹$walletPoints",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                textcolor: KblackColor,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
+                          // const SizedBox(height: 8),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   children: [
+                          //     const CustomText(
+                          //       text: "Fee & Taxes",
+                          //       fontSize: 14,
+                          //       fontWeight: FontWeight.w400,
+                          //       textcolor: KblackColor,
+                          //     ),
+                          //     CustomText(
+                          //       text: "₹$taxes",
+                          //       fontSize: 14,
+                          //       fontWeight: FontWeight.w400,
+                          //       textcolor: KblackColor,
+                          //     ),
+                          //   ],
+                          // ),
+                          // const SizedBox(height: 8),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   children: [
+                          //     const CustomText(
+                          //       text: "Wallet Points",
+                          //       fontSize: 14,
+                          //       fontWeight: FontWeight.w400,
+                          //       textcolor: KblackColor,
+                          //     ),
+                          //     CustomText(
+                          //       text: "₹$walletPoints",
+                          //       fontSize: 14,
+                          //       fontWeight: FontWeight.w400,
+                          //       textcolor: KblackColor,
+                          //     ),
+                          //   ],
+                          // ),
+                          const SizedBox(height: 10),
                           const DottedLine(dashColor: kseegreyColor),
                           const SizedBox(height: 10),
                           Row(
@@ -1264,7 +1303,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                 textcolor: korangeColor,
                               ),
                               CustomText(
-                                text: "₹$servicePrice",
+                                text: "₹$totalPrice",
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
                                 textcolor: korangeColor,
