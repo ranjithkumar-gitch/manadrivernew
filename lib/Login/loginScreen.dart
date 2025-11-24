@@ -145,13 +145,7 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                                     ),
                                   );
                                 } else {
-                                  // ScaffoldMessenger.of(context).showSnackBar(
-                                  //   const SnackBar(
-                                  //     content: Text(
-                                  //       "User not found. Please register first.",
-                                  //     ),
-                                  //   ),
-                                  // );
+                                 
                                   showDialog(
                                     context: context,
                                     builder: (context) {
