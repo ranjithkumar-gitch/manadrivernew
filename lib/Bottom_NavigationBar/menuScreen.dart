@@ -11,6 +11,7 @@ import 'package:mana_driver/Sidemenu/favoriteDriverScreen.dart';
 import 'package:mana_driver/Sidemenu/helpAndSupportScreen.dart';
 import 'package:mana_driver/Sidemenu/myAddressScreen.dart';
 import 'package:mana_driver/Sidemenu/offersScreen.dart';
+import 'package:mana_driver/Sidemenu/privacy_policy.dart';
 import 'package:mana_driver/Sidemenu/profilePage.dart';
 import 'package:mana_driver/Sidemenu/referScreen.dart';
 import 'package:mana_driver/Sidemenu/termsAndConditions.dart';
@@ -351,6 +352,39 @@ class _MenuScreenState extends State<MenuScreen> {
                               Expanded(
                                 child: CustomText(
                                   text: localizations.menuReferaFriend,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+                              Image.asset("images/chevronRight.png", width: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Divider(color: KdeviderColor),
+
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => PrivacyPolicy()),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(3),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "images/privacy.png",
+                                color: korangeColor,
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: CustomText(
+                                  text: 'Privacy Policy',
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
                                   textcolor: KblackColor,

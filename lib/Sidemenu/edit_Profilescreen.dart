@@ -203,7 +203,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         'phone': phoneController.text.trim(),
         if (image != null)
           'profilePic':
-              SharedPrefServices.getProfileImage(), // update locally too
+              SharedPrefServices.getProfileImage(), 
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
