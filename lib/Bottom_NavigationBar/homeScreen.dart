@@ -2069,6 +2069,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                               )[0],
                                           "time": selectedTime.format(context),
                                           "status": "New",
+                                          "statusHistory": [
+                                            {
+                                              "status": "New",
+
+                                              "dateTime": DateTime.now(),
+                                            },
+                                          ],
+
                                           if (selectedTripMode ==
                                               "Round Trip") ...{
                                             "arrivalDate": arrivalDateStr,

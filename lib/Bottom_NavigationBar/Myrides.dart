@@ -20,7 +20,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
     _tabController.addListener(() {
       setState(() {
         selectedTabIndex = _tabController.index;
@@ -33,7 +33,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
     FirebaseFirestore.instance.collection('bookings').snapshots().listen((
       snapshot,
     ) async {
-      print("📦 Received ${snapshot.docs.length} bookings from Firestore");
+      print(" Received ${snapshot.docs.length} bookings from Firestore");
 
       for (var doc in snapshot.docs) {
         final data = doc.data();
@@ -293,6 +293,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                   buildTab("New", 1),
                   buildTab("Accepted", 2),
                   buildTab("Completed", 3),
+                  buildTab("Cancelled", 4),
                 ],
               ),
             ),
@@ -336,6 +337,11 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                       allBookings
                           .where((b) => b['status'] == 'Completed')
                           .toList();
+                } else if (selectedTabIndex == 4) {
+                  filteredBookings =
+                      allBookings
+                          .where((b) => b['status'] == 'Cancelled')
+                          .toList();
                 } else {
                   filteredBookings = allBookings;
                 }
@@ -362,7 +368,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
 class ChatCleanupService {
   static Future<void> deleteChatIfBookingCompleted(String bookingId) async {
     try {
-      debugPrint("🔍 Checking booking status for $bookingId...");
+      debugPrint("Checking booking status for $bookingId...");
 
       final bookingSnapshot =
           await FirebaseFirestore.instance

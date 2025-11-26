@@ -38,9 +38,11 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
   void initState() {
     super.initState();
     data = widget.bookingData;
+    print('${data['bookingId']},$driverData,${data['ownerId']}');
+
     fetchVehicleData();
     // fetchDriver();
-    _listenAndDeleteCompletedChats();
+    // _listenAndDeleteCompletedChats();
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
@@ -96,8 +98,19 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Payment Successful: ${response.paymentId}")),
       );
+      String rideStatus = widget.bookingData['status'] ?? "Unknown";
 
-      double amount = double.tryParse(data['fare'].toString()) ?? 0.0;
+      double amount;
+
+      if (rideStatus == "Completed") {
+        amount = double.tryParse(widget.bookingData['fare'].toString()) ?? 0.0;
+      } else {
+        amount = 39.0;
+      }
+
+      String historyStatus =
+          (rideStatus == "Completed") ? "Completed" : "Cancelled";
+      // double amount = double.tryParse(data['fare'].toString()) ?? 0.0;
 
       final transactionData = {
         'transactionId': response.paymentId,
@@ -119,7 +132,18 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
         await FirebaseFirestore.instance
             .collection('bookings')
             .doc(bookingId)
-            .update({'paymentStatus': 'Success'});
+            .update({
+              'paymentStatus': 'Success',
+
+              'status': (rideStatus == "Completed" ? "Completed" : "Cancelled"),
+
+              'statusHistory': FieldValue.arrayUnion([
+                {
+                  "status": historyStatus,
+                  "dateTime": DateTime.now().toIso8601String(),
+                },
+              ]),
+            });
 
         debugPrint(" Booking $bookingId paymentStatus updated to 'Success'");
       } else {
@@ -185,7 +209,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
   }
 
   Future<void> cancelRide(BuildContext context) async {
-    final bookingDocId = widget.bookingData['ownerdocId'];
+    final bookingDocId = widget.bookingData['bookingId'];
 
     if (bookingDocId == null || bookingDocId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -298,13 +322,13 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
   @override
   Widget build(BuildContext context) {
     final bookingId = widget.bookingData['bookingId'] ?? '';
-    final driverId = widget.bookingData['driverdocId'] ?? '';
+    // final driverId = widget.bookingData['driverdocId'] ?? '';
     final ownerId = widget.bookingData['ownerId'] ?? '';
     final ownerName = SharedPrefServices.getFirstName() ?? 'Owner';
     final ownerProfile = SharedPrefServices.getProfileImage() ?? '';
     final data = widget.bookingData;
-    final bookingStatus = data['status'] ?? 'New';
-    final driverAssigned = driverData != null && driverData!.isNotEmpty;
+    // final bookingStatus = data['status'] ?? 'New';
+    // final driverAssigned = driverData != null && driverData!.isNotEmpty;
     print('$bookingId,$driverData,$ownerId');
     // final appBarTitle =
     //     driverAssigned ? "Driver Assigned" : "Driver not assigned";
@@ -321,7 +345,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
       appBarTitle = "Ride $rideStatus";
     }
 
-    String paymentStatus = data['paymentStatus'] ?? '';
+    // String paymentStatus = data['paymentStatus'] ?? '';
     // String bottomButtonText = '';
     // VoidCallback? bottomButtonAction;
 
@@ -402,7 +426,6 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
       String pickupLng,
     ) async {
       try {
-        // Get user’s current location
         Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high,
         );
@@ -414,7 +437,6 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
           "https://www.google.com/maps/dir/?api=1&origin=$currentLat,$currentLng&destination=$pickupLat,$pickupLng&travelmode=driving",
         );
 
-        // Check if can launch
         if (await canLaunchUrl(googleMapsUrl)) {
           await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
         } else {
@@ -511,6 +533,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
           ),
         ),
       ),
+
       body: StreamBuilder<DocumentSnapshot>(
         stream:
             FirebaseFirestore.instance
@@ -523,16 +546,16 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
           }
 
           final liveData = snapshot.data!.data() as Map<String, dynamic>;
+          final chatDeleted = liveData['chatDeleted'] ?? false;
 
-          // final liveStatus = liveData['status']?.toString() ?? '';
+          if ((status == 'Completed' || status == 'Cancelled') &&
+              chatDeleted == false) {
+            ChatCleanupService.deleteChatIfBookingCompleted(
+              widget.bookingData['bookingId'],
+            );
+          }
+
           final liveDriverId = liveData['driverdocId']?.toString() ?? '';
-
-          // if (liveStatus == 'Accepted' &&
-          //     liveDriverId.isNotEmpty &&
-          //     (driverData == null || liveDriverId != driverData!['id'])) {
-          //   print("🚕 Fetching driver because status = ACCEPTED...");
-          //   fetchDriver();
-          // }
 
           final rideStatus = liveData['status'] ?? 'New';
           // final paymentStatus = liveData['paymentStatus'] ?? '';
@@ -563,136 +586,168 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
+
                 Padding(
                   padding: const EdgeInsets.all(8),
-                  child: StreamBuilder<DocumentSnapshot>(
-                    stream:
-                        liveDriverId.isNotEmpty
-                            ? FirebaseFirestore.instance
-                                .collection('drivers')
-                                .doc(liveDriverId)
-                                .snapshots()
-                            : null,
-                    builder: (context, driverSnap) {
-                      if (driverSnap.connectionState ==
-                          ConnectionState.waiting) {
-                        return Row(
-                          children: const [
-                            CircleAvatar(
-                              radius: 40,
-                              backgroundColor: Colors.grey,
-                            ),
-                            SizedBox(width: 12),
-                            Text(
-                              "Loading driver...",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ],
-                        );
-                      }
-
-                      if (!driverSnap.hasData || !driverSnap.data!.exists) {
-                        return Row(
-                          children: const [
-                            CircleAvatar(
-                              radius: 40,
-                              backgroundColor: Colors.grey,
-                            ),
-                            SizedBox(width: 12),
-                            Text(
-                              "Driver not assigned",
-                              style: TextStyle(color: Colors.orange),
-                            ),
-                          ],
-                        );
-                      }
-
-                      final d = driverSnap.data!.data() as Map<String, dynamic>;
-
-                      return Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 40,
-                            backgroundImage:
-                                (d['profileUrl'] != null &&
-                                        d['profileUrl'].toString().isNotEmpty)
-                                    ? NetworkImage(d['profileUrl'])
-                                    : const AssetImage('images/avathar1.jpeg')
-                                        as ImageProvider,
-                          ),
-
-                          const SizedBox(width: 12),
-
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CustomText(
-                                  text:
-                                      "${d['firstName'] ?? ''} ${d['lastName'] ?? ''}"
-                                          .trim(),
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  textcolor: korangeColor,
+                  child:
+                      liveDriverId.isEmpty
+                          ? Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 40,
+                                backgroundColor: Colors.grey,
+                                child: Image.asset(
+                                  'images/avathar1.jpeg',
+                                  fit: BoxFit.cover,
                                 ),
-                                const SizedBox(height: 4),
-                              ],
-                            ),
-                          ),
-
-                          if (rideStatus != 'Completed') ...[
-                            Container(
-                              height: 50,
-                              width: 1,
-                              color: Colors.grey.shade300,
-                            ),
-                            const SizedBox(width: 12),
-
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder:
-                                            (_) => ChatScreen(
-                                              bookingId: bookingId,
-                                              driverData: d,
-                                              driverId: liveDriverId,
-                                              ownerId: ownerId,
-                                              ownerName: ownerName,
-                                              ownerProfile: ownerProfile,
-                                            ),
+                              ),
+                              SizedBox(width: 12),
+                              CustomText(
+                                text: "Driver not assigned",
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                textcolor: korangeColor,
+                              ),
+                            ],
+                          )
+                          : StreamBuilder<DocumentSnapshot>(
+                            stream:
+                                FirebaseFirestore.instance
+                                    .collection('drivers')
+                                    .doc(liveDriverId)
+                                    .snapshots(),
+                            builder: (context, driverSnap) {
+                              if (driverSnap.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 40,
+                                      backgroundColor: Colors.grey,
+                                      child: Image.asset(
+                                        'images/avathar1.jpeg',
+                                        fit: BoxFit.cover,
                                       ),
-                                    );
-                                  },
-                                  child: Image.asset("images/chat.png"),
-                                ),
-                                const SizedBox(width: 5),
-                                GestureDetector(
-                                  onTap: () async {
-                                    final phone = d['phone'] ?? '';
-                                    if (phone.isNotEmpty) {
-                                      final Uri callUri = Uri(
-                                        scheme: 'tel',
-                                        path: phone,
-                                      );
-                                      if (await canLaunchUrl(callUri)) {
-                                        await launchUrl(callUri);
-                                      }
-                                    }
-                                  },
-                                  child: Image.asset("images/call.png"),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ],
-                      );
-                    },
-                  ),
+                                    ),
+                                    SizedBox(width: 12),
+                                    CustomText(
+                                      text: "Loading driver...",
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                      textcolor: kgreyColor,
+                                    ),
+                                  ],
+                                );
+                              }
+
+                              if (!driverSnap.hasData ||
+                                  !driverSnap.data!.exists) {
+                                return Row(
+                                  children: const [
+                                    CircleAvatar(
+                                      radius: 40,
+                                      backgroundColor: Colors.grey,
+                                    ),
+                                    SizedBox(width: 12),
+                                    Text(
+                                      "Driver not assigned",
+                                      style: TextStyle(color: Colors.orange),
+                                    ),
+                                  ],
+                                );
+                              }
+
+                              final d =
+                                  driverSnap.data!.data()
+                                      as Map<String, dynamic>;
+
+                              return Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 40,
+                                    backgroundImage:
+                                        (d['profileUrl'] != null &&
+                                                d['profileUrl']
+                                                    .toString()
+                                                    .isNotEmpty)
+                                            ? NetworkImage(d['profileUrl'])
+                                            : const AssetImage(
+                                                  'images/avathar1.jpeg',
+                                                )
+                                                as ImageProvider,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        CustomText(
+                                          text:
+                                              "${d['firstName'] ?? ''} ${d['lastName'] ?? ''}"
+                                                  .trim(),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          textcolor: korangeColor,
+                                        ),
+                                        const SizedBox(height: 4),
+                                      ],
+                                    ),
+                                  ),
+                                  if (rideStatus != 'Completed' &&
+                                      rideStatus != 'Cancelled') ...[
+                                    Container(
+                                      height: 50,
+                                      width: 1,
+                                      color: Colors.grey.shade300,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (_) => ChatScreen(
+                                                      bookingId: bookingId,
+                                                      driverData: d,
+                                                      driverId: liveDriverId,
+                                                      ownerId: ownerId,
+                                                      ownerName: ownerName,
+                                                      ownerProfile:
+                                                          ownerProfile,
+                                                    ),
+                                              ),
+                                            );
+                                          },
+                                          child: Image.asset("images/chat.png"),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        GestureDetector(
+                                          onTap: () async {
+                                            final phone = d['phone'] ?? '';
+                                            if (phone.isNotEmpty) {
+                                              final Uri callUri = Uri(
+                                                scheme: 'tel',
+                                                path: phone,
+                                              );
+                                              if (await canLaunchUrl(callUri)) {
+                                                await launchUrl(callUri);
+                                              }
+                                            }
+                                          },
+                                          child: Image.asset("images/call.png"),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ],
+                              );
+                            },
+                          ),
                 ),
 
                 const Divider(thickness: 3, color: KlightgreyColor),
@@ -1640,7 +1695,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                       ),
                       const SizedBox(height: 10),
 
-                      if (liveData['driverdocId'] != null)
+                      if (liveData['driverdocId'] != null &&
+                          liveData['driverdocId'].toString().trim().isNotEmpty)
                         StreamBuilder<DocumentSnapshot>(
                           stream:
                               FirebaseFirestore.instance
@@ -1648,8 +1704,14 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                   .doc(liveData['driverdocId'])
                                   .snapshots(),
                           builder: (context, driverSnap) {
-                            if (!driverSnap.hasData) {
-                              return SizedBox(); // or a loader
+                            if (driverSnap.connectionState ==
+                                ConnectionState.waiting) {
+                              return const SizedBox();
+                            }
+
+                            if (!driverSnap.hasData ||
+                                !driverSnap.data!.exists) {
+                              return const SizedBox();
                             }
 
                             final driver =
@@ -1891,10 +1953,10 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
           VoidCallback? bottomButtonAction;
           Color buttonColor = korangeColor;
 
-          if (rideStatus == 'New') {
+          if (rideStatus == 'New' || rideStatus == 'Accepted') {
             buttonColor = Colors.red;
             bottomButtonText = 'Cancel Ride';
-            bottomButtonAction = () => cancelRide(context);
+            bottomButtonAction = () => _showCancelRideDialog(data);
           } else if (rideStatus == 'Ongoing') {
             buttonColor = Colors.green;
             bottomButtonText = "Ride Ongoing";
@@ -1941,6 +2003,149 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
         },
       ),
     );
+  }
+
+  void _showCancelRideDialog(Map<String, dynamic> data) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            title: Center(
+              child: CustomText(
+                text: "Cancel Ride",
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                textcolor: korangeColor,
+              ),
+            ),
+            content: CustomText(
+              text: "Are you sure you want to cancel this ride?",
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              textcolor: KblackColor,
+            ),
+            actions: [
+              OutlinedButton(
+                onPressed: () => Navigator.pop(context),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: korangeColor, width: 1.5),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 25,
+                    vertical: 10,
+                  ),
+                ),
+                child: Text(
+                  "No",
+                  style: TextStyle(
+                    color: korangeColor,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: korangeColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 25,
+                    vertical: 10,
+                  ),
+                ),
+                onPressed: () async {
+                  Navigator.pop(context);
+
+                  final rideStatus = widget.bookingData['status'] ?? '';
+
+                  if (rideStatus == 'New') {
+                    _cancelRideFree();
+                    return;
+                  }
+
+                  await _checkCancellationTimeAndProceed();
+                },
+                child: Text(
+                  "Yes",
+                  style: TextStyle(
+                    color: kwhiteColor,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
+          ),
+    );
+  }
+
+  Future<void> _checkCancellationTimeAndProceed() async {
+    try {
+      final bookingId = widget.bookingData['bookingId'];
+      if (bookingId == null) return;
+
+      final snap =
+          await FirebaseFirestore.instance
+              .collection("bookings")
+              .doc(bookingId)
+              .get();
+
+      final data = snap.data()!;
+      List history = data['statusHistory'] ?? [];
+
+      DateTime? acceptedTime;
+
+      for (var item in history) {
+        if (item['status'] == "Accepted") {
+          acceptedTime = DateTime.tryParse(item['dateTime']);
+          break;
+        }
+      }
+
+      if (acceptedTime == null) {
+        await _cancelRideFree();
+        return;
+      }
+
+      int diffMins = DateTime.now().difference(acceptedTime).inMinutes;
+
+      if (diffMins <= 5) {
+        await _cancelRideFree();
+      } else {
+        _openCheckout(59.0);
+      }
+    } catch (e) {
+      print("Cancel check error: $e");
+    }
+  }
+
+  Future<void> _cancelRideFree() async {
+    final bookingId = widget.bookingData['bookingId'];
+    if (bookingId == null) return;
+
+    await FirebaseFirestore.instance
+        .collection("bookings")
+        .doc(bookingId)
+        .update({
+          "status": "Cancelled",
+          "paymentStatus": "",
+          "statusHistory": FieldValue.arrayUnion([
+            {
+              "status": "Cancelled",
+              "dateTime": DateTime.now().toIso8601String(),
+            },
+          ]),
+        });
+
+    Navigator.pop(context);
   }
 }
 
@@ -2176,690 +2381,3 @@ void _showRatingDialog(BuildContext context) {
     },
   );
 }
-
-
-
-// floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      // floatingActionButton: SizedBox(
-      //   width: 220,
-      //   height: 50,
-      //   child: ElevatedButton(
-      //     style: ElevatedButton.styleFrom(
-      //       backgroundColor: buttonColor,
-      //       disabledBackgroundColor:
-      //           rideStatus == 'Ongoing' ? Colors.green.shade500 : korangeColor,
-      //       shape: RoundedRectangleBorder(
-      //         borderRadius: BorderRadius.circular(40),
-      //       ),
-      //       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      //     ),
-      //     onPressed: bottomButtonAction,
-      //     // () {
-      //     //   Navigator.push(
-      //     //     context,
-      //     //     MaterialPageRoute(builder: (context) => PaymentGateway()),
-      //     //   );
-      //     // },
-      //     child: CustomText(
-      //       text: bottomButtonText,
-      //       fontSize: 14,
-      //       fontWeight: FontWeight.w500,
-      //       textcolor: kwhiteColor,
-      //     ),
-      //   ),
-      // ),
-
-// OLD UI just keep it 
-                        // Padding(
-                    //   padding: const EdgeInsets.only(left: 15, right: 15),
-                    //   child: Row(
-                    //     children: [
-                    //       Container(
-                    //         width: 50,
-                    //         height: 50,
-                    //         decoration: BoxDecoration(
-                    //           color: Colors.grey.shade100,
-                    //           borderRadius: BorderRadius.circular(12),
-                    //         ),
-                    //         child: ClipRRect(
-                    //           borderRadius: BorderRadius.circular(12),
-                    //           child:
-                    //               vehicleImage.startsWith('http')
-                    //                   ? Image.network(
-                    //                     vehicleImage,
-                    //                     fit: BoxFit.contain,
-                    //                   )
-                    //                   : Image.asset(
-                    //                     vehicleImage,
-                    //                     fit: BoxFit.contain,
-                    //                   ),
-                    //         ),
-                    //       ),
-                    //       const SizedBox(width: 8),
-                    //       Expanded(
-                    //         child: Column(
-                    //           crossAxisAlignment: CrossAxisAlignment.start,
-                    //           children: [
-                    //             CustomText(
-                    //               text: vehicleName,
-                    //               fontSize: 14,
-                    //               fontWeight: FontWeight.w500,
-                    //               textcolor: KblackColor,
-                    //             ),
-                    //             SizedBox(height: 4),
-                    //             Row(
-                    //               children: [
-                    //                 CustomText(
-                    //                   text: transmission,
-                    //                   fontSize: 12,
-                    //                   fontWeight: FontWeight.w400,
-                    //                   textcolor: kseegreyColor,
-                    //                 ),
-                    //                 const SizedBox(width: 12),
-                    //                 Container(
-                    //                   height: 20,
-                    //                   width: 1,
-                    //                   color: kseegreyColor,
-                    //                 ),
-                    //                 SizedBox(width: 8),
-                    //                 CustomText(
-                    //                   text: category,
-                    //                   fontSize: 12,
-                    //                   fontWeight: FontWeight.w400,
-                    //                   textcolor: kseegreyColor,
-                    //                 ),
-                    //               ],
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //       Image.asset("images/chevronRight.png"),
-                    //     ],
-                    //   ),
-                    // ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(
-                    //     left: 15,
-                    //     right: 15,
-                    //     top: 15,
-                    //   ),
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       const CustomText(
-                    //         text: "Booking Details",
-                    //         fontSize: 16,
-                    //         fontWeight: FontWeight.w600,
-                    //         textcolor: korangeColor,
-                    //       ),
-                    //       const SizedBox(height: 10),
-                    //       Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         children: [
-                    //           Row(
-                    //             children: [
-                    //               _buildDot(Colors.green),
-                    //               const SizedBox(width: 8),
-                    //               const CustomText(
-                    //                 text: "Pickup Location",
-                    //                 fontSize: 12,
-                    //                 fontWeight: FontWeight.w400,
-                    //                 textcolor: kseegreyColor,
-                    //               ),
-                    //             ],
-                    //           ),
-                    //           Padding(
-                    //             padding: const EdgeInsets.only(
-                    //               left: 15,
-                    //               top: 5,
-                    //               bottom: 10,
-                    //             ),
-                    //             child: CustomText(
-                    //               text: pickupLocation,
-                    //               fontSize: 14,
-                    //               fontWeight: FontWeight.w400,
-                    //               textcolor: KblackColor,
-                    //             ),
-                    //           ),
-
-                    //           Row(
-                    //             children: [
-                    //               _buildDot(
-                    //                 drop2Location.isEmpty
-                    //                     ? Colors.red
-                    //                     : Colors.grey,
-                    //               ),
-                    //               const SizedBox(width: 8),
-                    //               CustomText(
-                    //                 text:
-                    //                     drop2Location.isEmpty
-                    //                         ? "Drop Location"
-                    //                         : "Drop Location 1",
-                    //                 fontSize: 12,
-                    //                 fontWeight: FontWeight.w400,
-                    //                 textcolor: kseegreyColor,
-                    //               ),
-                    //             ],
-                    //           ),
-                    //           Padding(
-                    //             padding: const EdgeInsets.only(
-                    //               left: 15,
-                    //               top: 5,
-                    //               bottom: 10,
-                    //             ),
-                    //             child: CustomText(
-                    //               text: dropLocation,
-                    //               fontSize: 14,
-                    //               fontWeight: FontWeight.w400,
-                    //               textcolor: KblackColor,
-                    //             ),
-                    //           ),
-
-                    //           if (drop2Location.isNotEmpty)
-                    //             Column(
-                    //               crossAxisAlignment: CrossAxisAlignment.start,
-                    //               children: [
-                    //                 Row(
-                    //                   children: [
-                    //                     _buildDot(Colors.red),
-                    //                     const SizedBox(width: 8),
-                    //                     const CustomText(
-                    //                       text: "Drop Location 2",
-                    //                       fontSize: 12,
-                    //                       fontWeight: FontWeight.w400,
-                    //                       textcolor: kseegreyColor,
-                    //                     ),
-                    //                   ],
-                    //                 ),
-                    //                 Padding(
-                    //                   padding: const EdgeInsets.only(
-                    //                     left: 15,
-                    //                     top: 5,
-                    //                     bottom: 10,
-                    //                   ),
-                    //                   child: CustomText(
-                    //                     text: drop2Location,
-                    //                     fontSize: 14,
-                    //                     fontWeight: FontWeight.w400,
-                    //                     textcolor: KblackColor,
-                    //                   ),
-                    //                 ),
-                    //               ],
-                    //             ),
-                    //         ],
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // const Divider(thickness: 3, color: KlightgreyColor),
-                     // Padding(
-                    //   padding: const EdgeInsets.only(left: 15, right: 15),
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       const CustomText(
-                    //         text: "Trip Details",
-                    //         fontSize: 16,
-                    //         fontWeight: FontWeight.w600,
-                    //         textcolor: korangeColor,
-                    //       ),
-                    //       const SizedBox(height: 12),
-                    //       Row(
-                    //         children: [
-                    //           Image.asset(
-                    //             "images/calender_drvr.png",
-                    //             height: 20,
-                    //             width: 20,
-                    //           ),
-                    //           const SizedBox(width: 8),
-                    //           CustomText(
-                    //             text: tripMode,
-                    //             fontSize: 14,
-                    //             fontWeight: FontWeight.w400,
-                    //             textcolor: KblackColor,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       const SizedBox(height: 15),
-                    //       Row(
-                    //         children: [
-                    //           Image.asset(
-                    //             "images/time.png",
-                    //             height: 20,
-                    //             width: 20,
-                    //           ),
-                    //           const SizedBox(width: 8),
-                    //           CustomText(
-                    //             text: tripTime,
-                    //             fontSize: 14,
-                    //             fontWeight: FontWeight.w400,
-                    //             textcolor: KblackColor,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       if (tripMode == "Hourly Trip" &&
-                    //           citylimithours.isNotEmpty) ...[
-                    //         const SizedBox(height: 15),
-                    //         Row(
-                    //           children: [
-                    //             Image.asset(
-                    //               "images/time.png",
-                    //               height: 20,
-                    //               width: 20,
-                    //             ),
-                    //             const SizedBox(width: 8),
-                    //             CustomText(
-                    //               text: 'Hourly Trip : $citylimithours Hours',
-                    //               fontSize: 14,
-                    //               fontWeight: FontWeight.w400,
-                    //               textcolor: KblackColor,
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ],
-                    //     ],
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 15),
-                    // const Divider(thickness: 3, color: KlightgreyColor),
-
-                    // Padding(
-                    //   padding: const EdgeInsets.only(left: 15, right: 15),
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       const CustomText(
-                    //         text: "Slot Details",
-                    //         fontSize: 16,
-                    //         fontWeight: FontWeight.w600,
-                    //         textcolor: korangeColor,
-                    //       ),
-                    //       const SizedBox(height: 10),
-                    //       if (tripMode == "Round Trip")
-                    //         CustomText(
-                    //           text: "Depature",
-                    //           fontSize: 14,
-                    //           fontWeight: FontWeight.w500,
-                    //           textcolor: Colors.grey.shade700,
-                    //         ),
-                    //       const SizedBox(height: 10),
-                    //       Row(
-                    //         children: [
-                    //           Image.asset(
-                    //             "images/calender_drvr.png",
-                    //             height: 20,
-                    //             width: 20,
-                    //           ),
-                    //           const SizedBox(width: 8),
-                    //           CustomText(
-                    //             text: date,
-                    //             fontSize: 14,
-                    //             fontWeight: FontWeight.w400,
-                    //             textcolor: KblackColor,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       const SizedBox(height: 15),
-                    //       Row(
-                    //         children: [
-                    //           Image.asset(
-                    //             "images/time.png",
-                    //             height: 20,
-                    //             width: 20,
-                    //           ),
-                    //           const SizedBox(width: 8),
-                    //           CustomText(
-                    //             text: time,
-                    //             fontSize: 14,
-                    //             fontWeight: FontWeight.w400,
-                    //             textcolor: KblackColor,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       if (tripMode == "Round Trip") ...[
-                    //         const SizedBox(height: 15),
-                    //         CustomText(
-                    //           text: "Arrival",
-                    //           fontSize: 14,
-                    //           fontWeight: FontWeight.w500,
-                    //           textcolor: Colors.grey.shade700,
-                    //         ),
-                    //         const SizedBox(height: 10),
-
-                    //         Row(
-                    //           children: [
-                    //             Image.asset(
-                    //               "images/calender_drvr.png",
-                    //               height: 20,
-                    //               width: 20,
-                    //             ),
-                    //             const SizedBox(width: 8),
-                    //             CustomText(
-                    //               text:
-                    //                   arrivalDate != null
-                    //                       ? "${arrivalDate}".split(' ')[0]
-                    //                       : "---",
-                    //               fontSize: 14,
-                    //               fontWeight: FontWeight.w400,
-                    //               textcolor: KblackColor,
-                    //             ),
-                    //           ],
-                    //         ),
-                    //         const SizedBox(height: 15),
-
-                    //         Row(
-                    //           children: [
-                    //             Image.asset(
-                    //               "images/time.png",
-                    //               height: 20,
-                    //               width: 20,
-                    //             ),
-                    //             const SizedBox(width: 8),
-                    //             CustomText(
-                    //               text:
-                    //                   arrivalTime != null ? arrivalTime : "---",
-                    //               fontSize: 14,
-                    //               fontWeight: FontWeight.w400,
-                    //               textcolor: KblackColor,
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ],
-                    //     ],
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 15),
-                    // const Divider(thickness: 3, color: KlightgreyColor),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(right: 15, left: 15),
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       const CustomText(
-                    //         text: "Contact Details",
-                    //         fontSize: 16,
-                    //         fontWeight: FontWeight.w600,
-                    //         textcolor: korangeColor,
-                    //       ),
-                    //       const SizedBox(height: 12),
-                    //       Row(
-                    //         children: [
-                    //           Image.asset(
-                    //             "images/person.png",
-                    //             height: 20,
-                    //             width: 20,
-                    //           ),
-                    //           const SizedBox(width: 8),
-                    //           CustomText(
-                    //             text:
-                    //                 ((SharedPrefServices.getFirstName() ?? '') +
-                    //                             " " +
-                    //                             (SharedPrefServices.getLastName() ??
-                    //                                 ''))
-                    //                         .trim()
-                    //                         .isNotEmpty
-                    //                     ? ((SharedPrefServices.getFirstName() ??
-                    //                                 '') +
-                    //                             " " +
-                    //                             (SharedPrefServices.getLastName() ??
-                    //                                 ''))
-                    //                         .trim()
-                    //                     : driverName,
-                    //             fontSize: 14,
-                    //             fontWeight: FontWeight.w400,
-                    //             textcolor: KblackColor,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       const SizedBox(height: 10),
-                    //       Row(
-                    //         children: [
-                    //           Image.asset(
-                    //             "images/call_drvr.png",
-                    //             height: 20,
-                    //             width: 20,
-                    //           ),
-                    //           const SizedBox(width: 8),
-                    //           CustomText(
-                    //             text:
-                    //                 SharedPrefServices.getNumber() ??
-                    //                 driverPhone,
-                    //             fontSize: 14,
-                    //             fontWeight: FontWeight.w400,
-                    //             textcolor: KblackColor,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       const SizedBox(height: 10),
-                    //       Row(
-                    //         children: [
-                    //           Image.asset(
-                    //             "images/email_drvr.png",
-                    //             height: 20,
-                    //             width: 20,
-                    //           ),
-                    //           const SizedBox(width: 8),
-                    //           CustomText(
-                    //             text:
-                    //                 SharedPrefServices.getEmail() ??
-                    //                 driverEmail,
-                    //             fontSize: 14,
-                    //             fontWeight: FontWeight.w400,
-                    //             textcolor: KblackColor,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 15),
-                    // const Divider(thickness: 3, color: KlightgreyColor),
-                    // if (driverData != null && driverData!.isNotEmpty) ...[
-                    //   const SizedBox(height: 15),
-                    //   Padding(
-                    //     padding: const EdgeInsets.only(right: 15, left: 15),
-                    //     child: Column(
-                    //       crossAxisAlignment: CrossAxisAlignment.start,
-                    //       children: [
-                    //         const CustomText(
-                    //           text: "Driver Details",
-                    //           fontSize: 16,
-                    //           fontWeight: FontWeight.w600,
-                    //           textcolor: korangeColor,
-                    //         ),
-                    //         const SizedBox(height: 12),
-                    //         Row(
-                    //           children: [
-                    //             Image.asset(
-                    //               "images/person.png",
-                    //               height: 20,
-                    //               width: 20,
-                    //             ),
-                    //             const SizedBox(width: 8),
-                    //             CustomText(
-                    //               text:
-                    //                   driverData != null
-                    //                       ? "${driverData!['firstName'] ?? ''} ${driverData!['lastName'] ?? ''}"
-                    //                       : driverName,
-                    //               fontSize: 14,
-                    //               fontWeight: FontWeight.w400,
-                    //               textcolor: KblackColor,
-                    //             ),
-                    //           ],
-                    //         ),
-                    //         const SizedBox(height: 10),
-                    //         Row(
-                    //           children: [
-                    //             Image.asset(
-                    //               "images/call_drvr.png",
-                    //               height: 20,
-                    //               width: 20,
-                    //             ),
-                    //             const SizedBox(width: 8),
-                    //             CustomText(
-                    //               text:
-                    //                   driverData != null
-                    //                       ? driverData!['phone'] ?? ''
-                    //                       : '',
-                    //               fontSize: 14,
-                    //               fontWeight: FontWeight.w400,
-                    //               textcolor: KblackColor,
-                    //             ),
-                    //           ],
-                    //         ),
-                    //         const SizedBox(height: 10),
-                    //         Row(
-                    //           children: [
-                    //             Image.asset(
-                    //               "images/email_drvr.png",
-                    //               height: 20,
-                    //               width: 20,
-                    //             ),
-                    //             const SizedBox(width: 8),
-                    //             CustomText(
-                    //               text:
-                    //                   driverData != null
-                    //                       ? driverData!['email'] ?? ''
-                    //                       : '',
-                    //               fontSize: 14,
-                    //               fontWeight: FontWeight.w400,
-                    //               textcolor: KblackColor,
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    //   const SizedBox(height: 15),
-                    //   const Divider(thickness: 3, color: KlightgreyColor),
-                    // ],
-                    // Padding(
-                    //   padding: const EdgeInsets.only(left: 15, right: 15),
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       const CustomText(
-                    //         text: "Payment Summary",
-                    //         fontSize: 16,
-                    //         fontWeight: FontWeight.w600,
-                    //         textcolor: korangeColor,
-                    //       ),
-                    //       const SizedBox(height: 12),
-
-                    //       Row(
-                    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //         children: [
-                    //           const CustomText(
-                    //             text: "Distance",
-                    //             fontSize: 14,
-                    //             fontWeight: FontWeight.w400,
-                    //             textcolor: KblackColor,
-                    //           ),
-                    //           CustomText(
-                    //             text: "$distance",
-                    //             fontSize: 14,
-                    //             fontWeight: FontWeight.w400,
-                    //             textcolor: KblackColor,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       const SizedBox(height: 8),
-                    //       Row(
-                    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //         children: [
-                    //           const CustomText(
-                    //             text: "Service Price",
-                    //             fontSize: 14,
-                    //             fontWeight: FontWeight.w400,
-                    //             textcolor: KblackColor,
-                    //           ),
-                    //           CustomText(
-                    //             text: "₹$servicePrice",
-                    //             fontSize: 14,
-                    //             fontWeight: FontWeight.w400,
-                    //             textcolor: KblackColor,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       const SizedBox(height: 8),
-                    //       Row(
-                    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //         children: [
-                    //           const CustomText(
-                    //             text: "Convenience Fee",
-                    //             fontSize: 14,
-                    //             fontWeight: FontWeight.w400,
-                    //             textcolor: KblackColor,
-                    //           ),
-                    //           CustomText(
-                    //             text: "₹$convenienceFee",
-                    //             fontSize: 14,
-                    //             fontWeight: FontWeight.w400,
-                    //             textcolor: KblackColor,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       // const SizedBox(height: 8),
-                    //       // Row(
-                    //       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //       //   children: [
-                    //       //     const CustomText(
-                    //       //       text: "Fee & Taxes",
-                    //       //       fontSize: 14,
-                    //       //       fontWeight: FontWeight.w400,
-                    //       //       textcolor: KblackColor,
-                    //       //     ),
-                    //       //     CustomText(
-                    //       //       text: "₹$taxes",
-                    //       //       fontSize: 14,
-                    //       //       fontWeight: FontWeight.w400,
-                    //       //       textcolor: KblackColor,
-                    //       //     ),
-                    //       //   ],
-                    //       // ),
-                    //       // const SizedBox(height: 8),
-                    //       // Row(
-                    //       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //       //   children: [
-                    //       //     const CustomText(
-                    //       //       text: "Wallet Points",
-                    //       //       fontSize: 14,
-                    //       //       fontWeight: FontWeight.w400,
-                    //       //       textcolor: KblackColor,
-                    //       //     ),
-                    //       //     CustomText(
-                    //       //       text: "₹$walletPoints",
-                    //       //       fontSize: 14,
-                    //       //       fontWeight: FontWeight.w400,
-                    //       //       textcolor: KblackColor,
-                    //       //     ),
-                    //       //   ],
-                    //       // ),
-                    //       const SizedBox(height: 10),
-                    //       const DottedLine(dashColor: kseegreyColor),
-                    //       const SizedBox(height: 10),
-                    //       Row(
-                    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //         children: [
-                    //           const CustomText(
-                    //             text: "Total Price",
-                    //             fontSize: 18,
-                    //             fontWeight: FontWeight.w700,
-                    //             textcolor: korangeColor,
-                    //           ),
-                    //           CustomText(
-                    //             text: "₹$totalPrice",
-                    //             fontSize: 18,
-                    //             fontWeight: FontWeight.w700,
-                    //             textcolor: korangeColor,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       const SizedBox(height: 10),
-                    //       const DottedLine(dashColor: kseegreyColor),
-                    //     ],
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 15),
-                    // const Divider(thickness: 3, color: KlightgreyColor),
-

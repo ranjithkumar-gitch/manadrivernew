@@ -57,7 +57,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomText(
-              text: "RYDYN – Privacy Policy (For Owners)",
+              text: "RYDYN – Privacy Policy (For Users)",
               fontSize: 16,
               fontWeight: FontWeight.w600,
               textcolor: KblackColor,
@@ -75,7 +75,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
 
             CustomText(
               text:
-                  "Thank you for using the Rydyn Driver App (“we”, “our”, “us”). "
+                  "Thank you for using the Rydyn App (“we”, “our”, “us”). "
                   "This Privacy Policy explains how we collect, use, and protect information.",
               fontWeight: FontWeight.w500,
               fontSize: 14,
@@ -89,7 +89,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
 
             CustomText(
               text:
-                  "We collect information from both Owners (Customers) and Drivers (Partners).",
+                  "We collect information from both users (Customers) and Captains (Partners).",
               fontSize: 14,
               fontWeight: FontWeight.w500,
               textcolor: KblackColor,
@@ -98,7 +98,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             const SizedBox(height: 15),
 
             CustomText(
-              text: "1.1 Information from Owners",
+              text: "1.1 Information from Users",
               fontWeight: FontWeight.w600,
               fontSize: 15,
               textcolor: KblackColor,
@@ -113,7 +113,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             const SizedBox(height: 20),
 
             CustomText(
-              text: "1.2 Information from Drivers",
+              text: "1.2 Information from Captains",
               fontWeight: FontWeight.w600,
               fontSize: 15,
               textcolor: KblackColor,
@@ -152,7 +152,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             ),
             const SizedBox(height: 8),
             CustomText(
-              text: "Used for assigning drivers, safety,route optimization.",
+              text: "Used for assigning captains, safety,route optimization.",
               fontWeight: FontWeight.w500,
               fontSize: 14,
               textcolor: KblackColor,
@@ -176,13 +176,10 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             const SizedBox(height: 10),
             bullet("Encrypted storage"),
             bullet("Secure access"),
-            bullet("Fraud prevention for both Owners & Drivers"),
+            bullet("Fraud prevention for both Users & Captains"),
 
             const SizedBox(height: 20),
 
-            //---------------------------------------------------------
-            // 4. ACCOUNT SECURITY
-            //---------------------------------------------------------
             sectionTitle("4. ACCOUNT SECURITY"),
             const SizedBox(height: 10),
             bullet("Users must keep OTP/device secure"),
@@ -190,22 +187,16 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
 
             const SizedBox(height: 20),
 
-            //---------------------------------------------------------
-            // 5. PAYMENT INFORMATION
-            //---------------------------------------------------------
             sectionTitle("5. PAYMENT INFORMATION"),
             const SizedBox(height: 10),
-            bullet("Owners: UPI/Card processed securely"),
-            bullet("Drivers: Bank/UPI details stored for payouts"),
+            bullet("Users: UPI/Card processed securely"),
+            bullet("Captains: Bank/UPI details stored for payouts"),
 
             const SizedBox(height: 20),
 
-            //---------------------------------------------------------
-            // 6. DISCLOSURE OF INFORMATION
-            //---------------------------------------------------------
             sectionTitle("6. DISCLOSURE OF INFORMATION"),
             const SizedBox(height: 10),
-            bullet("Shared only with Drivers/Owners for ride-related purposes"),
+            bullet("Shared only with Captains/Users for ride-related purposes"),
             bullet("Payment partners"),
             bullet("Verification agencies"),
             bullet("Law authorities"),

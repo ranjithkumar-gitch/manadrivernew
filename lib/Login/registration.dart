@@ -128,7 +128,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 vm.isLoading
                     ? const CircularProgressIndicator(color: korangeColor)
                     : CustomButton(
-                      text: 'Register as Owner',
+                      text: 'Register as User',
                       onPressed: () async {
                         final firstName = firstnameController.text.trim();
                         final lastName = lastnameController.text.trim();
