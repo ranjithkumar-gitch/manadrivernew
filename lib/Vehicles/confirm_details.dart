@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Bottom_NavigationBar/Myrides.dart';
+import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/Location/driverAssigned.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Sidemenu/cancellationPolicyScreen.dart';
@@ -34,12 +35,15 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
   Map<String, dynamic>? driverData;
   bool isLoading = false;
   late Razorpay _razorpay;
+  String totalPrice = "0";
+
   @override
   void initState() {
     super.initState();
     data = widget.bookingData;
+    totalPrice = widget.bookingData['fare']?.toString() ?? "0";
     print('${data['bookingId']},$driverData,${data['ownerId']}');
-
+    fetchReviews();
     fetchVehicleData();
     // fetchDriver();
     // _listenAndDeleteCompletedChats();
@@ -47,6 +51,25 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  List<Map<String, dynamic>> reviewsList = [];
+
+  void fetchReviews() async {
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance
+            .collection('reviews')
+            .where('bookingId', isEqualTo: widget.bookingData['bookingId'])
+            .get();
+
+    setState(() {
+      reviewsList =
+          snapshot.docs
+              .map((doc) => doc.data() as Map<String, dynamic>)
+              .toList();
+    });
+
+    print("Reviews fetched: ${reviewsList.length}");
   }
 
   void _listenAndDeleteCompletedChats() {
@@ -558,7 +581,9 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
           final liveDriverId = liveData['driverdocId']?.toString() ?? '';
 
           final rideStatus = liveData['status'] ?? 'New';
-          // final paymentStatus = liveData['paymentStatus'] ?? '';
+
+          final paymentStatus = liveData['paymentStatus'] ?? '';
+
           final ownerOTP = liveData['ownerOTP']?.toString() ?? '';
           final drop2Location = liveData['drop2'] ?? '';
           final pickupLocation = liveData['pickup'] ?? '';
@@ -845,7 +870,9 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
 
                 const SizedBox(height: 5),
 
-                if (rideStatus == 'Completed') ...[
+                if (rideStatus == 'Completed' &&
+                    paymentStatus == 'Success' &&
+                    reviewsList.isEmpty) ...[
                   Padding(
                     padding: const EdgeInsets.only(left: 15, right: 15),
                     child: Card(
@@ -883,7 +910,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                               ),
                             ),
                             ElevatedButton(
-                              onPressed: () => _showRatingDialog(context),
+                              onPressed: () => _showRatingDialog(context, data),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: korangeColor,
                                 shape: RoundedRectangleBorder(
@@ -1876,6 +1903,28 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                               ],
                             ),
 
+                            if (isCouponApplied) ...[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CustomText(
+                                    text: "Coupon Applied ",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    textcolor: Colors.green,
+                                  ),
+                                  CustomText(
+                                    text:
+                                        "-₹${appliedDiscount.toStringAsFixed(2)}",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    textcolor: Colors.green,
+                                  ),
+                                ],
+                              ),
+                            ],
+
                             const SizedBox(height: 10),
                             const DottedLine(dashColor: kseegreyColor),
                             const SizedBox(height: 10),
@@ -1890,8 +1939,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                 ),
                                 CustomText(
                                   text:
-                                      "₹${(double.tryParse(totalPrice) ?? 0).toStringAsFixed(2)}",
-
+                                      "₹${((double.tryParse(totalPrice) ?? 0) - appliedDiscount).toStringAsFixed(2)}",
                                   fontSize: 18,
                                   fontWeight: FontWeight.w700,
                                   textcolor: korangeColor,
@@ -1903,17 +1951,151 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                           ],
                         ),
                       ),
+
+                      SizedBox(height: 10),
+                      if (reviewsList.isNotEmpty)
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: Colors.grey.shade300,
+                              width: 1,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.1),
+                                blurRadius: 3,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                          child:
+                              reviewsList.isEmpty
+                                  ? const CustomText(
+                                    text: "No review available",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    textcolor: KblackColor,
+                                  )
+                                  : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const CustomText(
+                                        text: "Your Review",
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        textcolor: korangeColor,
+                                      ),
+                                      const SizedBox(height: 12),
+
+                                      Row(
+                                        children: [
+                                          const CustomText(
+                                            text: "Rating :",
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            textcolor: KblackColor,
+                                          ),
+                                          SizedBox(width: 4),
+                                          Row(
+                                            children: List.generate(
+                                              reviewsList[0]['rating'],
+                                              (i) => const Icon(
+                                                Icons.star,
+                                                color: Colors.orange,
+                                                size: 18,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 4),
+                                          CustomText(
+                                            text:
+                                                reviewsList[0]['rating']
+                                                    .toString(),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            textcolor: KblackColor,
+                                          ),
+                                        ],
+                                      ),
+
+                                      const SizedBox(height: 10),
+
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const CustomText(
+                                            text: "Feedback : ",
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            textcolor: KblackColor,
+                                          ),
+                                          SizedBox(width: 4),
+                                          Expanded(
+                                            child: CustomText(
+                                              text: (reviewsList[0]['feedback']
+                                                      as List)
+                                                  .join(", "),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              textcolor: KblackColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      const SizedBox(height: 10),
+
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const CustomText(
+                                            text: "Comment : ",
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            textcolor: KblackColor,
+                                          ),
+                                          SizedBox(width: 4),
+                                          Expanded(
+                                            child: CustomText(
+                                              text:
+                                                  reviewsList[0]['comment'] ??
+                                                  "",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              textcolor: KblackColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                        ),
                     ],
                   ),
                 ),
 
-                const SizedBox(height: 20),
-                _buildCard(
-                  context,
-                  imagePath: 'images/copoun_image.png',
-                  text: 'Coupons & Offers',
-                  onTap: () {},
-                ),
+                if (!(rideStatus == 'Completed' &&
+                    paymentStatus == 'Success')) ...[
+                  const SizedBox(height: 20),
+                ],
+                if (!(rideStatus == 'Completed' &&
+                    paymentStatus == 'Success')) ...[
+                  _buildCard(
+                    context,
+                    imagePath: 'images/copoun_image.png',
+                    text: 'Coupons & Offers',
+                    onTap: () {
+                      _showCouponsBottomSheet();
+                    },
+                  ),
+                ],
                 const SizedBox(height: 15),
                 _buildCard(
                   context,
@@ -1965,7 +2147,9 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
             buttonColor = Colors.orange;
             bottomButtonText = 'Proceed to Payment';
             bottomButtonAction = () {
-              _openCheckout(double.parse(data['fare']?.toString() ?? '0.00'));
+              double latestTotal =
+                  (double.tryParse(totalPrice) ?? 0) - appliedDiscount;
+              _openCheckout((latestTotal));
             };
           } else if (rideStatus == 'Completed' && paymentStatus == 'Success') {
             buttonColor = Colors.green;
@@ -2003,6 +2187,277 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
         },
       ),
     );
+  }
+
+  String? appliedCouponCode;
+  double appliedDiscount = 0.0;
+  String appliedCouponValue = "";
+  String finalTotal = "0.00";
+  bool isCouponApplied = false;
+
+  void applyCoupon(String code, String value) {
+    setState(() {
+      isCouponApplied = true;
+
+      appliedCouponCode = code;
+      appliedCouponValue = value;
+
+      double total = double.tryParse(totalPrice) ?? 0;
+
+      if (value.contains('%')) {
+        double percent = double.parse(value.replaceAll('%', ''));
+        appliedDiscount = (total * percent) / 100;
+      } else {
+        appliedDiscount = double.tryParse(value) ?? 0;
+      }
+
+      if (appliedDiscount > total) {
+        appliedDiscount = total;
+      }
+
+      double result = total - appliedDiscount;
+      finalTotal = result.toStringAsFixed(2);
+    });
+  }
+
+  void _showCouponsBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: SizedBox(
+            height: 250,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade400,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                Center(
+                  child: CustomText(
+                    text: "Coupons & Offers",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    textcolor: Colors.black,
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream:
+                        FirebaseFirestore.instance
+                            .collection('offers')
+                            .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: CircularProgressIndicator(color: korangeColor),
+                        );
+                      }
+
+                      if (snapshot.data!.docs.isEmpty) {
+                        return Center(
+                          child: Text(
+                            "No Offers Available",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        );
+                      }
+
+                      return ListView(
+                        padding: EdgeInsets.zero,
+                        children:
+                            snapshot.data!.docs.map((doc) {
+                              final data = doc.data() as Map<String, dynamic>;
+
+                              final title = data['offerCode'] ?? 'No Code';
+                              final endDate = data['endDate'] ?? '';
+                              final offerValue = data['offerValue'] ?? '';
+
+                              return ticketCoupon(
+                                title,
+                                endDate,
+                                offerValue,
+                                () {
+                                  applyCoupon(title, offerValue);
+                                },
+                              );
+                            }).toList(),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String formatDateTime(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+
+    String date =
+        "${dateTime.day.toString().padLeft(2, '0')}-"
+        "${dateTime.month.toString().padLeft(2, '0')}-"
+        "${dateTime.year}";
+
+    int hour = dateTime.hour % 12 == 0 ? 12 : dateTime.hour % 12;
+    String minute = dateTime.minute.toString().padLeft(2, '0');
+    String amPm = dateTime.hour >= 12 ? "PM" : "AM";
+
+    String time = "${hour.toString().padLeft(2, '0')}:$minute $amPm";
+
+    return "$date, $time";
+  }
+
+  Widget ticketCoupon(
+    String title,
+    String endDate,
+    String offerValue,
+    Function() onApply,
+  ) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      decoration: BoxDecoration(
+        color: KgreyorangeColor,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomText(
+                    text: title,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    textcolor: Colors.black,
+                  ),
+
+                  const SizedBox(height: 4),
+
+                  CustomText(
+                    text: 'Valid Till: ${formatDateTime(endDate)}',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    textcolor: kseegreyColor,
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          Container(
+            width: 110,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.orangeAccent, korangeresponseColor],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(12),
+                bottomRight: Radius.circular(12),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 5),
+                CustomText(
+                  text:
+                      offerValue.contains('%')
+                          ? "$offerValue OFF"
+                          : "₹$offerValue OFF",
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  textcolor: Colors.white,
+                ),
+
+                const SizedBox(height: 4),
+
+                InkWell(
+                  onTap: () {
+                    if (isCouponApplied && appliedCouponCode == title) {
+                      removeCoupon();
+                    } else {
+                      // Normal apply
+                      onApply();
+                    }
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: CustomText(
+                      text:
+                          isCouponApplied && appliedCouponCode == title
+                              ? "APPLIED"
+                              : "APPLY NOW",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      textcolor: Colors.orange.shade700,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void removeCoupon() {
+    setState(() {
+      isCouponApplied = false;
+      appliedCouponCode = null;
+      appliedCouponValue = "";
+      appliedDiscount = 0.0;
+
+      finalTotal = totalPrice;
+    });
   }
 
   void _showCancelRideDialog(Map<String, dynamic> data) {
@@ -2195,7 +2650,28 @@ Widget _buildDot(Color color) {
   );
 }
 
-void _showRatingDialog(BuildContext context) {
+Future<void> saveReview({
+  required String bookingId,
+  required String driverId,
+  required String userId,
+  required int rating,
+  required List<String> feedbackTags,
+  required String comment,
+}) async {
+  await FirebaseFirestore.instance.collection('reviews').add({
+    "bookingId": bookingId,
+    "driverId": driverId,
+    "userId": userId,
+    "rating": rating,
+    "feedbackTags": feedbackTags,
+    "comment": comment,
+    "timestamp": FieldValue.serverTimestamp(),
+  });
+}
+
+bool isLoading = false;
+
+void _showRatingDialog(BuildContext context, data) {
   int selectedStars = 0;
   final TextEditingController commentController = TextEditingController();
   final List<FeedbackOption> feedbackOptions = [
@@ -2362,16 +2838,85 @@ void _showRatingDialog(BuildContext context) {
 
                   const SizedBox(height: 20),
 
-                  Center(
-                    child: CustomButton(
-                      text: 'Submit',
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      width: 220,
-                      height: 50,
-                    ),
-                  ),
+                  isLoading
+                      ? const Center(
+                        child: CircularProgressIndicator(color: Colors.orange),
+                      )
+                      : Center(
+                        child: CustomButton(
+                          text: 'Submit',
+                          onPressed: () async {
+                            if (selectedStars == 0) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Please select rating")),
+                              );
+                              return;
+                            }
+                            setState(() {
+                              isLoading = true; // 🔥 Show Loader
+                            });
+                            await FirebaseFirestore.instance
+                                .collection('reviews')
+                                .add({
+                                  'bookingId': data['bookingId'],
+                                  'driverId': data['driverId'],
+                                  'ownerId': data['ownerId'],
+                                  'rating': selectedStars,
+                                  'feedback': selectedFeedback.toList(),
+                                  'comment': commentController.text.trim(),
+                                  'createdAt': FieldValue.serverTimestamp(),
+                                });
+
+                            final driverRef = FirebaseFirestore.instance
+                                .collection('drivers')
+                                .doc(data['driverdocId']);
+
+                            FirebaseFirestore.instance.runTransaction((
+                              transaction,
+                            ) async {
+                              final snapshot = await transaction.get(driverRef);
+
+                              int totalReviews =
+                                  snapshot.data()?['totalReviews'] ?? 0;
+                              int totalRating =
+                                  snapshot.data()?['totalRating'] ?? 0;
+
+                              totalReviews += 1;
+                              totalRating += selectedStars;
+
+                              double averageRating = totalRating / totalReviews;
+
+                              transaction.update(driverRef, {
+                                'totalReviews': totalReviews,
+                                'totalRating': totalRating,
+                                'averageRating': averageRating,
+                              });
+                            });
+                            setState(() {
+                              isLoading = false; 
+                            });
+                            Navigator.pop(context);
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => BottomNavigation(),
+                              ),
+                            );
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Thank you! Your review is submitted",
+                                ),
+                              ),
+                            );
+                          },
+
+                          width: 220,
+                          height: 50,
+                        ),
+                      ),
                 ],
               ),
             ),

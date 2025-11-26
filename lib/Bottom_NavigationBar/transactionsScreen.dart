@@ -128,8 +128,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             final ownerId = bookingData['ownerId'] ?? '';
             final vehicleId = bookingData['vehicleId'] ?? '';
             final driverDocId = bookingData['driverdocId'] ?? '';
+            final bookingStatus = bookingData['status'] ?? '';
 
-            /// --- DRIVER NAME ---
             String driverName = 'NA';
             if (driverDocId.isNotEmpty) {
               final driverSnap =
@@ -143,7 +143,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               }
             }
 
-            /// --- VEHICLE NAME ---
             String vehicleName = 'NA';
             if (vehicleId.isNotEmpty) {
               final vehicleSnap =
@@ -157,10 +156,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               }
             }
 
-            /// --- ONLY ADD IF MATCHES CURRENT USER ---
             if (currentUserId == driverId || currentUserId == ownerId) {
               tx['driverName'] = driverName;
               tx['vehicleName'] = vehicleName;
+              tx['bookingStatus'] = bookingStatus;
               filtered.add(tx);
             }
           }
@@ -169,7 +168,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         });
   }
 
-  /// --- UI CARD ---
   Widget _buildTransactionCard(Map<String, dynamic> tx) {
     final transactionId = tx['transactionId'] ?? '';
     final amount = tx['amount'] ?? 0.0;
@@ -181,6 +179,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             : DateTime.now();
     final driverName = tx['driverName'];
     final vehicleName = tx['vehicleName'];
+    final bookingStatus = tx['bookingStatus'] ?? '';
 
     final dateString =
         "${timestamp.day.toString().padLeft(2, '0')}/${timestamp.month.toString().padLeft(2, '0')}/${timestamp.year}";
@@ -286,33 +285,57 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      text: "₹${amount.toStringAsFixed(2)}/-",
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                      text:
+                          bookingStatus == "Cancelled"
+                              ? "Ride Cancelled"
+                              : "Ride Completed",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                       textcolor: korangeColor,
                     ),
-                    const SizedBox(height: 3),
+                    SizedBox(height: 3),
                     CustomText(
-                      text: paymentMethod,
+                      text:
+                          bookingStatus == "Cancelled"
+                              ? "Cancellation Charges"
+                              : status == "Success"
+                              ? "Payment Completed"
+                              : "Payment Failed",
                       fontSize: 12,
-                      textcolor: kseegreyColor,
                       fontWeight: FontWeight.w400,
+                      textcolor:
+                          bookingStatus == "Cancelled"
+                              ? Colors.red
+                              : status == "Success"
+                              ? KgreenColor
+                              : Colors.red,
                     ),
                   ],
                 ),
-                CustomText(
-                  text:
-                      status == "Success"
-                          ? "Payment Completed"
-                          : "Payment Failed",
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  textcolor: status == "Success" ? KgreenColor : Colors.red,
+
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start ,
+                  children: [
+                    CustomText(
+                      text: paymentMethod,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      textcolor: kseegreyColor,
+                    ),
+                    SizedBox(height: 3),
+                    CustomText(
+                      text: "₹${amount.toStringAsFixed(2)}/-",
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      textcolor: korangeColor,
+                    ),
+                  ],
                 ),
               ],
             ),

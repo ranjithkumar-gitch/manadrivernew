@@ -631,7 +631,7 @@ abstract class AppLocalizations {
   /// No description provided for @cP_a2.
   ///
   /// In en, this message translates to:
-  /// **'• 50 cancellation fee will be charged if:'**
+  /// **'• 59 cancellation fee will be charged if:'**
   String get cP_a2;
 
   /// No description provided for @cP_a22.

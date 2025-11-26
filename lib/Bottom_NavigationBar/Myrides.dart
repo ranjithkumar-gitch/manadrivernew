@@ -81,7 +81,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
     String time = bookingData['time'] ?? "";
     String vehicleId = bookingData['vehicleId'] ?? "";
     String driverDocId = bookingData['driverdocId'] ?? "";
-    String driverRating = bookingData['driverRating']?.toString() ?? "N/A";
+    String driverRating = "N/A";
     // String price = bookingData['fare'] ?? "";
     double price = double.parse(bookingData['fare']?.toString() ?? '0.00');
     return FutureBuilder<DocumentSnapshot?>(
@@ -124,6 +124,8 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                   "${driverData['firstName'] ?? ''} ${driverData['lastName'] ?? ''}"
                       .trim();
               profileUrl = driverData['profileUrl'] ?? "";
+
+              driverRating = driverData['averageRating']?.toString() ?? "N/A";
             }
 
             return GestureDetector(
@@ -190,16 +192,48 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                                 ),
                                 Row(
                                   children: [
-                                    Image.asset('images/star.png'),
-                                    SizedBox(width: 3),
+                                    Row(
+                                      children: List.generate(5, (index) {
+                                        double rating =
+                                            double.tryParse(
+                                              driverRating.toString(),
+                                            ) ??
+                                            0.0;
+
+                                        if (index < rating.floor()) {
+                                          return const Icon(
+                                            Icons.star_rounded,
+                                            color: Colors.orange,
+                                            size: 15,
+                                          );
+                                        } else if (index == rating.floor() &&
+                                            rating % 1 != 0) {
+                                          return const Icon(
+                                            Icons.star_half_rounded,
+                                            color: Colors.orange,
+                                            size: 15,
+                                          );
+                                        } else {
+                                          return const Icon(
+                                            Icons.star_border_rounded,
+                                            color: Colors.orange,
+                                            size: 15,
+                                          );
+                                        }
+                                      }),
+                                    ),
+
+                                    const SizedBox(width: 4),
+
                                     CustomText(
-                                      text: driverRating,
+                                      text: driverRating.toString(),
                                       textcolor: kseegreyColor,
                                       fontSize: 12,
-                                      fontWeight: FontWeight.w400,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ],
                                 ),
+
                                 CustomText(
                                   text: vehicleName,
                                   textcolor: kseegreyColor,

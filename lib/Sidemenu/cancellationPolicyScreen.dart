@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
-
 import 'package:mana_driver/l10n/app_localizations.dart';
 
 class CancellationPolicyScreen extends StatelessWidget {
@@ -61,12 +60,6 @@ class CancellationPolicyScreen extends StatelessWidget {
             SectionDescription(localizations.cP_a2),
             SectionDescription(localizations.cP_a22),
             SectionDescription(localizations.cP_a23),
-            const SizedBox(height: 20),
-            SectionTitle(localizations.cP_q3),
-            SectionDescription(localizations.cP_a3),
-            const SizedBox(height: 20),
-            SectionTitle(localizations.cP_q4),
-            SectionDescription(localizations.cP_a4),
             const SizedBox(height: 20),
             SectionTitle(localizations.cP_q5),
             SectionDescription(localizations.cP_a5),
