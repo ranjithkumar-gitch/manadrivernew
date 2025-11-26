@@ -2702,8 +2702,8 @@ void _showRatingDialog(BuildContext context, data) {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const CustomText(
-                    text: "How was your trip with\nRamesh Kumar",
+                  CustomText(
+                    text: "How was your trip with\n ${data['driverName']}?",
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     textcolor: korangeColor,
@@ -2893,7 +2893,7 @@ void _showRatingDialog(BuildContext context, data) {
                               });
                             });
                             setState(() {
-                              isLoading = false; 
+                              isLoading = false;
                             });
                             Navigator.pop(context);
 

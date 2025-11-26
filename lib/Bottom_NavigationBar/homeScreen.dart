@@ -796,18 +796,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.bold,
                           textcolor: KblackColor,
                         ),
-                        Text(
-                          localizations.home_viewoffers,
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: korangeColor,
-                            decoration: TextDecoration.underline,
-                            decorationColor: korangeColor,
-                            decorationStyle: TextDecorationStyle.solid,
-                            decorationThickness: 1.5,
-                          ),
-                        ),
+                        // Text(
+                        //   localizations.home_viewoffers,
+                        //   style: GoogleFonts.poppins(
+                        //     fontSize: 12,
+                        //     fontWeight: FontWeight.w400,
+                        //     color: korangeColor,
+                        //     decoration: TextDecoration.underline,
+                        //     decorationColor: korangeColor,
+                        //     decorationStyle: TextDecorationStyle.solid,
+                        //     decorationThickness: 1.5,
+                        //   ),
+                        // ),
                       ],
                     ),
                     SizedBox(height: 10),
@@ -2194,19 +2194,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final double totalPrice = servicePrice + convFee;
 
-    // this old code //
-    // final double servicePrice =
-    //     isOneWay ? ((fareMap['total'] ?? 0.0) as double) : 0.0;
-    // final double addons =
-    //     isOneWay ? ((fareMap['addons'] ?? 0.0) as double) : 0.0;
-    // final double taxes = isOneWay ? ((fareMap['taxes'] ?? 0.0) as double) : 0.0;
-    // final double walletPoints =
-    //     isOneWay ? ((fareMap['wallet'] ?? 0.0) as double) : 0.0;
-
-    // final double totalPrice = double.parse(
-    //   (servicePrice + addons + taxes - walletPoints).toStringAsFixed(2),
-    // );
-
     String _rupee(double v) => "₹${v.toStringAsFixed(2)}";
 
     showModalBottomSheet(
@@ -2309,61 +2296,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
 
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     const CustomText(
-              //       text: "Add-on’s",
-              //       fontSize: 14,
-              //       fontWeight: FontWeight.w400,
-              //       textcolor: KblackColor,
-              //     ),
-              //     CustomText(
-              //       text: _rupee(addons),
-              //       fontSize: 14,
-              //       fontWeight: FontWeight.w400,
-              //       textcolor: KblackColor,
-              //     ),
-              //   ],
-              // ),
-              // const SizedBox(height: 8),
-
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     const CustomText(
-              //       text: "Fee & Taxes",
-              //       fontSize: 14,
-              //       fontWeight: FontWeight.w400,
-              //       textcolor: KblackColor,
-              //     ),
-              //     CustomText(
-              //       text: _rupee(taxes),
-              //       fontSize: 14,
-              //       fontWeight: FontWeight.w400,
-              //       textcolor: KblackColor,
-              //     ),
-              //   ],
-              // ),
-              // const SizedBox(height: 8),
-
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     const CustomText(
-              //       text: "Wallet Points",
-              //       fontSize: 14,
-              //       fontWeight: FontWeight.w400,
-              //       textcolor: KblackColor,
-              //     ),
-              //     CustomText(
-              //       text: _rupee(walletPoints),
-              //       fontSize: 14,
-              //       fontWeight: FontWeight.w400,
-              //       textcolor: KblackColor,
-              //     ),
-              //   ],
-              // ),
               const SizedBox(height: 15),
 
               const DottedLine(dashColor: kseegreyColor),
