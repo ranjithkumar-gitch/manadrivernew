@@ -410,8 +410,11 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                               "drop": dropLocationController.text,
                             });
                           },
-                          decoration: const InputDecoration(
-                            hintText: "Drop Location",
+                          decoration: InputDecoration(
+                            hintText:
+                                showSecondDrop
+                                    ? "Drop Location 1"
+                                    : "Drop Location",
                             hintStyle: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
@@ -566,9 +569,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                   (!showSecondDrop ||
                                       secondDropController.text.isNotEmpty))
                               ? korangeColor
-                              : Colors
-                                  .grey
-                                  .shade600, // grey if fields not filled
+                              : Colors.grey.shade600,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(22),
                       ),
@@ -592,6 +593,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
             const Divider(),
             Expanded(
               child:
+                   
                   predictions.isNotEmpty
                       ? ListView.builder(
                         itemCount: predictions.length,
@@ -632,173 +634,3 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
     );
   }
 }
-
-
- // if (result != null) {
-    //   setState(() {
-    //     if (isPickup) {
-    //       currentLocationController.text = result['locationName'];
-    //       pickupLat = result['latitude'].toString();
-    //       pickupLng = result['longitude'].toString();
-    //       isPickupSelection = false;
-    //     } else if (isSecondDrop) {
-    //       secondDropController.text = result['locationName'];
-    //     } else {
-    //       dropLocationController.text = result['locationName'];
-    //       dropLat = result['latitude'].toString();
-    //       dropLng = result['longitude'].toString();
-    //     }
-    //   });
-    // }
- // void _onSuggestionTap(AutocompletePrediction p) {
-  //   setState(() {
-  //     if (isCurrent) {
-  //       currentLocationController.text = p.fullText ?? "";
-  //     } else {
-  //       if (showSecondDrop && secondDropFocus.hasFocus) {
-  //         secondDropController.text = p.fullText ?? "";
-  //       } else {
-  //         dropLocationController.text = p.fullText ?? "";
-  //       }
-  //     }
-  //     predictions.clear();
-  //   });
-  // }
-
-//  previous code //
-// InkWell(
-                //   onTap: () => _openMap(isPickupSelection),
-
-                //   child: Container(
-                //     height: 40,
-                //     padding: const EdgeInsets.symmetric(
-                //       vertical: 8,
-                //       horizontal: 12,
-                //     ),
-                //     decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.circular(20),
-                //       border: Border.all(color: korangeColor),
-                //     ),
-                //     child: Row(
-                //       children: [
-                //         Icon(Icons.location_on, color: korangeColor, size: 18),
-                //         SizedBox(width: 3),
-                //         CustomText(
-                //           text:
-                //               isPickupSelection
-                //                   ? "Select on map"
-                //                   : "Select on map",
-                //           fontSize: 14,
-                //           fontWeight: FontWeight.w500,
-                //           textcolor: korangeColor,
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
-                // inside your InkWell for "Select on map"
-  // InkWell(
-                //   onTap: () async {
-                //     final result = await Navigator.push(
-                //       context,
-                //       MaterialPageRoute(builder: (_) => MapPickScreen()),
-                //     );
-
-                //     if (result != null) {
-                //       double latitude = result['latitude'];
-                //       double longitude = result['longitude'];
-                //       String locationName = result['locationName'];
-
-                //       currentLocationController.text = locationName;
-
-                //       final LatLng latLng = LatLng(
-                //         lat: latitude,
-                //         lng: longitude,
-                //       );
-
-                //       print("Selected Lat: ${latLng.lat}, Lng: ${latLng.lng}");
-                //     }
-                //   },
-                //   child: const CustomText(
-                //     text: "Select from map",
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.w500,
-                //     textcolor: korangeColor,
-                //     underline: true,
-                //     underlineColor: korangeColor,
-                //   ),
-                // ),
-
-                // previous code//
-  // Future<void> _onChanged(String value, bool current) async {
-  //   setState(() => isCurrent = current);
-  //   if (value.isNotEmpty) {
-  //     final result = await places.findAutocompletePredictions(value);
-  //     setState(() {
-  //       predictions = result.predictions;
-  //     });
-  //   } else {
-  //     setState(() => predictions.clear());
-  //   }
-  // }
-
-  // void _onSuggestionTap(AutocompletePrediction p) {
-  //   setState(() {
-  //     if (isCurrent) {
-  //       currentLocationController.text = p.fullText ?? "";
-  //     } else {
-  //       dropLocationController.text = p.fullText ?? "";
-  //     }
-  //     predictions.clear();
-  //   });
-  // }
-
-  // Future<void> _openMap(bool isPickup) async {
-  //   final result = await Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder:
-  //           (_) => MapPickScreen(
-  //             isPickup: isPickup,
-  //             previousLatLng:
-  //                 isPickup && pickupLat.isNotEmpty
-  //                     ? gmaps.LatLng(
-  //                       double.parse(pickupLat),
-  //                       double.parse(pickupLng),
-  //                     )
-  //                     : (!isPickup && dropLat.isNotEmpty
-  //                         ? gmaps.LatLng(
-  //                           double.parse(dropLat),
-  //                           double.parse(dropLng),
-  //                         )
-  //                         : null),
-  //             previousLocationName:
-  //                 isPickup
-  //                     ? currentLocationController.text
-  //                     : dropLocationController.text,
-  //           ),
-  //     ),
-  //   );
-
-  //   if (result != null) {
-  //     setState(() {
-  //       if (isPickup) {
-  //         // Pickup selected, store values
-  //         currentLocationController.text = result['locationName'];
-  //         pickupLat = result['latitude'].toString();
-  //         pickupLng = result['longitude'].toString();
-
-  //         // Switch to drop selection next
-  //         isPickupSelection = false;
-  //       } else {
-  //         // Drop selected, store values
-  //         dropLocationController.text = result['locationName'];
-  //         dropLat = result['latitude'].toString();
-  //         dropLng = result['longitude'].toString();
-
-  //         // Optionally, reset to pickup for new selection
-  //         isPickupSelection = true;
-  //       }
-  //     });
-  //   }
-  // }

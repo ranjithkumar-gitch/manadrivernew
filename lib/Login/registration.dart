@@ -130,7 +130,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     : CustomButton(
                       text: 'Register as User',
                       onPressed: () async {
-                        final firstName = firstnameController.text.trim();
+                        final firstName =
+                            firstnameController.text.trim()[0].toUpperCase() +
+                            firstnameController.text.trim().substring(1);
                         final lastName = lastnameController.text.trim();
                         final email = emailController.text.trim();
                         final phone = phoneController.text.trim();
@@ -161,16 +163,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return;
                         }
 
-                        if (!isValidEmail(email)) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "Please enter a valid email address",
-                              ),
-                            ),
-                          );
-                          return;
-                        }
+                        // if (!isValidEmail(email)) {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     SnackBar(
+                        //       content: Text(
+                        //         "Please enter a valid email address",
+                        //       ),
+                        //     ),
+                        //   );
+                        //   return;
+                        // }
 
                         final isValid = await isValidPhone(
                           phone,

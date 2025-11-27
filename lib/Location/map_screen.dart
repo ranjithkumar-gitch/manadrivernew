@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/Location/location.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
@@ -85,20 +87,41 @@ class _MapPickScreenState extends State<MapPickScreen> {
         context: context,
         builder:
             (context) => AlertDialog(
-              title: const Text("Enable Location Services"),
-              content: const Text(
-                "Unable to get your current location. Please turn on location services and try again.",
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
+              content: Text(
+                "Unable to get your current location. Please turn on location services and try again.",
+                style: GoogleFonts.poppins(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              title: Center(
+                child: Text(
+                  "Enable Location Services",
+                  style: GoogleFonts.poppins(
+                    color: korangeColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+
               actions: [
                 TextButton(
-                  onPressed:
-                      () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LocationSelectionScreen(),
-                        ),
-                      ),
-                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'OK',
+                    style: GoogleFonts.poppins(
+                      color: korangeColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ],
             ),

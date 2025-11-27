@@ -172,9 +172,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ).showSnackBar(const SnackBar(content: Text('User not found')));
         return;
       }
-
+      final firstName =
+          firstnameController.text.trim()[0].toUpperCase() +
+          firstnameController.text.trim().substring(1);
+      print(firstName);
       final Map<String, dynamic> updateData = {
-        'firstName': firstnameController.text.trim(),
+        'firstName': firstName,
         'lastName': lastnameController.text.trim(),
         'email': emailController.text.trim(),
       };
@@ -197,13 +200,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           .set(updateData, SetOptions(merge: true));
 
       vm.updateUser({
-        'firstName': firstnameController.text.trim(),
+        'firstName': firstName,
         'lastName': lastnameController.text.trim(),
         'email': emailController.text.trim(),
         'phone': phoneController.text.trim(),
-        if (image != null)
-          'profilePic':
-              SharedPrefServices.getProfileImage(), 
+        if (image != null) 'profilePic': SharedPrefServices.getProfileImage(),
       });
 
       ScaffoldMessenger.of(context).showSnackBar(

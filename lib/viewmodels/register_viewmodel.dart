@@ -37,7 +37,7 @@ class RegisterViewModel extends ChangeNotifier {
     try {
       if (fisrtName.trim().isEmpty) throw Exception('First name required');
       if (lastName.trim().isEmpty) throw Exception('Last name required');
-      if (email.trim().isEmpty) throw Exception('Email required');
+      // if (email.trim().isEmpty) throw Exception('Email required');
       if (phone.trim().isEmpty) throw Exception('Phone required');
 
       // final snapshot =

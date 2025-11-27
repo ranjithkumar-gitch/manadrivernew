@@ -114,6 +114,88 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     }
   }
 
+  // void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+  //   try {
+  //     debugPrint('Payment Successful: ${response.paymentId}');
+
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Payment Successful: ${response.paymentId}")),
+  //     );
+  //     String rideStatus = widget.bookingData['status'] ?? "Unknown";
+
+  //     double amount;
+
+  //     if (rideStatus == "Completed") {
+  //       amount = double.tryParse(widget.bookingData['fare'].toString()) ?? 0.0;
+  //     } else {
+  //       amount = 39.0;
+  //     }
+
+  //     String historyStatus =
+  //         (rideStatus == "Completed") ? "Completed" : "Cancelled";
+  //     // double amount = double.tryParse(data['fare'].toString()) ?? 0.0;
+
+  //     final transactionData = {
+  //       'transactionId': response.paymentId,
+  //       'bookingDocId': widget.bookingData['bookingId'] ?? 'Unknown',
+  //       'amount': amount,
+  //       'status': 'Success',
+  //       'paymentMethod': 'Razorpay',
+  //       'timestamp': FieldValue.serverTimestamp(),
+  //     };
+
+  //     await FirebaseFirestore.instance
+  //         .collection('transactions')
+  //         .add(transactionData);
+
+  //     debugPrint("Transaction saved in Firestore: $transactionData");
+
+  //     final bookingId = widget.bookingData['bookingId'];
+  //     if (bookingId != null && bookingId.toString().isNotEmpty) {
+  //       await FirebaseFirestore.instance
+  //           .collection('bookings')
+  //           .doc(bookingId)
+  //           .update({
+  //             'paymentStatus': 'Success',
+
+  //             'status': (rideStatus == "Completed" ? "Completed" : "Cancelled"),
+
+  //             'statusHistory': FieldValue.arrayUnion([
+  //               {
+  //                 "status": historyStatus,
+  //                 "dateTime": DateTime.now().toIso8601String(),
+  //               },
+  //             ]),
+  //           });
+
+  //       debugPrint(" Booking $bookingId paymentStatus updated to 'Success'");
+  //     } else {
+  //       debugPrint(" Booking ID missing — paymentStatus not updated");
+  //     }
+
+  //     if (mounted) {
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => const PaymentGateway()),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     debugPrint("Error saving transaction: $e");
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Error saving transaction details")),
+  //     );
+
+  //     final bookingId = widget.bookingData['bookingId'];
+  //     if (bookingId != null && bookingId.toString().isNotEmpty) {
+  //       await FirebaseFirestore.instance
+  //           .collection('bookings')
+  //           .doc(bookingId)
+  //           .update({'paymentStatus': 'Failure'});
+
+  //       debugPrint(" Booking $bookingId paymentStatus updated to 'Failure'");
+  //     }
+  //   }
+  // }
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     try {
       debugPrint('Payment Successful: ${response.paymentId}');
@@ -121,56 +203,74 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Payment Successful: ${response.paymentId}")),
       );
-      String rideStatus = widget.bookingData['status'] ?? "Unknown";
+
+      final bookingId = widget.bookingData['bookingId'];
+
+      // ******** FIX: get live status ********
+      final liveSnap =
+          await FirebaseFirestore.instance
+              .collection('bookings')
+              .doc(bookingId)
+              .get();
+
+      String rideStatus = liveSnap['status'] ?? "Unknown";
+      debugPrint("LIVE STATUS at payment time = $rideStatus");
 
       double amount;
+      bool isCancelPayment = false;
 
       if (rideStatus == "Completed") {
+        // REAL ride payment
         amount = double.tryParse(widget.bookingData['fare'].toString()) ?? 0.0;
       } else {
-        amount = 39.0;
+        // CANCEL payment
+        isCancelPayment = true;
+        amount = 59.0;
       }
-
-      String historyStatus =
-          (rideStatus == "Completed") ? "Completed" : "Cancelled";
-      // double amount = double.tryParse(data['fare'].toString()) ?? 0.0;
 
       final transactionData = {
         'transactionId': response.paymentId,
-        'bookingDocId': widget.bookingData['bookingId'] ?? 'Unknown',
+        'bookingDocId': bookingId,
         'amount': amount,
         'status': 'Success',
         'paymentMethod': 'Razorpay',
         'timestamp': FieldValue.serverTimestamp(),
+        'type': isCancelPayment ? 'Cancel Payment' : 'Ride Payment',
       };
 
       await FirebaseFirestore.instance
           .collection('transactions')
           .add(transactionData);
 
-      debugPrint("Transaction saved in Firestore: $transactionData");
-
-      final bookingId = widget.bookingData['bookingId'];
       if (bookingId != null && bookingId.toString().isNotEmpty) {
-        await FirebaseFirestore.instance
-            .collection('bookings')
-            .doc(bookingId)
-            .update({
-              'paymentStatus': 'Success',
-
-              'status': (rideStatus == "Completed" ? "Completed" : "Cancelled"),
-
-              'statusHistory': FieldValue.arrayUnion([
-                {
-                  "status": historyStatus,
-                  "dateTime": DateTime.now().toIso8601String(),
-                },
-              ]),
-            });
-
-        debugPrint(" Booking $bookingId paymentStatus updated to 'Success'");
-      } else {
-        debugPrint(" Booking ID missing — paymentStatus not updated");
+        if (isCancelPayment) {
+          await FirebaseFirestore.instance
+              .collection('bookings')
+              .doc(bookingId)
+              .update({
+                'paymentStatus': 'Success',
+                'status': 'Cancelled',
+                'statusHistory': FieldValue.arrayUnion([
+                  {
+                    "status": "Cancelled",
+                    "dateTime": DateTime.now().toIso8601String(),
+                  },
+                ]),
+              });
+        } else {
+          await FirebaseFirestore.instance
+              .collection('bookings')
+              .doc(bookingId)
+              .update({
+                'paymentStatus': 'Success',
+                // 'statusHistory': FieldValue.arrayUnion([
+                //   {
+                //     "status": "Payment Successful",
+                //     "dateTime": DateTime.now().toIso8601String(),
+                //   },
+                // ]),
+              });
+        }
       }
 
       if (mounted) {
@@ -181,19 +281,6 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
       }
     } catch (e) {
       debugPrint("Error saving transaction: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error saving transaction details")),
-      );
-
-      final bookingId = widget.bookingData['bookingId'];
-      if (bookingId != null && bookingId.toString().isNotEmpty) {
-        await FirebaseFirestore.instance
-            .collection('bookings')
-            .doc(bookingId)
-            .update({'paymentStatus': 'Failure'});
-
-        debugPrint(" Booking $bookingId paymentStatus updated to 'Failure'");
-      }
     }
   }
 

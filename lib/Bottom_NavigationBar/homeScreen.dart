@@ -591,7 +591,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: Center(
                                               child: ClipRRect(
                                                 borderRadius:
-                                                    BorderRadius.circular(12),
+                                                    BorderRadius.circular(14),
                                                 child:
                                                     (car['images'] != null &&
                                                             car['images']
@@ -601,7 +601,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         ? Image.network(
                                                           car['images'][0],
                                                           fit: BoxFit.cover,
-                                                          width: 130,
+                                                          width: 90,
+                                                          height: 86,
                                                           errorBuilder:
                                                               (
                                                                 context,
@@ -639,7 +640,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       car['transmission'],
                                                     ),
                                                     _infoChip(car['fuelType']),
-                                                    _infoChip(car['category']),
+                                                    // _infoChip(car['category']),
                                                   ],
                                                 ),
                                                 const SizedBox(height: 5),
@@ -647,13 +648,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ],
                                             ),
                                           ),
-                                          const Align(
-                                            alignment: Alignment.center,
-                                            child: Icon(
-                                              Icons.arrow_forward_ios,
-                                              size: 18,
-                                            ),
-                                          ),
+                                          // const Align(
+                                          //   alignment: Alignment.center,
+                                          //   child: Icon(
+                                          //     Icons.arrow_forward_ios,
+                                          //     size: 18,
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                     ),
@@ -773,12 +774,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ],
-                    SizedBox(height: 20),
+                    SizedBox(height: 15),
                   ],
                 ),
               ),
 
-              SizedBox(height: 20),
+              SizedBox(height: 15),
               Divider(height: 4, color: KdeviderColor, thickness: 5),
               SizedBox(height: 20),
               Container(

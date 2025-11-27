@@ -193,7 +193,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                                 Row(
                                   children: [
                                     driverRating == 0
-                                        ? const SizedBox() // ⭐ No stars shown
+                                        ? const SizedBox()
                                         : Row(
                                           children: List.generate(5, (index) {
                                             double rating =
