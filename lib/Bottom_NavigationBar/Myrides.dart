@@ -192,36 +192,39 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                                 ),
                                 Row(
                                   children: [
-                                    Row(
-                                      children: List.generate(5, (index) {
-                                        double rating =
-                                            double.tryParse(
-                                              driverRating.toString(),
-                                            ) ??
-                                            0.0;
+                                    driverRating == 0
+                                        ? const SizedBox() // ⭐ No stars shown
+                                        : Row(
+                                          children: List.generate(5, (index) {
+                                            double rating =
+                                                double.tryParse(
+                                                  driverRating.toString(),
+                                                ) ??
+                                                0.0;
 
-                                        if (index < rating.floor()) {
-                                          return const Icon(
-                                            Icons.star_rounded,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          );
-                                        } else if (index == rating.floor() &&
-                                            rating % 1 != 0) {
-                                          return const Icon(
-                                            Icons.star_half_rounded,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          );
-                                        } else {
-                                          return const Icon(
-                                            Icons.star_border_rounded,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          );
-                                        }
-                                      }),
-                                    ),
+                                            if (index < rating.floor()) {
+                                              return const Icon(
+                                                Icons.star_rounded,
+                                                color: Colors.orange,
+                                                size: 15,
+                                              );
+                                            } else if (index ==
+                                                    rating.floor() &&
+                                                rating % 1 != 0) {
+                                              return const Icon(
+                                                Icons.star_half_rounded,
+                                                color: Colors.orange,
+                                                size: 15,
+                                              );
+                                            } else {
+                                              return const Icon(
+                                                Icons.star_border_rounded,
+                                                color: Colors.orange,
+                                                size: 15,
+                                              );
+                                            }
+                                          }),
+                                        ),
 
                                     const SizedBox(width: 4),
 

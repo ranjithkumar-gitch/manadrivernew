@@ -796,18 +796,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.bold,
                           textcolor: KblackColor,
                         ),
-                        // Text(
-                        //   localizations.home_viewoffers,
-                        //   style: GoogleFonts.poppins(
-                        //     fontSize: 12,
-                        //     fontWeight: FontWeight.w400,
-                        //     color: korangeColor,
-                        //     decoration: TextDecoration.underline,
-                        //     decorationColor: korangeColor,
-                        //     decorationStyle: TextDecorationStyle.solid,
-                        //     decorationThickness: 1.5,
-                        //   ),
-                        // ),
                       ],
                     ),
                     SizedBox(height: 10),
@@ -2033,13 +2021,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   .toString(),
                                           'driverId': '',
                                           'driverdocId': '',
+                                          'driverName': '',
                                           "distance":
                                               selectedTripMode == "Round Trip"
                                                   ? "${(double.tryParse(distance.replaceAll('km', '').trim()) ?? 0.0) * 2} km"
                                                   : distance,
 
                                           "duration": convertMinutes(time),
-                                          "ownerOTP": "",
+                                          "ownerOTP": '',
+
                                           "pickup": pickupController.text,
                                           "drop": dropController.text,
                                           "drop2":
