@@ -92,6 +92,8 @@ class _MenuScreenState extends State<MenuScreen> {
             MaterialPageRoute(builder: (_) => const ProfileScreen()),
           ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircleAvatar(
             radius: 35,
@@ -118,7 +120,14 @@ class _MenuScreenState extends State<MenuScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  SharedPrefServices.getEmail().toString().isEmpty
+                      ? CrossAxisAlignment.start
+                      : CrossAxisAlignment.start,
+              mainAxisAlignment:
+                  SharedPrefServices.getEmail().toString().isEmpty
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.start,
               children: [
                 CustomText(
                   text:
@@ -127,16 +136,20 @@ class _MenuScreenState extends State<MenuScreen> {
                   fontWeight: FontWeight.w600,
                   textcolor: korangeColor,
                 ),
-                SizedBox(height: 4),
-                CustomText(
-                  text: maskEmail(SharedPrefServices.getEmail().toString()),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w300,
-                  textcolor: kseegreyColor,
-                ),
+
+                if (SharedPrefServices.getEmail().toString().isNotEmpty) ...[
+                  SizedBox(height: 4),
+                  CustomText(
+                    text: maskEmail(SharedPrefServices.getEmail().toString()),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w300,
+                    textcolor: kseegreyColor,
+                  ),
+                ],
               ],
             ),
           ),
+
           Image.asset("images/chevronRight.png", width: 20),
         ],
       ),

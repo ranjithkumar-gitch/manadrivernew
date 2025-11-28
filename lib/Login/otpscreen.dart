@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
+import 'package:mana_driver/Login/loginScreen.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/viewmodels/register_viewmodel.dart';
 import 'package:pinput/pinput.dart';
@@ -87,10 +88,52 @@ class _OtpScreenState extends State<OtpScreen> {
         await SharedPrefServices.setislogged(true);
 
         // final role = await SharedPrefServices.getRoleCode();
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              content: Text(
+                "Please login to continue",
+                style: GoogleFonts.poppins(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              title: Center(
+                child: Text(
+                  "Registration Successful",
+                  style: GoogleFonts.poppins(
+                    color: korangeColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => BottomNavigation()),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => LoginScreen()),
+                    );
+                  },
+                  child: Text(
+                    'OK',
+                    style: GoogleFonts.poppins(
+                      color: korangeColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
