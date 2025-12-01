@@ -7,6 +7,7 @@ import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/Location/location.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MapPickScreen extends StatefulWidget {
   final bool isPickup;
@@ -112,10 +113,29 @@ class _MapPickScreenState extends State<MapPickScreen> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    openAppSettings();
                   },
                   child: Text(
-                    'OK',
+                    'Open Settings',
+                    style: GoogleFonts.poppins(
+                      color: korangeColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BottomNavigation(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'Cancel',
                     style: GoogleFonts.poppins(
                       color: korangeColor,
                       fontSize: 14,

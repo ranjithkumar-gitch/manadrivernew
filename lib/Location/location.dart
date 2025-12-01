@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:mana_driver/Location/map_screen.dart';
 import 'package:mana_driver/Widgets/colors.dart';
@@ -486,7 +487,52 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                 InkWell(
                   onTap: () {
                     bool isPickup = currentFocus.hasFocus;
+                    bool isDrop = dropFocus.hasFocus;
                     bool isSecondDrop = secondDropFocus.hasFocus;
+                    if (!isPickup && !isDrop && !isSecondDrop) {
+                      showDialog(
+                        context: context,
+                        builder:
+                            (context) => AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              content: Text(
+                                "Please select Pickup or Drop location.",
+                                style: GoogleFonts.poppins(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              title: Center(
+                                child: Text(
+                                  "Choose Location Type",
+                                  style: GoogleFonts.poppins(
+                                    color: korangeColor,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text(
+                                    "Ok",
+                                    style: GoogleFonts.poppins(
+                                      color: korangeColor,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                      );
+                      return;
+                    }
 
                     _openMap(isPickup: isPickup, isSecondDrop: isSecondDrop);
                   },
@@ -593,7 +639,6 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
             const Divider(),
             Expanded(
               child:
-                   
                   predictions.isNotEmpty
                       ? ListView.builder(
                         itemCount: predictions.length,
