@@ -140,7 +140,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuCancelPolicy => 'Cancellation policy';
 
   @override
-  String get menuAbtMD => 'About Mana Driver';
+  String get menuAbtMD => 'About Rydyn';
 
   @override
   String get menuDeleteAccount => 'Delete Account';

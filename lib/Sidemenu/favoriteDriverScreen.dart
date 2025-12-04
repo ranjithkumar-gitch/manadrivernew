@@ -25,12 +25,18 @@ class FavouriteDriversScreen extends StatelessWidget {
             children: [
               Align(
                 alignment: Alignment.centerLeft,
-                child: InkWell(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () => Navigator.pop(context),
-                  child: Image.asset(
-                    "images/chevronLeft.png",
-                    width: 24,
-                    height: 24,
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    alignment: Alignment.centerLeft,
+                    child: Image.asset(
+                      "images/chevronLeft.png",
+                      width: 24,
+                      height: 24,
+                    ),
                   ),
                 ),
               ),
@@ -47,7 +53,7 @@ class FavouriteDriversScreen extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
         child: Center(
           child: CustomText(
             text: localizations.fav_dummy_text,

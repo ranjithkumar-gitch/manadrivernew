@@ -137,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _startOfferAutoScroll() {
-    _offerAutoScrollTimer = Timer.periodic(Duration(seconds: 4), (timer) {
+    _offerAutoScrollTimer = Timer.periodic(Duration(seconds: 7), (timer) {
       if (_offerPageController.hasClients) {
         if (_offerCurrentPage < offerImages.length - 1) {
           _offerCurrentPage++;
@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         _offerPageController.animateToPage(
           _offerCurrentPage,
-          duration: Duration(milliseconds: 500),
+          duration: Duration(milliseconds: 1000),
           curve: Curves.easeInOut,
         );
       }

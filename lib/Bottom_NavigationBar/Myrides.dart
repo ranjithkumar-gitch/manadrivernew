@@ -84,6 +84,12 @@ class _MyRidesScreenState extends State<MyRidesScreen>
     String driverRating = "N/A";
     // String price = bookingData['fare'] ?? "";
     double price = double.parse(bookingData['fare']?.toString() ?? '0.00');
+
+    String convertDate(String date) {
+      List<String> parts = date.split("-");
+      return "${parts[2]}-${parts[1]}-${parts[0]}";
+    }
+
     return FutureBuilder<DocumentSnapshot?>(
       future:
           vehicleId.isNotEmpty
@@ -126,6 +132,9 @@ class _MyRidesScreenState extends State<MyRidesScreen>
               profileUrl = driverData['profileUrl'] ?? "";
 
               driverRating = driverData['averageRating']?.toString() ?? "N/A";
+              double avg = (driverData['averageRating'] ?? 0).toDouble();
+              double finalRating = (avg * 2).round() / 2;
+              driverRating = finalRating.toString();
             }
 
             return GestureDetector(
@@ -278,7 +287,10 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                         children: [
                           Image.asset('images/calender.png'),
                           const SizedBox(width: 5),
-                          Text(date, style: TextStyle(color: kseegreyColor)),
+                          Text(
+                            convertDate(date),
+                            style: TextStyle(color: kseegreyColor),
+                          ),
                           const SizedBox(width: 12),
                           Container(height: 20, width: 1, color: kseegreyColor),
                           const SizedBox(width: 12),

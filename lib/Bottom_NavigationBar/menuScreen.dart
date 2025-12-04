@@ -47,7 +47,7 @@ class _MenuScreenState extends State<MenuScreen> {
     {'image': 'images/info.png', 'title': 'Terms & Conditions'},
     {'image': 'images/support.png', 'title': 'Help & Support'},
     {'image': 'images/policy.png', 'title': 'Cancellation policy'},
-    {'image': 'images/aboutMD.png', 'title': 'About Mana Driver'},
+    {'image': 'images/aboutMD.png', 'title': 'About Rydyn'},
     {'image': 'images/delete_acnt.png', 'title': 'Delete Account'},
     {'image': 'images/logout.png', 'title': 'Logout'},
   ];
@@ -779,14 +779,13 @@ class _MenuScreenState extends State<MenuScreen> {
                         value: selectedLanguage,
                         items: [
                           DropdownMenuItem(
+                            value: 'Select Language',
+                            enabled: false,
+                            child: Text('Select Language'),
+                          ),
+                          DropdownMenuItem(
                             value: 'English',
-                            child: Text(
-                              'English',
-                              style: GoogleFonts.poppins(
-                                color: KblackColor,
-                                fontSize: 14,
-                              ),
-                            ),
+                            child: Text('English'),
                           ),
                           DropdownMenuItem(
                             value: 'Telugu',
@@ -798,12 +797,20 @@ class _MenuScreenState extends State<MenuScreen> {
                           ),
                         ],
                         onChanged: (newValue) {
-                          if (newValue == null) return;
+                          if (newValue == null || newValue == "Select Language")
+                            return;
 
                           setStateSB(() {
                             selectedLanguage = newValue;
                           });
                         },
+                        // onChanged: (newValue) {
+                        //   if (newValue == null) return;
+
+                        //   setStateSB(() {
+                        //     selectedLanguage = newValue;
+                        //   });
+                        // },
                         dropdownStyleData: DropdownStyleData(
                           direction: DropdownDirection.textDirection,
                           offset: const Offset(0, -5),

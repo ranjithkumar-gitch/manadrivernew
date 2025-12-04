@@ -28,16 +28,34 @@ class ReferFriendScreen extends StatelessWidget {
             children: [
               Align(
                 alignment: Alignment.centerLeft,
-                child: InkWell(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () => Navigator.pop(context),
-                  child: Image.asset(
-                    "images/chevronLeft.png",
-                    width: 24,
-                    height: 24,
-                    color: kwhiteColor,
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    alignment: Alignment.centerLeft,
+                    child: Image.asset(
+                      "images/chevronLeft.png",
+                      width: 24,
+                      height: 24,
+                      color: kwhiteColor,
+                    ),
                   ),
                 ),
               ),
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: InkWell(
+              //     onTap: () => Navigator.pop(context),
+              //     child: Image.asset(
+              //       "images/chevronLeft.png",
+              //       width: 24,
+              //       height: 24,
+              //       color: kwhiteColor,
+              //     ),
+              //   ),
+              // ),
               Center(
                 child: CustomText(
                   text: localizations.menuReferaFriend,

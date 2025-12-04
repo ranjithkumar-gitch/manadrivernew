@@ -538,15 +538,33 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
             children: [
               Align(
                 alignment: Alignment.centerLeft,
-                child: InkWell(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () => Navigator.pop(context),
-                  child: Image.asset(
-                    "images/chevronLeft.png",
-                    width: 24,
-                    height: 24,
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    alignment: Alignment.centerLeft,
+                    child: Image.asset(
+                      "images/chevronLeft.png",
+                      width: 24,
+                      height: 24,
+                    ),
                   ),
                 ),
               ),
+
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: InkWell(
+              //     onTap: () => Navigator.pop(context),
+              //     child: Image.asset(
+              //       "images/chevronLeft.png",
+              //       width: 24,
+              //       height: 24,
+              //     ),
+              //   ),
+              // ),
               Center(
                 child: CustomText(
                   text: appBarTitle,
@@ -610,6 +628,11 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
               liveData['convenienceFee']?.toString() ?? '0.00';
           String duration = liveData['duration'] ?? '';
           String totalPrice = liveData['fare']?.toString() ?? '0.00';
+          String convertDate(String date) {
+            List<String> parts = date.split("-");
+            return "${parts[2]}-${parts[1]}-${parts[0]}";
+          }
+
           return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1545,7 +1568,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                         ),
                                         const SizedBox(width: 8),
                                         CustomText(
-                                          text: date,
+                                          text: convertDate(date),
                                           fontSize: 14,
                                           fontWeight: FontWeight.w400,
                                           textcolor: KblackColor,
@@ -1592,7 +1615,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                           ),
                                           const SizedBox(width: 8),
                                           CustomText(
-                                            text: arrivalDate,
+                                            text: convertDate(arrivalDate),
                                             fontSize: 14,
                                             fontWeight: FontWeight.w400,
                                             textcolor: KblackColor,
