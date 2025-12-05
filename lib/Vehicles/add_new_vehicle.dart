@@ -587,78 +587,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                 ),
 
                 const SizedBox(height: 10),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: List.generate(
-                //     4,
-                //     (index) => Padding(
-                //       padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                //       child: GestureDetector(
-                //         onTap: () => _pickImage(index),
-                //         child: DottedBorder(
-                //           options: RoundedRectDottedBorderOptions(
-                //             radius: const Radius.circular(10),
-                //             dashPattern: [5, 5],
-                //             color: kgreyColor,
-                //             strokeWidth: 2,
-                //             padding: const EdgeInsets.all(0),
-                //           ),
-                //           child: Container(
-                //             width: 70,
-                //             height: 60,
-                //             decoration: BoxDecoration(
-                //               borderRadius: BorderRadius.circular(10),
-                //               color: KdeviderColor,
-                //             ),
-                //             child:
-                //                 images[index] == null
-                //                     ? const Icon(Icons.add, color: kgreyColor)
-                //                     : Stack(
-                //                       clipBehavior: Clip.none,
-                //                       children: [
-                //                         ClipRRect(
-                //                           borderRadius: BorderRadius.circular(
-                //                             10,
-                //                           ),
-                //                           child: Image.file(
-                //                             images[index]!,
-                //                             width: 70,
-                //                             height: 60,
-                //                             fit: BoxFit.cover,
-                //                           ),
-                //                         ),
-
-                //                         Positioned(
-                //                           top: -5,
-                //                           right: 0,
-                //                           child: GestureDetector(
-                //                             onTap: () {
-                //                               setState(() {
-                //                                 images[index] = null;
-                //                               });
-                //                             },
-                //                             child: Container(
-                //                               decoration: BoxDecoration(
-                //                                 color: korangeColor,
-                //                                 shape: BoxShape.circle,
-                //                               ),
-                //                               padding: const EdgeInsets.all(2),
-                //                               child: const Icon(
-                //                                 Icons.delete,
-                //                                 size: 14,
-                //                                 color: Colors.white,
-                //                               ),
-                //                             ),
-                //                           ),
-                //                         ),
-                //                       ],
-                //                     ),
-                //           ),
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
+                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
@@ -734,28 +663,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                   ),
                 ),
 
-                // const SizedBox(height: 25),
-                // buildDropdownField(
-                //   label: "Vehicle Brand",
-                //   hint: "Select Brand",
-                //   items:
-                //       vehicleData
-                //           .map((e) => e['brand'] as String)
-                //           .toSet()
-                //           .toList(),
-                //   value: selectedBrand,
-                //   onChanged: (value) {
-                //     setState(() {
-                //       selectedBrand = value;
-                //       selectedModel = null;
-                //       availableModels =
-                //           vehicleData
-                //               .where((e) => e['brand'] == value)
-                //               .map((e) => e['model'] as String)
-                //               .toList();
-                //     });
-                //   },
-                // ),
+               
                 const SizedBox(height: 25),
                 buildDropdownField(
                   label: "Vehicle Brand",

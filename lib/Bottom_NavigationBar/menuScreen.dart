@@ -779,11 +779,6 @@ class _MenuScreenState extends State<MenuScreen> {
                         value: selectedLanguage,
                         items: [
                           DropdownMenuItem(
-                            value: 'Select Language',
-                            enabled: false,
-                            child: Text('Select Language'),
-                          ),
-                          DropdownMenuItem(
                             value: 'English',
                             child: Text('English'),
                           ),
@@ -796,21 +791,14 @@ class _MenuScreenState extends State<MenuScreen> {
                             child: Text('हिन्दी'),
                           ),
                         ],
+
                         onChanged: (newValue) {
-                          if (newValue == null || newValue == "Select Language")
-                            return;
+                          if (newValue == null) return;
 
                           setStateSB(() {
                             selectedLanguage = newValue;
                           });
                         },
-                        // onChanged: (newValue) {
-                        //   if (newValue == null) return;
-
-                        //   setStateSB(() {
-                        //     selectedLanguage = newValue;
-                        //   });
-                        // },
                         dropdownStyleData: DropdownStyleData(
                           direction: DropdownDirection.textDirection,
                           offset: const Offset(0, -5),

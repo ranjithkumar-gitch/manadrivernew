@@ -59,11 +59,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                             value: selectedLanguage,
                             items: [
                               DropdownMenuItem(
-                                value: 'Select Language',
-                                enabled: false,
-                                child: Text('Select Language'),
-                              ),
-                              DropdownMenuItem(
                                 value: 'English',
                                 child: Text('English'),
                               ),
@@ -76,14 +71,13 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                                 child: Text('हिन्दी'),
                               ),
                             ],
-                            onChanged: (newValue) {
-                              if (newValue == null ||
-                                  newValue == "Select Language")
-                                return;
 
+                            onChanged: (newValue) {
+                              if (newValue == null) return;
                               setState(() {
                                 selectedLanguage = newValue;
                               });
+
                               final localeProvider =
                                   Provider.of<LocaleProvider>(
                                     context,
@@ -98,27 +92,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                                 localeProvider.setLocale(const Locale('te'));
                               }
                             },
-
-                            // onChanged: (newValue) {
-                            //   if (newValue == null) return;
-                            //   setState(() {
-                            //     selectedLanguage = newValue;
-                            //   });
-
-                            //   final localeProvider =
-                            //       Provider.of<LocaleProvider>(
-                            //         context,
-                            //         listen: false,
-                            //       );
-
-                            //   if (newValue == 'English') {
-                            //     localeProvider.setLocale(const Locale('en'));
-                            //   } else if (newValue == 'Hindi') {
-                            //     localeProvider.setLocale(const Locale('hi'));
-                            //   } else if (newValue == 'Telugu') {
-                            //     localeProvider.setLocale(const Locale('te'));
-                            //   }
-                            // },
                             dropdownStyleData: DropdownStyleData(
                               direction: DropdownDirection.textDirection,
                               offset: const Offset(0, -5),

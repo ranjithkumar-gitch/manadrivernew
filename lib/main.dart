@@ -20,7 +20,7 @@ void main() async {
   await Geolocator.requestPermission();
   await Geolocator.isLocationServiceEnabled();
 
-  runApp(const MyApp());      
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

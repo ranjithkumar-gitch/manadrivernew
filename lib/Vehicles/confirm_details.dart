@@ -2125,19 +2125,23 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                     },
                   ),
                 ],
-                const SizedBox(height: 15),
-                _buildCard(
-                  context,
-                  imagePath: 'images/cancel_image.png',
-                  text: 'Cancellation policy',
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const CancellationPolicyScreen(),
-                      ),
-                    );
-                  },
-                ),
+                if (rideStatus == 'New' || rideStatus == 'Accepted') ...[
+                  const SizedBox(height: 15),
+                  _buildCard(
+                    context,
+                    imagePath: 'images/cancel_image.png',
+                    text: 'Cancellation policy',
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder:
+                              (context) => const CancellationPolicyScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+
                 const SizedBox(height: 130),
               ],
             ),

@@ -20,7 +20,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 5, vsync: this);
+    _tabController = TabController(length: 6, vsync: this);
     _tabController.addListener(() {
       setState(() {
         selectedTabIndex = _tabController.index;
@@ -341,8 +341,9 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                   buildTab("All", 0),
                   buildTab("New", 1),
                   buildTab("Accepted", 2),
-                  buildTab("Completed", 3),
-                  buildTab("Cancelled", 4),
+                  buildTab("Ongoing", 3),
+                  buildTab("Completed", 4),
+                  buildTab("Cancelled", 5),
                 ],
               ),
             ),
@@ -375,18 +376,19 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                 } else if (selectedTabIndex == 2) {
                   filteredBookings =
                       allBookings
-                          .where(
-                            (b) =>
-                                b['status'] != 'Completed' &&
-                                b['status'] != 'New',
-                          )
+                          .where((b) => b['status'] == 'Accepted')
                           .toList();
                 } else if (selectedTabIndex == 3) {
                   filteredBookings =
                       allBookings
-                          .where((b) => b['status'] == 'Completed')
+                          .where((b) => b['status'] == 'Ongoing')
                           .toList();
                 } else if (selectedTabIndex == 4) {
+                  filteredBookings =
+                      allBookings
+                          .where((b) => b['status'] == 'Completed')
+                          .toList();
+                } else if (selectedTabIndex == 5) {
                   filteredBookings =
                       allBookings
                           .where((b) => b['status'] == 'Cancelled')
