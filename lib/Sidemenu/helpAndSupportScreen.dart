@@ -3,16 +3,21 @@ import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 
 import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class HelpAndSupport extends StatelessWidget {
+class HelpAndSupport extends StatefulWidget {
+  @override
+  State<HelpAndSupport> createState() => _HelpAndSupportState();
+}
+
+class _HelpAndSupportState extends State<HelpAndSupport> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: Colors.transparent, // Important!
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          // Gradient background
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -141,12 +146,18 @@ class HelpAndSupport extends StatelessWidget {
                               "images/phone.png",
                               localizations.hS_t3,
                               "+91 9000052798",
+                              onTap: () {
+                                _callNumber("+91 9000052798");
+                              },
                             ),
                             SizedBox(height: 12),
                             contactCard(
                               "images/sendemail.png",
                               localizations.hS_t4,
                               "help@manadriver.com",
+                              onTap: () {
+                                _sendEmail("help@manadriver.com");
+                              },
                             ),
                           ],
                         ),
@@ -162,46 +173,104 @@ class HelpAndSupport extends StatelessWidget {
     );
   }
 
-  Widget contactCard(String imagePath, String title, String subtitle) {
-    return Container(
-      decoration: BoxDecoration(
-        color: KcontactcardColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: EdgeInsets.all(12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: KcontactimagecontainerColor,
-              borderRadius: BorderRadius.circular(12),
+  void _callNumber(String phone) async {
+    phone = phone.replaceAll("+91", "").trim();
+
+    if (phone.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Phone number not available.")),
+      );
+      return;
+    }
+
+    if (phone.length != 10) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Invalid phone number.")));
+      return;
+    }
+
+    final Uri callUri = Uri(scheme: 'tel', path: phone);
+
+    if (await canLaunchUrl(callUri)) {
+      await launchUrl(callUri);
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Unable to open dialer.")));
+    }
+  }
+
+  void _sendEmail(String email) async {
+    if (email.isEmpty || !email.contains("@")) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Invalid email address."),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
+    final Uri mailUri = Uri(scheme: 'mailto', path: email);
+
+    if (await canLaunchUrl(mailUri)) {
+      await launchUrl(mailUri);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Unable to open email app.")),
+      );
+    }
+  }
+
+  Widget contactCard(
+    String imagePath,
+    String title,
+    String subtitle, {
+    VoidCallback? onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: KcontactcardColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: EdgeInsets.all(12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: KcontactimagecontainerColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: EdgeInsets.all(4),
+              child: Image.asset(imagePath, width: 48, height: 48),
             ),
-            padding: EdgeInsets.all(4),
-            child: Image.asset(imagePath, width: 48, height: 48),
-          ),
-          SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomText(
-                  text: title,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  textcolor: KcontacttextColor,
-                ),
-                SizedBox(height: 4),
-                CustomText(
-                  text: subtitle,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  textcolor: korangeColor,
-                ),
-              ],
+            SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomText(
+                    text: title,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    textcolor: KcontacttextColor,
+                  ),
+                  SizedBox(height: 4),
+                  CustomText(
+                    text: subtitle,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    textcolor: korangeColor,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

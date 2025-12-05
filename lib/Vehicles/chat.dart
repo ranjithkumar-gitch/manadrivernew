@@ -60,7 +60,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   Timer? _typingTimer;
 
   File? selectedImage;
-
+  bool isImageUploading = false;
   @override
   void initState() {
     super.initState();
@@ -202,6 +202,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
     setState(() {
       selectedImage = File(pickedFile.path);
+      isImageUploading = false;
     });
   }
 
@@ -229,6 +230,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     // 🔹 Upload image if selected
 
     if (selectedImage != null) {
+      setState(() => isImageUploading = true);
       final fileName =
           'chat_images/${DateTime.now().millisecondsSinceEpoch}.jpg';
 
@@ -259,7 +261,10 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
     messageController.clear();
 
-    setState(() => selectedImage = null);
+    setState(() {
+      selectedImage = null;
+      isImageUploading = false;
+    });
   }
 
   Future<void> _markAsSeen(DocumentSnapshot doc) async {
@@ -505,40 +510,84 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             ),
           ),
 
-          // 🔹 Image Preview (before sending)
+          // if (selectedImage != null)
+          //   Container(
+          //     margin: const EdgeInsets.only(bottom: 8),
+
+          //     child: Stack(
+          //       children: [
+          //         ClipRRect(
+          //           borderRadius: BorderRadius.circular(10),
+
+          //           child: Image.file(
+          //             selectedImage!,
+
+          //             width: 120,
+
+          //             height: 120,
+
+          //             fit: BoxFit.cover,
+          //           ),
+          //         ),
+
+          //         Positioned(
+          //           top: 4,
+
+          //           right: 4,
+
+          //           child: GestureDetector(
+          //             onTap: () => setState(() => selectedImage = null),
+
+          //             child: const CircleAvatar(
+          //               radius: 12,
+
+          //               backgroundColor: Colors.black54,
+
+          //               child: Icon(Icons.close, color: Colors.white, size: 14),
+          //             ),
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
           if (selectedImage != null)
             Container(
               margin: const EdgeInsets.only(bottom: 8),
-
+              width: 120,
+              height: 120,
               child: Stack(
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-
                     child: Image.file(
                       selectedImage!,
-
                       width: 120,
-
                       height: 120,
-
                       fit: BoxFit.cover,
                     ),
                   ),
 
+                  if (isImageUploading)
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black26,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          color: korangeColor,
+                          strokeWidth: 3,
+                        ),
+                      ),
+                    ),
                   Positioned(
                     top: 4,
-
                     right: 4,
-
                     child: GestureDetector(
                       onTap: () => setState(() => selectedImage = null),
-
                       child: const CircleAvatar(
                         radius: 12,
-
-                        backgroundColor: Colors.black54,
-
+                        backgroundColor: korangeColor,
                         child: Icon(Icons.close, color: Colors.white, size: 14),
                       ),
                     ),

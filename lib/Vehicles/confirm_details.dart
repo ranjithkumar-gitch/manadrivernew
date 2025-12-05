@@ -358,18 +358,6 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     print('$bookingId,$driverData,$ownerId');
     // final appBarTitle =
     //     driverAssigned ? "Driver Assigned" : "Driver not assigned";
-    final rideStatus = widget.bookingData['status'] ?? '';
-
-    String appBarTitle = '';
-    if (rideStatus == 'New') {
-      appBarTitle = "Driver Not Assigned";
-    } else if (rideStatus == 'Accepted') {
-      appBarTitle = "Driver Assigned";
-    } else if (rideStatus == 'Completed') {
-      appBarTitle = "Ride Completed";
-    } else {
-      appBarTitle = "Ride $rideStatus";
-    }
 
     // String paymentStatus = data['paymentStatus'] ?? '';
     // String bottomButtonText = '';
@@ -524,57 +512,72 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 0,
         backgroundColor: Colors.white,
+        elevation: 0,
         automaticallyImplyLeading: false,
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: Colors.grey.shade300, height: 1.0),
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: Colors.grey.shade300, height: 1),
         ),
-        title: Padding(
-          padding: const EdgeInsets.only(bottom: 10.0, top: 5),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () => Navigator.pop(context),
-                  child: Container(
-                    width: 50,
-                    height: 50,
+        title: StreamBuilder<DocumentSnapshot>(
+          stream:
+              FirebaseFirestore.instance
+                  .collection('bookings')
+                  .doc(widget.bookingData['bookingId'])
+                  .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Text("Loading...");
+            }
+
+            final liveData = snapshot.data!;
+            final rideStatus = liveData['status'] ?? "New";
+
+            String appBarTitle = "";
+
+            if (rideStatus == 'New') {
+              appBarTitle = "Driver Not Assigned";
+            } else if (rideStatus == 'Accepted') {
+              appBarTitle = "Driver Assigned";
+            } else if (rideStatus == 'Completed') {
+              appBarTitle = "Ride Completed";
+            } else {
+              appBarTitle = "Ride $rideStatus";
+            }
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10, top: 5),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Align(
                     alignment: Alignment.centerLeft,
-                    child: Image.asset(
-                      "images/chevronLeft.png",
-                      width: 24,
-                      height: 24,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        alignment: Alignment.centerLeft,
+                        child: Image.asset(
+                          "images/chevronLeft.png",
+                          width: 24,
+                          height: 24,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  Center(
+                    child: CustomText(
+                      text: appBarTitle,
+                      textcolor: KblackColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 22,
+                    ),
+                  ),
+                ],
               ),
-
-              // Align(
-              //   alignment: Alignment.centerLeft,
-              //   child: InkWell(
-              //     onTap: () => Navigator.pop(context),
-              //     child: Image.asset(
-              //       "images/chevronLeft.png",
-              //       width: 24,
-              //       height: 24,
-              //     ),
-              //   ),
-              // ),
-              Center(
-                child: CustomText(
-                  text: appBarTitle,
-                  textcolor: KblackColor,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 22,
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
 
@@ -2494,7 +2497,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     });
   }
 
-  void _showCancelRideDialog(Map<String, dynamic> data) {
+  Future<void> _showCancelRideDialog(Map<String, dynamic> data) async {
+    bool isFree = await _isFreeCancellation();
     showDialog(
       context: context,
       builder:
@@ -2511,110 +2515,114 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
               ),
             ),
             content: CustomText(
-              text: "Are you sure you want to cancel this ride?",
+              text:
+                  isFree
+                      ? "You can cancel this ride for FREE. Are you sure?"
+                      : "Cancelling now will charge ₹59.\nDo you want to proceed?",
               fontSize: 14,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w400,
               textcolor: KblackColor,
             ),
             actions: [
-              OutlinedButton(
-                onPressed: () => Navigator.pop(context),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: korangeColor, width: 1.5),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: korangeColor, width: 1.5),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 25,
+                        vertical: 10,
+                      ),
+                    ),
+                    child: Text(
+                      "No",
+                      style: TextStyle(
+                        color: korangeColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
                   ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25,
-                    vertical: 10,
-                  ),
-                ),
-                child: Text(
-                  "No",
-                  style: TextStyle(
-                    color: korangeColor,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: korangeColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 25,
+                        vertical: 10,
+                      ),
+                    ),
+                    onPressed: () async {
+                      Navigator.pop(context);
 
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: korangeColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                      if (isFree) {
+                        await _cancelRideFree();
+                      } else {
+                        _openCheckout(59.0);
+                      }
+                    },
+                    child: Text(
+                      isFree ? "Cancel Ride" : "Pay ₹59",
+                      style: TextStyle(
+                        color: kwhiteColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
                   ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25,
-                    vertical: 10,
-                  ),
-                ),
-                onPressed: () async {
-                  Navigator.pop(context);
-
-                  final rideStatus = widget.bookingData['status'] ?? '';
-
-                  if (rideStatus == 'New') {
-                    _cancelRideFree();
-                    return;
-                  }
-
-                  await _checkCancellationTimeAndProceed();
-                },
-                child: Text(
-                  "Yes",
-                  style: TextStyle(
-                    color: kwhiteColor,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ),
-                ),
+                ],
               ),
             ],
           ),
     );
   }
 
-  Future<void> _checkCancellationTimeAndProceed() async {
-    try {
-      final bookingId = widget.bookingData['bookingId'];
-      if (bookingId == null) return;
+  // Future<void> _checkCancellationTimeAndProceed() async {
+  //   try {
+  //     final bookingId = widget.bookingData['bookingId'];
+  //     if (bookingId == null) return;
 
-      final snap =
-          await FirebaseFirestore.instance
-              .collection("bookings")
-              .doc(bookingId)
-              .get();
+  //     final snap =
+  //         await FirebaseFirestore.instance
+  //             .collection("bookings")
+  //             .doc(bookingId)
+  //             .get();
 
-      final data = snap.data()!;
-      List history = data['statusHistory'] ?? [];
+  //     final data = snap.data()!;
+  //     List history = data['statusHistory'] ?? [];
 
-      DateTime? acceptedTime;
+  //     DateTime? acceptedTime;
 
-      for (var item in history) {
-        if (item['status'] == "Accepted") {
-          acceptedTime = DateTime.tryParse(item['dateTime']);
-          break;
-        }
-      }
+  //     for (var item in history) {
+  //       if (item['status'] == "Accepted") {
+  //         acceptedTime = DateTime.tryParse(item['dateTime']);
+  //         break;
+  //       }
+  //     }
 
-      if (acceptedTime == null) {
-        await _cancelRideFree();
-        return;
-      }
+  //     if (acceptedTime == null) {
+  //       await _cancelRideFree();
+  //       return;
+  //     }
 
-      int diffMins = DateTime.now().difference(acceptedTime).inMinutes;
+  //     int diffMins = DateTime.now().difference(acceptedTime).inMinutes;
 
-      if (diffMins <= 5) {
-        await _cancelRideFree();
-      } else {
-        _openCheckout(59.0);
-      }
-    } catch (e) {
-      print("Cancel check error: $e");
-    }
-  }
+  //     if (diffMins <= 5) {
+  //       await _cancelRideFree();
+  //     } else {
+  //       _openCheckout(59.0);
+  //     }
+  //   } catch (e) {
+  //     print("Cancel check error: $e");
+  //   }
+  // }
 
   Future<void> _cancelRideFree() async {
     final bookingId = widget.bookingData['bookingId'];
@@ -2635,6 +2643,34 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
         });
 
     Navigator.pop(context);
+  }
+
+  Future<bool> _isFreeCancellation() async {
+    final bookingId = widget.bookingData['bookingId'];
+    if (bookingId == null) return true;
+
+    final snap =
+        await FirebaseFirestore.instance
+            .collection("bookings")
+            .doc(bookingId)
+            .get();
+
+    final data = snap.data()!;
+    List history = data['statusHistory'] ?? [];
+
+    DateTime? acceptedTime;
+
+    for (var item in history) {
+      if (item['status'] == "Accepted") {
+        acceptedTime = DateTime.tryParse(item['dateTime']);
+        break;
+      }
+    }
+
+    if (acceptedTime == null) return true;
+    int diffMins = DateTime.now().difference(acceptedTime).inMinutes;
+
+    return diffMins <= 5;
   }
 }
 
