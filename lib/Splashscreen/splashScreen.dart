@@ -66,25 +66,13 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: korangeColor,
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(),
-
-          Center(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: AnimatedTextKit(
-                repeatForever: true,
-                animatedTexts: [
-                  ColorizeAnimatedText(
-                    'rydyn',
-                    textStyle: colorizeTextStyle,
-                    colors: colorizeColors,
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-                isRepeatingAnimation: true,
-                pause: const Duration(milliseconds: 200),
+          Expanded(
+            child: Center(
+              child: Image.asset(
+                'images/rydyn_user.png',
+                height: 400,
+                fit: BoxFit.contain,
               ),
             ),
           ),
@@ -95,9 +83,9 @@ class _SplashScreenState extends State<SplashScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CustomText(
-                  text: 'Made in India',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
+                  text: 'MADE IN INDIA',
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
                   textcolor: kwhiteColor,
                 ),
                 const SizedBox(width: 5),
@@ -115,6 +103,45 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+//  const SizedBox(),
 
+//           Center(
+//             child: SizedBox(
+//               width: MediaQuery.of(context).size.width * 0.8,
+//               child: AnimatedTextKit(
+//                 repeatForever: true,
+//                 animatedTexts: [
+//                   ColorizeAnimatedText(
+//                     'rydyn',
+//                     textStyle: colorizeTextStyle,
+//                     colors: colorizeColors,
+//                     textAlign: TextAlign.center,
+//                   ),
+//                 ],
+//                 isRepeatingAnimation: true,
+//                 pause: const Duration(milliseconds: 200),
+//               ),
+//             ),
+//           ),
 
-
+//           Padding(
+//             padding: const EdgeInsets.only(bottom: 40),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 CustomText(
+//                   text: 'Made in India',
+//                   fontSize: 18,
+//                   fontWeight: FontWeight.w500,
+//                   textcolor: kwhiteColor,
+//                 ),
+//                 const SizedBox(width: 5),
+//                 Image.asset(
+//                   'images/flag.png',
+//                   width: 21,
+//                   height: 17,
+//                   fit: BoxFit.contain,
+//                 ),
+//               ],
+//             ),
+//           ),

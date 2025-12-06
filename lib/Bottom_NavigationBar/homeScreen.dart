@@ -1504,65 +1504,51 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SizedBox(height: 10),
 
                                 GestureDetector(
-                                  onTap:
-                                      selectedTripTime == "Now"
-                                          ? null
-                                          : () async {
-                                            final DateTime?
-                                            picked = await showDatePicker(
-                                              context: context,
-                                              initialDate:
-                                                  arrivalDate ?? selectedDate,
-                                              firstDate: selectedDate,
-                                              lastDate: DateTime(2101),
-                                              builder: (context, child) {
-                                                return Theme(
-                                                  data: Theme.of(
-                                                    context,
-                                                  ).copyWith(
-                                                    colorScheme:
-                                                        ColorScheme.light(
-                                                          primary: korangeColor,
-                                                          onPrimary:
-                                                              Colors.white,
-                                                          onSurface:
-                                                              Colors
-                                                                  .grey
-                                                                  .shade700,
-                                                        ),
-                                                    textButtonTheme:
-                                                        TextButtonThemeData(
-                                                          style:
-                                                              TextButton.styleFrom(
-                                                                foregroundColor:
-                                                                    korangeColor,
-                                                              ),
-                                                        ),
+                                  onTap: () async {
+                                    final DateTime?
+                                    picked = await showDatePicker(
+                                      context: context,
+                                      initialDate: arrivalDate ?? selectedDate,
+                                      firstDate: selectedDate,
+                                      lastDate: DateTime(2101),
+                                      builder: (context, child) {
+                                        return Theme(
+                                          data: Theme.of(context).copyWith(
+                                            colorScheme: ColorScheme.light(
+                                              primary: korangeColor,
+                                              onPrimary: Colors.white,
+                                              onSurface: Colors.grey.shade700,
+                                            ),
+                                            textButtonTheme:
+                                                TextButtonThemeData(
+                                                  style: TextButton.styleFrom(
+                                                    foregroundColor:
+                                                        korangeColor,
                                                   ),
-                                                  child: child!,
-                                                );
-                                              },
-                                            );
+                                                ),
+                                          ),
+                                          child: child!,
+                                        );
+                                      },
+                                    );
 
-                                            if (picked != null) {
-                                              setState(() {
-                                                arrivalDate = picked;
+                                    if (picked != null) {
+                                      setState(() {
+                                        arrivalDate = picked;
 
-                                                if (selectedTripMode ==
-                                                    "Round Trip") {
-                                                  convenienceFee =
-                                                      calculateConvenienceFee(
-                                                        selectedDate,
-                                                        arrivalDate!,
-                                                      );
-                                                  finalRoundTripFare =
-                                                      (fareMap['total'] ??
-                                                          0.0) +
-                                                      convenienceFee;
-                                                }
-                                              });
-                                            }
-                                          },
+                                        if (selectedTripMode == "Round Trip") {
+                                          convenienceFee =
+                                              calculateConvenienceFee(
+                                                selectedDate,
+                                                arrivalDate!,
+                                              );
+                                          finalRoundTripFare =
+                                              (fareMap['total'] ?? 0.0) +
+                                              convenienceFee;
+                                        }
+                                      });
+                                    }
+                                  },
                                   child: dateTimeRow(
                                     Icons.date_range,
                                     "Arrival Date",
@@ -1578,205 +1564,183 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Divider(color: kbordergreyColor),
 
                                 GestureDetector(
-                                  onTap:
-                                      selectedTripTime == "Now"
-                                          ? null
-                                          : () async {
-                                            if (arrivalDate == null) {
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            12,
-                                                          ),
-                                                    ),
-                                                    title: Text(
-                                                      "Arrival Date Required",
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-                                                    content: Text(
-                                                      "Please select the arrival date before choosing the arrival time.",
-                                                    ),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed:
-                                                            () => Navigator.pop(
-                                                              context,
-                                                            ),
-                                                        child: Text(
-                                                          "OK",
-                                                          style: TextStyle(
-                                                            color: korangeColor,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                              return;
-                                            }
-                                            String formatTo12Hour(DateTime dt) {
-                                              int hour =
-                                                  dt.hour > 12
-                                                      ? dt.hour - 12
-                                                      : dt.hour == 0
-                                                      ? 12
-                                                      : dt.hour;
-                                              String minute = dt.minute
-                                                  .toString()
-                                                  .padLeft(2, '0');
-                                              String period =
-                                                  dt.hour >= 12 ? "PM" : "AM";
-                                              return "$hour:$minute $period";
-                                            }
+                                  onTap: () async {
+                                    if (arrivalDate == null) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            title: Text(
+                                              "Arrival Date Required",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            content: Text(
+                                              "Please select the arrival date before choosing the arrival time.",
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed:
+                                                    () =>
+                                                        Navigator.pop(context),
+                                                child: Text(
+                                                  "OK",
+                                                  style: TextStyle(
+                                                    color: korangeColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                      return;
+                                    }
+                                    String formatTo12Hour(DateTime dt) {
+                                      int hour =
+                                          dt.hour > 12
+                                              ? dt.hour - 12
+                                              : dt.hour == 0
+                                              ? 12
+                                              : dt.hour;
+                                      String minute = dt.minute
+                                          .toString()
+                                          .padLeft(2, '0');
+                                      String period =
+                                          dt.hour >= 12 ? "PM" : "AM";
+                                      return "$hour:$minute $period";
+                                    }
 
-                                            final TimeOfDay?
-                                            picked = await showTimePicker(
-                                              context: context,
-                                              initialTime:
-                                                  arrivalTime ?? selectedTime,
-                                              builder: (context, child) {
-                                                return Theme(
-                                                  data: Theme.of(
-                                                    context,
-                                                  ).copyWith(
-                                                    timePickerTheme:
-                                                        TimePickerThemeData(
-                                                          hourMinuteShape:
-                                                              RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius.circular(
-                                                                      8,
-                                                                    ),
-                                                              ),
-                                                          dialBackgroundColor:
-                                                              Colors.grey[200],
-                                                          dialHandColor:
-                                                              korangeColor,
-                                                        ),
-                                                    colorScheme:
-                                                        ColorScheme.light(
-                                                          primary: korangeColor,
+                                    final TimeOfDay?
+                                    picked = await showTimePicker(
+                                      context: context,
+                                      initialTime: arrivalTime ?? selectedTime,
+                                      builder: (context, child) {
+                                        return Theme(
+                                          data: Theme.of(context).copyWith(
+                                            timePickerTheme: TimePickerThemeData(
+                                              hourMinuteShape:
+                                                  RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8,
                                                         ),
                                                   ),
-                                                  child: child!,
-                                                );
-                                              },
-                                            );
+                                              dialBackgroundColor:
+                                                  Colors.grey[200],
+                                              dialHandColor: korangeColor,
+                                            ),
+                                            colorScheme: ColorScheme.light(
+                                              primary: korangeColor,
+                                            ),
+                                          ),
+                                          child: child!,
+                                        );
+                                      },
+                                    );
 
-                                            if (picked != null) {
-                                              final departDT = DateTime(
-                                                selectedDate.year,
-                                                selectedDate.month,
-                                                selectedDate.day,
-                                                selectedTime.hour,
-                                                selectedTime.minute,
-                                              );
+                                    if (picked != null) {
+                                      final departDT = DateTime(
+                                        selectedDate.year,
+                                        selectedDate.month,
+                                        selectedDate.day,
+                                        selectedTime.hour,
+                                        selectedTime.minute,
+                                      );
 
-                                              final int etaMinutes =
-                                                  int.tryParse(
-                                                    time.replaceAll(
-                                                      RegExp(r'[^0-9]'),
-                                                      '',
+                                      final int etaMinutes =
+                                          int.tryParse(
+                                            time.replaceAll(
+                                              RegExp(r'[^0-9]'),
+                                              '',
+                                            ),
+                                          ) ??
+                                          0;
+
+                                      final minArrivalDT = departDT.add(
+                                        Duration(minutes: etaMinutes),
+                                      );
+
+                                      final arrivalDT = DateTime(
+                                        arrivalDate!.year,
+                                        arrivalDate!.month,
+                                        arrivalDate!.day,
+                                        picked.hour,
+                                        picked.minute,
+                                      );
+
+                                      if (arrivalDT.isBefore(minArrivalDT)) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              title: Text(
+                                                "Invalid Arrival Time",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                              content: Text(
+                                                "Arrival time must be after ETA (${formatTo12Hour(minArrivalDT)}).",
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed:
+                                                      () => Navigator.pop(
+                                                        context,
+                                                      ),
+                                                  child: Text(
+                                                    "OK",
+                                                    style: TextStyle(
+                                                      color: korangeColor,
                                                     ),
-                                                  ) ??
-                                                  0;
-
-                                              final minArrivalDT = departDT.add(
-                                                Duration(minutes: etaMinutes),
-                                              );
-
-                                              final arrivalDT = DateTime(
-                                                arrivalDate!.year,
-                                                arrivalDate!.month,
-                                                arrivalDate!.day,
-                                                picked.hour,
-                                                picked.minute,
-                                              );
-
-                                              if (arrivalDT.isBefore(
-                                                minArrivalDT,
-                                              )) {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return AlertDialog(
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              12,
-                                                            ),
-                                                      ),
-                                                      title: Text(
-                                                        "Invalid Arrival Time",
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 16,
-                                                        ),
-                                                      ),
-                                                      content: Text(
-                                                        "Arrival time must be after ETA (${formatTo12Hour(minArrivalDT)}).",
-                                                      ),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed:
-                                                              () =>
-                                                                  Navigator.pop(
-                                                                    context,
-                                                                  ),
-                                                          child: Text(
-                                                            "OK",
-                                                            style: TextStyle(
-                                                              color:
-                                                                  korangeColor,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                                return;
-                                              }
-
-                                              setState(() {
-                                                arrivalTime = picked;
-
-                                                if (selectedTripMode ==
-                                                        "Round Trip" &&
-                                                    arrivalDate != null) {
-                                                  convenienceFee =
-                                                      calculateConvenienceFee(
-                                                        selectedDate,
-                                                        arrivalDate!,
-                                                      );
-                                                  finalRoundTripFare =
-                                                      (fareMap['total'] ??
-                                                          0.0) +
-                                                      convenienceFee;
-
-                                                  print(
-                                                    " Convenience Fee: $convenienceFee",
-                                                  );
-                                                  print(
-                                                    " Total Fare (Included Convenience): $finalRoundTripFare",
-                                                  );
-                                                  print(
-                                                    " Base Fare: ${fareMap['total']}",
-                                                  );
-                                                }
-                                              });
-                                            }
+                                                  ),
+                                                ),
+                                              ],
+                                            );
                                           },
+                                        );
+                                        return;
+                                      }
+
+                                      setState(() {
+                                        arrivalTime = picked;
+
+                                        if (selectedTripMode == "Round Trip" &&
+                                            arrivalDate != null) {
+                                          convenienceFee =
+                                              calculateConvenienceFee(
+                                                selectedDate,
+                                                arrivalDate!,
+                                              );
+                                          finalRoundTripFare =
+                                              (fareMap['total'] ?? 0.0) +
+                                              convenienceFee;
+
+                                          print(
+                                            " Convenience Fee: $convenienceFee",
+                                          );
+                                          print(
+                                            " Total Fare (Included Convenience): $finalRoundTripFare",
+                                          );
+                                          print(
+                                            " Base Fare: ${fareMap['total']}",
+                                          );
+                                        }
+                                      });
+                                    }
+                                  },
                                   child: dateTimeRow(
                                     Icons.timer,
                                     "Arrival Time",

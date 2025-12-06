@@ -216,40 +216,40 @@ class _MenuScreenState extends State<MenuScreen> {
                         ),
                       ),
                       const Divider(color: KdeviderColor),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => FavouriteDriversScreen(),
-                            ),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(3),
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                "images/favorite.png",
-                                width: 24,
-                                height: 24,
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: CustomText(
-                                  text: localizations.menuFavDrivers,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: KblackColor,
-                                ),
-                              ),
-                              Image.asset("images/chevronRight.png", width: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const Divider(color: KdeviderColor),
 
+                      // InkWell(
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (_) => FavouriteDriversScreen(),
+                      //       ),
+                      //     );
+                      //   },
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.all(3),
+                      //     child: Row(
+                      //       children: [
+                      //         Image.asset(
+                      //           "images/favorite.png",
+                      //           width: 24,
+                      //           height: 24,
+                      //         ),
+                      //         const SizedBox(width: 12),
+                      //         Expanded(
+                      //           child: CustomText(
+                      //             text: localizations.menuFavDrivers,
+                      //             fontSize: 16,
+                      //             fontWeight: FontWeight.w400,
+                      //             textcolor: KblackColor,
+                      //           ),
+                      //         ),
+                      //         Image.asset("images/chevronRight.png", width: 20),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                      // const Divider(color: KdeviderColor),
                       InkWell(
                         onTap:
                             () => _showUpdateMobileDialog(
@@ -311,72 +311,72 @@ class _MenuScreenState extends State<MenuScreen> {
                         ),
                       ),
                       const Divider(color: KdeviderColor),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => OffersScreen()),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(3),
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                "images/offers.png",
-                                width: 24,
-                                height: 24,
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: CustomText(
-                                  text: localizations.menuOffers,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: KblackColor,
-                                ),
-                              ),
-                              Image.asset("images/chevronRight.png", width: 20),
-                            ],
-                          ),
-                        ),
-                      ),
 
-                      const Divider(color: KdeviderColor),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => ReferFriendScreen(),
-                            ),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(3),
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                "images/refer.png",
-                                width: 24,
-                                height: 24,
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: CustomText(
-                                  text: localizations.menuReferaFriend,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: KblackColor,
-                                ),
-                              ),
-                              Image.asset("images/chevronRight.png", width: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const Divider(color: KdeviderColor),
+                      // InkWell(
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(builder: (_) => OffersScreen()),
+                      //     );
+                      //   },
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.all(3),
+                      //     child: Row(
+                      //       children: [
+                      //         Image.asset(
+                      //           "images/offers.png",
+                      //           width: 24,
+                      //           height: 24,
+                      //         ),
+                      //         const SizedBox(width: 12),
+                      //         Expanded(
+                      //           child: CustomText(
+                      //             text: localizations.menuOffers,
+                      //             fontSize: 16,
+                      //             fontWeight: FontWeight.w400,
+                      //             textcolor: KblackColor,
+                      //           ),
+                      //         ),
+                      //         Image.asset("images/chevronRight.png", width: 20),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
 
+                      // const Divider(color: KdeviderColor),
+                      // InkWell(
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (_) => ReferFriendScreen(),
+                      //       ),
+                      //     );
+                      //   },
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.all(3),
+                      //     child: Row(
+                      //       children: [
+                      //         Image.asset(
+                      //           "images/refer.png",
+                      //           width: 24,
+                      //           height: 24,
+                      //         ),
+                      //         const SizedBox(width: 12),
+                      //         Expanded(
+                      //           child: CustomText(
+                      //             text: localizations.menuReferaFriend,
+                      //             fontSize: 16,
+                      //             fontWeight: FontWeight.w400,
+                      //             textcolor: KblackColor,
+                      //           ),
+                      //         ),
+                      //         Image.asset("images/chevronRight.png", width: 20),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                      // const Divider(color: KdeviderColor),
                       InkWell(
                         onTap: () {
                           Navigator.push(
