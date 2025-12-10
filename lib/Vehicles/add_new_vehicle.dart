@@ -271,7 +271,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
   Future<void> _addVehicle() async {
     try {
       setState(() {
-        _isLoading = true; // start loader
+        _isLoading = true;
       });
       if (selectedBrand == null || selectedBrand!.isEmpty) {
         ScaffoldMessenger.of(
@@ -587,7 +587,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                 ),
 
                 const SizedBox(height: 10),
-                
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
@@ -663,7 +663,6 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                   ),
                 ),
 
-               
                 const SizedBox(height: 25),
                 buildDropdownField(
                   label: "Vehicle Brand",
@@ -918,6 +917,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: korangeColor,
+                        disabledBackgroundColor: korangeColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(40),
                         ),
@@ -926,13 +926,24 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                           vertical: 5,
                         ),
                       ),
-                      onPressed: _addVehicle,
-                      child: CustomText(
-                        text: "Add Vehicle",
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        textcolor: kwhiteColor,
-                      ),
+                      onPressed: _isLoading ? null : _addVehicle,
+
+                      child:
+                          _isLoading
+                              ? SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.5,
+                                  color: Colors.white,
+                                ),
+                              )
+                              : CustomText(
+                                text: "Add Vehicle",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                textcolor: kwhiteColor,
+                              ),
                     ),
                   ),
                 ),

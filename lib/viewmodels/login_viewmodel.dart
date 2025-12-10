@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/models/loginState.dart';
@@ -97,6 +98,9 @@ class LoginViewModel extends ChangeNotifier {
   }
 
   Future<void> fetchLoggedInUser(String phoneNumber) async {
+    final token = await FirebaseMessaging.instance.getToken();
+    print('FCM Token on login: $token');
+    String? fcmToken = token;
     try {
       final withCode = normalizedPhone(phoneNumber);
       final withoutCode = phoneNumber;
@@ -129,6 +133,11 @@ class LoginViewModel extends ChangeNotifier {
         final userData = ownerSnap.docs.first.data();
         _loggedInUser = userData;
         notifyListeners();
+        final driverDocId = ownerSnap.docs.first.id;
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(driverDocId)
+            .update({"fcmToken": fcmToken});
 
         await _saveOwnerDataToSharedPrefs(userData, ownerSnap.docs.first.id);
         print("Owner details stored in SharedPreferences");
@@ -193,6 +202,7 @@ class LoginViewModel extends ChangeNotifier {
     await SharedPrefServices.setCountryCode(userData['countryCode'] ?? "");
     await SharedPrefServices.setDocID(docId);
     await SharedPrefServices.setislogged(true);
+    await SharedPrefServices.setFcmToken(userData['fcmToken'] ?? "");
   }
 
   void updateUser(Map<String, dynamic> newUserData) {

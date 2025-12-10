@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
+import 'package:mana_driver/notifications/service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
@@ -36,7 +37,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
   bool isLoading = false;
   late Razorpay _razorpay;
   String totalPrice = "0";
-
+  final fcmService = FCMService();
   @override
   void initState() {
     super.initState();
@@ -173,6 +174,18 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                   },
                 ]),
               });
+          final driverDoc =
+              await FirebaseFirestore.instance
+                  .collection('drivers')
+                  .doc(widget.bookingData['driverId'])
+                  .get();
+
+          final driverToken = driverDoc['fcmToken'] ?? "";
+          await fcmService.sendNotification(
+            recipientFCMToken: driverToken,
+            title: "Ride Cancelled",
+            body: "Customer cancelled the ride.",
+          );
         } else {
           await FirebaseFirestore.instance
               .collection('bookings')
@@ -184,6 +197,19 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                 'appliedDiscount': appliedDiscount,
                 'appliedCouponCode': appliedCouponCode ?? "",
               });
+          final driverDoc =
+              await FirebaseFirestore.instance
+                  .collection('drivers')
+                  .doc(widget.bookingData['driverId'])
+                  .get();
+
+          final driverToken = driverDoc['fcmToken'] ?? "";
+
+          await fcmService.sendNotification(
+            recipientFCMToken: driverToken,
+            title: "Payment Received",
+            body: "A payment of ₹$amount has been received.",
+          );
         }
       }
 

@@ -2,7 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefServices {
   static SharedPreferences? prefs;
-
+  static const _keyfcmToken = 'fcmToken';
   static const _keyuserId = 'userId';
   static const _keyfirstName = 'firstname';
   static const _keylastName = 'lastname';
@@ -42,6 +42,8 @@ class SharedPrefServices {
     await prefs!.setBool(_keyisOnline, isOnline);
   }
 
+  static Future setFcmToken(String fcmToken) async =>
+      await prefs!.setString(_keyfcmToken, fcmToken);
   static Future setSaveLanguage(String savelanguage) async =>
       await prefs!.setString(_keysavelanguage, savelanguage);
 
@@ -101,7 +103,7 @@ class SharedPrefServices {
       await prefs!.setString(_keystatus, status);
 
   // Getters
-
+  static String? getfcmToken() => prefs!.getString(_keyfcmToken);
   static bool getislogged() => prefs!.getBool(_keyislogged) ?? false;
   static bool getisOnline() => prefs!.getBool(_keyisOnline) ?? false;
   static String? getUserId() => prefs!.getString(_keyuserId);
@@ -137,7 +139,7 @@ class SharedPrefServices {
 
   static Future<void> clearUserFromSharedPrefs() async {
     prefs = await SharedPreferences.getInstance();
-
+    await prefs!.setString(_keyfcmToken, "");
     await prefs!.setString(_keyuserId, "");
     await prefs!.setString(_keyfirstName, "");
     await prefs!.setString(_keylastName, "");

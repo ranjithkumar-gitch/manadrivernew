@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/Login/selectLanguage.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customText.dart';
-
+import 'package:mana_driver/Widgets/customText.dart';  
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:mana_driver/notifications/firebase_api.dart';
+import 'package:mana_driver/notifications/service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,9 +18,59 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final fcmService = FCMService();
+  final FirebaseApi _firebaseApi = FirebaseApi();
   @override
   void initState() {
     super.initState();
+    _navigateNext();
+    print('DOCID ${SharedPrefServices.getDocId().toString()}');
+    print('USER ID ${SharedPrefServices.getUserId().toString()}');
+  }
+
+  Future<void> runApp() async {
+    await _firebaseApi.initNotifications();
+
+    final token = await FirebaseMessaging.instance.getToken();
+    print('FCM Token on Splash: $token');
+
+    if (token != null && token.isNotEmpty) {
+      String? userId = SharedPrefServices.getUserId();
+      String? docId = SharedPrefServices.getDocId();
+
+      print("DOCID from SharedPref: $docId");
+      print("USER ID from SharedPref: $userId");
+
+      if (userId != null &&
+          userId.isNotEmpty &&
+          docId != null &&
+          docId.isNotEmpty) {
+        try {
+          final docSnapshot =
+              await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(docId)
+                  .get();
+          if (docSnapshot.exists) {
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(docId)
+                .update({'fcmToken': token});
+            print("FCM Token saved to Firestore for docId: $docId");
+          } else {
+            print(" Document with docId: $docId does not exist");
+          }
+        } catch (error) {
+          print("Failed to save FCM Token: $error");
+        }
+      } else {
+        print(" userId or docId is null/empty. Cannot update FCM token.");
+      }
+    } else {
+      print(' Failed to get device FCM token');
+    }
+
+    await Future.delayed(const Duration(seconds: 3));
     _navigateNext();
   }
 

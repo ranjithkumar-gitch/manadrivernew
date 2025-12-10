@@ -30,6 +30,7 @@ class RegisterViewModel extends ChangeNotifier {
     required String email,
     required String phone,
     required String countryCode,
+    required String fcmToken,
   }) async {
     _setLoading(true);
     _setError(null);
@@ -59,6 +60,7 @@ class RegisterViewModel extends ChangeNotifier {
         email: email.trim(),
         phone: phone.trim(),
         countryCode: countryCode,
+        fcmToken: fcmToken,
         createdAt: DateTime.now(),
       );
 
