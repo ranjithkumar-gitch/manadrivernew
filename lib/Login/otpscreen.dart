@@ -17,6 +17,7 @@ class OtpScreen extends StatefulWidget {
   final String lastName;
   final String email;
   final String countryCode;
+  final String fcmToken;
   final bool isTestOtp;
 
   const OtpScreen({
@@ -24,6 +25,7 @@ class OtpScreen extends StatefulWidget {
     required this.phoneNumber,
     required this.firstName,
     required this.lastName,
+    required this.fcmToken,
     required this.email,
     required this.countryCode,
     this.isTestOtp = true,
@@ -52,6 +54,10 @@ class _OtpScreenState extends State<OtpScreen> {
 
   final TextEditingController otpController = TextEditingController();
   bool _isLoading = false;
+  String capitalizeFirst(String value) {
+    if (value.isEmpty) return value;
+    return value[0].toUpperCase() + value.substring(1).toLowerCase();
+  }
 
   Future<void> _verifyOtp() async {
     final otp = otpController.text.trim();
@@ -70,11 +76,12 @@ class _OtpScreenState extends State<OtpScreen> {
 
       // Save to Firebase using RegisterViewModel
       final success = await vm.register(
-        fisrtName: widget.firstName,
+        fisrtName: capitalizeFirst(widget.firstName.trim()),
         lastName: widget.lastName,
         email: widget.email.isEmpty ? "" : widget.email,
         phone: widget.phoneNumber,
         countryCode: widget.countryCode,
+        fcmToken: widget.fcmToken,
       );
 
       if (success) {
@@ -85,6 +92,7 @@ class _OtpScreenState extends State<OtpScreen> {
         );
         await SharedPrefServices.setNumber(widget.phoneNumber);
         await SharedPrefServices.setCountryCode(widget.countryCode);
+        await SharedPrefServices.setFcmToken(widget.fcmToken);
         await SharedPrefServices.setislogged(true);
 
         // final role = await SharedPrefServices.getRoleCode();

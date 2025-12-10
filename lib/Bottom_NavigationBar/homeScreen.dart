@@ -20,6 +20,7 @@ import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
 import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:mana_driver/notifications/service.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -1015,6 +1016,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  final fcmService = FCMService();
   String _fmt(double v) {
     final f = NumberFormat.currency(
       locale: 'en_IN',
@@ -2052,6 +2054,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                         await FirebaseFirestore.instance
                                             .collection('bookings')
                                             .add(bookingData);
+                                        final driversSnap =
+                                            await FirebaseFirestore.instance
+                                                .collection('drivers')
+                                                .get();
+
+                                        for (var doc in driversSnap.docs) {
+                                          final driverToken = doc['fcmToken'];
+
+                                          if (driverToken != null &&
+                                              driverToken.isNotEmpty) {
+                                            await fcmService.sendNotification(
+                                              recipientFCMToken: driverToken,
+                                              title: "New Ride Request",
+                                              body:
+                                                  "A new ride request is available near you.",
+                                            );
+                                          }
+                                        }
 
                                         ScaffoldMessenger.of(
                                           context,
