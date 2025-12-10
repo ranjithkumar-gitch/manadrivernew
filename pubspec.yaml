@@ -66,6 +66,9 @@ dependencies:
   hexcolor: ^3.0.1
   dropdown_button2: ^2.3.9
   permission_handler: ^12.0.1
+  googleapis_auth: ^2.0.0
+  firebase_messaging: ^16.0.4
+  flutter_local_notifications: ^19.5.0
 
 
 
