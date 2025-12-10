@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -130,9 +131,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     : CustomButton(
                       text: 'Register as User',
                       onPressed: () async {
-                        final firstName =
-                            firstnameController.text.trim()[0].toUpperCase() +
-                            firstnameController.text.trim().substring(1);
+                        final firstName = firstnameController.text;
+
                         final lastName = lastnameController.text.trim();
                         final email = emailController.text.trim();
                         final phone = phoneController.text.trim();
@@ -301,11 +301,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           }
 
                           if (mounted) {
+                            final token =
+                                await FirebaseMessaging.instance.getToken();
+                            print('FCM Token on login: $token');
+                            String? fcmToken = token;
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder:
                                     (_) => OtpScreen(
+                                      fcmToken: fcmToken ?? "",
                                       phoneNumber: phoneController.text.trim(),
                                       firstName: firstName,
                                       lastName: lastName,

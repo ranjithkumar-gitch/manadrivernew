@@ -3,7 +3,7 @@ class UserModel {
   final String firstName;
   final String lastName;
   final String roleCode;
-
+  final String fcmToken;
   final String email;
   final String phone;
   final String countryCode;
@@ -14,6 +14,7 @@ class UserModel {
     required this.firstName,
     required this.lastName,
     required this.roleCode,
+    required this.fcmToken,
     required this.email,
     required this.phone,
     required this.countryCode,
@@ -23,6 +24,7 @@ class UserModel {
   Map<String, dynamic> toMap() => {
     'userId': userId,
     'firstName': firstName,
+    'fcmToken': fcmToken,
     'lastName': lastName,
     'roleCode': roleCode,
     'email': email,
@@ -37,7 +39,7 @@ class UserModel {
       userId: map['userId'] ?? '',
       firstName: map['firstName'] ?? '',
       lastName: map['lastName'] ?? '',
-
+      fcmToken: map['fcmToken'] ?? '',
       email: map['email'] ?? '',
       phone: map['phone'] ?? '',
       countryCode: map['countryCode'] ?? '',
