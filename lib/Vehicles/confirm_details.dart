@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Bottom_NavigationBar/Myrides.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/Location/driverAssigned.dart';
+import 'package:mana_driver/Login/otpscreen.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Sidemenu/cancellationPolicyScreen.dart';
 import 'package:mana_driver/Vehicles/chat.dart';
@@ -14,7 +15,8 @@ import 'package:intl/intl.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
-import 'package:mana_driver/notifications/service.dart';
+import 'package:mana_driver/service.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
@@ -177,7 +179,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
           final driverDoc =
               await FirebaseFirestore.instance
                   .collection('drivers')
-                  .doc(widget.bookingData['driverId'])
+                  .doc(widget.bookingData['driverdocId'])
                   .get();
 
           final driverToken = driverDoc['fcmToken'] ?? "";
@@ -207,8 +209,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
 
           await fcmService.sendNotification(
             recipientFCMToken: driverToken,
-            title: "Payment Received",
-            body: "A payment of ₹$amount has been received.",
+            title: "💵 Payment Received",
+            body: "You have received ₹$amount successfully.",
           );
         }
       }
@@ -2610,46 +2612,6 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     );
   }
 
-  // Future<void> _checkCancellationTimeAndProceed() async {
-  //   try {
-  //     final bookingId = widget.bookingData['bookingId'];
-  //     if (bookingId == null) return;
-
-  //     final snap =
-  //         await FirebaseFirestore.instance
-  //             .collection("bookings")
-  //             .doc(bookingId)
-  //             .get();
-
-  //     final data = snap.data()!;
-  //     List history = data['statusHistory'] ?? [];
-
-  //     DateTime? acceptedTime;
-
-  //     for (var item in history) {
-  //       if (item['status'] == "Accepted") {
-  //         acceptedTime = DateTime.tryParse(item['dateTime']);
-  //         break;
-  //       }
-  //     }
-
-  //     if (acceptedTime == null) {
-  //       await _cancelRideFree();
-  //       return;
-  //     }
-
-  //     int diffMins = DateTime.now().difference(acceptedTime).inMinutes;
-
-  //     if (diffMins <= 5) {
-  //       await _cancelRideFree();
-  //     } else {
-  //       _openCheckout(59.0);
-  //     }
-  //   } catch (e) {
-  //     print("Cancel check error: $e");
-  //   }
-  // }
-
   Future<void> _cancelRideFree() async {
     final bookingId = widget.bookingData['bookingId'];
     if (bookingId == null) return;
@@ -2667,6 +2629,20 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
             },
           ]),
         });
+
+    final driverDoc =
+        await FirebaseFirestore.instance
+            .collection('drivers')
+            .doc(widget.bookingData['driverdocId'])
+            .get();
+
+    final driverToken = driverDoc['fcmToken'] ?? "";
+
+    await fcmService.sendNotification(
+      recipientFCMToken: driverToken,
+      title: "Ride Cancelled",
+      body: "Customer cancelled the ride. No charges applied.",
+    );
 
     Navigator.pop(context);
   }
@@ -2949,7 +2925,7 @@ void _showRatingDialog(BuildContext context, data) {
                               return;
                             }
                             setState(() {
-                              isLoading = true; // 🔥 Show Loader
+                              isLoading = true;
                             });
                             await FirebaseFirestore.instance
                                 .collection('reviews')
@@ -2988,6 +2964,22 @@ void _showRatingDialog(BuildContext context, data) {
                                 'averageRating': averageRating,
                               });
                             });
+                            final driverSnap =
+                                await FirebaseFirestore.instance
+                                    .collection('drivers')
+                                    .doc(data['driverdocId'])
+                                    .get();
+
+                            final driverToken = driverSnap['fcmToken'] ?? "";
+
+                            if (driverToken.isNotEmpty) {
+                              await fcmService.sendNotification(
+                                recipientFCMToken: driverToken,
+                                title: "⭐ New Review Received",
+                                body:
+                                    "You received a ${selectedStars}★ rating from the customer.",
+                              );
+                            }
                             setState(() {
                               isLoading = false;
                             });

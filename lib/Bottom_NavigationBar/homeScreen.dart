@@ -20,7 +20,8 @@ import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
 import 'package:mana_driver/l10n/app_localizations.dart';
-import 'package:mana_driver/notifications/service.dart';
+
+import 'package:mana_driver/service.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 

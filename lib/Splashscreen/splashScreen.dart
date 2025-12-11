@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/Login/selectLanguage.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customText.dart';  
+import 'package:mana_driver/Widgets/customText.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:mana_driver/notifications/firebase_api.dart';
-import 'package:mana_driver/notifications/service.dart';
+import 'package:mana_driver/firebase_api.dart';
+import 'package:mana_driver/service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -23,9 +24,51 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    fetchServiceKeys();
     _navigateNext();
     print('DOCID ${SharedPrefServices.getDocId().toString()}');
     print('USER ID ${SharedPrefServices.getUserId().toString()}');
+  }
+
+  Future<void> fetchServiceKeys() async {
+    try {
+      final snap =
+          await FirebaseFirestore.instance
+              .collection("serviceKeys")
+              .doc('p5xZLhdsUezpgluOIzSY')
+              .get();
+
+      if (!snap.exists) {
+        print("Service keys document not found");
+        return;
+      }
+
+      final data = snap.data()!;
+
+      await SharedPrefServices.setAuthProvider(data["authProvider"] ?? "");
+      await SharedPrefServices.setAuthUri(data["authUri"] ?? "");
+      await SharedPrefServices.setClientEmail(data["clientEmail"] ?? "");
+      await SharedPrefServices.setClientId(data["clientId"] ?? "");
+      await SharedPrefServices.setClientUrl(data["clientUrl"] ?? "");
+      await SharedPrefServices.setPrimaryKey(data["primaryKey"] ?? "");
+      await SharedPrefServices.setPrivateKey(data["privateKey"] ?? "");
+      await SharedPrefServices.setTokenUri(data["tokenUri"] ?? "");
+      await SharedPrefServices.setUniverseDomain(data["universeDomain"] ?? "");
+
+      print("Service keys saved to SharedPreferences!");
+
+      print("authProvider      : ${SharedPrefServices.getAuthProvider()}");
+      print("authUri           : ${SharedPrefServices.getAuthUri()}");
+      print("clientEmail       : ${SharedPrefServices.getClientEmail()}");
+      print("clientId          : ${SharedPrefServices.getClientId()}");
+      print("clientUrl         : ${SharedPrefServices.getClientUrl()}");
+      print("primaryKey        : ${SharedPrefServices.getPrimaryKey()}");
+      print("privateKey        : ${SharedPrefServices.getPrivateKey()}");
+      print("tokenUri          : ${SharedPrefServices.getTokenUri()}");
+      print("universeDomain    : ${SharedPrefServices.getUniverseDomain()}");
+    } catch (e) {
+      print("Error loading service keys: $e");
+    }
   }
 
   Future<void> runApp() async {
@@ -109,11 +152,11 @@ class _SplashScreenState extends State<SplashScreen> {
       Colors.orange,
     ];
 
-    const colorizeTextStyle = TextStyle(
-      fontSize: 42.0,
-      fontWeight: FontWeight.bold,
-      fontFamily: 'Horizon',
-      letterSpacing: 1.5,
+    final colorizeTextStyle = GoogleFonts.cabinSketch(
+      fontSize: 52,
+      fontWeight: FontWeight.w800,
+
+      color: Colors.black,
     );
 
     return Scaffold(
@@ -122,12 +165,31 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           Expanded(
             child: Center(
-              child: Image.asset(
-                'images/rydyn_user.png',
-                height: 400,
-                fit: BoxFit.contain,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: AnimatedTextKit(
+                  repeatForever: true,
+                  animatedTexts: [
+                    ColorizeAnimatedText(
+                      'rydyn',
+                      textStyle: colorizeTextStyle,
+                      colors: colorizeColors,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                  isRepeatingAnimation: true,
+                  pause: const Duration(milliseconds: 200),
+                ),
               ),
             ),
+
+            // Center(
+            //   child: Image.asset(
+            //     'images/rydyn_user.png',
+            //     height: 400,
+            //     fit: BoxFit.contain,
+            //   ),
+            // ),
           ),
 
           Padding(

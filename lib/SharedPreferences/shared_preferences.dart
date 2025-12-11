@@ -28,7 +28,17 @@ class SharedPrefServices {
 
   static const _keyislogged = 'islogged';
 
-  static const _keysavelanguage = 'savelanguage ';
+  static const _keysavelanguage = 'savelanguage';
+
+  static const _keyauthProvider = 'authProvider';
+  static const _keyauthUri = 'authUri';
+  static const _keyclientEmail = 'clientEmail';
+  static const _keyclientId = 'clientId';
+  static const _keyclientUrl = 'clientUrl';
+  static const _keyprimaryKey = 'primaryKey';
+  static const _keytokenUri = 'tokenUri';
+  static const _keyprivateKey = 'privateKey';
+  static const _keyuniverseDomain = 'universeDomain';
 
   static const _keyisOnline = 'isOnline';
 
@@ -44,6 +54,34 @@ class SharedPrefServices {
 
   static Future setFcmToken(String fcmToken) async =>
       await prefs!.setString(_keyfcmToken, fcmToken);
+
+  static Future setAuthProvider(String authProvider) async =>
+      await prefs!.setString(_keyauthProvider, authProvider);
+
+  static Future setAuthUri(String authUri) async =>
+      await prefs!.setString(_keyauthUri, authUri);
+
+  static Future setClientEmail(String clientEmail) async =>
+      await prefs!.setString(_keyclientEmail, clientEmail);
+
+  static Future setClientId(String clientId) async =>
+      await prefs!.setString(_keyclientId, clientId);
+
+  static Future setClientUrl(String clientUrl) async =>
+      await prefs!.setString(_keyclientUrl, clientUrl);
+
+  static Future setPrimaryKey(String primaryKey) async =>
+      await prefs!.setString(_keyprimaryKey, primaryKey);
+
+  static Future setTokenUri(String tokenUri) async =>
+      await prefs!.setString(_keytokenUri, tokenUri);
+
+  static Future setPrivateKey(String privateKey) async =>
+      await prefs!.setString(_keyprivateKey, privateKey);
+
+  static Future setUniverseDomain(String universeDomain) async =>
+      await prefs!.setString(_keyuniverseDomain, universeDomain);
+
   static Future setSaveLanguage(String savelanguage) async =>
       await prefs!.setString(_keysavelanguage, savelanguage);
 
@@ -136,6 +174,23 @@ class SharedPrefServices {
   static String? getRoleCode() => prefs!.getString(_keyroleCode);
 
   static String? getStatus() => prefs!.getString(_keystatus);
+  static String? getAuthProvider() => prefs!.getString(_keyauthProvider);
+
+  static String? getAuthUri() => prefs!.getString(_keyauthUri);
+
+  static String? getClientEmail() => prefs!.getString(_keyclientEmail);
+
+  static String? getClientId() => prefs!.getString(_keyclientId);
+
+  static String? getClientUrl() => prefs!.getString(_keyclientUrl);
+
+  static String? getPrimaryKey() => prefs!.getString(_keyprimaryKey);
+
+  static String? getTokenUri() => prefs!.getString(_keytokenUri);
+
+  static String? getPrivateKey() => prefs!.getString(_keyprivateKey);
+
+  static String? getUniverseDomain() => prefs!.getString(_keyuniverseDomain);
 
   static Future<void> clearUserFromSharedPrefs() async {
     prefs = await SharedPreferences.getInstance();
@@ -153,6 +208,15 @@ class SharedPrefServices {
     await prefs!.setBool(_keyislogged, false);
 
     await prefs!.setString(_keydocId, "");
+    await prefs!.setString(_keyauthProvider, "");
+    await prefs!.setString(_keyauthUri, "");
+    await prefs!.setString(_keyclientEmail, "");
+    await prefs!.setString(_keyclientId, "");
+    await prefs!.setString(_keyclientUrl, "");
+    await prefs!.setString(_keyprimaryKey, "");
+    await prefs!.setString(_keytokenUri, "");
+    await prefs!.setString(_keyprivateKey, "");
+    await prefs!.setString(_keyuniverseDomain, "");
 
     print('User data reset in SharedPreferences.');
   }

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/Login/loginScreen.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
+import 'package:mana_driver/service.dart';
 import 'package:mana_driver/viewmodels/register_viewmodel.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +35,8 @@ class OtpScreen extends StatefulWidget {
   @override
   State<OtpScreen> createState() => _OtpScreenState();
 }
+
+final FCMService fcmService = FCMService();
 
 class _OtpScreenState extends State<OtpScreen> {
   // @override
@@ -94,6 +97,14 @@ class _OtpScreenState extends State<OtpScreen> {
         await SharedPrefServices.setCountryCode(widget.countryCode);
         await SharedPrefServices.setFcmToken(widget.fcmToken);
         await SharedPrefServices.setislogged(true);
+
+        await fcmService.sendNotification(
+          recipientFCMToken: widget.fcmToken,
+          title: "Welcome to Rydyn!",
+          body:
+              "${capitalizeFirst(widget.firstName)} your registration was successful.Please log in to continue.",
+        );
+        print("Registration Success Notification Sent!");
 
         // final role = await SharedPrefServices.getRoleCode();
         showDialog(

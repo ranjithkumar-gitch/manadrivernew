@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,6 +6,7 @@ import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 
 import 'package:mana_driver/Login/selectLanguage.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
+import 'package:mana_driver/service.dart';
 
 import 'package:mana_driver/viewmodels/login_viewmodel.dart';
 
@@ -46,6 +48,49 @@ class _OtpLoginState extends State<OtpLogin> {
   //     Navigator.pop(context); // or redirect to login/home
   //   }
   // }
+
+  final FCMService fcmService = FCMService();
+
+  Future<void> fetchServiceKeys() async {
+    try {
+      final snap =
+          await FirebaseFirestore.instance
+              .collection("serviceKeys")
+              .doc('p5xZLhdsUezpgluOIzSY')
+              .get();
+
+      if (!snap.exists) {
+        print("Service keys document not found");
+        return;
+      }
+
+      final data = snap.data()!;
+
+      await SharedPrefServices.setAuthProvider(data["authProvider"] ?? "");
+      await SharedPrefServices.setAuthUri(data["authUri"] ?? "");
+      await SharedPrefServices.setClientEmail(data["clientEmail"] ?? "");
+      await SharedPrefServices.setClientId(data["clientId"] ?? "");
+      await SharedPrefServices.setClientUrl(data["clientUrl"] ?? "");
+      await SharedPrefServices.setPrimaryKey(data["primaryKey"] ?? "");
+      await SharedPrefServices.setPrivateKey(data["privateKey"] ?? "");
+      await SharedPrefServices.setTokenUri(data["tokenUri"] ?? "");
+      await SharedPrefServices.setUniverseDomain(data["universeDomain"] ?? "");
+
+      print("Service keys saved to SharedPreferences!");
+
+      print("authProvider      : ${SharedPrefServices.getAuthProvider()}");
+      print("authUri           : ${SharedPrefServices.getAuthUri()}");
+      print("clientEmail       : ${SharedPrefServices.getClientEmail()}");
+      print("clientId          : ${SharedPrefServices.getClientId()}");
+      print("clientUrl         : ${SharedPrefServices.getClientUrl()}");
+      print("primaryKey        : ${SharedPrefServices.getPrimaryKey()}");
+      print("privateKey        : ${SharedPrefServices.getPrivateKey()}");
+      print("tokenUri          : ${SharedPrefServices.getTokenUri()}");
+      print("universeDomain    : ${SharedPrefServices.getUniverseDomain()}");
+    } catch (e) {
+      print("Error loading service keys: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -175,13 +220,37 @@ class _OtpLoginState extends State<OtpLogin> {
                               final vm = context.read<LoginViewModel>();
 
                               await vm.fetchLoggedInUser(widget.phoneNumber);
-
+                              await fetchServiceKeys();
                               final role =
                                   await SharedPrefServices.getRoleCode();
 
                               if (!mounted) return;
 
                               if (role == "Owner") {
+                                final docId = SharedPrefServices.getDocId();
+
+                                if (docId != null && docId.isNotEmpty) {
+                                  final snap =
+                                      await FirebaseFirestore.instance
+                                          .collection("users")
+                                          .doc(docId)
+                                          .get();
+
+                                  if (snap.exists) {
+                                    final driverToken =
+                                        snap.data()?["fcmToken"] ?? "";
+
+                                    if (driverToken.isNotEmpty) {
+                                      await fcmService.sendNotification(
+                                        recipientFCMToken: driverToken,
+                                        title: "Welcome Back!",
+                                        body:
+                                            "You're now logged in and ready to go.",
+                                      );
+                                      print("Login success notification sent!");
+                                    }
+                                  }
+                                }
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -197,6 +266,7 @@ class _OtpLoginState extends State<OtpLogin> {
                                 );
                               }
                             } catch (e) {
+                              print(e);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text("Error: $e")),
                               );
