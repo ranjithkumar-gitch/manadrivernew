@@ -1,6 +1,6 @@
 import 'dart:convert';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mana_driver/main.dart';
 
@@ -44,6 +44,7 @@ class FirebaseApi {
         notification.hashCode,
         notification.title,
         notification.body,
+
         NotificationDetails(
           android: AndroidNotificationDetails(
             _androidChannel.id,
@@ -51,6 +52,7 @@ class FirebaseApi {
             channelDescription: _androidChannel.description,
             importance: _androidChannel.importance,
             icon: '@mipmap/ic_launcher',
+            color: Colors.orange,
           ),
         ),
         payload: jsonEncode(message.toMap()),

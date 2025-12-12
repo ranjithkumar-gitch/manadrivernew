@@ -18,16 +18,41 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
   final fcmService = FCMService();
   final FirebaseApi _firebaseApi = FirebaseApi();
   @override
   void initState() {
     super.initState();
-    fetchServiceKeys();
-    _navigateNext();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4),
+    );
+
+    _scaleAnimation = Tween<double>(
+      begin: 0.0, // start at normal size
+      end: 1.0, // shrink to nothing (zoom out)
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
+    _controller.forward();
+    startSplashFlow();
+
     print('DOCID ${SharedPrefServices.getDocId().toString()}');
     print('USER ID ${SharedPrefServices.getUserId().toString()}');
+  }
+
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> startSplashFlow() async {
+    await fetchServiceKeys();
+    await runApp();
+    await _navigateNext();
   }
 
   Future<void> fetchServiceKeys() async {
@@ -114,7 +139,6 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     await Future.delayed(const Duration(seconds: 3));
-    _navigateNext();
   }
 
   Future<void> _navigateNext() async {
@@ -165,31 +189,33 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           Expanded(
             child: Center(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: AnimatedTextKit(
-                  repeatForever: true,
-                  animatedTexts: [
-                    ColorizeAnimatedText(
+              child: ScaleTransition(
+                scale: _scaleAnimation,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
                       'rydyn',
-                      textStyle: colorizeTextStyle,
-                      colors: colorizeColors,
-                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
                     ),
                   ],
-                  isRepeatingAnimation: true,
-                  pause: const Duration(milliseconds: 200),
                 ),
               ),
-            ),
 
-            // Center(
-            //   child: Image.asset(
-            //     'images/rydyn_user.png',
-            //     height: 400,
-            //     fit: BoxFit.contain,
-            //   ),
-            // ),
+              //   Image.asset(
+              //     'images/rydyn_captain.png',
+              //     height: 400,
+              //     fit: BoxFit.contain,
+              //   ),
+            ),
           ),
 
           Padding(
@@ -218,6 +244,41 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+
+
+
+
+
+
+
+ // Expanded(
+          //   child: Center(
+          //     child: SizedBox(
+          //       width: MediaQuery.of(context).size.width * 0.8,
+          //       child: AnimatedTextKit(
+          //         repeatForever: true,
+          //         animatedTexts: [
+          //           ColorizeAnimatedText(
+          //             'rydyn',
+          //             textStyle: colorizeTextStyle,
+          //             colors: colorizeColors,
+          //             textAlign: TextAlign.center,
+          //           ),
+          //         ],
+          //         isRepeatingAnimation: true,
+          //         pause: const Duration(milliseconds: 200),
+          //       ),
+          //     ),
+          //   ),
+
+          //   // Center(
+          //   //   child: Image.asset(
+          //   //     'images/rydyn_user.png',
+          //   //     height: 400,
+          //   //     fit: BoxFit.contain,
+          //   //   ),
+          //   // ),
+          // ),
 //  const SizedBox(),
 
 //           Center(
