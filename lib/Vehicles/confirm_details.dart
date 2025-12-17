@@ -639,6 +639,15 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
           final paymentStatus = liveData['paymentStatus'] ?? '';
 
           final ownerOTP = liveData['ownerOTP']?.toString() ?? '';
+
+          DateTime createdAtTime =
+              (liveData['createdAt'] as Timestamp).toDate();
+
+          final DateTime now = DateTime.now();
+          final int diffSeconds = 300 - now.difference(createdAtTime).inSeconds;
+
+          final bool isTimerOver = diffSeconds <= 0;
+
           final drop2Location = liveData['drop2'] ?? '';
           final pickupLocation = liveData['pickup'] ?? '';
           final dropLocation = liveData['drop'] ?? '';
@@ -1090,6 +1099,123 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                         ],
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 12),
+                ] else if (rideStatus == 'New') ...[
+                  StreamBuilder<int>(
+                    stream: Stream.periodic(
+                      const Duration(seconds: 1),
+                      (i) => i,
+                    ),
+                    builder: (context, snapshot) {
+                      final createdAtTs = liveData['createdAt'];
+                      if (createdAtTs == null) return const SizedBox();
+
+                      final createdAt = (createdAtTs as Timestamp).toDate();
+                      final now = DateTime.now();
+
+                      final diffSeconds = now.difference(createdAt).inSeconds;
+                      final isTimerOver = diffSeconds >= 300;
+
+                      final remainingSeconds = (300 - diffSeconds).clamp(
+                        0,
+                        300,
+                      );
+                      final minutes = (remainingSeconds ~/ 60)
+                          .toString()
+                          .padLeft(2, '0');
+                      final seconds = (remainingSeconds % 60)
+                          .toString()
+                          .padLeft(2, '0');
+
+                      final progress = remainingSeconds / 300;
+
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 15, right: 15),
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey.shade300),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.1),
+                                blurRadius: 3,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    if (!isTimerOver)
+                                      CircularProgressIndicator(
+                                        value: remainingSeconds / 300,
+                                        strokeWidth: 4,
+                                        backgroundColor: Colors.grey.shade300,
+                                        valueColor: AlwaysStoppedAnimation(
+                                          korangeColor,
+                                        ),
+                                      )
+                                    else
+                                      Icon(
+                                        Icons.warning_amber_outlined,
+                                        color: korangeColor,
+                                        size: 26,
+                                      ),
+                                  ],
+                                ),
+                              ),
+
+                              const SizedBox(width: 12),
+
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomText(
+                                      text:
+                                          isTimerOver
+                                              ? "No captains available"
+                                              : "Ride request received",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      textcolor: korangeColor,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    CustomText(
+                                      text:
+                                          isTimerOver
+                                              ? "At the moment no captains accepted. Please cancel the ride below."
+                                              : "Waiting for captains to accept your ride",
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: kseegreyColor,
+                                    ),
+
+                                    if (!isTimerOver) ...[
+                                      const SizedBox(height: 8),
+                                      CustomText(
+                                        text: "Time left: $minutes:$seconds",
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        textcolor: korangeColor,
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 12),
                 ],
