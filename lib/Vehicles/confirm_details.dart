@@ -10,6 +10,7 @@ import 'package:mana_driver/Login/otpscreen.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Sidemenu/cancellationPolicyScreen.dart';
 import 'package:mana_driver/Vehicles/chat.dart';
+import 'package:mana_driver/Vehicles/full_image_view.dart';
 import 'package:mana_driver/Vehicles/payment_gateway.dart';
 import 'package:intl/intl.dart';
 import 'package:mana_driver/Widgets/colors.dart';
@@ -438,6 +439,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
             ? vehicleData!['images'][0]
             : 'images/swift.png';
     String driverName = data['driverName'] ?? 'Driver not assigned';
+
     // String driverPhone = data['driverPhone'] ?? '+91 XXXXX XXXXX';
     // String driverEmail = data['driverEmail'] ?? 'example@email.com';
     // String pickupLocation = data['pickup'] ?? '';
@@ -746,18 +748,39 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
 
                               return Row(
                                 children: [
-                                  CircleAvatar(
-                                    radius: 40,
-                                    backgroundImage:
+                                  GestureDetector(
+                                    onTap:
                                         (d['profileUrl'] != null &&
                                                 d['profileUrl']
                                                     .toString()
                                                     .isNotEmpty)
-                                            ? NetworkImage(d['profileUrl'])
-                                            : const AssetImage(
-                                                  'images/avathar1.jpeg',
-                                                )
-                                                as ImageProvider,
+                                            ? () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder:
+                                                      (_) => FullImageView(
+                                                        imagePath:
+                                                            d['profileUrl'],
+                                                        isAsset: false,
+                                                      ),
+                                                ),
+                                              );
+                                            }
+                                            : null,
+                                    child: CircleAvatar(
+                                      radius: 40,
+                                      backgroundImage:
+                                          (d['profileUrl'] != null &&
+                                                  d['profileUrl']
+                                                      .toString()
+                                                      .isNotEmpty)
+                                              ? NetworkImage(d['profileUrl'])
+                                              : const AssetImage(
+                                                    'images/avathar1.jpeg',
+                                                  )
+                                                  as ImageProvider,
+                                    ),
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
@@ -798,7 +821,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                                       driverData: d,
                                                       driverId: liveDriverId,
                                                       ownerId: ownerId,
-                                                      ownerName: ownerName,
+                                                      ownerName: driverName,
                                                       ownerProfile:
                                                           ownerProfile,
                                                     ),

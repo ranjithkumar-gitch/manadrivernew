@@ -12,6 +12,7 @@ import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 
 import 'package:mana_driver/Location/location.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
+import 'package:mana_driver/Sidemenu/helpAndSupportScreen.dart';
 
 import 'package:mana_driver/Vehicles/my_vehicle.dart';
 
@@ -242,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => NotificationScreen(),
+                                  builder: (_) => HelpAndSupport(),
                                 ),
                               );
                             },
@@ -257,7 +258,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               child: Image.asset(
-                                'images/notification.png',
+                                'images/support.png',
+                                // color: KblackColor,
                                 width: 24,
                                 height: 24,
                                 fit: BoxFit.contain,
@@ -1060,7 +1062,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (!isRoundTrip) {
       if (dist <= 100) {
-        rate = 12.0;
+        rate = 20.0;
       } else if (dist <= 200) {
         rate = 11.0;
       } else {
@@ -1099,6 +1101,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       builder: (context) {
         DateTime selectedDate = DateTime.now();
+
         TimeOfDay selectedTime = TimeOfDay.now();
 
         DateTime? arrivalDate;
@@ -1361,8 +1364,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: dateTimeRow(
                                   Icons.date_range,
                                   "Select Date",
-                                  value:
-                                      "${selectedDate.toLocal()}".split(' ')[0],
+                                  value: DateFormat(
+                                    'dd-MM-yyyy',
+                                  ).format(selectedDate),
                                 ),
                               ),
 
@@ -1462,7 +1466,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           }
                                         },
                                 child: dateTimeRow(
-                                  Icons.timer,
+                                  Icons.timer_outlined,
                                   "Select Time",
                                   value: selectedTime.format(context),
                                 ),
@@ -1558,9 +1562,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     value:
                                         arrivalDate == null
                                             ? "---"
-                                            : "${arrivalDate!.toLocal()}".split(
-                                              ' ',
-                                            )[0],
+                                            : DateFormat(
+                                              'dd-MM-yyyy',
+                                            ).format(arrivalDate!),
                                   ),
                                 ),
 
@@ -1635,13 +1639,56 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           8,
                                                         ),
                                                   ),
+                                              dayPeriodShape:
+                                                  RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8,
+                                                        ),
+                                                    side: BorderSide(
+                                                      color: korangeColor,
+                                                      width: 1,
+                                                    ),
+                                                  ),
+                                              dayPeriodColor: korangeColor,
+                                              dayPeriodTextColor:
+                                                  MaterialStateColor.resolveWith(
+                                                    (states) {
+                                                      if (states.contains(
+                                                        MaterialState.selected,
+                                                      )) {
+                                                        return Colors.white;
+                                                      }
+                                                      return Colors.black;
+                                                    },
+                                                  ),
                                               dialBackgroundColor:
                                                   Colors.grey[200],
                                               dialHandColor: korangeColor,
+                                              hourMinuteTextColor:
+                                                  MaterialStateColor.resolveWith(
+                                                    (states) {
+                                                      if (states.contains(
+                                                        MaterialState.selected,
+                                                      )) {
+                                                        return Colors.white;
+                                                      }
+                                                      return Colors.black;
+                                                    },
+                                                  ),
                                             ),
                                             colorScheme: ColorScheme.light(
                                               primary: korangeColor,
+                                              onPrimary: Colors.white,
+                                              onSurface: Colors.grey.shade700,
                                             ),
+                                            textButtonTheme:
+                                                TextButtonThemeData(
+                                                  style: TextButton.styleFrom(
+                                                    foregroundColor:
+                                                        korangeColor,
+                                                  ),
+                                                ),
                                           ),
                                           child: child!,
                                         );
@@ -1745,7 +1792,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     }
                                   },
                                   child: dateTimeRow(
-                                    Icons.timer,
+                                    Icons.timer_outlined,
                                     "Arrival Time",
                                     value:
                                         arrivalTime == null

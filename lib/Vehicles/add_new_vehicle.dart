@@ -564,21 +564,21 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
               children: [
                 const SizedBox(height: 10),
                 CustomText(
-                  text: 'Add you vehicle',
+                  text: 'Add once, use every time',
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   textcolor: KblackColor,
                 ),
-                const SizedBox(height: 5),
-                CustomText(
-                  text:
-                      'Save your vehicle and get one step closer to hassle-free rides.',
-                  fontSize: 12,
-                  fontWeight: FontWeight.w300,
-                  textcolor: kgreyColor,
-                ),
+                // const SizedBox(height: 5),
 
-                const SizedBox(height: 20),
+                // CustomText(
+                //   text:
+                //       'Save your vehicle and get one step closer to hassle-free rides.',
+                //   fontSize: 12,
+                //   fontWeight: FontWeight.w300,
+                //   textcolor: kgreyColor,
+                // ),
+                const SizedBox(height: 15),
                 CustomText(
                   text: 'Upload Vehicle Images',
                   fontSize: 14,
@@ -589,11 +589,11 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                 const SizedBox(height: 10),
 
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: List.generate(
-                    4,
+                    2,
                     (index) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                      padding: const EdgeInsets.only(left: 7, right: 12),
                       child: GestureDetector(
                         onTap: () => _pickImage(index),
                         child: DottedBorder(
@@ -605,8 +605,8 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                             padding: const EdgeInsets.all(0),
                           ),
                           child: Container(
-                            width: 70,
-                            height: 60,
+                            width: 140,
+                            height: 100,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: KdeviderColor,
@@ -623,8 +623,8 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                                           ),
                                           child: Image.file(
                                             images[index]!,
-                                            width: 70,
-                                            height: 60,
+                                            width: 140,
+                                            height: 100,
                                             fit: BoxFit.cover,
                                           ),
                                         ),
@@ -635,9 +635,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                                             onTap: () {
                                               setState(() {
                                                 images.removeAt(index);
-                                                images.add(
-                                                  null,
-                                                ); // shift and keep 4
+                                                images.add(null);
                                               });
                                             },
                                             child: Container(
@@ -645,7 +643,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                                                 color: korangeColor,
                                                 shape: BoxShape.circle,
                                               ),
-                                              padding: const EdgeInsets.all(2),
+                                              padding: const EdgeInsets.all(3),
                                               child: const Icon(
                                                 Icons.delete,
                                                 size: 14,
