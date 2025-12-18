@@ -1,16 +1,7 @@
-
-
 import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'main.dart';
-
-
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint('BG message: ${message.messageId}');
-}
-
 
 class FirebaseApi {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -25,19 +16,13 @@ class FirebaseApi {
         importance: Importance.high,
       );
 
-
   Future<void> initNotifications() async {
-    await _firebaseMessaging.requestPermission();
-
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-
     final token = await _firebaseMessaging.getToken();
     debugPrint("FCM Token: $token");
 
     await _initLocalNotifications();
     _initFCMListeners();
   }
-
 
   Future<void> _initLocalNotifications() async {
     const AndroidInitializationSettings androidSettings =
@@ -47,18 +32,7 @@ class FirebaseApi {
       android: androidSettings,
     );
 
-    await _localNotifications.initialize(
-      settings,
-      onDidReceiveNotificationResponse: (response) {
-        if (response.payload == null) return;
-
-        final Map<String, dynamic> payload = jsonDecode(response.payload!);
-
-        final route = payload['data']?['route'] ?? '/dashboard';
-
-        navigatorKey.currentState?.pushNamed(route);
-      },
-    );
+    await _localNotifications.initialize(settings);
 
     await _localNotifications
         .resolvePlatformSpecificImplementation<
@@ -67,10 +41,7 @@ class FirebaseApi {
         ?.createNotificationChannel(_androidChannel);
   }
 
- 
-
   void _initFCMListeners() {
-    
     FirebaseMessaging.onMessage.listen((message) {
       final notification = message.notification;
       if (notification == null) return;
@@ -88,34 +59,16 @@ class FirebaseApi {
             icon: '@mipmap/ic_launcher',
           ),
         ),
-        payload: jsonEncode(message.toMap()),
+        payload: jsonEncode(message.data),
       );
     });
 
- 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      _handleNotificationTap(message);
+      debugPrint("Opened from background");
     });
-
-
-    _firebaseMessaging.getInitialMessage().then((message) {
-      if (message != null) {
-        _handleNotificationTap(message);
-      }
-    });
-  }
-
-
-
-  void _handleNotificationTap(RemoteMessage message) {
-    final route = message.data['route'] ?? '/dashboard';
-    navigatorKey.currentState?.pushNamed(route);
   }
 
   Future<void> iosNotifications() async {
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
-
     const DarwinInitializationSettings iosSettings =
         DarwinInitializationSettings(
           requestAlertPermission: true,
@@ -127,15 +80,10 @@ class FirebaseApi {
       iOS: iosSettings,
     );
 
-    await flutterLocalNotificationsPlugin.initialize(initSettings);
-    // await FirebaseMessaging.instance
-    //     .setForegroundNotificationPresentationOptions(
-    //   alert: true,
-    //   badge: true,
-    //   sound: true,
-    // );
+    await _localNotifications.initialize(initSettings);
   }
 }
+
 
 
 

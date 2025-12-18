@@ -54,8 +54,21 @@ class FCMService {
       "message": {
         "token": recipientFCMToken,
         "notification": {"title": title, "body": body},
+
+        "data": {
+          "route": "/splash",
+          "click_action": "FLUTTER_NOTIFICATION_CLICK",
+        },
+
+        // "android": {
+        //   "notification": {"click_action": "FLUTTER_NOTIFICATION_CLICK"},
+        // },
         "android": {
-          "notification": {"click_action": "FLUTTER_NOTIFICATION_CLICK"},
+          "priority": "HIGH",
+          "notification": {
+            "click_action": "FLUTTER_NOTIFICATION_CLICK",
+            "channel_id": "high_importance_channel",
+          },
         },
         "apns": {
           "payload": {
