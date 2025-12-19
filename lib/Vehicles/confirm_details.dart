@@ -23,8 +23,13 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class ConfirmDetails extends StatefulWidget {
   final Map<String, dynamic> bookingData;
+  final bool fromHome;
 
-  const ConfirmDetails({super.key, required this.bookingData});
+  const ConfirmDetails({
+    super.key,
+    required this.bookingData,
+    required this.fromHome,
+  });
 
   @override
   State<ConfirmDetails> createState() => _ConfirmDetailsState();
@@ -46,7 +51,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     super.initState();
     data = widget.bookingData;
     totalPrice = widget.bookingData['fare']?.toString() ?? "0";
-    print('${data['bookingId']},$driverData,${data['ownerId']}');
+    print('printing ${data['bookingId']},$driverData,${data['ownerId']}');
     fetchReviews();
     fetchVehicleData();
     // fetchDriver();
@@ -583,7 +588,31 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (_) => const BottomNavigation(initialIndex: 1),
+                          ),
+                          (route) => false,
+                        );
+                      },
+
+                      // onTap: () {
+
+                      //   if (widget.fromHome) {
+                      //     Navigator.pushAndRemoveUntil(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (_) => BottomNavigation(),
+                      //       ),
+                      //       (route) => false,
+                      //     );
+                      //   } else {
+                      //     Navigator.pop(context);
+                      //   }
+                      // },
                       child: Container(
                         width: 50,
                         height: 50,
@@ -675,6 +704,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
             return "${parts[2]}-${parts[1]}-${parts[0]}";
           }
 
+          final email = SharedPrefServices.getEmail()?.trim() ?? '';
           return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1887,24 +1917,29 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Image.asset(
-                                  "images/email_drvr.png",
-                                  height: 20,
-                                  width: 20,
-                                ),
-                                const SizedBox(width: 8),
-                                CustomText(
-                                  text:
-                                      SharedPrefServices.getEmail().toString(),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: KblackColor,
-                                ),
-                              ],
-                            ),
+                            if (email.isNotEmpty)
+                              Column(
+                                children: [
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        "images/email_drvr.png",
+                                        height: 20,
+                                        width: 20,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      CustomText(
+                                        text: email,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        textcolor: KblackColor,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+
                             const SizedBox(height: 10),
                             Row(
                               children: [
@@ -1949,6 +1984,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
 
                             final driver =
                                 driverSnap.data!.data() as Map<String, dynamic>;
+                            final String driverEmail =
+                                driver['email']?.toString().trim() ?? '';
 
                             return Container(
                               width: double.infinity,
@@ -1996,24 +2033,27 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 10),
 
-                                  Row(
-                                    children: [
-                                      Image.asset(
-                                        "images/email_drvr.png",
-                                        height: 20,
-                                        width: 20,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      CustomText(
-                                        text: driver['email'] ?? '',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        textcolor: KblackColor,
-                                      ),
-                                    ],
-                                  ),
+                                  if (driverEmail.isNotEmpty) ...[
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          "images/email_drvr.png",
+                                          height: 20,
+                                          width: 20,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        CustomText(
+                                          text: driverEmail,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          textcolor: KblackColor,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+
                                   const SizedBox(height: 10),
 
                                   Row(

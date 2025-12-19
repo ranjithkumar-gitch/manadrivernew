@@ -142,13 +142,13 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _navigateNext() async {
-    // 🔔 Detect notification open (APP CLOSED STATE)
+ 
     RemoteMessage? message =
         await FirebaseMessaging.instance.getInitialMessage();
 
     if (message != null) {
       print("App opened via notification");
-      // Later you can use: message.data['type']
+     
     }
 
     await Future.delayed(const Duration(seconds: 3));

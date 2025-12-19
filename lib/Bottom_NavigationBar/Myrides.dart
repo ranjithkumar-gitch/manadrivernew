@@ -143,7 +143,10 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                   context,
                   MaterialPageRoute(
                     builder:
-                        (context) => ConfirmDetails(bookingData: bookingData),
+                        (context) => ConfirmDetails(
+                          bookingData: bookingData,
+                          fromHome: false,
+                        ),
                   ),
                 );
               },

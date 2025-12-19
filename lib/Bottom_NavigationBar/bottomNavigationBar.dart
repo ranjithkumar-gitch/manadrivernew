@@ -10,12 +10,20 @@ import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/l10n/app_localizations.dart';
 
 class BottomNavigation extends StatefulWidget {
+  final int initialIndex;
+  const BottomNavigation({Key? key, this.initialIndex = 0}) : super(key: key);
   @override
   State<BottomNavigation> createState() => _BottomNavigationState();
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
 
   final List<Widget> _screens = [
     HomeScreen(),

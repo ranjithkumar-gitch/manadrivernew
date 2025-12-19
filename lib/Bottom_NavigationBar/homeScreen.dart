@@ -13,6 +13,7 @@ import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/Location/location.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Sidemenu/helpAndSupportScreen.dart';
+import 'package:mana_driver/Vehicles/confirm_details.dart';
 
 import 'package:mana_driver/Vehicles/my_vehicle.dart';
 
@@ -63,6 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     print("Home Scree user id ${SharedPrefServices.getUserId().toString()}");
     super.initState();
+    selectedCarIndex = -1;
+
     _fetchCars();
     // _startAutoScroll();
     _startOfferAutoScroll();
@@ -1062,7 +1065,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (!isRoundTrip) {
       if (dist <= 100) {
-        rate = 20.0;
+        rate = 12.0;
       } else if (dist <= 200) {
         rate = 11.0;
       } else {
@@ -2099,9 +2102,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                           "Booking Data to send: $bookingData",
                                         );
 
-                                        await FirebaseFirestore.instance
+                                        // await FirebaseFirestore.instance
+                                        //     .collection('bookings')
+                                        //     .add(bookingData);
+                                        final docRef = await FirebaseFirestore
+                                            .instance
                                             .collection('bookings')
                                             .add(bookingData);
+
+                                        final bookingId = docRef.id;
+
+                                        print(bookingId);
+
+                                        final bookingWithId = {
+                                          ...bookingData,
+                                          'bookingId': bookingId,
+                                        };
+
                                         final driversSnap =
                                             await FirebaseFirestore.instance
                                                 .collection('drivers')
@@ -2131,13 +2148,38 @@ class _HomeScreenState extends State<HomeScreen> {
                                             backgroundColor: Colors.green,
                                           ),
                                         );
+                                        setState(() {
+                                          pickupController.clear();
+                                          dropController.clear();
+                                          drop2Controller.clear();
+
+                                          selectedTripMode = "";
+                                          selectedTripTime = "";
+                                          selectedCarIndex = -1;
+                                          selectedDate = DateTime.now();
+                                          selectedTime = TimeOfDay.now();
+                                          arrivalDate = null;
+                                          arrivalTime = null;
+
+                                          pickupLat = '';
+                                          pickupLng = '';
+                                          dropLat = '';
+                                          dropLng = '';
+                                          drop2Lat = '';
+                                          drop2Lng = '';
+                                          fareMap.clear();
+                                        });
 
                                         Navigator.pop(context);
 
-                                        Navigator.pushReplacement(
+                                        Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (_) => BottomNavigation(),
+                                            builder:
+                                                (_) => ConfirmDetails(
+                                                  bookingData: bookingWithId,
+                                                    fromHome: true,
+                                                ),
                                           ),
                                         );
                                       } catch (e) {
