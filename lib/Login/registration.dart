@@ -11,6 +11,7 @@ import 'package:mana_driver/Widgets/customText.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:mana_driver/Widgets/customTextField.dart';
 import 'package:mana_driver/Widgets/mobileNumberInputField.dart';
+import 'package:mana_driver/l10n/app_localizations.dart';
 import 'package:mana_driver/viewmodels/register_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:libphonenumber_plugin/libphonenumber_plugin.dart';
@@ -68,6 +69,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final vm = Provider.of<RegisterViewModel>(context);
 
@@ -82,14 +84,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CustomText(
-                  text: "It only takes a minute to get started.",
+                  text: localizations.getStartedMinute,
                   fontSize: 32,
                   fontWeight: FontWeight.w700,
                   textcolor: korangeColor,
                 ),
                 const SizedBox(height: 10),
                 CustomText(
-                  text: "Quick. Simple. Hassle-free registration.",
+                  text: localizations.quickSimpleRegistration,
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
                   textcolor: kgreyColor,
@@ -98,20 +100,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 CustomTextField(
                   controller: firstnameController,
-                  labelText: 'First Name',
+                  labelText: localizations.firstName,
                 ),
                 const SizedBox(height: 20),
 
                 CustomTextField(
                   controller: lastnameController,
-                  labelText: 'Last Name',
+                  labelText: localizations.lastName,
                 ),
 
                 const SizedBox(height: 20),
 
                 CustomTextField(
                   controller: emailController,
-                  labelText: 'Email ID',
+                  labelText: localizations.emailId,
                 ),
                 const SizedBox(height: 20),
 
@@ -129,7 +131,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 vm.isLoading
                     ? const CircularProgressIndicator(color: korangeColor)
                     : CustomButton(
-                      text: 'Register as User',
+                      text: localizations.registerAsUser,
                       onPressed: () async {
                         final firstName = firstnameController.text;
 
@@ -148,7 +150,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         if (!isValidName(firstName)) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text("Please enter a valid first name"),
+                              content: Text(localizations.validFirstName),
                             ),
                           );
                           return;
@@ -157,7 +159,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         if (!isValidName(lastName)) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text("Please enter a valid last name"),
+                              content: Text(localizations.validLastName),
                             ),
                           );
                           return;
@@ -184,7 +186,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                "Please enter a valid phone number for ${selectedCountry.name}",
+                                "${localizations.validPhoneNumber} ${selectedCountry.name}",
                               ),
                             ),
                           );
@@ -213,7 +215,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                   title: Center(
                                     child: Text(
-                                      "Mobile Number Exists",
+                                      localizations.mobileNumberExists,
                                       style: GoogleFonts.poppins(
                                         color: korangeColor,
                                         fontSize: 15,
@@ -222,7 +224,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     ),
                                   ),
                                   content: Text(
-                                    "This mobile number is already registered as an Owner.",
+                                    localizations.mobileRegisteredOwner,
                                     style: GoogleFonts.poppins(
                                       color: Colors.black,
                                       fontSize: 14,
@@ -233,7 +235,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     TextButton(
                                       onPressed: () => Navigator.pop(context),
                                       child: Text(
-                                        'OK',
+                                        localizations.ok,
                                         style: GoogleFonts.poppins(
                                           color: korangeColor,
                                           fontSize: 14,
@@ -265,7 +267,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                   title: Center(
                                     child: Text(
-                                      "Mobile Number Exists",
+                                      localizations.mobileNumberExists,
                                       style: GoogleFonts.poppins(
                                         color: korangeColor,
                                         fontSize: 15,
@@ -274,7 +276,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     ),
                                   ),
                                   content: Text(
-                                    "This mobile number is already registered as a Driver.",
+                                    localizations.mobileRegisteredDriver,
                                     style: GoogleFonts.poppins(
                                       color: Colors.black,
                                       fontSize: 14,
@@ -285,7 +287,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     TextButton(
                                       onPressed: () => Navigator.pop(context),
                                       child: Text(
-                                        'OK',
+                                        localizations.ok,
                                         style: GoogleFonts.poppins(
                                           color: korangeColor,
                                           fontSize: 14,
@@ -337,7 +339,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomText(
-                      text: "You have an account? ",
+                      text: localizations.haveAccount,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       textcolor: kgreyColor,
@@ -352,7 +354,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         );
                       },
                       child: CustomText(
-                        text: "Sign In",
+                        text: localizations.signIn,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         textcolor: korangeColor,

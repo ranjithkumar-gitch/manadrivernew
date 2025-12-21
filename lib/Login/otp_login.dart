@@ -6,6 +6,7 @@ import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 
 import 'package:mana_driver/Login/selectLanguage.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
+import 'package:mana_driver/l10n/app_localizations.dart';
 import 'package:mana_driver/service.dart';
 
 import 'package:mana_driver/viewmodels/login_viewmodel.dart';
@@ -94,6 +95,7 @@ class _OtpLoginState extends State<OtpLogin> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -114,7 +116,7 @@ class _OtpLoginState extends State<OtpLogin> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CustomText(
-                            text: "Enter Your OTP",
+                            text: localizations.enterYourOtp,
                             fontSize: 32,
                             fontWeight: FontWeight.w700,
                             textcolor: korangeColor,
@@ -128,14 +130,11 @@ class _OtpLoginState extends State<OtpLogin> {
                                 color: kgreyColor,
                               ),
                               children: [
-                                const TextSpan(text: "OTP sent to "),
                                 TextSpan(
                                   text: widget.phoneNumber,
                                   style: TextStyle(color: korangeColor),
                                 ),
-                                const TextSpan(
-                                  text: " this OTP will get auto entering",
-                                ),
+                                TextSpan(text: " " + localizations.otpSent),
                               ],
                             ),
                           ),
@@ -191,11 +190,9 @@ class _OtpLoginState extends State<OtpLogin> {
                                   fontWeight: FontWeight.w400,
                                 ),
                                 children: [
-                                  const TextSpan(
-                                    text: "You didn’t receive OTP? ",
-                                  ),
+                                  TextSpan(text: localizations.otpNotReceived),
                                   TextSpan(
-                                    text: "Resend OTP",
+                                    text: localizations.resendOtp,
                                     style: TextStyle(
                                       color: korangeColor,
                                       fontWeight: FontWeight.w600,
@@ -212,7 +209,7 @@ class _OtpLoginState extends State<OtpLogin> {
                     _isLoading
                         ? const CircularProgressIndicator(color: korangeColor)
                         : CustomButton(
-                          text: 'Verify OTP',
+                          text: localizations.verifyOtp,
                           onPressed: () async {
                             setState(() => _isLoading = true);
 
@@ -243,9 +240,8 @@ class _OtpLoginState extends State<OtpLogin> {
                                     if (driverToken.isNotEmpty) {
                                       await fcmService.sendNotification(
                                         recipientFCMToken: driverToken,
-                                        title: "Welcome Back!",
-                                        body:
-                                            "You're now logged in and ready to go.",
+                                        title: localizations.welcomeBack,
+                                        body: localizations.loggedInReady,
                                       );
                                       print("Login success notification sent!");
                                     }

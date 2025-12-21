@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/Login/loginScreen.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
+import 'package:mana_driver/l10n/app_localizations.dart';
 import 'package:mana_driver/service.dart';
 import 'package:mana_driver/viewmodels/register_viewmodel.dart';
 import 'package:pinput/pinput.dart';
@@ -62,114 +63,9 @@ class _OtpScreenState extends State<OtpScreen> {
     return value[0].toUpperCase() + value.substring(1).toLowerCase();
   }
 
-  Future<void> _verifyOtp() async {
-    final otp = otpController.text.trim();
-
-    if (otp != "1234") {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Invalid OTP")));
-      return;
-    }
-
-    setState(() => _isLoading = true);
-
-    try {
-      final vm = Provider.of<RegisterViewModel>(context, listen: false);
-
-      // Save to Firebase using RegisterViewModel
-      final success = await vm.register(
-        fisrtName: capitalizeFirst(widget.firstName.trim()),
-        lastName: widget.lastName,
-        email: widget.email.isEmpty ? "" : widget.email,
-        phone: widget.phoneNumber,
-        countryCode: widget.countryCode,
-        fcmToken: widget.fcmToken,
-      );
-
-      if (success) {
-        await SharedPrefServices.setFirstName(widget.firstName);
-        await SharedPrefServices.setLastName(widget.lastName);
-        await SharedPrefServices.setEmail(
-          widget.email.isEmpty ? "" : widget.email,
-        );
-        await SharedPrefServices.setNumber(widget.phoneNumber);
-        await SharedPrefServices.setCountryCode(widget.countryCode);
-        await SharedPrefServices.setFcmToken(widget.fcmToken);
-        await SharedPrefServices.setislogged(true);
-
-        await fcmService.sendNotification(
-          recipientFCMToken: widget.fcmToken,
-          title: "Welcome to Rydyn!",
-          body:
-              "${capitalizeFirst(widget.firstName)} your registration was successful.Please log in to continue.",
-        );
-        print("Registration Success Notification Sent!");
-
-        // final role = await SharedPrefServices.getRoleCode();
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              content: Text(
-                "Please login to continue",
-                style: GoogleFonts.poppins(
-                  color: Colors.black,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              title: Center(
-                child: Text(
-                  "Registration Successful",
-                  style: GoogleFonts.poppins(
-                    color: korangeColor,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => LoginScreen()),
-                    );
-                  },
-                  child: Text(
-                    'OK',
-                    style: GoogleFonts.poppins(
-                      color: korangeColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(vm.errorMessage ?? "Registration failed")),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $e")));
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -190,7 +86,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CustomText(
-                            text: "Enter Your OTP",
+                            text: localizations.enterYourOtp,
                             fontSize: 32,
                             fontWeight: FontWeight.w700,
                             textcolor: korangeColor,
@@ -204,14 +100,11 @@ class _OtpScreenState extends State<OtpScreen> {
                                 color: kgreyColor,
                               ),
                               children: [
-                                const TextSpan(text: "OTP sent to "),
                                 TextSpan(
                                   text: widget.phoneNumber,
                                   style: TextStyle(color: korangeColor),
                                 ),
-                                const TextSpan(
-                                  text: " this OTP will get auto entering",
-                                ),
+                                TextSpan(text: " " + localizations.otpSent),
                               ],
                             ),
                           ),
@@ -267,11 +160,9 @@ class _OtpScreenState extends State<OtpScreen> {
                                   fontWeight: FontWeight.w400,
                                 ),
                                 children: [
-                                  const TextSpan(
-                                    text: "You didn’t receive OTP? ",
-                                  ),
+                                  TextSpan(text: localizations.otpNotReceived),
                                   TextSpan(
-                                    text: "Resend OTP",
+                                    text: localizations.resendOtp,
                                     style: TextStyle(
                                       color: korangeColor,
                                       fontWeight: FontWeight.w600,
@@ -288,7 +179,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     _isLoading
                         ? const CircularProgressIndicator(color: korangeColor)
                         : CustomButton(
-                          text: 'Verify OTP',
+                          text: localizations.verifyOtp,
                           onPressed: _verifyOtp,
                           width: 220,
                           height: 53,
@@ -302,5 +193,114 @@ class _OtpScreenState extends State<OtpScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _verifyOtp() async {
+    final localizations = AppLocalizations.of(context)!;
+    final otp = otpController.text.trim();
+
+    if (otp != "1234") {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(localizations.invalidOtp)));
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final vm = Provider.of<RegisterViewModel>(context, listen: false);
+
+      // Save to Firebase using RegisterViewModel
+      final success = await vm.register(
+        fisrtName: capitalizeFirst(widget.firstName.trim()),
+        lastName: widget.lastName,
+        email: widget.email.isEmpty ? "" : widget.email,
+        phone: widget.phoneNumber,
+        countryCode: widget.countryCode,
+        fcmToken: widget.fcmToken,
+      );
+
+      if (success) {
+        await SharedPrefServices.setFirstName(widget.firstName);
+        await SharedPrefServices.setLastName(widget.lastName);
+        await SharedPrefServices.setEmail(
+          widget.email.isEmpty ? "" : widget.email,
+        );
+        await SharedPrefServices.setNumber(widget.phoneNumber);
+        await SharedPrefServices.setCountryCode(widget.countryCode);
+        await SharedPrefServices.setFcmToken(widget.fcmToken);
+        await SharedPrefServices.setislogged(true);
+
+        await fcmService.sendNotification(
+          recipientFCMToken: widget.fcmToken,
+          title: localizations.welcomeRydyn,
+          body:
+              "${capitalizeFirst(widget.firstName)} ${localizations.registrationSuccessMessage}",
+        );
+        print("Registration Success Notification Sent!");
+
+        // final role = await SharedPrefServices.getRoleCode();
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              content: Text(
+                localizations.pleaseLogin,
+                style: GoogleFonts.poppins(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              title: Center(
+                child: Text(
+                  localizations.registrationSuccessful,
+                  style: GoogleFonts.poppins(
+                    color: korangeColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => LoginScreen()),
+                    );
+                  },
+                  child: Text(
+                    localizations.ok,
+                    style: GoogleFonts.poppins(
+                      color: korangeColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(vm.errorMessage ?? localizations.registrationFailed),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 }

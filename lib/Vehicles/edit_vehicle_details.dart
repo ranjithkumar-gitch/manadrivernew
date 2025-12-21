@@ -11,6 +11,7 @@ import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
+import 'package:mana_driver/l10n/app_localizations.dart';
 
 class EditVehicleDetails extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -309,6 +310,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
   bool _isLoading = false;
 
   Future<void> _updateVehicle(String vehicleId) async {
+    final localizations = AppLocalizations.of(context)!;
     try {
       setState(() {
         _isLoading = true;
@@ -316,29 +318,29 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
 
       // Validation checks
       if (selectedBrand == null || selectedBrand!.isEmpty) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Please select a brand")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(localizations.pleaseSelectBrand)),
+        );
         return;
       }
 
       if (selectedModel == null || selectedModel!.isEmpty) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text("Please select a model")));
+        ).showSnackBar(SnackBar(content: Text(localizations.selectModel)));
         return;
       }
 
       if (selectedCategory == null || selectedCategory!.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select a category")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(localizations.selectCategory)));
         return;
       }
 
       if (vehicleNumberController.text.trim().isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please enter vehicle number")),
+          SnackBar(content: Text(localizations.enterVehicleNumber)),
         );
         return;
       }
@@ -346,25 +348,21 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
       String vehicleNumber = vehicleNumberController.text.trim().toUpperCase();
       if (!vehicleRegex.hasMatch(vehicleNumber)) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              "Please enter valid vehicle number (e.g. TS05BY1234)",
-            ),
-          ),
+          SnackBar(content: Text(localizations.validVehicleNumber)),
         );
         return;
       }
 
       if (selectedFuelType == null || selectedFuelType!.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select fuel type")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(localizations.selectFuelType)));
         return;
       }
 
       if (selectedTransmission == null || selectedTransmission!.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select transmission")),
+          SnackBar(content: Text(localizations.selectTransmission)),
         );
         return;
       }
@@ -373,7 +371,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
           images.where((img) => img != null).toList().length;
       if (pickedImagesCount + imageUrls.where((u) => u != null).length < 1) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please upload at least 1 image")),
+          SnackBar(content: Text(localizations.uploadAtLeastOneImage)),
         );
         return;
       }
@@ -440,7 +438,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Vehicle updated successfully!")),
+        SnackBar(content: Text(localizations.vehicleUpdatedSuccess)),
       );
 
       Navigator.pushReplacement(
@@ -468,6 +466,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
 
   int maxImages = 4;
   void _pickImage(int index) async {
+    final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder:
@@ -477,7 +476,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
             ),
             title: Center(
               child: CustomText(
-                text: "Select Image From",
+                text: localizations.selectImageFrom,
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
                 textcolor: KblackColor,
@@ -511,7 +510,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                         Icon(Icons.camera, size: 18, color: korangeColor),
                         SizedBox(width: 8),
                         CustomText(
-                          text: "Camera",
+                          text: localizations.camera,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           textcolor: Colors.black,
@@ -544,7 +543,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                         ),
                         SizedBox(width: 8),
                         CustomText(
-                          text: "Gallery",
+                          text: localizations.gallery,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           textcolor: Colors.black,
@@ -575,6 +574,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -608,7 +608,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
               ),
               Center(
                 child: CustomText(
-                  text: "Edit Vehicle",
+                  text: localizations.editVehicle,
                   textcolor: KblackColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
@@ -762,8 +762,8 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
 
                 const SizedBox(height: 25),
                 buildDropdownField(
-                  label: "Vehicle Brand",
-                  hint: "Select Brand",
+                  label: localizations.vehicleBrand,
+                  hint: localizations.selectBrand,
                   items:
                       (() {
                         final List<String> brands =
@@ -802,8 +802,8 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                 ),
                 if (selectedBrand != null && selectedBrand != "Others") ...[
                   buildDropdownField(
-                    label: "Vehicle Model",
-                    hint: "Select Model",
+                    label: localizations.vehicleModel,
+                    hint: localizations.selectModel,
                     items: availableModels,
                     value: selectedModel,
                     onChanged: (value) {
@@ -834,8 +834,8 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                       color: korangeColor,
                     ),
                     decoration: InputDecoration(
-                      labelText: 'Vehicle Category',
-                      hintText: 'Vehicle Category',
+                      labelText: localizations.vehicleCategory,
+                      hintText: localizations.vehicleCategory,
                       hintStyle: TextStyle(
                         color: kseegreyColor,
                         fontSize: 14,
@@ -876,8 +876,8 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                       color: korangeColor,
                     ),
                     decoration: InputDecoration(
-                      labelText: 'Enter Vehicle Model',
-                      hintText: 'Enter Vehicle Model',
+                      labelText: localizations.enterVehicleModel,
+                      hintText: localizations.enterVehicleModel,
                       hintStyle: TextStyle(
                         color: kseegreyColor,
                         fontSize: 14,
@@ -909,7 +909,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                   DropdownButtonFormField<String>(
                     icon: Icon(Icons.keyboard_arrow_down, color: KblackColor),
                     decoration: InputDecoration(
-                      labelText: "Vehicle Category",
+                      labelText: localizations.vehicleCategory,
                       labelStyle: TextStyle(
                         color: kgreyColor,
                         fontSize: 14,
@@ -934,7 +934,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                       fillColor: Colors.white,
                     ),
                     hint: CustomText(
-                      text: "Select Vehicle Category",
+                      text: localizations.selectVehicleCategory,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       textcolor: kseegreyColor,
@@ -964,100 +964,15 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                   SizedBox(height: 15),
                 ],
 
-                // buildDropdownField(
-                //   label: "Vehicle Brand",
-                //   hint: "Select Brand",
-                //   items:
-                //       vehicleData
-                //           .map((e) => e['brand'] as String)
-                //           .toSet()
-                //           .toList(),
-                //   value: selectedBrand,
-                //   onChanged: (value) {
-                //     setState(() {
-                //       selectedBrand = value;
-                //       selectedModel = null;
-                //       availableModels =
-                //           vehicleData
-                //               .where((e) => e['brand'] == value)
-                //               .map((e) => e['model'] as String)
-                //               .toList();
-                //     });
-                //   },
-                // ),
-
-                // buildDropdownField(
-                //   label: "Vehicle Model",
-                //   hint: "Select Model",
-                //   items: availableModels,
-                //   value: selectedModel,
-                //   onChanged: (value) {
-                //     setState(() {
-                //       selectedModel = value;
-
-                //       selectedCategory =
-                //           vehicleData
-                //               .firstWhere(
-                //                 (e) =>
-                //                     e['brand'] == selectedBrand &&
-                //                     e['model'] == selectedModel,
-                //               )['category']
-                //               .toString();
-                //     });
-                //   },
-                // ),
-
-                // TextFormField(
-                //   readOnly: true,
-                //   controller: TextEditingController(
-                //     text: selectedCategory ?? "",
-                //   ),
-
-                //   style: GoogleFonts.poppins(
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.w500,
-                //     color: korangeColor,
-                //   ),
-                //   decoration: InputDecoration(
-                //     labelText: 'Vehicle Category',
-                //     hintText: 'Vehicle Category',
-                //     hintStyle: TextStyle(
-                //       color: kseegreyColor,
-                //       fontSize: 14,
-                //       fontWeight: FontWeight.w400,
-                //     ),
-                //     labelStyle: TextStyle(
-                //       color: kgreyColor,
-                //       fontSize: 14,
-                //       fontWeight: FontWeight.w400,
-                //     ),
-                //     border: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(8),
-                //       borderSide: const BorderSide(color: kbordergreyColor),
-                //     ),
-                //     enabledBorder: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(8),
-                //       borderSide: const BorderSide(color: kbordergreyColor),
-                //     ),
-                //     focusedBorder: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(8),
-                //       borderSide: const BorderSide(
-                //         color: kbordergreyColor,
-                //         width: 1.5,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // SizedBox(height: 15),
                 buildTextField(
-                  "Enter vehicle Number",
-                  "Enter vehicle number",
+                  localizations.enterVehicleNumber,
+                  localizations.enterVehicleNumber,
                   vehicleNumberController,
                 ),
 
                 buildDropdownFields(
-                  "Fuel Type",
-                  "Select Fuel Type",
+                  localizations.fuelType,
+                  localizations.selectFuelType,
                   ["Petrol", "Diesel", "Electric", "CNG"],
                   selectedFuelType,
                   (value) {
@@ -1068,8 +983,8 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                 ),
 
                 buildDropdownFields(
-                  "Transmission",
-                  "Select Transmission",
+                  localizations.transmission,
+                  localizations.selectTransmission,
                   ["Manual", "Automatic", "Semi-Automatic"],
                   selectedTransmission,
                   (value) {
@@ -1080,8 +995,8 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                 ),
 
                 buildDropdownFields(
-                  "AC Available",
-                  "Is AC Available?",
+                  localizations.acAvailable,
+                  localizations.isAcAvailable,
                   ["Yes", "No"],
                   selectedAc,
                   (value) {
@@ -1126,7 +1041,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                         _updateVehicle(widget.docId);
                       },
                       child: CustomText(
-                        text: "Update Vehicle Details",
+                        text: localizations.updateVehicleDetails,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         textcolor: kwhiteColor,

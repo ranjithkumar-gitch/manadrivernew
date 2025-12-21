@@ -4,6 +4,7 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
+import 'package:mana_driver/l10n/app_localizations.dart';
 
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});
@@ -30,6 +31,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     if (currentUserId == null) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator(color: korangeColor)),
@@ -41,8 +43,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         elevation: 0,
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
-        title: const Text(
-          'Transactions',
+        title: Text(
+          localizations.bottomNavTransactions,
           style: TextStyle(
             color: Colors.black,
             fontSize: 20,
@@ -54,8 +56,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             children: [
               Image.asset("images/filter.png"),
               const SizedBox(width: 4),
-              const CustomText(
-                text: "Filter",
+              CustomText(
+                text: localizations.filter,
                 fontSize: 14,
                 textcolor: korangeColor,
                 fontWeight: FontWeight.w400,
@@ -78,9 +80,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           final userTransactions = snapshot.data!;
 
           if (userTransactions.isEmpty) {
-            return const Center(
+            return Center(
               child: CustomText(
-                text: "No Transactions Found",
+                text: localizations.noTransactionsFound,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 textcolor: KblackColor,
@@ -190,6 +192,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     final minute = timestamp.minute.toString().padLeft(2, '0');
     final ampm = timestamp.hour >= 12 ? 'PM' : 'AM';
     final timeString = "$hour:$minute $ampm";
+    final localizations = AppLocalizations.of(context)!;
 
     return Card(
       color: kwhiteColor,
@@ -293,8 +296,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     CustomText(
                       text:
                           bookingStatus == "Cancelled"
-                              ? "Ride Cancelled"
-                              : "Ride Completed",
+                              ? localizations.rideCancelled
+                              : localizations.rideCompleted,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       textcolor: korangeColor,
@@ -303,10 +306,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     CustomText(
                       text:
                           bookingStatus == "Cancelled"
-                              ? "Cancellation Charges"
+                              ? localizations.cancellationCharges
                               : status == "Success"
-                              ? "Payment Completed"
-                              : "Payment Failed",
+                              ? localizations.paymentCompleted
+                              : localizations.paymentFailed,
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       textcolor:
@@ -320,7 +323,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ),
 
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start ,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
                       text: paymentMethod,

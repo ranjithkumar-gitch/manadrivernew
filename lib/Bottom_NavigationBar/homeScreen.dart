@@ -1,30 +1,21 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'package:intl/intl.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mana_driver/AppBar/notificationScreen.dart';
-import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
-
 import 'package:mana_driver/Location/location.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Sidemenu/helpAndSupportScreen.dart';
 import 'package:mana_driver/Vehicles/confirm_details.dart';
-
 import 'package:mana_driver/Vehicles/my_vehicle.dart';
-
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
 import 'package:mana_driver/l10n/app_localizations.dart';
-
 import 'package:mana_driver/service.dart';
-
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -350,42 +341,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     thickness: 1.3,
                                   ),
                                 ),
-                                // SizedBox(width: 15),
-
-                                // SizedBox(
-                                //   height: 30,
-                                //   width: 68,
-                                //   child: ElevatedButton(
-                                //     style: ElevatedButton.styleFrom(
-                                //       backgroundColor:
-                                //           isDropLocation2Visible
-                                //               ? Colors.red
-                                //               : korangeColor,
-                                //       shape: RoundedRectangleBorder(
-                                //         borderRadius: BorderRadius.circular(22),
-                                //       ),
-                                //       padding: EdgeInsets.symmetric(
-                                //         horizontal: 10,
-                                //         vertical: 5,
-                                //       ),
-                                //     ),
-                                //     onPressed: () {
-                                //       setState(() {
-                                //         isDropLocation2Visible =
-                                //             !isDropLocation2Visible;
-                                //       });
-                                //     },
-                                //     child: CustomText(
-                                //       text:
-                                //           isDropLocation2Visible
-                                //               ? 'Delete'
-                                //               : 'Add',
-                                //       fontSize: 14,
-                                //       fontWeight: FontWeight.w400,
-                                //       textcolor: kwhiteColor,
-                                //     ),
-                                //   ),
-                                // ),
                               ],
                             ),
 
@@ -1086,6 +1041,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void showBookingBottomSheet(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     String selectedTripMode = "One Way";
     String selectedTripTime = "Schedule";
     int selectedCityHours = 1;
@@ -1159,7 +1115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             SizedBox(height: 10),
                             CustomText(
-                              text: "Select Trip mode",
+                              text: localizations.selectTripMode,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               textcolor: KblackColor,
@@ -1170,7 +1126,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Expanded(
                                   child: tripOption(
-                                    "One Way",
+                                    localizations.oneWay,
+                                    Icons.directions,
                                     selected: selectedTripMode == "One Way",
                                     onTap: () {
                                       setState(() {
@@ -1189,7 +1146,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Expanded(
                                   child: tripOption(
-                                    "Round Trip",
+                                    localizations.roundTrip,
+                                    Icons.repeat,
                                     selected: selectedTripMode == "Round Trip",
                                     onTap: () {
                                       setState(() {
@@ -1212,8 +1170,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Expanded(
                                   child: tripOption(
                                     selectedTripMode == "Hourly Trip"
-                                        ? "Hourly Trip (${selectedCityHours} hr)"
-                                        : "Hourly Trip",
+                                        ? "${localizations.hourlyTrip} (${selectedCityHours} hr)"
+                                        : localizations.hourlyTrip,
+                                    Icons.access_time,
                                     selected: selectedTripMode == "Hourly Trip",
                                     onTap: () {
                                       setState(() {
@@ -1229,7 +1188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Padding(
                                       padding: const EdgeInsets.only(right: 8),
                                       child: Text(
-                                        " Every 1 hr ₹ 129/- ",
+                                        " " + localizations.hourlyFare,
                                         style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -1256,15 +1215,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CustomText(
-                              text: "Choose Trip Time",
+                              text: localizations.chooseTripTime,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               textcolor: KblackColor,
                             ),
 
                             SizedBox(height: 10),
-                            tripOption(
-                              "Now",
+                            tripTimeOption(
+                              localizations.now,
+
                               selected: selectedTripTime == "Now",
                               onTap: () {
                                 setState(() {
@@ -1280,8 +1240,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 print("Selected Trip Time: $selectedTripTime");
                               },
                             ),
-                            tripOption(
-                              "Schedule",
+                            tripTimeOption(
+                              localizations.schedule,
                               selected: selectedTripTime == "Schedule",
                               onTap: () {
                                 setState(() {
@@ -1310,8 +1270,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               CustomText(
                                 text:
                                     selectedTripMode == "Round Trip"
-                                        ? "Departure Date & Time"
-                                        : "Select Date & Time",
+                                        ? localizations.departureDateTime
+                                        : localizations.selectDateTime,
+
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                                 textcolor: KblackColor,
@@ -1366,7 +1327,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         },
                                 child: dateTimeRow(
                                   Icons.date_range,
-                                  "Select Date",
+                                  localizations.selectDate,
                                   value: DateFormat(
                                     'dd-MM-yyyy',
                                   ).format(selectedDate),
@@ -1470,7 +1431,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         },
                                 child: dateTimeRow(
                                   Icons.timer_outlined,
-                                  "Select Time",
+                                  localizations.selectTime,
                                   value: selectedTime.format(context),
                                 ),
                               ),
@@ -1497,7 +1458,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Row(
                                   children: [
                                     CustomText(
-                                      text: "Arrival Date & Time",
+                                      text: localizations.arrivalDateTime,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                       textcolor: KblackColor,
@@ -1561,7 +1522,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   child: dateTimeRow(
                                     Icons.date_range,
-                                    "Arrival Date",
+                                    localizations.arrivalDate,
                                     value:
                                         arrivalDate == null
                                             ? "---"
@@ -1585,14 +1546,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   BorderRadius.circular(12),
                                             ),
                                             title: Text(
-                                              "Arrival Date Required",
+                                              localizations.arrivalDateRequired,
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16,
                                               ),
                                             ),
                                             content: Text(
-                                              "Please select the arrival date before choosing the arrival time.",
+                                              localizations
+                                                  .selectArrivalBeforeTime,
                                             ),
                                             actions: [
                                               TextButton(
@@ -1600,7 +1562,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     () =>
                                                         Navigator.pop(context),
                                                 child: Text(
-                                                  "OK",
+                                                  localizations.ok,
                                                   style: TextStyle(
                                                     color: korangeColor,
                                                   ),
@@ -1738,14 +1700,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     BorderRadius.circular(12),
                                               ),
                                               title: Text(
-                                                "Invalid Arrival Time",
+                                                localizations
+                                                    .invalidArrivalTime,
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 16,
                                                 ),
                                               ),
                                               content: Text(
-                                                "Arrival time must be after ETA (${formatTo12Hour(minArrivalDT)}).",
+                                                "${localizations.arrivalAfterEta} (${formatTo12Hour(minArrivalDT)}).",
                                               ),
                                               actions: [
                                                 TextButton(
@@ -1754,7 +1717,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         context,
                                                       ),
                                                   child: Text(
-                                                    "OK",
+                                                    localizations.ok,
                                                     style: TextStyle(
                                                       color: korangeColor,
                                                     ),
@@ -1796,7 +1759,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   child: dateTimeRow(
                                     Icons.timer_outlined,
-                                    "Arrival Time",
+                                    localizations.arrivalTime,
                                     value:
                                         arrivalTime == null
                                             ? "---"
@@ -1827,7 +1790,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     CustomText(
-                                      text: "Estimated fare",
+                                      text: localizations.estimatedFare,
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
                                       textcolor: kgreyColor,
@@ -1867,7 +1830,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             );
                                           },
                                           child: Text(
-                                            'View Breakup',
+                                            localizations.viewBreakup,
                                             style: GoogleFonts.poppins(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
@@ -1911,7 +1874,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ).showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              "Please select pickup & drop location",
+                                              localizations.selectPickupDrop,
                                             ),
                                           ),
                                         );
@@ -1924,7 +1887,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ).showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              "Please select a vehicle",
+                                              localizations.selectVehicle,
                                             ),
                                           ),
                                         );
@@ -1942,14 +1905,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       BorderRadius.circular(12),
                                                 ),
                                                 title: Text(
-                                                  "Arrival Details Required",
+                                                  localizations
+                                                      .arrivalDetailsRequired,
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 16,
                                                   ),
                                                 ),
                                                 content: Text(
-                                                  "Please select both arrival date and arrival time to continue.",
+                                                  localizations
+                                                      .arrivalDateTimeRequired,
                                                 ),
                                                 actions: [
                                                   TextButton(
@@ -1958,7 +1923,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           context,
                                                         ),
                                                     child: Text(
-                                                      "OK",
+                                                      localizations.ok,
                                                       style: TextStyle(
                                                         color: korangeColor,
                                                       ),
@@ -2143,7 +2108,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ).showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              "Requested a driver successfully",
+                                              localizations
+                                                  .driverRequestedSuccess,
                                             ),
                                             backgroundColor: Colors.green,
                                           ),
@@ -2178,7 +2144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             builder:
                                                 (_) => ConfirmDetails(
                                                   bookingData: bookingWithId,
-                                                    fromHome: true,
+                                                  fromHome: true,
                                                 ),
                                           ),
                                         );
@@ -2204,7 +2170,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                             )
                                             : CustomText(
-                                              text: "Continue",
+                                              text:
+                                                  localizations.continueButton,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
                                               textcolor: kwhiteColor,
@@ -2264,19 +2231,22 @@ class _HomeScreenState extends State<HomeScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
+
       builder: (_) {
+        final localizations = AppLocalizations.of(context)!;
         return Container(
           margin: EdgeInsets.all(10),
-          height: 220,
+          height: 230,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 15),
-              const CustomText(
-                text: "Payment Breakup",
+              CustomText(
+                text: localizations.paymentBreakup,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 textcolor: KblackColor,
@@ -2285,8 +2255,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const CustomText(
-                    text: "Trip Mode",
+                  CustomText(
+                    text: localizations.tripMode,
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     textcolor: KblackColor,
@@ -2305,8 +2275,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const CustomText(
-                    text: "Distance",
+                  CustomText(
+                    text: localizations.distance,
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     textcolor: KblackColor,
@@ -2327,8 +2297,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const CustomText(
-                    text: "Service Price",
+                  CustomText(
+                    text: localizations.servicePrice,
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     textcolor: KblackColor,
@@ -2346,8 +2316,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const CustomText(
-                      text: "Convenience Fee",
+                    CustomText(
+                      text: localizations.convenienceFee,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       textcolor: KblackColor,
@@ -2369,8 +2339,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const CustomText(
-                    text: "Total Price",
+                  CustomText(
+                    text: localizations.totalPrice,
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                     textcolor: korangeColor,
@@ -2395,7 +2365,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-Widget tripOption(String label, {bool selected = false, VoidCallback? onTap}) {
+Widget tripOption(
+  String label,
+  IconData icon, {
+  bool selected = false,
+  VoidCallback? onTap,
+}) {
   return GestureDetector(
     onTap: onTap,
     child: Padding(
@@ -2408,6 +2383,38 @@ Widget tripOption(String label, {bool selected = false, VoidCallback? onTap}) {
             color: selected ? korangeColor : kgreyColor,
           ),
           SizedBox(width: 10),
+          Icon(icon, size: 22, color: selected ? korangeColor : kgreyColor),
+          SizedBox(width: 3),
+          CustomText(
+            text: label,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            textcolor: KblackColor,
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget tripTimeOption(
+  String label, {
+  bool selected = false,
+  VoidCallback? onTap,
+}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            selected ? Icons.radio_button_checked : Icons.radio_button_off,
+            color: selected ? korangeColor : kgreyColor,
+          ),
+          SizedBox(width: 10),
+
           CustomText(
             text: label,
             fontSize: 14,

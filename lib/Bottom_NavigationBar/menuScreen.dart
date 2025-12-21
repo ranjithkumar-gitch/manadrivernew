@@ -397,7 +397,7 @@ class _MenuScreenState extends State<MenuScreen> {
                               const SizedBox(width: 12),
                               Expanded(
                                 child: CustomText(
-                                  text: 'Privacy Policy',
+                                  text: localizations.privacyPolicy,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
                                   textcolor: KblackColor,
@@ -1049,13 +1049,14 @@ class _MenuScreenState extends State<MenuScreen> {
     showDialog(
       context: context,
       builder: (context) {
+        final localizations = AppLocalizations.of(context)!;
         return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          title: const Center(
+          title: Center(
             child: Text(
-              'Are you sure you want to logout ?',
+              localizations.confirmLogout,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
@@ -1075,8 +1076,8 @@ class _MenuScreenState extends State<MenuScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text(
-                    'Cancel',
+                  child: Text(
+                    localizations.cancel,
                     style: TextStyle(color: korangeColor, fontFamily: "inter"),
                   ),
                 ),
@@ -1100,8 +1101,8 @@ class _MenuScreenState extends State<MenuScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text(
-                    'Logout',
+                  child: Text(
+                    localizations.menuLogout,
                     style: TextStyle(color: Colors.white, fontFamily: "inter"),
                   ),
                 ),

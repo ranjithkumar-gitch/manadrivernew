@@ -9,6 +9,7 @@ import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
+import 'package:mana_driver/l10n/app_localizations.dart';
 
 class VehicleDetailsScreen extends StatelessWidget {
   final data;
@@ -21,6 +22,7 @@ class VehicleDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -55,7 +57,7 @@ class VehicleDetailsScreen extends StatelessWidget {
               ),
               Center(
                 child: CustomText(
-                  text: "Vehicle Details",
+                  text: localizations.vehicleDetails,
                   textcolor: KblackColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
@@ -82,27 +84,25 @@ class VehicleDetailsScreen extends StatelessWidget {
                   context: context,
                   builder:
                       (ctx) => AlertDialog(
-                        title: const Text("Delete Vehicle"),
-                        content: const Text(
-                          "Are you sure you want to delete this vehicle?",
-                        ),
+                        title: Text(localizations.deleteVehicle),
+                        content: Text(localizations.confirmDeleteVehicle),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(ctx),
-                            child: const Text("Cancel"),
+                            child: Text(localizations.cancel),
                           ),
                           TextButton(
                             onPressed: () {
                               Navigator.pop(ctx);
 
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Vehicle deleted"),
+                                SnackBar(
+                                  content: Text(localizations.vehicleDeleted),
                                 ),
                               );
                             },
-                            child: const Text(
-                              "Delete",
+                            child: Text(
+                              localizations.delete,
                               style: TextStyle(color: Colors.red),
                             ),
                           ),
@@ -113,8 +113,11 @@ class VehicleDetailsScreen extends StatelessWidget {
             },
             itemBuilder:
                 (context) => [
-                  const PopupMenuItem(value: 'edit', child: Text("Edit")),
-                  const PopupMenuItem(value: 'delete', child: Text("Delete")),
+                  PopupMenuItem(value: 'edit', child: Text(localizations.edit)),
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: Text(localizations.delete),
+                  ),
                 ],
           ),
         ],
@@ -227,8 +230,7 @@ class VehicleDetailsScreen extends StatelessWidget {
                       ),
 
                       CustomText(
-                        text:
-                            "Exceptional performance and premium comfort features.",
+                        text: localizations.exceptionalPerformance,
                         textcolor: kgreyColor,
                         fontWeight: FontWeight.w400,
                         fontSize: 12,
@@ -262,7 +264,7 @@ class VehicleDetailsScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             _sectionCard(
-              title: "Key Specifications",
+              title: localizations.keySpecifications,
               child: Column(
                 children: [
                   Row(
@@ -276,12 +278,12 @@ class VehicleDetailsScreen extends StatelessWidget {
                       SizedBox(width: 15),
                       _SpecItem(
                         iconPath: 'images/fuel.png',
-                        label: "Fuel Type",
+                        label: localizations.fuelType,
                         value: data['fuelType'] ?? "",
                       ),
                       _SpecItem(
                         iconPath: 'images/settings.png',
-                        label: "Transmission",
+                        label: localizations.transmission,
                         value: data['transmission'] ?? "",
                       ),
                     ],

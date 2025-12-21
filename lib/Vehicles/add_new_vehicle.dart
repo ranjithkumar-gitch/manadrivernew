@@ -6,12 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:mana_driver/l10n/app_localizations.dart';
 
 class AddNewVehicle extends StatefulWidget {
   const AddNewVehicle({super.key});
@@ -268,147 +268,6 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
   TextEditingController customModelController = TextEditingController();
   TextEditingController customCategoryController = TextEditingController();
 
-  Future<void> _addVehicle() async {
-    try {
-      setState(() {
-        _isLoading = true;
-      });
-      if (selectedBrand == null || selectedBrand!.isEmpty) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Please select a brand")));
-        return;
-      }
-
-      if (selectedBrand == "Others") {
-        if (customModelController.text.trim().isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Please enter a vehicle model")),
-          );
-          return;
-        }
-
-        if (selectedCustomCategory == null || selectedCustomCategory!.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Please select a vehicle category")),
-          );
-          return;
-        }
-      } else {
-        if (selectedModel == null || selectedModel!.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Please select a model")),
-          );
-          return;
-        }
-
-        if (selectedCategory == null || selectedCategory!.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Please select a category")),
-          );
-          return;
-        }
-      }
-
-      if (vehicleNumberController.text.trim().isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please enter vehicle number")),
-        );
-        return;
-      }
-
-      String vehicleNumber = vehicleNumberController.text.trim().toUpperCase();
-
-      if (!vehicleRegex.hasMatch(vehicleNumber)) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              "Please enter valid vehicle number (e.g. TS05BY1234)",
-            ),
-          ),
-        );
-        return;
-      }
-
-      if (selectedFuelType == null || selectedFuelType!.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select fuel type")),
-        );
-        return;
-      }
-
-      if (selectedTransmission == null || selectedTransmission!.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select transmission")),
-        );
-        return;
-      }
-
-      int pickedImagesCount =
-          images.where((img) => img != null).toList().length;
-      if (pickedImagesCount < 1) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please upload at least 1 image")),
-        );
-        return;
-      }
-
-      List<String> imageUrls = [];
-      for (int i = 0; i < images.length; i++) {
-        if (images[i] != null) {
-          String fileName =
-              "${SharedPrefServices.getUserId().toString()}_Vehicles/${DateTime.now().millisecondsSinceEpoch}_$i.jpg";
-
-          final ref = FirebaseStorage.instance.ref().child(fileName);
-          final uploadTask = ref.putFile(images[i]!);
-
-          final snapshot = await uploadTask.whenComplete(() {});
-          final downloadUrl = await snapshot.ref.getDownloadURL();
-
-          imageUrls.add(downloadUrl);
-        }
-      }
-
-      await FirebaseFirestore.instance.collection("vehicles").add({
-        "userId": SharedPrefServices.getUserId().toString(),
-        "brand": selectedBrand,
-        "model":
-            selectedBrand == "Others"
-                ? customModelController.text.trim()
-                : selectedModel,
-        "category":
-            selectedBrand == "Others"
-                ? selectedCustomCategory
-                : selectedCategory,
-        "vehicleNumber": vehicleNumberController.text.trim(),
-        "fuelType": selectedFuelType,
-        "transmission": selectedTransmission,
-        "images": imageUrls,
-        "acAvailable": selectedAc,
-        "createdAt": FieldValue.serverTimestamp(),
-      });
-
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Vehicle added successfully!")),
-      );
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => BottomNavigation()),
-      );
-    } catch (e) {
-      if (!mounted) return;
-      _showSnack("Error: $e");
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-  }
-
   void _showSnack(String message) {
     ScaffoldMessenger.of(
       context,
@@ -416,6 +275,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
   }
 
   void _pickImage(int index) async {
+    final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder:
@@ -425,7 +285,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
             ),
             title: Center(
               child: CustomText(
-                text: "Select Image From",
+                text: localizations.selectImageFrom,
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
                 textcolor: KblackColor,
@@ -452,7 +312,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                         Icon(Icons.camera, size: 18, color: korangeColor),
                         SizedBox(width: 8),
                         CustomText(
-                          text: "Camera",
+                          text: localizations.camera,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           textcolor: Colors.black,
@@ -481,7 +341,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                         ),
                         SizedBox(width: 8),
                         CustomText(
-                          text: "Gallery",
+                          text: localizations.gallery,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           textcolor: Colors.black,
@@ -512,6 +372,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -545,7 +406,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
               ),
               Center(
                 child: CustomText(
-                  text: "Add New Vehicle",
+                  text: localizations.addNewVehicle,
                   textcolor: KblackColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
@@ -564,23 +425,15 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
               children: [
                 const SizedBox(height: 10),
                 CustomText(
-                  text: 'Add once, use every time',
+                  text: localizations.addOnceUseEveryTime,
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   textcolor: KblackColor,
                 ),
-                // const SizedBox(height: 5),
 
-                // CustomText(
-                //   text:
-                //       'Save your vehicle and get one step closer to hassle-free rides.',
-                //   fontSize: 12,
-                //   fontWeight: FontWeight.w300,
-                //   textcolor: kgreyColor,
-                // ),
                 const SizedBox(height: 15),
                 CustomText(
-                  text: 'Upload Vehicle Images',
+                  text: localizations.uploadVehicleImages,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   textcolor: KblackColor,
@@ -663,8 +516,8 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
 
                 const SizedBox(height: 25),
                 buildDropdownField(
-                  label: "Vehicle Brand",
-                  hint: "Select Brand",
+                  label: localizations.vehicleBrand,
+                  hint: localizations.selectBrand,
                   items:
                       (() {
                         final List<String> brands =
@@ -702,8 +555,8 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                 ),
                 if (selectedBrand != null && selectedBrand != "Others") ...[
                   buildDropdownField(
-                    label: "Vehicle Model",
-                    hint: "Select Model",
+                    label: localizations.vehicleModel,
+                    hint: localizations.selectModel,
                     items: availableModels,
                     value: selectedModel,
                     onChanged: (value) {
@@ -734,8 +587,8 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                       color: korangeColor,
                     ),
                     decoration: InputDecoration(
-                      labelText: 'Vehicle Category',
-                      hintText: 'Vehicle Category',
+                      labelText: localizations.vehicleCategory,
+                      hintText: localizations.vehicleCategory,
                       hintStyle: TextStyle(
                         color: kseegreyColor,
                         fontSize: 14,
@@ -776,8 +629,8 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                       color: korangeColor,
                     ),
                     decoration: InputDecoration(
-                      labelText: 'Enter Vehicle Model',
-                      hintText: 'Enter Vehicle Model',
+                      labelText: localizations.enterVehicleModel,
+                      hintText: localizations.enterVehicleModel,
                       hintStyle: TextStyle(
                         color: kseegreyColor,
                         fontSize: 14,
@@ -809,7 +662,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                   DropdownButtonFormField<String>(
                     icon: Icon(Icons.keyboard_arrow_down, color: KblackColor),
                     decoration: InputDecoration(
-                      labelText: "Vehicle Category",
+                      labelText: localizations.vehicleCategory,
                       labelStyle: TextStyle(
                         color: kgreyColor,
                         fontSize: 14,
@@ -834,7 +687,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                       fillColor: Colors.white,
                     ),
                     hint: CustomText(
-                      text: "Select Vehicle Category",
+                      text: localizations.selectVehicleCategory,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       textcolor: kseegreyColor,
@@ -865,16 +718,21 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                 ],
 
                 buildTextField(
-                  "Enter vehicle Number",
-                  "Enter vehicle number",
+                  localizations.enterVehicleNumber,
+                  localizations.enterVehicleNumber,
                   vehicleNumberController,
                   textCapitalization: TextCapitalization.characters,
                 ),
 
                 buildDropdownFields(
-                  "Fuel Type",
-                  "Select Fuel Type",
-                  ["Petrol", "Diesel", "Electric", "CNG"],
+                  localizations.fuelType,
+                  localizations.selectFuelType,
+                  [
+                    localizations.petrol,
+                    localizations.diesel,
+                    localizations.electric,
+                    localizations.cng,
+                  ],
                   selectedFuelType,
                   (value) {
                     setState(() {
@@ -884,9 +742,13 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                 ),
 
                 buildDropdownFields(
-                  "Transmission",
-                  "Select Transmission",
-                  ["Manual", "Automatic", "Semi-Automatic"],
+                  localizations.transmission,
+                  localizations.selectTransmission,
+                  [
+                    localizations.manual,
+                    localizations.automatic,
+                    localizations.semiAutomatic,
+                  ],
                   selectedTransmission,
                   (value) {
                     setState(() {
@@ -896,9 +758,9 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                 ),
 
                 buildDropdownFields(
-                  "AC Available",
-                  "Is AC Available?",
-                  ["Yes", "No"],
+                  localizations.acAvailable,
+                  localizations.isAcAvailable,
+                  [localizations.yes, localizations.no],
                   selectedAc,
                   (value) {
                     setState(() {
@@ -937,7 +799,7 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
                                 ),
                               )
                               : CustomText(
-                                text: "Add Vehicle",
+                                text: localizations.addVehicle,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 textcolor: kwhiteColor,
@@ -1122,6 +984,144 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
       ),
     );
   }
+
+  Future<void> _addVehicle() async {
+    final localizations = AppLocalizations.of(context)!;
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      if (selectedBrand == null || selectedBrand!.isEmpty) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(localizations.selectBrand)));
+        return;
+      }
+
+      if (selectedBrand == "Others") {
+        if (customModelController.text.trim().isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(localizations.enterVehicleModel)),
+          );
+          return;
+        }
+
+        if (selectedCustomCategory == null || selectedCustomCategory!.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(localizations.selectVehicleCategory)),
+          );
+          return;
+        }
+      } else {
+        if (selectedModel == null || selectedModel!.isEmpty) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(localizations.selectModel)));
+          return;
+        }
+
+        if (selectedCategory == null || selectedCategory!.isEmpty) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(localizations.selectCategory)));
+          return;
+        }
+      }
+
+      if (vehicleNumberController.text.trim().isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(localizations.enterVehicleNumber)),
+        );
+        return;
+      }
+
+      String vehicleNumber = vehicleNumberController.text.trim().toUpperCase();
+
+      if (!vehicleRegex.hasMatch(vehicleNumber)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(localizations.validVehicleNumber)),
+        );
+        return;
+      }
+
+      if (selectedFuelType == null || selectedFuelType!.isEmpty) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(localizations.selectFuelType)));
+        return;
+      }
+
+      if (selectedTransmission == null || selectedTransmission!.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(localizations.selectTransmission)),
+        );
+        return;
+      }
+
+      int pickedImagesCount =
+          images.where((img) => img != null).toList().length;
+      if (pickedImagesCount < 1) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(localizations.uploadAtLeastOneImage)),
+        );
+        return;
+      }
+
+      List<String> imageUrls = [];
+      for (int i = 0; i < images.length; i++) {
+        if (images[i] != null) {
+          String fileName =
+              "${SharedPrefServices.getUserId().toString()}_Vehicles/${DateTime.now().millisecondsSinceEpoch}_$i.jpg";
+
+          final ref = FirebaseStorage.instance.ref().child(fileName);
+          final uploadTask = ref.putFile(images[i]!);
+
+          final snapshot = await uploadTask.whenComplete(() {});
+          final downloadUrl = await snapshot.ref.getDownloadURL();
+
+          imageUrls.add(downloadUrl);
+        }
+      }
+
+      await FirebaseFirestore.instance.collection("vehicles").add({
+        "userId": SharedPrefServices.getUserId().toString(),
+        "brand": selectedBrand,
+        "model":
+            selectedBrand == "Others"
+                ? customModelController.text.trim()
+                : selectedModel,
+        "category":
+            selectedBrand == "Others"
+                ? selectedCustomCategory
+                : selectedCategory,
+        "vehicleNumber": vehicleNumberController.text.trim(),
+        "fuelType": selectedFuelType,
+        "transmission": selectedTransmission,
+        "images": imageUrls,
+        "acAvailable": selectedAc,
+        "createdAt": FieldValue.serverTimestamp(),
+      });
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(localizations.vehicleAddedSuccess)),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => BottomNavigation()),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      _showSnack("Error: $e");
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 }
 
 class UpperCaseTextFormatter extends TextInputFormatter {
@@ -1136,63 +1136,3 @@ class UpperCaseTextFormatter extends TextInputFormatter {
     );
   }
 }
-
-   // buildDropdownFields(
-            //   "Features & Equipment",
-            //   "Select Features & Equipment",
-            //   [
-            //     "All-Wheel Drive",
-            //     "Premium Package",
-            //     "Navigation",
-            //     "Heated Seats",
-            //   ],
-            // ),
-
-            // const SizedBox(height: 10),
-            // buildTextField(
-            //   "Type Message (Optional)",
-            //   "Enter any message",
-            //   maxLines: 3,
-            // ),
-
-            // const SizedBox(height: 10),
-            // CustomText(
-            //   text: "Upload RC Documents",
-            //   fontSize: 14,
-            //   fontWeight: FontWeight.w500,
-            //   textcolor: KblackColor,
-            // ),
-            // const SizedBox(height: 12),
-            // DottedBorder(
-            //   options: RoundedRectDottedBorderOptions(
-            //     radius: Radius.circular(10),
-            //     dashPattern: [5, 5],
-            //     color: kbordergreyColor,
-            //     strokeWidth: 2,
-            //     padding: EdgeInsets.all(0),
-            //   ),
-            //   child: Container(
-            //     width: double.infinity,
-            //     padding: const EdgeInsets.symmetric(vertical: 24),
-            //     decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(10),
-            //     ),
-            //     child: Column(
-            //       children: [
-            //         Image.asset(
-            //           'images/doc_icon.png',
-            //           width: 46,
-            //           height: 46,
-            //           fit: BoxFit.contain,
-            //         ),
-            //         SizedBox(height: 8),
-            //         CustomText(
-            //           text: "Upload RC Documents",
-            //           fontSize: 12,
-            //           fontWeight: FontWeight.w500,
-            //           textcolor: kgreyColor,
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),

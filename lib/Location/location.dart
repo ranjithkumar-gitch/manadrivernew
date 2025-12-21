@@ -7,6 +7,7 @@ import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:mana_driver/l10n/app_localizations.dart';
 
 class LocationSelectionScreen extends StatefulWidget {
   const LocationSelectionScreen({super.key});
@@ -252,6 +253,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -283,9 +285,9 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                   ),
                 ),
               ),
-              const Center(
+              Center(
                 child: CustomText(
-                  text: "Location",
+                  text: localizations.location,
                   textcolor: KblackColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
@@ -338,8 +340,8 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                               (_) => FocusScope.of(
                                 context,
                               ).requestFocus(dropFocus),
-                          decoration: const InputDecoration(
-                            hintText: "Pickup Location",
+                          decoration: InputDecoration(
+                            hintText: localizations.pickupLocation,
                             hintStyle: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
@@ -397,7 +399,10 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                 },
 
                                 child: CustomText(
-                                  text: showSecondDrop ? 'Delete' : 'Add',
+                                  text:
+                                      showSecondDrop
+                                          ? localizations.delete
+                                          : localizations.add,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w400,
                                   textcolor: kwhiteColor,
@@ -420,8 +425,8 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                           decoration: InputDecoration(
                             hintText:
                                 showSecondDrop
-                                    ? "Drop Location 1"
-                                    : "Drop Location",
+                                    ? localizations.dropLocation1
+                                    : localizations.dropLocation,
                             hintStyle: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
@@ -441,6 +446,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                   isSecondDrop: true,
                                 ),
                             textInputAction: TextInputAction.done,
+
                             onSubmitted: (_) {
                               Navigator.pop(context, {
                                 "current": currentLocationController.text,
@@ -448,8 +454,8 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                 "drop2": secondDropController.text,
                               });
                             },
-                            decoration: const InputDecoration(
-                              hintText: "Drop Location 2",
+                            decoration: InputDecoration(
+                              hintText: localizations.dropLocation2,
                               hintStyle: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
@@ -472,13 +478,14 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomText(
-                      text: "Distance: $distanceText",
+                      text: "${localizations.distance} $distanceText",
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       textcolor: Colors.black87,
                     ),
                     CustomText(
-                      text: "Time: ${convertMinutes(durationText!)}",
+                      text:
+                          "${localizations.time} ${convertMinutes(durationText!)}",
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       textcolor: Colors.black87,
@@ -504,7 +511,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               content: Text(
-                                "Please select Pickup or Drop location.",
+                                localizations.selectPickupOrDrop,
                                 style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -513,7 +520,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                               ),
                               title: Center(
                                 child: Text(
-                                  "Choose Location Type",
+                                  localizations.chooseLocationType,
                                   style: GoogleFonts.poppins(
                                     color: korangeColor,
                                     fontSize: 15,
@@ -526,7 +533,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                 TextButton(
                                   onPressed: () => Navigator.pop(context),
                                   child: Text(
-                                    "Ok",
+                                    localizations.ok,
                                     style: GoogleFonts.poppins(
                                       color: korangeColor,
                                       fontSize: 15,
@@ -566,9 +573,9 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                               .text
                                               .isNotEmpty &&
                                           secondDropController.text.isEmpty
-                                      ? "Select drop2 on map"
-                                      : "Select on map")
-                                  : "Select on map",
+                                      ? localizations.selectDrop2OnMap
+                                      : localizations.selectOnMap)
+                                  : localizations.selectOnMap,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           textcolor: korangeColor,
@@ -599,6 +606,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                   "Drop2: ${secondDropController.text} | Lat: $drop2Lat | Lng: $drop2Lng",
                                 );
                               }
+                              FocusManager.instance.primaryFocus?.unfocus();
                               Navigator.pop(context, {
                                 "current": currentLocationController.text,
                                 "drop": dropLocationController.text,
@@ -630,8 +638,8 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                         vertical: 5,
                       ),
                     ),
-                    child: const CustomText(
-                      text: "Done",
+                    child: CustomText(
+                      text: localizations.done,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       textcolor: kwhiteColor,
@@ -666,8 +674,8 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                           );
                         },
                       )
-                      : const Center(
-                        child: Text("Start typing to see suggestions..."),
+                      : Center(
+                        child: Text(localizations.startTypingSuggestions),
                       ),
             ),
           ],
