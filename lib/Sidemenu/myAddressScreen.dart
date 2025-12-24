@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
@@ -27,6 +28,21 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
   final TextEditingController zipCtrl = TextEditingController();
   final TextEditingController addressCtrl = TextEditingController();
 
+  String capitalizeFirst(String value) {
+    if (value.trim().isEmpty) return value;
+    return value.trim()[0].toUpperCase() +
+        value.trim().substring(1).toLowerCase();
+  }
+
+  String capitalizeEachWord(String value) {
+    return value
+        .trim()
+        .split(' ')
+        .where((word) => word.isNotEmpty)
+        .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+        .join(' ');
+  }
+
   Future<void> _addAddressDialog(
     BuildContext context,
     AppLocalizations localizations,
@@ -50,7 +66,7 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                 textcolor: KblackColor,
               ),
               content: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9, // wider
+                width: MediaQuery.of(context).size.width * 0.9,
                 child: Form(
                   key: _formKey,
                   child: SingleChildScrollView(
@@ -112,15 +128,22 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                               await FirebaseFirestore.instance
                                   .collection("addresses")
                                   .add({
-                                    // 'userId':
-                                    //     SharedPrefServices.getUserId()
-                                    //         .toString(),
-                                    "title": titleCtrl.text,
-                                    "Address": addressCtrl.text,
-                                    "state": stateCtrl.text,
-                                    "city": cityCtrl.text,
-                                    "country": countryCtrl.text,
-                                    "zipcode": zipCtrl.text,
+                                    'userId':
+                                        SharedPrefServices.getUserId()
+                                            .toString(),
+
+                                    "title": capitalizeEachWord(titleCtrl.text),
+                                    "Address": capitalizeFirst(
+                                      addressCtrl.text.trim(),
+                                    ),
+
+                                    "state": capitalizeFirst(stateCtrl.text),
+                                    "city": capitalizeFirst(cityCtrl.text),
+                                    "country": capitalizeFirst(
+                                      countryCtrl.text,
+                                    ),
+
+                                    "zipcode": zipCtrl.text.trim(),
                                     "createdAt": FieldValue.serverTimestamp(),
                                   });
 
@@ -142,6 +165,47 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                             }
                           }
                         },
+
+                        // onPressed: () async {
+                        //   if (_formKey.currentState!.validate()) {
+                        //     setState(() {
+                        //       isLoading = true;
+                        //     });
+
+                        //     try {
+                        //       await FirebaseFirestore.instance
+                        //           .collection("addresses")
+                        //           .add({
+                        //             'userId':
+                        //                 SharedPrefServices.getUserId()
+                        //                     .toString(),
+                        //             "title": titleCtrl.text,
+                        //             "Address": addressCtrl.text,
+                        //             "state": stateCtrl.text,
+                        //             "city": cityCtrl.text,
+                        //             "country": countryCtrl.text,
+                        //             "zipcode": zipCtrl.text,
+                        //             "createdAt": FieldValue.serverTimestamp(),
+                        //           });
+
+                        //       titleCtrl.clear();
+                        //       addressCtrl.clear();
+                        //       stateCtrl.clear();
+                        //       cityCtrl.clear();
+                        //       countryCtrl.clear();
+                        //       zipCtrl.clear();
+
+                        //       Navigator.pop(context);
+                        //     } catch (e) {
+                        //       setState(() {
+                        //         isLoading = false;
+                        //       });
+                        //       ScaffoldMessenger.of(context).showSnackBar(
+                        //         SnackBar(content: Text("Error: $e")),
+                        //       );
+                        //     }
+                        //   }
+                        // },
                       ),
                     ),
               ],
@@ -204,6 +268,10 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
           stream:
               FirebaseFirestore.instance
                   .collection("addresses")
+                  .where(
+                    'userId',
+                    isEqualTo: SharedPrefServices.getUserId().toString(),
+                  )
                   .orderBy("createdAt", descending: true)
                   .snapshots(),
           builder: (context, snapshot) {
@@ -216,7 +284,7 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                 child: CustomText(
                   text: "No address added yet",
                   textcolor: kseegreyColor,
-                  fontSize: 13,
+                  fontSize: 14,
                   fontWeight: FontWeight.w400,
                 ),
               );

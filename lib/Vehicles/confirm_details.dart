@@ -544,17 +544,117 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
       }
     }
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const BottomNavigation(initialIndex: 1),
+          ),
+          (route) => false,
+        );
+      },
+      child: Scaffold(
         backgroundColor: Colors.white,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(color: Colors.grey.shade300, height: 1),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(1),
+            child: Container(color: Colors.grey.shade300, height: 1),
+          ),
+          title: StreamBuilder<DocumentSnapshot>(
+            stream:
+                FirebaseFirestore.instance
+                    .collection('bookings')
+                    .doc(widget.bookingData['bookingId'])
+                    .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Text("Loading...");
+              }
+
+              final liveData = snapshot.data!;
+              final rideStatus = liveData['status'] ?? "New";
+
+              String appBarTitle = "";
+
+              if (rideStatus == 'New') {
+                appBarTitle = "Driver Not Assigned";
+              } else if (rideStatus == 'Accepted') {
+                appBarTitle = "Driver Assigned";
+              } else if (rideStatus == 'Completed') {
+                appBarTitle = "Ride Completed";
+              } else {
+                appBarTitle = "Ride $rideStatus";
+              }
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 10, top: 5),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (_) =>
+                                      const BottomNavigation(initialIndex: 1),
+                            ),
+                            (route) => false,
+                          );
+                        },
+
+                        // onTap: () {
+
+                        //   if (widget.fromHome) {
+                        //     Navigator.pushAndRemoveUntil(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder: (_) => BottomNavigation(),
+                        //       ),
+                        //       (route) => false,
+                        //     );
+                        //   } else {
+                        //     Navigator.pop(context);
+                        //   }
+                        // },
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          alignment: Alignment.centerLeft,
+                          child: Image.asset(
+                            "images/chevronLeft.png",
+                            width: 24,
+                            height: 24,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: CustomText(
+                        text: appBarTitle,
+                        textcolor: KblackColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 22,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
-        title: StreamBuilder<DocumentSnapshot>(
+
+        body: StreamBuilder<DocumentSnapshot>(
           stream:
               FirebaseFirestore.instance
                   .collection('bookings')
@@ -562,496 +662,624 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                   .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return const Text("Loading...");
+              return const Center(child: CircularProgressIndicator());
             }
 
-            final liveData = snapshot.data!;
-            final rideStatus = liveData['status'] ?? "New";
+            final liveData = snapshot.data!.data() as Map<String, dynamic>;
+            final chatDeleted = liveData['chatDeleted'] ?? false;
 
-            String appBarTitle = "";
-
-            if (rideStatus == 'New') {
-              appBarTitle = "Driver Not Assigned";
-            } else if (rideStatus == 'Accepted') {
-              appBarTitle = "Driver Assigned";
-            } else if (rideStatus == 'Completed') {
-              appBarTitle = "Ride Completed";
-            } else {
-              appBarTitle = "Ride $rideStatus";
+            if ((status == 'Completed' || status == 'Cancelled') &&
+                chatDeleted == false) {
+              ChatCleanupService.deleteChatIfBookingCompleted(
+                widget.bookingData['bookingId'],
+              );
             }
 
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 10, top: 5),
-              child: Stack(
-                alignment: Alignment.center,
+            final liveDriverId = liveData['driverdocId']?.toString() ?? '';
+
+            final rideStatus = liveData['status'] ?? 'New';
+
+            final paymentStatus = liveData['paymentStatus'] ?? '';
+
+            final ownerOTP = liveData['ownerOTP']?.toString() ?? '';
+
+            DateTime createdAtTime =
+                (liveData['createdAt'] as Timestamp).toDate();
+
+            final DateTime now = DateTime.now();
+            final int diffSeconds =
+                300 - now.difference(createdAtTime).inSeconds;
+
+            final bool isTimerOver = diffSeconds <= 0;
+
+            final drop2Location = liveData['drop2'] ?? '';
+            final pickupLocation = liveData['pickup'] ?? '';
+            final dropLocation = liveData['drop'] ?? '';
+            final pickupLat = liveData['pickupLat'].toString();
+            final pickupLng = liveData['pickupLng'].toString();
+            final dropLat = liveData['dropLat'].toString();
+            final dropLng = liveData['dropLng'].toString();
+            final drop2Lat = liveData['drop2Lat'].toString();
+            final drop2Lng = liveData['drop2Lng'].toString();
+            String tripMode = liveData['tripMode'] ?? '';
+            String tripTime = liveData['tripTime'] ?? '';
+            String distance = liveData['distance'] ?? '';
+            String citylimithours = liveData['cityLimitHours'].toString();
+            String date = liveData['date'] ?? 'DD/MM/YYYY';
+            String arrivalDate = liveData['arrivalDate'] ?? 'DD/MM/YYYY';
+            String arrivalTime = liveData['arrivalTime'] ?? 'DD/MM/YYYY';
+            String time = liveData['time'] ?? 'HH:MM';
+            String servicePrice = liveData['serviceFare']?.toString() ?? '0.00';
+            String convenienceFee =
+                liveData['convenienceFee']?.toString() ?? '0.00';
+            String duration = liveData['duration'] ?? '';
+            String totalPrice = liveData['fare']?.toString() ?? '0.00';
+            String convertDate(String date) {
+              List<String> parts = date.split("-");
+              return "${parts[2]}-${parts[1]}-${parts[0]}";
+            }
+
+            final email = SharedPrefServices.getEmail()?.trim() ?? '';
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (_) => const BottomNavigation(initialIndex: 1),
-                          ),
-                          (route) => false,
-                        );
-                      },
+                  const SizedBox(height: 10),
 
-                      // onTap: () {
-
-                      //   if (widget.fromHome) {
-                      //     Navigator.pushAndRemoveUntil(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (_) => BottomNavigation(),
-                      //       ),
-                      //       (route) => false,
-                      //     );
-                      //   } else {
-                      //     Navigator.pop(context);
-                      //   }
-                      // },
-                      child: Container(
-                        width: 50,
-                        height: 50,
-                        alignment: Alignment.centerLeft,
-                        child: Image.asset(
-                          "images/chevronLeft.png",
-                          width: 24,
-                          height: 24,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: CustomText(
-                      text: appBarTitle,
-                      textcolor: KblackColor,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 22,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
-
-      body: StreamBuilder<DocumentSnapshot>(
-        stream:
-            FirebaseFirestore.instance
-                .collection('bookings')
-                .doc(widget.bookingData['bookingId'])
-                .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final liveData = snapshot.data!.data() as Map<String, dynamic>;
-          final chatDeleted = liveData['chatDeleted'] ?? false;
-
-          if ((status == 'Completed' || status == 'Cancelled') &&
-              chatDeleted == false) {
-            ChatCleanupService.deleteChatIfBookingCompleted(
-              widget.bookingData['bookingId'],
-            );
-          }
-
-          final liveDriverId = liveData['driverdocId']?.toString() ?? '';
-
-          final rideStatus = liveData['status'] ?? 'New';
-
-          final paymentStatus = liveData['paymentStatus'] ?? '';
-
-          final ownerOTP = liveData['ownerOTP']?.toString() ?? '';
-
-          DateTime createdAtTime =
-              (liveData['createdAt'] as Timestamp).toDate();
-
-          final DateTime now = DateTime.now();
-          final int diffSeconds = 300 - now.difference(createdAtTime).inSeconds;
-
-          final bool isTimerOver = diffSeconds <= 0;
-
-          final drop2Location = liveData['drop2'] ?? '';
-          final pickupLocation = liveData['pickup'] ?? '';
-          final dropLocation = liveData['drop'] ?? '';
-          final pickupLat = liveData['pickupLat'].toString();
-          final pickupLng = liveData['pickupLng'].toString();
-          final dropLat = liveData['dropLat'].toString();
-          final dropLng = liveData['dropLng'].toString();
-          final drop2Lat = liveData['drop2Lat'].toString();
-          final drop2Lng = liveData['drop2Lng'].toString();
-          String tripMode = liveData['tripMode'] ?? '';
-          String tripTime = liveData['tripTime'] ?? '';
-          String distance = liveData['distance'] ?? '';
-          String citylimithours = liveData['cityLimitHours'].toString();
-          String date = liveData['date'] ?? 'DD/MM/YYYY';
-          String arrivalDate = liveData['arrivalDate'] ?? 'DD/MM/YYYY';
-          String arrivalTime = liveData['arrivalTime'] ?? 'DD/MM/YYYY';
-          String time = liveData['time'] ?? 'HH:MM';
-          String servicePrice = liveData['serviceFare']?.toString() ?? '0.00';
-          String convenienceFee =
-              liveData['convenienceFee']?.toString() ?? '0.00';
-          String duration = liveData['duration'] ?? '';
-          String totalPrice = liveData['fare']?.toString() ?? '0.00';
-          String convertDate(String date) {
-            List<String> parts = date.split("-");
-            return "${parts[2]}-${parts[1]}-${parts[0]}";
-          }
-
-          final email = SharedPrefServices.getEmail()?.trim() ?? '';
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child:
-                      liveDriverId.isEmpty
-                          ? Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 40,
-                                backgroundColor: Colors.grey,
-                                child: Image.asset(
-                                  'images/avathar1.jpeg',
-                                  fit: BoxFit.cover,
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child:
+                        liveDriverId.isEmpty
+                            ? Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 40,
+                                  backgroundColor: Colors.grey,
+                                  child: Image.asset(
+                                    'images/avathar1.jpeg',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(width: 12),
-                              CustomText(
-                                text: "Driver not assigned",
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                textcolor: korangeColor,
-                              ),
-                            ],
-                          )
-                          : StreamBuilder<DocumentSnapshot>(
-                            stream:
-                                FirebaseFirestore.instance
-                                    .collection('drivers')
-                                    .doc(liveDriverId)
-                                    .snapshots(),
-                            builder: (context, driverSnap) {
-                              if (driverSnap.connectionState ==
-                                  ConnectionState.waiting) {
+                                SizedBox(width: 12),
+                                CustomText(
+                                  text: "Driver not assigned",
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  textcolor: korangeColor,
+                                ),
+                              ],
+                            )
+                            : StreamBuilder<DocumentSnapshot>(
+                              stream:
+                                  FirebaseFirestore.instance
+                                      .collection('drivers')
+                                      .doc(liveDriverId)
+                                      .snapshots(),
+                              builder: (context, driverSnap) {
+                                if (driverSnap.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 40,
+                                        backgroundColor: Colors.grey,
+                                        child: Image.asset(
+                                          'images/avathar1.jpeg',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      SizedBox(width: 12),
+                                      CustomText(
+                                        text: "Loading driver...",
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        textcolor: kgreyColor,
+                                      ),
+                                    ],
+                                  );
+                                }
+
+                                if (!driverSnap.hasData ||
+                                    !driverSnap.data!.exists) {
+                                  return Row(
+                                    children: const [
+                                      CircleAvatar(
+                                        radius: 40,
+                                        backgroundColor: Colors.grey,
+                                      ),
+                                      SizedBox(width: 12),
+                                      Text(
+                                        "Driver not assigned",
+                                        style: TextStyle(color: Colors.orange),
+                                      ),
+                                    ],
+                                  );
+                                }
+
+                                final d =
+                                    driverSnap.data!.data()
+                                        as Map<String, dynamic>;
+
                                 return Row(
                                   children: [
-                                    CircleAvatar(
-                                      radius: 40,
-                                      backgroundColor: Colors.grey,
-                                      child: Image.asset(
-                                        'images/avathar1.jpeg',
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    SizedBox(width: 12),
-                                    CustomText(
-                                      text: "Loading driver...",
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                      textcolor: kgreyColor,
-                                    ),
-                                  ],
-                                );
-                              }
-
-                              if (!driverSnap.hasData ||
-                                  !driverSnap.data!.exists) {
-                                return Row(
-                                  children: const [
-                                    CircleAvatar(
-                                      radius: 40,
-                                      backgroundColor: Colors.grey,
-                                    ),
-                                    SizedBox(width: 12),
-                                    Text(
-                                      "Driver not assigned",
-                                      style: TextStyle(color: Colors.orange),
-                                    ),
-                                  ],
-                                );
-                              }
-
-                              final d =
-                                  driverSnap.data!.data()
-                                      as Map<String, dynamic>;
-
-                              return Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap:
-                                        (d['profileUrl'] != null &&
-                                                d['profileUrl']
-                                                    .toString()
-                                                    .isNotEmpty)
-                                            ? () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder:
-                                                      (_) => FullImageView(
-                                                        imagePath:
-                                                            d['profileUrl'],
-                                                        isAsset: false,
-                                                      ),
-                                                ),
-                                              );
-                                            }
-                                            : null,
-                                    child: CircleAvatar(
-                                      radius: 40,
-                                      backgroundImage:
+                                    GestureDetector(
+                                      onTap:
                                           (d['profileUrl'] != null &&
                                                   d['profileUrl']
                                                       .toString()
                                                       .isNotEmpty)
-                                              ? NetworkImage(d['profileUrl'])
-                                              : const AssetImage(
-                                                    'images/avathar1.jpeg',
-                                                  )
-                                                  as ImageProvider,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        CustomText(
-                                          text:
-                                              "${d['firstName'] ?? ''} ${d['lastName'] ?? ''}"
-                                                  .trim(),
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          textcolor: korangeColor,
-                                        ),
-                                        const SizedBox(height: 4),
-                                      ],
-                                    ),
-                                  ),
-                                  if (rideStatus != 'Completed' &&
-                                      rideStatus != 'Cancelled') ...[
-                                    Container(
-                                      height: 50,
-                                      width: 1,
-                                      color: Colors.grey.shade300,
+                                              ? () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder:
+                                                        (_) => FullImageView(
+                                                          imagePath:
+                                                              d['profileUrl'],
+                                                          isAsset: false,
+                                                        ),
+                                                  ),
+                                                );
+                                              }
+                                              : null,
+                                      child: CircleAvatar(
+                                        radius: 40,
+                                        backgroundImage:
+                                            (d['profileUrl'] != null &&
+                                                    d['profileUrl']
+                                                        .toString()
+                                                        .isNotEmpty)
+                                                ? NetworkImage(d['profileUrl'])
+                                                : const AssetImage(
+                                                      'images/avathar1.jpeg',
+                                                    )
+                                                    as ImageProvider,
+                                      ),
                                     ),
                                     const SizedBox(width: 12),
-                                    Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder:
-                                                    (_) => ChatScreen(
-                                                      bookingId: bookingId,
-                                                      driverData: d,
-                                                      driverId: liveDriverId,
-                                                      ownerId: ownerId,
-                                                      ownerName: driverName,
-                                                      ownerProfile:
-                                                          ownerProfile,
-                                                    ),
-                                              ),
-                                            );
-                                          },
-                                          child: Image.asset("images/chat.png"),
-                                        ),
-                                        const SizedBox(width: 5),
-                                        GestureDetector(
-                                          onTap: () async {
-                                            final phone = d['phone'] ?? '';
-                                            if (phone.isNotEmpty) {
-                                              final Uri callUri = Uri(
-                                                scheme: 'tel',
-                                                path: phone,
-                                              );
-                                              if (await canLaunchUrl(callUri)) {
-                                                await launchUrl(callUri);
-                                              }
-                                            }
-                                          },
-                                          child: Image.asset("images/call.png"),
-                                        ),
-                                      ],
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          CustomText(
+                                            text:
+                                                "${d['firstName'] ?? ''} ${d['lastName'] ?? ''}"
+                                                    .trim(),
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            textcolor: korangeColor,
+                                          ),
+                                          const SizedBox(height: 4),
+                                        ],
+                                      ),
                                     ),
+                                    if (rideStatus != 'Completed' &&
+                                        rideStatus != 'Cancelled') ...[
+                                      Container(
+                                        height: 50,
+                                        width: 1,
+                                        color: Colors.grey.shade300,
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Row(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder:
+                                                      (_) => ChatScreen(
+                                                        bookingId: bookingId,
+                                                        driverData: d,
+                                                        driverId: liveDriverId,
+                                                        ownerId: ownerId,
+                                                        ownerName: driverName,
+                                                        ownerProfile:
+                                                            ownerProfile,
+                                                      ),
+                                                ),
+                                              );
+                                            },
+                                            child: Image.asset(
+                                              "images/chat.png",
+                                            ),
+                                          ),
+                                          const SizedBox(width: 5),
+                                          GestureDetector(
+                                            onTap: () async {
+                                              final phone = d['phone'] ?? '';
+                                              if (phone.isNotEmpty) {
+                                                final Uri callUri = Uri(
+                                                  scheme: 'tel',
+                                                  path: phone,
+                                                );
+                                                if (await canLaunchUrl(
+                                                  callUri,
+                                                )) {
+                                                  await launchUrl(callUri);
+                                                }
+                                              }
+                                            },
+                                            child: Image.asset(
+                                              "images/call.png",
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ],
-                                ],
-                              );
-                            },
-                          ),
-                ),
-
-                const Divider(thickness: 3, color: KlightgreyColor),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 15,
-                    left: 15,
-                    top: 8,
-                    bottom: 8,
+                                );
+                              },
+                            ),
                   ),
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: kbordergreyColor, width: 1),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
+
+                  const Divider(thickness: 3, color: KlightgreyColor),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 15,
+                      left: 15,
+                      top: 8,
+                      bottom: 8,
                     ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: kbordergreyColor,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: kbordergreyColor, width: 1),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
                               color: kbordergreyColor,
-                              width: 1,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: kbordergreyColor,
+                                width: 1,
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child:
+                                  vehicleImage.startsWith('http')
+                                      ? Image.network(
+                                        vehicleImage,
+                                        fit: BoxFit.cover,
+                                      )
+                                      : Image.asset(
+                                        vehicleImage,
+                                        fit: BoxFit.cover,
+                                      ),
                             ),
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child:
-                                vehicleImage.startsWith('http')
-                                    ? Image.network(
-                                      vehicleImage,
-                                      fit: BoxFit.cover,
-                                    )
-                                    : Image.asset(
-                                      vehicleImage,
-                                      fit: BoxFit.cover,
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                  text: vehicleName,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  textcolor: KblackColor,
+                                ),
+                                SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    CustomText(
+                                      text: transmission,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: kseegreyColor,
                                     ),
+                                    const SizedBox(width: 12),
+                                    Container(
+                                      height: 20,
+                                      width: 1,
+                                      color: kseegreyColor,
+                                    ),
+                                    SizedBox(width: 8),
+                                    CustomText(
+                                      text: category,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: kseegreyColor,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
+                          Image.asset("images/chevronRight.png"),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  if (rideStatus == 'Completed' &&
+                      paymentStatus == 'Success' &&
+                      reviewsList.isEmpty) ...[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15, right: 15),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
                             children: [
-                              CustomText(
-                                text: vehicleName,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                textcolor: KblackColor,
+                              Image.asset(
+                                "images/review.png",
+                                height: 50,
+                                width: 50,
                               ),
-                              SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  CustomText(
-                                    text: transmission,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: kseegreyColor,
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    CustomText(
+                                      text: "Write a review?",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      textcolor: korangeColor,
+                                    ),
+                                    CustomText(
+                                      text: "How was your experience?",
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: kseegreyColor,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed:
+                                    () => _showRatingDialog(context, data),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: korangeColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(46),
                                   ),
-                                  const SizedBox(width: 12),
-                                  Container(
-                                    height: 20,
-                                    width: 1,
-                                    color: kseegreyColor,
-                                  ),
-                                  SizedBox(width: 8),
-                                  CustomText(
-                                    text: category,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: kseegreyColor,
-                                  ),
-                                ],
+                                ),
+                                child: const CustomText(
+                                  text: "Give a rate",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  textcolor: kwhiteColor,
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        Image.asset("images/chevronRight.png"),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 5),
-
-                if (rideStatus == 'Completed' &&
-                    paymentStatus == 'Success' &&
-                    reviewsList.isEmpty) ...[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15, right: 15),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
                       ),
-
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
+                    ),
+                    SizedBox(height: 10),
+                  ] else if (rideStatus == 'Accepted') ...[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15, right: 15),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey.shade300),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              blurRadius: 3,
+                              offset: const Offset(0, 1),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.all(15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Image.asset(
-                              "images/review.png",
-                              height: 50,
-                              width: 50,
+                            const CustomText(
+                              text: "Verification code to start the ride",
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              textcolor: korangeColor,
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  CustomText(
-                                    text: "Write a review?",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    textcolor: korangeColor,
-                                  ),
-                                  CustomText(
-                                    text: "How was your experience?",
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: kseegreyColor,
-                                  ),
-                                ],
-                              ),
+                            const SizedBox(height: 10),
+
+                            CustomText(
+                              text:
+                                  "Share this OTP with your driver to start the ride.",
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              textcolor: KblackColor.withOpacity(0.6),
                             ),
-                            ElevatedButton(
-                              onPressed: () => _showRatingDialog(context, data),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: korangeColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(46),
+
+                            const SizedBox(height: 20),
+
+                            Center(
+                              child: Container(
+                                width: double.infinity,
+                                margin: const EdgeInsets.only(
+                                  right: 20,
+                                  left: 20,
                                 ),
-                              ),
-                              child: const CustomText(
-                                text: "Give a rate",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                textcolor: kwhiteColor,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 18,
+                                  horizontal: 40,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: korangeColor.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: korangeColor,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    CustomText(
+                                      text: "4-Digit OTP",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      textcolor: KblackColor.withOpacity(0.7),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    CustomText(
+                                      text: ownerOTP,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      textcolor: korangeColor,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                ] else if (rideStatus == 'Accepted') ...[
+                    const SizedBox(height: 12),
+                  ] else if (rideStatus == 'New') ...[
+                    StreamBuilder<int>(
+                      stream: Stream.periodic(
+                        const Duration(seconds: 1),
+                        (i) => i,
+                      ),
+                      builder: (context, snapshot) {
+                        final createdAtTs = liveData['createdAt'];
+                        if (createdAtTs == null) return const SizedBox();
+
+                        final createdAt = (createdAtTs as Timestamp).toDate();
+                        final now = DateTime.now();
+
+                        final diffSeconds = now.difference(createdAt).inSeconds;
+                        final isTimerOver = diffSeconds >= 300;
+
+                        final remainingSeconds = (300 - diffSeconds).clamp(
+                          0,
+                          300,
+                        );
+                        final minutes = (remainingSeconds ~/ 60)
+                            .toString()
+                            .padLeft(2, '0');
+                        final seconds = (remainingSeconds % 60)
+                            .toString()
+                            .padLeft(2, '0');
+
+                        final progress = remainingSeconds / 300;
+
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 15, right: 15),
+                          child: Container(
+                            padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.grey.shade300),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  blurRadius: 3,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  height: 50,
+                                  width: 50,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      if (!isTimerOver)
+                                        CircularProgressIndicator(
+                                          value: remainingSeconds / 300,
+                                          strokeWidth: 4,
+                                          backgroundColor: Colors.grey.shade300,
+                                          valueColor: AlwaysStoppedAnimation(
+                                            korangeColor,
+                                          ),
+                                        )
+                                      else
+                                        Icon(
+                                          Icons.warning_amber_outlined,
+                                          color: korangeColor,
+                                          size: 26,
+                                        ),
+                                    ],
+                                  ),
+                                ),
+
+                                const SizedBox(width: 12),
+
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText(
+                                        text:
+                                            isTimerOver
+                                                ? "No captains available"
+                                                : "Ride request received",
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        textcolor: korangeColor,
+                                      ),
+                                      const SizedBox(height: 4),
+                                      CustomText(
+                                        text:
+                                            isTimerOver
+                                                ? "At the moment no captains accepted. Please cancel the ride below."
+                                                : "Waiting for captains to accept your ride",
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w400,
+                                        textcolor: kseegreyColor,
+                                      ),
+
+                                      if (!isTimerOver) ...[
+                                        const SizedBox(height: 8),
+                                        CustomText(
+                                          text: "Time left: $minutes:$seconds",
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          textcolor: korangeColor,
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+
                   Padding(
-                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    padding: const EdgeInsets.only(
+                      left: 15,
+                      right: 15,
+                      top: 0,
+                      bottom: 10,
+                    ),
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -1070,310 +1298,27 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const CustomText(
-                            text: "Verification code to start the ride",
-                            fontSize: 16,
+                            text: "Route Information",
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                             textcolor: korangeColor,
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 15),
 
-                          CustomText(
-                            text:
-                                "Share this OTP with your driver to start the ride.",
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            textcolor: KblackColor.withOpacity(0.6),
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          Center(
-                            child: Container(
-                              width: double.infinity,
-                              margin: const EdgeInsets.only(
-                                right: 20,
-                                left: 20,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 18,
-                                horizontal: 40,
-                              ),
-                              decoration: BoxDecoration(
-                                color: korangeColor.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: korangeColor,
-                                  width: 1.5,
-                                ),
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
                                 children: [
-                                  CustomText(
-                                    text: "4-Digit OTP",
-                                    fontSize: 14,
+                                  _buildDot(Colors.green),
+                                  const SizedBox(width: 10),
+                                  const CustomText(
+                                    text: "Pickup Location",
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w500,
-                                    textcolor: KblackColor.withOpacity(0.7),
+                                    textcolor: Colors.green,
                                   ),
-                                  const SizedBox(height: 6),
-                                  CustomText(
-                                    text: ownerOTP,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    textcolor: korangeColor,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                ] else if (rideStatus == 'New') ...[
-                  StreamBuilder<int>(
-                    stream: Stream.periodic(
-                      const Duration(seconds: 1),
-                      (i) => i,
-                    ),
-                    builder: (context, snapshot) {
-                      final createdAtTs = liveData['createdAt'];
-                      if (createdAtTs == null) return const SizedBox();
 
-                      final createdAt = (createdAtTs as Timestamp).toDate();
-                      final now = DateTime.now();
-
-                      final diffSeconds = now.difference(createdAt).inSeconds;
-                      final isTimerOver = diffSeconds >= 300;
-
-                      final remainingSeconds = (300 - diffSeconds).clamp(
-                        0,
-                        300,
-                      );
-                      final minutes = (remainingSeconds ~/ 60)
-                          .toString()
-                          .padLeft(2, '0');
-                      final seconds = (remainingSeconds % 60)
-                          .toString()
-                          .padLeft(2, '0');
-
-                      final progress = remainingSeconds / 300;
-
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 15, right: 15),
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.grey.shade300),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.1),
-                                blurRadius: 3,
-                                offset: const Offset(0, 1),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                height: 50,
-                                width: 50,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    if (!isTimerOver)
-                                      CircularProgressIndicator(
-                                        value: remainingSeconds / 300,
-                                        strokeWidth: 4,
-                                        backgroundColor: Colors.grey.shade300,
-                                        valueColor: AlwaysStoppedAnimation(
-                                          korangeColor,
-                                        ),
-                                      )
-                                    else
-                                      Icon(
-                                        Icons.warning_amber_outlined,
-                                        color: korangeColor,
-                                        size: 26,
-                                      ),
-                                  ],
-                                ),
-                              ),
-
-                              const SizedBox(width: 12),
-
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomText(
-                                      text:
-                                          isTimerOver
-                                              ? "No captains available"
-                                              : "Ride request received",
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      textcolor: korangeColor,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    CustomText(
-                                      text:
-                                          isTimerOver
-                                              ? "At the moment no captains accepted. Please cancel the ride below."
-                                              : "Waiting for captains to accept your ride",
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                      textcolor: kseegreyColor,
-                                    ),
-
-                                    if (!isTimerOver) ...[
-                                      const SizedBox(height: 8),
-                                      CustomText(
-                                        text: "Time left: $minutes:$seconds",
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                        textcolor: korangeColor,
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                ],
-
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 15,
-                    right: 15,
-                    top: 0,
-                    bottom: 10,
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade300),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          blurRadius: 3,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    padding: const EdgeInsets.all(15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const CustomText(
-                          text: "Route Information",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          textcolor: korangeColor,
-                        ),
-                        const SizedBox(height: 15),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                _buildDot(Colors.green),
-                                const SizedBox(width: 10),
-                                const CustomText(
-                                  text: "Pickup Location",
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  textcolor: Colors.green,
-                                ),
-
-                                const SizedBox(width: 6),
-                                const Icon(
-                                  Icons.access_time,
-                                  size: 15,
-                                  color: Colors.grey,
-                                ),
-                                const SizedBox(width: 4),
-                                CustomText(
-                                  text: time,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: Colors.grey,
-                                ),
-                              ],
-                            ),
-
-                            GestureDetector(
-                              onTap: () {
-                                _openMapWithCurrentLocation(
-                                  pickupLat,
-                                  pickupLng,
-                                );
-                              },
-                              child: const Icon(
-                                Icons.pin_drop,
-                                size: 22,
-                                color: KredColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 15,
-                            top: 0,
-                            bottom: 10,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 4),
-                              CustomText(
-                                text: pickupLocation,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                                textcolor: KblackColor,
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: 10),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                _buildDot(
-                                  drop2Location.isEmpty
-                                      ? KredColor
-                                      : korangeColor,
-                                ),
-                                const SizedBox(width: 10),
-                                CustomText(
-                                  text:
-                                      drop2Location.isEmpty
-                                          ? "Drop Location"
-                                          : "Drop Location 1",
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  textcolor:
-                                      drop2Location.isEmpty
-                                          ? KredColor
-                                          : korangeColor,
-                                ),
-
-                                if (drop2Location.isEmpty) ...[
                                   const SizedBox(width: 6),
                                   const Icon(
                                     Icons.access_time,
@@ -1382,827 +1327,351 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                   ),
                                   const SizedBox(width: 4),
                                   CustomText(
-                                    text:
-                                        "ETA: ${_calculateETA(time, duration)}",
+                                    text: time,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w400,
                                     textcolor: Colors.grey,
                                   ),
                                 ],
+                              ),
+
+                              GestureDetector(
+                                onTap: () {
+                                  _openMapWithCurrentLocation(
+                                    pickupLat,
+                                    pickupLng,
+                                  );
+                                },
+                                child: const Icon(
+                                  Icons.pin_drop,
+                                  size: 22,
+                                  color: KredColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 15,
+                              top: 0,
+                              bottom: 10,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 4),
+                                CustomText(
+                                  text: pickupLocation,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
                               ],
                             ),
-
-                            GestureDetector(
-                              onTap: () {
-                                _openMapWithCurrentLocation(dropLat, dropLng);
-                              },
-                              child: const Icon(
-                                Icons.pin_drop,
-                                size: 22,
-                                color: KredColor,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 15,
-                            top: 5,
-                            bottom: 10,
                           ),
-                          child: CustomText(
-                            text: dropLocation,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            textcolor: KblackColor,
-                          ),
-                        ),
 
-                        if (drop2Location.isNotEmpty)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          const SizedBox(height: 10),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    children: [
-                                      _buildDot(Colors.red),
-                                      const SizedBox(width: 8),
-                                      const CustomText(
-                                        text: "Drop Location 2",
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        textcolor: KredColor,
-                                      ),
-                                      const SizedBox(width: 6),
-                                      const Icon(
-                                        Icons.access_time,
-                                        size: 15,
-                                        color: Colors.grey,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      CustomText(
-                                        text:
-                                            "ETA: ${_calculateETA(time, duration)}",
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w400,
-                                        textcolor: Colors.grey,
-                                      ),
-                                    ],
+                                  _buildDot(
+                                    drop2Location.isEmpty
+                                        ? KredColor
+                                        : korangeColor,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  CustomText(
+                                    text:
+                                        drop2Location.isEmpty
+                                            ? "Drop Location"
+                                            : "Drop Location 1",
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    textcolor:
+                                        drop2Location.isEmpty
+                                            ? KredColor
+                                            : korangeColor,
                                   ),
 
-                                  GestureDetector(
-                                    onTap: () {
-                                      _openMapWithCurrentLocation(
-                                        drop2Lat,
-                                        drop2Lng,
-                                      );
-                                    },
-                                    child: const Icon(
-                                      Icons.pin_drop,
-                                      size: 22,
-                                      color: KredColor,
+                                  if (drop2Location.isEmpty) ...[
+                                    const SizedBox(width: 6),
+                                    const Icon(
+                                      Icons.access_time,
+                                      size: 15,
+                                      color: Colors.grey,
                                     ),
-                                  ),
+                                    const SizedBox(width: 4),
+                                    CustomText(
+                                      text:
+                                          "ETA: ${_calculateETA(time, duration)}",
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: Colors.grey,
+                                    ),
+                                  ],
                                 ],
                               ),
 
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 15,
-                                  top: 5,
-                                  bottom: 10,
-                                ),
-                                child: CustomText(
-                                  text: drop2Location,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: KblackColor,
+                              GestureDetector(
+                                onTap: () {
+                                  _openMapWithCurrentLocation(dropLat, dropLng);
+                                },
+                                child: const Icon(
+                                  Icons.pin_drop,
+                                  size: 22,
+                                  color: KredColor,
                                 ),
                               ),
                             ],
                           ),
 
-                        const SizedBox(height: 15),
-                        DottedLine(dashColor: kbordergreyColor, dashLength: 7),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 15,
+                              top: 5,
+                              bottom: 10,
+                            ),
+                            child: CustomText(
+                              text: dropLocation,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              textcolor: KblackColor,
+                            ),
+                          ),
 
-                        const SizedBox(height: 10),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
+                          if (drop2Location.isNotEmpty)
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const CustomText(
-                                  text: "Distance",
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: kseegreyColor,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        _buildDot(Colors.red),
+                                        const SizedBox(width: 8),
+                                        const CustomText(
+                                          text: "Drop Location 2",
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          textcolor: KredColor,
+                                        ),
+                                        const SizedBox(width: 6),
+                                        const Icon(
+                                          Icons.access_time,
+                                          size: 15,
+                                          color: Colors.grey,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        CustomText(
+                                          text:
+                                              "ETA: ${_calculateETA(time, duration)}",
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w400,
+                                          textcolor: Colors.grey,
+                                        ),
+                                      ],
+                                    ),
+
+                                    GestureDetector(
+                                      onTap: () {
+                                        _openMapWithCurrentLocation(
+                                          drop2Lat,
+                                          drop2Lng,
+                                        );
+                                      },
+                                      child: const Icon(
+                                        Icons.pin_drop,
+                                        size: 22,
+                                        color: KredColor,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 4),
-                                CustomText(
-                                  text: distance,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  textcolor: KblackColor,
+
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 15,
+                                    top: 5,
+                                    bottom: 10,
+                                  ),
+                                  child: CustomText(
+                                    text: drop2Location,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    textcolor: KblackColor,
+                                  ),
                                 ),
                               ],
                             ),
-                            Container(
-                              height: 40,
-                              width: 1,
-                              color: Colors.grey.shade300,
-                            ),
-                            Column(
-                              children: [
-                                CustomText(
-                                  text: "Duration",
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: kseegreyColor,
-                                ),
-                                SizedBox(height: 4),
-                                CustomText(
-                                  text: duration,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  textcolor: KblackColor,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        DottedLine(dashColor: kbordergreyColor, dashLength: 7),
 
-                        const SizedBox(height: 15),
+                          const SizedBox(height: 15),
+                          DottedLine(
+                            dashColor: kbordergreyColor,
+                            dashLength: 7,
+                          ),
 
-                        Center(
-                          child: SizedBox(
-                            width: 180,
-                            height: 45,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: korangeColor,
+                          const SizedBox(height: 10),
 
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                elevation: 0,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
+                                children: [
+                                  const CustomText(
+                                    text: "Distance",
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    textcolor: kseegreyColor,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  CustomText(
+                                    text: distance,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    textcolor: KblackColor,
+                                  ),
+                                ],
                               ),
+                              Container(
+                                height: 40,
+                                width: 1,
+                                color: Colors.grey.shade300,
+                              ),
+                              Column(
+                                children: [
+                                  CustomText(
+                                    text: "Duration",
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    textcolor: kseegreyColor,
+                                  ),
+                                  SizedBox(height: 4),
+                                  CustomText(
+                                    text: duration,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    textcolor: KblackColor,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          DottedLine(
+                            dashColor: kbordergreyColor,
+                            dashLength: 7,
+                          ),
 
-                              onPressed: () async {
-                                String destinationLat =
-                                    drop2Location.isNotEmpty
-                                        ? drop2Lat
-                                        : dropLat;
-                                String destinationLng =
-                                    drop2Location.isNotEmpty
-                                        ? drop2Lng
-                                        : dropLng;
+                          const SizedBox(height: 15),
 
-                                try {
-                                  LocationPermission permission =
-                                      await Geolocator.checkPermission();
-                                  if (permission == LocationPermission.denied) {
-                                    permission =
-                                        await Geolocator.requestPermission();
-                                  }
+                          Center(
+                            child: SizedBox(
+                              width: 180,
+                              height: 45,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: korangeColor,
 
-                                  Position position =
-                                      await Geolocator.getCurrentPosition(
-                                        desiredAccuracy: LocationAccuracy.high,
-                                      );
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  elevation: 0,
+                                ),
 
-                                  double currentLat = position.latitude;
-                                  double currentLng = position.longitude;
+                                onPressed: () async {
+                                  String destinationLat =
+                                      drop2Location.isNotEmpty
+                                          ? drop2Lat
+                                          : dropLat;
+                                  String destinationLng =
+                                      drop2Location.isNotEmpty
+                                          ? drop2Lng
+                                          : dropLng;
 
-                                  final Uri googleMapsUrl = Uri.parse(
-                                    "https://www.google.com/maps/dir/?api=1"
-                                    "&origin=$currentLat,$currentLng"
-                                    "&destination=$destinationLat,$destinationLng"
-                                    "&travelmode=driving",
-                                  );
+                                  try {
+                                    LocationPermission permission =
+                                        await Geolocator.checkPermission();
+                                    if (permission ==
+                                        LocationPermission.denied) {
+                                      permission =
+                                          await Geolocator.requestPermission();
+                                    }
 
-                                  if (await canLaunchUrl(googleMapsUrl)) {
-                                    await launchUrl(
-                                      googleMapsUrl,
-                                      mode: LaunchMode.externalApplication,
+                                    Position position =
+                                        await Geolocator.getCurrentPosition(
+                                          desiredAccuracy:
+                                              LocationAccuracy.high,
+                                        );
+
+                                    double currentLat = position.latitude;
+                                    double currentLng = position.longitude;
+
+                                    final Uri googleMapsUrl = Uri.parse(
+                                      "https://www.google.com/maps/dir/?api=1"
+                                      "&origin=$currentLat,$currentLng"
+                                      "&destination=$destinationLat,$destinationLng"
+                                      "&travelmode=driving",
                                     );
-                                  } else {
+
+                                    if (await canLaunchUrl(googleMapsUrl)) {
+                                      await launchUrl(
+                                        googleMapsUrl,
+                                        mode: LaunchMode.externalApplication,
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            "Unable to open Google Maps.",
+                                          ),
+                                          behavior: SnackBarBehavior.floating,
+                                          backgroundColor: Colors.redAccent,
+                                        ),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    print("Error getting directions: $e");
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+                                      SnackBar(
                                         content: Text(
-                                          "Unable to open Google Maps.",
+                                          "Error opening directions: ${e.toString()}",
                                         ),
                                         behavior: SnackBarBehavior.floating,
                                         backgroundColor: Colors.redAccent,
                                       ),
                                     );
                                   }
-                                } catch (e) {
-                                  print("Error getting directions: $e");
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        "Error opening directions: ${e.toString()}",
-                                      ),
-                                      behavior: SnackBarBehavior.floating,
-                                      backgroundColor: Colors.redAccent,
-                                    ),
-                                  );
-                                }
-                              },
+                                },
 
-                              child: const CustomText(
-                                text: "Get Directions",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                textcolor: kwhiteColor,
+                                child: const CustomText(
+                                  text: "Get Directions",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  textcolor: kwhiteColor,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 0,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 1,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
-                              blurRadius: 3,
-                              offset: const Offset(0, 1),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const CustomText(
-                              text: "Trip Details",
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              textcolor: korangeColor,
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Image.asset(
-                                  "images/calender_drvr.png",
-                                  height: 20,
-                                  width: 20,
-                                ),
-                                const SizedBox(width: 8),
-                                CustomText(
-                                  text: tripMode,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: KblackColor,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Image.asset(
-                                  "images/time.png",
-                                  height: 20,
-                                  width: 20,
-                                ),
-                                const SizedBox(width: 8),
-                                CustomText(
-                                  text: tripTime,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: KblackColor,
-                                ),
-                              ],
-                            ),
-                            if (tripMode == "City Limits" &&
-                                citylimithours.isNotEmpty) ...[
-                              const SizedBox(height: 12),
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    "images/time.png",
-                                    height: 20,
-                                    width: 20,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  CustomText(
-                                    text: 'City Limit : $citylimithours Hours',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: KblackColor,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 1,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
-                              blurRadius: 3,
-                              offset: const Offset(0, 1),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const CustomText(
-                              text: "Slot Details",
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              textcolor: korangeColor,
-                            ),
-                            const SizedBox(height: 8),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    if (tripMode == "Round Trip")
-                                      CustomText(
-                                        text: "Depature",
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        textcolor: Colors.grey.shade700,
-                                      ),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          "images/calender_drvr.png",
-                                          height: 20,
-                                          width: 20,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        CustomText(
-                                          text: convertDate(date),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          textcolor: KblackColor,
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          "images/time.png",
-                                          height: 20,
-                                          width: 20,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        CustomText(
-                                          text: time,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          textcolor: KblackColor,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                if (tripMode == "Round Trip")
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      CustomText(
-                                        text: "Arrival",
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        textcolor: Colors.grey.shade700,
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Image.asset(
-                                            "images/calender_drvr.png",
-                                            height: 20,
-                                            width: 20,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          CustomText(
-                                            text: convertDate(arrivalDate),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            textcolor: KblackColor,
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 12),
-                                      Row(
-                                        children: [
-                                          Image.asset(
-                                            "images/time.png",
-                                            height: 20,
-                                            width: 20,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          CustomText(
-                                            text: arrivalTime,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            textcolor: KblackColor,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 1,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
-                              blurRadius: 3,
-                              offset: const Offset(0, 1),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const CustomText(
-                              text: "Contact Details",
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              textcolor: korangeColor,
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Image.asset(
-                                  "images/person.png",
-                                  height: 20,
-                                  width: 20,
-                                ),
-                                const SizedBox(width: 8),
-                                CustomText(
-                                  text:
-                                      ((SharedPrefServices.getFirstName() ??
-                                                      '') +
-                                                  " " +
-                                                  (SharedPrefServices.getLastName() ??
-                                                      ''))
-                                              .trim()
-                                              .isNotEmpty
-                                          ? ((SharedPrefServices.getFirstName() ??
-                                                      '') +
-                                                  " " +
-                                                  (SharedPrefServices.getLastName() ??
-                                                      ''))
-                                              .trim()
-                                          : driverName,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: KblackColor,
-                                ),
-                              ],
-                            ),
-                            if (email.isNotEmpty)
-                              Column(
-                                children: [
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Image.asset(
-                                        "images/email_drvr.png",
-                                        height: 20,
-                                        width: 20,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      CustomText(
-                                        text: email,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        textcolor: KblackColor,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Image.asset(
-                                  "images/call_drvr.png",
-                                  height: 20,
-                                  width: 20,
-                                ),
-                                const SizedBox(width: 8),
-                                CustomText(
-                                  text:
-                                      SharedPrefServices.getNumber().toString(),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: KblackColor,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-
-                      if (liveData['driverdocId'] != null &&
-                          liveData['driverdocId'].toString().trim().isNotEmpty)
-                        StreamBuilder<DocumentSnapshot>(
-                          stream:
-                              FirebaseFirestore.instance
-                                  .collection('drivers')
-                                  .doc(liveData['driverdocId'])
-                                  .snapshots(),
-                          builder: (context, driverSnap) {
-                            if (driverSnap.connectionState ==
-                                ConnectionState.waiting) {
-                              return const SizedBox();
-                            }
-
-                            if (!driverSnap.hasData ||
-                                !driverSnap.data!.exists) {
-                              return const SizedBox();
-                            }
-
-                            final driver =
-                                driverSnap.data!.data() as Map<String, dynamic>;
-                            final String driverEmail =
-                                driver['email']?.toString().trim() ?? '';
-
-                            return Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(15),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: Colors.grey.shade300,
-                                  width: 1,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.1),
-                                    blurRadius: 3,
-                                    offset: const Offset(0, 1),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const CustomText(
-                                    text: "Driver Details",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    textcolor: korangeColor,
-                                  ),
-                                  const SizedBox(height: 12),
-
-                                  Row(
-                                    children: [
-                                      Image.asset(
-                                        "images/person.png",
-                                        height: 20,
-                                        width: 20,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      CustomText(
-                                        text:
-                                            "${driver['firstName'] ?? ''} ${driver['lastName'] ?? ''}",
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        textcolor: KblackColor,
-                                      ),
-                                    ],
-                                  ),
-
-                                  if (driverEmail.isNotEmpty) ...[
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          "images/email_drvr.png",
-                                          height: 20,
-                                          width: 20,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        CustomText(
-                                          text: driverEmail,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          textcolor: KblackColor,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-
-                                  const SizedBox(height: 10),
-
-                                  Row(
-                                    children: [
-                                      Image.asset(
-                                        "images/call_drvr.png",
-                                        height: 20,
-                                        width: 20,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      CustomText(
-                                        text: driver['phone'] ?? '',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        textcolor: KblackColor,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-
-                      SizedBox(height: 10),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 1,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
-                              blurRadius: 3,
-                              offset: const Offset(0, 1),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const CustomText(
-                              text: "Payment Summary",
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              textcolor: korangeColor,
-                            ),
-                            const SizedBox(height: 12),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const CustomText(
-                                  text: "Service Price",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: KblackColor,
-                                ),
-                                CustomText(
-                                  text:
-                                      "₹${(double.tryParse(servicePrice) ?? 0).toStringAsFixed(2)}",
-
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: KblackColor,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const CustomText(
-                                  text: "Convenience Fee",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: KblackColor,
-                                ),
-                                CustomText(
-                                  text:
-                                      "₹${(double.tryParse(convenienceFee) ?? 0).toStringAsFixed(2)}",
-
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: KblackColor,
-                                ),
-                              ],
-                            ),
-
-                            if (isCouponApplied ||
-                                (data['couponApplied'] == true)) ...[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  CustomText(
-                                    text: "Coupon Applied ",
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                    textcolor: Colors.green,
-                                  ),
-                                  CustomText(
-                                    text:
-                                        "-₹${(isCouponApplied ? appliedDiscount : (data['appliedDiscount'] ?? 0)).toStringAsFixed(2)}",
-
-                                    // "-₹${appliedDiscount.toStringAsFixed(2)}",
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    textcolor: Colors.green,
-                                  ),
-                                ],
-                              ),
-                            ],
-
-                            const SizedBox(height: 10),
-                            const DottedLine(dashColor: kseegreyColor),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const CustomText(
-                                  text: "Total Price",
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  textcolor: korangeColor,
-                                ),
-                                CustomText(
-                                  text:
-                                      "₹${((double.tryParse(totalPrice) ?? 0) - appliedDiscount).toStringAsFixed(2)}",
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  textcolor: korangeColor,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            const DottedLine(dashColor: kseegreyColor),
-                          ],
-                        ),
-                      ),
-
-                      SizedBox(height: 10),
-                      if (reviewsList.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Container(
                           width: double.infinity,
                           padding: const EdgeInsets.all(15),
@@ -2221,224 +1690,803 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                               ),
                             ],
                           ),
-                          child:
-                              reviewsList.isEmpty
-                                  ? const CustomText(
-                                    text: "No review available",
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const CustomText(
+                                text: "Trip Details",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                textcolor: korangeColor,
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    "images/calender_drvr.png",
+                                    height: 20,
+                                    width: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  CustomText(
+                                    text: tripMode,
                                     fontSize: 14,
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.w400,
                                     textcolor: KblackColor,
-                                  )
-                                  : Column(
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    "images/time.png",
+                                    height: 20,
+                                    width: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  CustomText(
+                                    text: tripTime,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    textcolor: KblackColor,
+                                  ),
+                                ],
+                              ),
+                              if (tripMode == "City Limits" &&
+                                  citylimithours.isNotEmpty) ...[
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      "images/time.png",
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    CustomText(
+                                      text:
+                                          'City Limit : $citylimithours Hours',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: KblackColor,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: Colors.grey.shade300,
+                              width: 1,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.1),
+                                blurRadius: 3,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const CustomText(
+                                text: "Slot Details",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                textcolor: korangeColor,
+                              ),
+                              const SizedBox(height: 8),
+
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const CustomText(
-                                        text: "Your Review",
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        textcolor: korangeColor,
+                                      if (tripMode == "Round Trip")
+                                        CustomText(
+                                          text: "Depature",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          textcolor: Colors.grey.shade700,
+                                        ),
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Image.asset(
+                                            "images/calender_drvr.png",
+                                            height: 20,
+                                            width: 20,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          CustomText(
+                                            text: convertDate(date),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            textcolor: KblackColor,
+                                          ),
+                                        ],
                                       ),
                                       const SizedBox(height: 12),
-
                                       Row(
                                         children: [
-                                          const CustomText(
-                                            text: "Rating :",
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            textcolor: KblackColor,
+                                          Image.asset(
+                                            "images/time.png",
+                                            height: 20,
+                                            width: 20,
                                           ),
-                                          SizedBox(width: 4),
-                                          Row(
-                                            children: List.generate(
-                                              reviewsList[0]['rating'],
-                                              (i) => const Icon(
-                                                Icons.star,
-                                                color: Colors.orange,
-                                                size: 18,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 4),
+                                          const SizedBox(width: 8),
                                           CustomText(
-                                            text:
-                                                reviewsList[0]['rating']
-                                                    .toString(),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                            textcolor: KblackColor,
-                                          ),
-                                        ],
-                                      ),
-
-                                      const SizedBox(height: 10),
-
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const CustomText(
-                                            text: "Feedback : ",
+                                            text: time,
                                             fontSize: 14,
                                             fontWeight: FontWeight.w400,
                                             textcolor: KblackColor,
-                                          ),
-                                          SizedBox(width: 4),
-                                          Expanded(
-                                            child: CustomText(
-                                              text: (reviewsList[0]['feedback']
-                                                      as List)
-                                                  .join(", "),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
-                                              textcolor: KblackColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-
-                                      const SizedBox(height: 10),
-
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const CustomText(
-                                            text: "Comment : ",
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            textcolor: KblackColor,
-                                          ),
-                                          SizedBox(width: 4),
-                                          Expanded(
-                                            child: CustomText(
-                                              text:
-                                                  reviewsList[0]['comment'] ??
-                                                  "",
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
-                                              textcolor: KblackColor,
-                                            ),
                                           ),
                                         ],
                                       ),
                                     ],
                                   ),
+                                  if (tripMode == "Round Trip")
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        CustomText(
+                                          text: "Arrival",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          textcolor: Colors.grey.shade700,
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          children: [
+                                            Image.asset(
+                                              "images/calender_drvr.png",
+                                              height: 20,
+                                              width: 20,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            CustomText(
+                                              text: convertDate(arrivalDate),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              textcolor: KblackColor,
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Row(
+                                          children: [
+                                            Image.asset(
+                                              "images/time.png",
+                                              height: 20,
+                                              width: 20,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            CustomText(
+                                              text: arrivalTime,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              textcolor: KblackColor,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                    ],
+
+                        const SizedBox(height: 10),
+
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: Colors.grey.shade300,
+                              width: 1,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.1),
+                                blurRadius: 3,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const CustomText(
+                                text: "Contact Details",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                textcolor: korangeColor,
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    "images/person.png",
+                                    height: 20,
+                                    width: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  CustomText(
+                                    text:
+                                        ((SharedPrefServices.getFirstName() ??
+                                                        '') +
+                                                    " " +
+                                                    (SharedPrefServices.getLastName() ??
+                                                        ''))
+                                                .trim()
+                                                .isNotEmpty
+                                            ? ((SharedPrefServices.getFirstName() ??
+                                                        '') +
+                                                    " " +
+                                                    (SharedPrefServices.getLastName() ??
+                                                        ''))
+                                                .trim()
+                                            : driverName,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    textcolor: KblackColor,
+                                  ),
+                                ],
+                              ),
+                              if (email.isNotEmpty)
+                                Column(
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          "images/email_drvr.png",
+                                          height: 20,
+                                          width: 20,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        CustomText(
+                                          text: email,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          textcolor: KblackColor,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    "images/call_drvr.png",
+                                    height: 20,
+                                    width: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  CustomText(
+                                    text:
+                                        SharedPrefServices.getNumber()
+                                            .toString(),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    textcolor: KblackColor,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+
+                        if (liveData['driverdocId'] != null &&
+                            liveData['driverdocId']
+                                .toString()
+                                .trim()
+                                .isNotEmpty)
+                          StreamBuilder<DocumentSnapshot>(
+                            stream:
+                                FirebaseFirestore.instance
+                                    .collection('drivers')
+                                    .doc(liveData['driverdocId'])
+                                    .snapshots(),
+                            builder: (context, driverSnap) {
+                              if (driverSnap.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const SizedBox();
+                              }
+
+                              if (!driverSnap.hasData ||
+                                  !driverSnap.data!.exists) {
+                                return const SizedBox();
+                              }
+
+                              final driver =
+                                  driverSnap.data!.data()
+                                      as Map<String, dynamic>;
+                              final String driverEmail =
+                                  driver['email']?.toString().trim() ?? '';
+
+                              return Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.grey.shade300,
+                                    width: 1,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.1),
+                                      blurRadius: 3,
+                                      offset: const Offset(0, 1),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const CustomText(
+                                      text: "Driver Details",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      textcolor: korangeColor,
+                                    ),
+                                    const SizedBox(height: 12),
+
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          "images/person.png",
+                                          height: 20,
+                                          width: 20,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        CustomText(
+                                          text:
+                                              "${driver['firstName'] ?? ''} ${driver['lastName'] ?? ''}",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          textcolor: KblackColor,
+                                        ),
+                                      ],
+                                    ),
+
+                                    if (driverEmail.isNotEmpty) ...[
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Image.asset(
+                                            "images/email_drvr.png",
+                                            height: 20,
+                                            width: 20,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          CustomText(
+                                            text: driverEmail,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            textcolor: KblackColor,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+
+                                    const SizedBox(height: 10),
+
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          "images/call_drvr.png",
+                                          height: 20,
+                                          width: 20,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        CustomText(
+                                          text: driver['phone'] ?? '',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          textcolor: KblackColor,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+
+                        SizedBox(height: 10),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: Colors.grey.shade300,
+                              width: 1,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.1),
+                                blurRadius: 3,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const CustomText(
+                                text: "Payment Summary",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                textcolor: korangeColor,
+                              ),
+                              const SizedBox(height: 12),
+
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const CustomText(
+                                    text: "Service Price",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    textcolor: KblackColor,
+                                  ),
+                                  CustomText(
+                                    text:
+                                        "₹${(double.tryParse(servicePrice) ?? 0).toStringAsFixed(2)}",
+
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    textcolor: KblackColor,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const CustomText(
+                                    text: "Convenience Fee",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    textcolor: KblackColor,
+                                  ),
+                                  CustomText(
+                                    text:
+                                        "₹${(double.tryParse(convenienceFee) ?? 0).toStringAsFixed(2)}",
+
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    textcolor: KblackColor,
+                                  ),
+                                ],
+                              ),
+
+                              if (isCouponApplied ||
+                                  (data['couponApplied'] == true)) ...[
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CustomText(
+                                      text: "Coupon Applied ",
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                      textcolor: Colors.green,
+                                    ),
+                                    CustomText(
+                                      text:
+                                          "-₹${(isCouponApplied ? appliedDiscount : (data['appliedDiscount'] ?? 0)).toStringAsFixed(2)}",
+
+                                      // "-₹${appliedDiscount.toStringAsFixed(2)}",
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      textcolor: Colors.green,
+                                    ),
+                                  ],
+                                ),
+                              ],
+
+                              const SizedBox(height: 10),
+                              const DottedLine(dashColor: kseegreyColor),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const CustomText(
+                                    text: "Total Price",
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    textcolor: korangeColor,
+                                  ),
+                                  CustomText(
+                                    text:
+                                        "₹${((double.tryParse(totalPrice) ?? 0) - appliedDiscount).toStringAsFixed(2)}",
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    textcolor: korangeColor,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              const DottedLine(dashColor: kseegreyColor),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(height: 10),
+                        if (reviewsList.isNotEmpty)
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.grey.shade300,
+                                width: 1,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  blurRadius: 3,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child:
+                                reviewsList.isEmpty
+                                    ? const CustomText(
+                                      text: "No review available",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      textcolor: KblackColor,
+                                    )
+                                    : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const CustomText(
+                                          text: "Your Review",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          textcolor: korangeColor,
+                                        ),
+                                        const SizedBox(height: 12),
+
+                                        Row(
+                                          children: [
+                                            const CustomText(
+                                              text: "Rating :",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              textcolor: KblackColor,
+                                            ),
+                                            SizedBox(width: 4),
+                                            Row(
+                                              children: List.generate(
+                                                reviewsList[0]['rating'],
+                                                (i) => const Icon(
+                                                  Icons.star,
+                                                  color: Colors.orange,
+                                                  size: 18,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 4),
+                                            CustomText(
+                                              text:
+                                                  reviewsList[0]['rating']
+                                                      .toString(),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              textcolor: KblackColor,
+                                            ),
+                                          ],
+                                        ),
+
+                                        const SizedBox(height: 10),
+
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const CustomText(
+                                              text: "Feedback : ",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              textcolor: KblackColor,
+                                            ),
+                                            SizedBox(width: 4),
+                                            Expanded(
+                                              child: CustomText(
+                                                text:
+                                                    (reviewsList[0]['feedback']
+                                                            as List)
+                                                        .join(", "),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                                textcolor: KblackColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        const SizedBox(height: 10),
+
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const CustomText(
+                                              text: "Comment : ",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              textcolor: KblackColor,
+                                            ),
+                                            SizedBox(width: 4),
+                                            Expanded(
+                                              child: CustomText(
+                                                text:
+                                                    reviewsList[0]['comment'] ??
+                                                    "",
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                                textcolor: KblackColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                          ),
+                      ],
+                    ),
+                  ),
+
+                  if (!(rideStatus == 'Completed' &&
+                      paymentStatus == 'Success')) ...[
+                    const SizedBox(height: 20),
+                  ],
+                  if (!(rideStatus == 'Completed' &&
+                      paymentStatus == 'Success')) ...[
+                    _buildCard(
+                      context,
+                      imagePath: 'images/copoun_image.png',
+                      text: 'Coupons & Offers',
+                      onTap: () {
+                        _showCouponsBottomSheet();
+                      },
+                    ),
+                  ],
+                  if (rideStatus == 'New' || rideStatus == 'Accepted') ...[
+                    const SizedBox(height: 15),
+                    _buildCard(
+                      context,
+                      imagePath: 'images/cancel_image.png',
+                      text: 'Cancellation policy',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder:
+                                (context) => const CancellationPolicyScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+
+                  const SizedBox(height: 130),
+                ],
+              ),
+            );
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: StreamBuilder<DocumentSnapshot>(
+          stream:
+              FirebaseFirestore.instance
+                  .collection('bookings')
+                  .doc(widget.bookingData['bookingId'])
+                  .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const SizedBox.shrink();
+            }
+
+            final data = snapshot.data!.data() as Map<String, dynamic>;
+            final rideStatus = data['status'] ?? '';
+            final paymentStatus = data['paymentStatus'] ?? '';
+
+            String bottomButtonText = '';
+            VoidCallback? bottomButtonAction;
+            Color buttonColor = korangeColor;
+
+            if (rideStatus == 'New' || rideStatus == 'Accepted') {
+              buttonColor = Colors.red;
+              bottomButtonText = 'Cancel Ride';
+              bottomButtonAction = () => _showCancelRideDialog(data);
+            } else if (rideStatus == 'Ongoing') {
+              buttonColor = Colors.green;
+              bottomButtonText = "Ride Ongoing";
+              bottomButtonAction = null;
+            } else if (rideStatus == 'Completed' &&
+                paymentStatus != 'Success') {
+              buttonColor = Colors.orange;
+              bottomButtonText = 'Proceed to Payment';
+              bottomButtonAction = () {
+                double latestTotal =
+                    (double.tryParse(totalPrice) ?? 0) - appliedDiscount;
+                paidAmount = latestTotal;
+                _openCheckout((latestTotal));
+              };
+            } else if (rideStatus == 'Completed' &&
+                paymentStatus == 'Success') {
+              buttonColor = Colors.green;
+              bottomButtonText = 'Payment Completed';
+              bottomButtonAction = null;
+            } else {
+              bottomButtonText = 'Ride $rideStatus';
+              bottomButtonAction = null;
+            }
+
+            return SizedBox(
+              width: 220,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: buttonColor,
+                  disabledBackgroundColor: buttonColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
                   ),
                 ),
-
-                if (!(rideStatus == 'Completed' &&
-                    paymentStatus == 'Success')) ...[
-                  const SizedBox(height: 20),
-                ],
-                if (!(rideStatus == 'Completed' &&
-                    paymentStatus == 'Success')) ...[
-                  _buildCard(
-                    context,
-                    imagePath: 'images/copoun_image.png',
-                    text: 'Coupons & Offers',
-                    onTap: () {
-                      _showCouponsBottomSheet();
-                    },
-                  ),
-                ],
-                if (rideStatus == 'New' || rideStatus == 'Accepted') ...[
-                  const SizedBox(height: 15),
-                  _buildCard(
-                    context,
-                    imagePath: 'images/cancel_image.png',
-                    text: 'Cancellation policy',
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder:
-                              (context) => const CancellationPolicyScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-
-                const SizedBox(height: 130),
-              ],
-            ),
-          );
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: StreamBuilder<DocumentSnapshot>(
-        stream:
-            FirebaseFirestore.instance
-                .collection('bookings')
-                .doc(widget.bookingData['bookingId'])
-                .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const SizedBox.shrink();
-          }
-
-          final data = snapshot.data!.data() as Map<String, dynamic>;
-          final rideStatus = data['status'] ?? '';
-          final paymentStatus = data['paymentStatus'] ?? '';
-
-          String bottomButtonText = '';
-          VoidCallback? bottomButtonAction;
-          Color buttonColor = korangeColor;
-
-          if (rideStatus == 'New' || rideStatus == 'Accepted') {
-            buttonColor = Colors.red;
-            bottomButtonText = 'Cancel Ride';
-            bottomButtonAction = () => _showCancelRideDialog(data);
-          } else if (rideStatus == 'Ongoing') {
-            buttonColor = Colors.green;
-            bottomButtonText = "Ride Ongoing";
-            bottomButtonAction = null;
-          } else if (rideStatus == 'Completed' && paymentStatus != 'Success') {
-            buttonColor = Colors.orange;
-            bottomButtonText = 'Proceed to Payment';
-            bottomButtonAction = () {
-              double latestTotal =
-                  (double.tryParse(totalPrice) ?? 0) - appliedDiscount;
-              paidAmount = latestTotal;
-              _openCheckout((latestTotal));
-            };
-          } else if (rideStatus == 'Completed' && paymentStatus == 'Success') {
-            buttonColor = Colors.green;
-            bottomButtonText = 'Payment Completed';
-            bottomButtonAction = null;
-          } else {
-            bottomButtonText = 'Ride $rideStatus';
-            bottomButtonAction = null;
-          }
-
-          return SizedBox(
-            width: 220,
-            height: 50,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: buttonColor,
-                disabledBackgroundColor: buttonColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
+                onPressed: bottomButtonAction,
+                child: CustomText(
+                  text: bottomButtonText,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  textcolor: Colors.white,
                 ),
               ),
-              onPressed: bottomButtonAction,
-              child: CustomText(
-                text: bottomButtonText,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                textcolor: Colors.white,
-              ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
