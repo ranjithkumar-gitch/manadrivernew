@@ -145,7 +145,6 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                                     ),
                                   );
                                 } else {
-                                 
                                   showDialog(
                                     context: context,
                                     builder: (context) {
@@ -238,7 +237,7 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                     ),
                   ),
                   Text(
-                    'APK Release v1.0.3',
+                    'APK Release v1.0.5',
                     style: GoogleFonts.poppins(
                       color: kgreyColor,
                       fontSize: 14,
