@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Login/loginScreen.dart';
+import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
 import 'package:mana_driver/l10n/app_localizations.dart';
@@ -91,6 +92,9 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                               } else if (newValue == 'Telugu') {
                                 localeProvider.setLocale(const Locale('te'));
                               }
+                              SharedPrefServices.setSaveLanguage(
+                                selectedLanguage,
+                              );
                             },
                             dropdownStyleData: DropdownStyleData(
                               direction: DropdownDirection.textDirection,
