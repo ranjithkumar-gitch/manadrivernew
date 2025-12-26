@@ -464,7 +464,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
     ).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  int maxImages = 4;
+  int maxImages = 2;
   void _pickImage(int index) async {
     final localizations = AppLocalizations.of(context)!;
     showDialog(
@@ -633,7 +633,7 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, // always 2 per row
+                            crossAxisCount: 2,
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10,
                             childAspectRatio: 70 / 60,

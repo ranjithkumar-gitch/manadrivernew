@@ -16,7 +16,7 @@ import 'package:mana_driver/viewmodels/register_viewmodel.dart';
 import 'package:mana_driver/services/locale_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:mana_driver/Splashscreen/splashScreen.dart';
-import 'package:mana_driver/firebase_options.dart'; 
+import 'package:mana_driver/firebase_options.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
