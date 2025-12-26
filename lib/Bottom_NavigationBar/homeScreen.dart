@@ -762,25 +762,84 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     SizedBox(height: 10),
-                    Container(
-                      height: 140,
-                      child: PageView.builder(
-                        controller: _offerPageController,
-                        itemCount: offerImages.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 6),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.asset(
-                                offerImages[index],
-                                fit: BoxFit.cover,
+                    StreamBuilder<QuerySnapshot>(
+                      stream:
+                          FirebaseFirestore.instance
+                              .collection('offers')
+                              .snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              color: korangeColor,
+                            ),
+                          );
+                        }
+
+                        if (snapshot.data!.docs.isEmpty) {
+                          return Center(
+                            child: Text(
+                              'No offers available at the moment.',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade600,
                               ),
                             ),
                           );
-                        },
-                      ),
+                        }
+
+                        final offers = snapshot.data!.docs;
+
+                        return Container(
+                          height: 140,
+                          child: PageView.builder(
+                            controller: _offerPageController,
+                            itemCount: offers.length,
+                            itemBuilder: (context, index) {
+                              final data =
+                                  offers[index].data() as Map<String, dynamic>;
+
+                              final orderId = data['offerCode'] ?? '';
+                              final offerMode =
+                                  data['offerMode'] ?? 'Percentage';
+                              final offerValue = data['offerValue'] ?? '';
+
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                ),
+                                child: offerCard(
+                                  orderId: orderId,
+                                  offerMode: offerMode,
+                                  offerValue: offerValue,
+                                  imagePath: "images/newOffer.png",
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
+
+                    // Container(
+                    //   height: 140,
+                    //   child: PageView.builder(
+                    //     controller: _offerPageController,
+                    //     itemCount: offerImages.length,
+                    //     itemBuilder: (context, index) {
+                    //       return Padding(
+                    //         padding: const EdgeInsets.symmetric(horizontal: 6),
+                    //         child: ClipRRect(
+                    //           borderRadius: BorderRadius.circular(12),
+                    //           child: Image.asset(
+                    //             offerImages[index],
+                    //             fit: BoxFit.cover,
+                    //           ),
+                    //         ),
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
                     SizedBox(height: 12),
                     Center(
                       child: SmoothPageIndicator(
@@ -848,6 +907,77 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget offerCard({
+    required String orderId,
+    required String offerMode,
+    required String offerValue,
+    required String imagePath,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFD09E),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomText(
+                  text: orderId.isNotEmpty ? "$orderId" : "FOR FIRST BOOKING",
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  textcolor: KblackColor,
+                ),
+
+                const SizedBox(height: 6),
+                Text(
+                  'UP TO',
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: korangeColor,
+                  ),
+                ),
+
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text(
+                      offerMode == "Percentage" ? offerValue : "₹$offerValue",
+                      style: GoogleFonts.poppins(
+                        height: 0.8,
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: korangeColor,
+                      ),
+                    ),
+
+                    const SizedBox(width: 4),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: CustomText(
+                        text: 'OFF',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        textcolor: korangeColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Image.asset(imagePath, height: 100),
+        ],
       ),
     );
   }
