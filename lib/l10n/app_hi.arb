@@ -252,6 +252,19 @@
   "cancellationCharges": "रद्दीकरण शुल्क",
   "paymentCompleted": "भुगतान पूरा हुआ",
   "paymentFailed": "भुगतान विफल",
-  "rideCompleted": "यात्रा पूरी हुई"
+  "rideCompleted": "यात्रा पूरी हुई",
+  "all": "सभी", "newRide": "नई यात्रा", "accepted": "स्वीकृत", "ongoing": "चालू", "completed": "पूर्ण", "cancelled": "रद्द",
+  "noRidesAvailable": "कोई यात्रा उपलब्ध नहीं है",
+  "vehicleNotAssigned": "वाहन असाइन नहीं किया गया", "driverNotAssigned": "ड्राइवर असाइन नहीं किया गया", "notAvailable": "उपलब्ध नहीं",
+  "cancelRide": "यात्रा रद्द करें ?", "confirmCancelRide": "क्या आप वाकई इस यात्रा को रद्द करना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।",
+  "cancelRideFree": "आप इस यात्रा को मुफ्त में रद्द कर सकते हैं। क्या आप सुनिश्चित हैं?", "cancelRideCharge": "अभी रद्द करने पर ₹59 शुल्क लगेगा।\nक्या आप आगे बढ़ना चाहते हैं?", "pay59": "₹59 का भुगतान करें",
+  "couldNotOpenGoogleMaps": "Google Maps नहीं खोल सका।", "locationPermissionDenied": "स्थान अनुमति अस्वीकृत या उपलब्ध नहीं है।", "loading": "लोड हो रहा है...", "driverNotAssigned": "ड्राइवर असाइन नहीं किया गया", "driverAssigned": "ड्राइवर असाइन किया गया", "rideCompleted": "यात्रा पूरी हुई", "ride": "यात्रा",
+  "loadingDriver": "ड्राइवर लोड हो रहा है...", "typeMessage": "संदेश लिखें...", "writeReview": "समीक्षा लिखें?", "experienceQuestion": "आपका अनुभव कैसा रहा?", "giveRating": "रेटिंग दें", "verificationCodeRide": "यात्रा शुरू करने के लिए सत्यापन कोड", "shareOtpDriver": "यात्रा शुरू करने के लिए यह OTP अपने ड्राइवर के साथ साझा करें।", "fourDigitOtp": "4-अंकीय OTP", "noCaptainsAvailable": "कोई कैप्टन उपलब्ध नहीं है", "rideRequestReceived": "यात्रा अनुरोध प्राप्त हुआ", "noCaptainsAccepted": "इस समय किसी कैप्टन ने स्वीकार नहीं किया। कृपया नीचे यात्रा रद्द करें।", "waitingForCaptains": "कैप्टन द्वारा आपकी यात्रा स्वीकार करने की प्रतीक्षा हो रही है", "timeLeft": "शेष समय:",
+  "routeInformation": "मार्ग जानकारी", "duration": "अवधि", "unableToOpenGoogleMaps": "Google Maps खोलने में असमर्थ।", "errorOpeningDirections": "दिशा खोलने में त्रुटि:", "getDirections": "दिशा प्राप्त करें", "tripDetails": "यात्रा विवरण", "cityLimit": "शहर सीमा :", "hours": "घंटे", "slotDetails": "स्लॉट विवरण", "departure": "प्रस्थान", "arrival": "आगमन", "contactDetails": "संपर्क विवरण", "driverDetails": "ड्राइवर विवरण", "paymentSummary": "भुगतान सारांश", "servicePrice": "सेवा मूल्य", "convenienceFee": "सुविधा शुल्क", "couponApplied": "कूपन लागू", "totalPrice": "कुल मूल्य", "noReviewAvailable": "कोई समीक्षा उपलब्ध नहीं", "yourReview": "आपकी समीक्षा", "rating": "रेटिंग : ", "feedback": "प्रतिक्रिया : ", "comment": "टिप्पणी : ", "cancellationPolicy": "रद्द करने की नीति",
+  "couponsOffers": "कूपन और ऑफ़र", "validTill": "मान्य तिथि :", "applied": "लागू किया गया", "applyNow": "लागू करें",
+  "noOffersAvailable": "कोई ऑफ़र उपलब्ध नहीं है",
+  "politeDriver": "विनम्र ड्राइवर", "cleanliness": "स्वच्छता", "smoothDriving": "सुव्यवस्थित ड्राइविंग", "onTime": "समय पर", "tapToRateDriver": "अपने ड्राइवर को रेट करने के लिए टैप करें", "howWasYourTrip": "आपकी यात्रा कैसी रही\n", "giveFeedback": "प्रतिक्रिया दें", "leaveCommentOptional": "टिप्पणी छोड़ें (वैकल्पिक)", "submit": "जमा करें", "thankYouReviewSubmitted": "धन्यवाद! आपकी समीक्षा जमा हो गई है",
+  "pleaseSelectRating": "कृपया रेटिंग चुनें",
+  "paymentSuccessful": "भुगतान सफल:", "paymentFailed": "भुगतान विफल:", "bookingDocumentNotFound": "बुकिंग दस्तावेज़ ID नहीं मिली", "rideCancelledSuccessfully": "यात्रा सफलतापूर्वक रद्द की गई", "errorCancellingRide": "यात्रा रद्द करने में त्रुटि:", "cancelRide": "यात्रा रद्द करें", "rideOngoing": "यात्रा जारी है", "proceedToPayment": "भुगतान के लिए आगे बढ़ें", "paymentCompleted": "भुगतान पूरा हुआ", "ride": "यात्रा"
  
 }

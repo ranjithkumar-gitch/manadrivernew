@@ -16,6 +16,7 @@ import 'package:intl/intl.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
+import 'package:mana_driver/l10n/app_localizations.dart';
 import 'package:mana_driver/service.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -46,6 +47,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
   late Razorpay _razorpay;
   String totalPrice = "0";
   final fcmService = FCMService();
+
   @override
   void initState() {
     super.initState();
@@ -124,11 +126,14 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    final lang = AppLocalizations.of(context)!;
     try {
       debugPrint('Payment Successful: ${response.paymentId}');
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Payment Successful: ${response.paymentId}")),
+        SnackBar(
+          content: Text("${lang.paymentSuccessful} ${response.paymentId}"),
+        ),
       );
 
       final bookingId = widget.bookingData['bookingId'];
@@ -233,9 +238,10 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
+    final lang = AppLocalizations.of(context)!;
     debugPrint(' Failed: ${response.message}');
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Payment Failed: ${response.message}")),
+      SnackBar(content: Text("${lang.paymentFailed} ${response.message}")),
     );
   }
 
@@ -268,11 +274,12 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
 
   Future<void> cancelRide(BuildContext context) async {
     final bookingDocId = widget.bookingData['bookingId'];
+    final lang = AppLocalizations.of(context)!;
 
     if (bookingDocId == null || bookingDocId.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Booking document ID not found')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(lang.bookingDocumentNotFound)));
       return;
     }
 
@@ -282,7 +289,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
           (context) => AlertDialog(
             title: Center(
               child: Text(
-                'Cancel Ride ?',
+                lang.cancelRide,
                 style: GoogleFonts.poppins(
                   color: korangeColor,
                   fontSize: 15,
@@ -291,7 +298,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
               ),
             ),
             content: Text(
-              'Are you sure you want to cancel this ride? This action cannot be undone.',
+              lang.confirmCancelRide,
               style: GoogleFonts.poppins(
                 color: Colors.black,
                 fontSize: 14,
@@ -310,10 +317,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
-                      'No',
-                      style: TextStyle(color: korangeColor),
-                    ),
+                    child: Text(lang.no, style: TextStyle(color: korangeColor)),
                   ),
                   ElevatedButton(
                     onPressed: () => Navigator.pop(context, true),
@@ -323,8 +327,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
-                      'Yes',
+                    child: Text(
+                      lang.yes,
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -346,15 +350,15 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
           });
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ride cancelled successfully')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(lang.rideCancelledSuccessfully)));
         Navigator.pop(context);
       }
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Error cancelling ride: $e')));
+      ).showSnackBar(SnackBar(content: Text('${lang.errorCancellingRide} $e')));
     }
   }
 
@@ -382,50 +386,14 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
   @override
   Widget build(BuildContext context) {
     final bookingId = widget.bookingData['bookingId'] ?? '';
-    // final driverId = widget.bookingData['driverdocId'] ?? '';
+
     final ownerId = widget.bookingData['ownerId'] ?? '';
     final ownerName = SharedPrefServices.getFirstName() ?? 'Owner';
     final ownerProfile = SharedPrefServices.getProfileImage() ?? '';
     final data = widget.bookingData;
-    // final bookingStatus = data['status'] ?? 'New';
-    // final driverAssigned = driverData != null && driverData!.isNotEmpty;
+    final lang = AppLocalizations.of(context)!;
+
     print('$bookingId,$driverData,$ownerId');
-    // final appBarTitle =
-    //     driverAssigned ? "Driver Assigned" : "Driver not assigned";
-
-    // String paymentStatus = data['paymentStatus'] ?? '';
-    // String bottomButtonText = '';
-    // VoidCallback? bottomButtonAction;
-
-    // Color buttonColor = korangeColor;
-    // if (rideStatus == 'New') {
-    //   buttonColor = Colors.red;
-    //   bottomButtonText = 'Cancel Ride';
-    //   bottomButtonAction = () => cancelRide(context);
-    // } else if (rideStatus == 'Completed' && paymentStatus != 'Success') {
-    //   buttonColor = Colors.orange;
-    //   bottomButtonText = 'Proceed to Payment';
-    //   bottomButtonAction = () {
-    //     _openCheckout(double.parse(data['fare']?.toString() ?? '0.00'));
-    //   };
-    // } else if (rideStatus == 'Completed' && paymentStatus == 'Success') {
-    //   buttonColor = Colors.green;
-    //   bottomButtonText = 'Payment Completed';
-    //   bottomButtonAction = null;
-    // } else {
-    //   bottomButtonText = 'Ride $rideStatus';
-    //   bottomButtonAction = null;
-    // }
-    // String driverFullName =
-    //     (driverData != null
-    //             ? "${driverData!['firstName'] ?? ''} ${driverData!['lastName'] ?? ''}"
-    //             : 'Driver Name')
-    //         .trim();
-    // String driverEmail =
-    //     driverData != null ? "${driverData!['email'] ?? ''}" : 'Driver Email';
-
-    // String driverContact =
-    //     driverData != null ? "${driverData!['phone'] ?? ''}" : 'Driver Phone';
 
     String vehicleName =
         vehicleData != null
@@ -444,31 +412,6 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
             ? vehicleData!['images'][0]
             : 'images/swift.png';
     String driverName = data['driverName'] ?? 'Driver not assigned';
-
-    // String driverPhone = data['driverPhone'] ?? '+91 XXXXX XXXXX';
-    // String driverEmail = data['driverEmail'] ?? 'example@email.com';
-    // String pickupLocation = data['pickup'] ?? '';
-    // String tripMode = data['tripMode'] ?? '';
-    // String tripTime = data['tripTime'] ?? '';
-    // String distance = data['distance'] ?? '';
-    // String ownerOTP = data['ownerOTP'].toString();
-    // String citylimithours = data['cityLimitHours'].toString();
-    // String dropLocation = data['drop'] ?? '';
-    // String drop2Location = data['drop2'] ?? '';
-    // String date = data['date'] ?? 'DD/MM/YYYY';
-    // String arrivalDate = data['arrivalDate'] ?? 'DD/MM/YYYY';
-    // String arrivalTime = data['arrivalTime'] ?? 'DD/MM/YYYY';
-    // String time = data['time'] ?? 'HH:MM';
-    // String servicePrice = data['serviceFare']?.toString() ?? '0.00';
-    // String convenienceFee = data['convenienceFee']?.toString() ?? '0.00';
-    // String duration = data['duration'] ?? '';
-    // String totalPrice = data['fare']?.toString() ?? '0.00';
-    // String pickupLat = data['pickupLat'].toString();
-    // String pickupLng = data['pickupLng'].toString();
-    // String dropLat = data['dropLat'].toString();
-    // String dropLng = data['dropLng'].toString();
-    // String drop2Lat = data['drop2Lat'].toString();
-    // String drop2Lng = data['drop2Lng'].toString();
 
     Future<void> _openMapWithCurrentLocation(
       String pickupLat,
@@ -490,8 +433,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
           await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Could not open Google Maps."),
+            SnackBar(
+              content: Text(lang.couldNotOpenGoogleMaps),
               behavior: SnackBarBehavior.floating,
               backgroundColor: Colors.redAccent,
             ),
@@ -501,7 +444,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
         print("Error opening map: $e");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Location permission denied or not available."),
+            content: Text(lang.locationPermissionDenied),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.redAccent,
           ),
@@ -575,7 +518,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                     .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return const Text("Loading...");
+                return Text(lang.loading);
               }
 
               final liveData = snapshot.data!;
@@ -584,13 +527,13 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
               String appBarTitle = "";
 
               if (rideStatus == 'New') {
-                appBarTitle = "Driver Not Assigned";
+                appBarTitle = lang.driverNotAssigned;
               } else if (rideStatus == 'Accepted') {
-                appBarTitle = "Driver Assigned";
+                appBarTitle = lang.driverAssigned;
               } else if (rideStatus == 'Completed') {
-                appBarTitle = "Ride Completed";
+                appBarTitle = lang.rideCompleted;
               } else {
-                appBarTitle = "Ride $rideStatus";
+                appBarTitle = "${lang.ride} $rideStatus";
               }
 
               return Padding(
@@ -613,20 +556,6 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                           );
                         },
 
-                        // onTap: () {
-
-                        //   if (widget.fromHome) {
-                        //     Navigator.pushAndRemoveUntil(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //         builder: (_) => BottomNavigation(),
-                        //       ),
-                        //       (route) => false,
-                        //     );
-                        //   } else {
-                        //     Navigator.pop(context);
-                        //   }
-                        // },
                         child: Container(
                           width: 50,
                           height: 50,
@@ -742,7 +671,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                 ),
                                 SizedBox(width: 12),
                                 CustomText(
-                                  text: "Driver not assigned",
+                                  text: lang.driverNotAssigned,
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,
                                   textcolor: korangeColor,
@@ -770,7 +699,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                       ),
                                       SizedBox(width: 12),
                                       CustomText(
-                                        text: "Loading driver...",
+                                        text: lang.loadingDriver,
                                         fontSize: 15,
                                         fontWeight: FontWeight.w500,
                                         textcolor: kgreyColor,
@@ -782,14 +711,14 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                 if (!driverSnap.hasData ||
                                     !driverSnap.data!.exists) {
                                   return Row(
-                                    children: const [
+                                    children: [
                                       CircleAvatar(
                                         radius: 40,
                                         backgroundColor: Colors.grey,
                                       ),
                                       SizedBox(width: 12),
                                       Text(
-                                        "Driver not assigned",
+                                        lang.driverNotAssigned,
                                         style: TextStyle(color: Colors.orange),
                                       ),
                                     ],
@@ -1002,7 +931,6 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                               ],
                             ),
                           ),
-                          Image.asset("images/chevronRight.png"),
                         ],
                       ),
                     ),
@@ -1033,15 +961,15 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
+                                  children: [
                                     CustomText(
-                                      text: "Write a review?",
+                                      text: lang.writeReview,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                       textcolor: korangeColor,
                                     ),
                                     CustomText(
-                                      text: "How was your experience?",
+                                      text: lang.experienceQuestion,
                                       fontSize: 12,
                                       fontWeight: FontWeight.w400,
                                       textcolor: kseegreyColor,
@@ -1058,8 +986,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                     borderRadius: BorderRadius.circular(46),
                                   ),
                                 ),
-                                child: const CustomText(
-                                  text: "Give a rate",
+                                child: CustomText(
+                                  text: lang.giveRating,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   textcolor: kwhiteColor,
@@ -1091,8 +1019,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const CustomText(
-                              text: "Verification code to start the ride",
+                            CustomText(
+                              text: lang.verificationCodeRide,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               textcolor: korangeColor,
@@ -1100,8 +1028,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                             const SizedBox(height: 10),
 
                             CustomText(
-                              text:
-                                  "Share this OTP with your driver to start the ride.",
+                              text: lang.shareOtpDriver,
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
                               textcolor: KblackColor.withOpacity(0.6),
@@ -1132,7 +1059,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     CustomText(
-                                      text: "4-Digit OTP",
+                                      text: lang.fourDigitOtp,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                       textcolor: KblackColor.withOpacity(0.7),
@@ -1235,8 +1162,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                       CustomText(
                                         text:
                                             isTimerOver
-                                                ? "No captains available"
-                                                : "Ride request received",
+                                                ? lang.noCaptainsAvailable
+                                                : lang.rideRequestReceived,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                         textcolor: korangeColor,
@@ -1245,17 +1172,18 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                       CustomText(
                                         text:
                                             isTimerOver
-                                                ? "At the moment no captains accepted. Please cancel the ride below."
-                                                : "Waiting for captains to accept your ride",
+                                                ? lang.noCaptainsAccepted
+                                                : lang.waitingForCaptains,
                                         fontSize: 13,
                                         fontWeight: FontWeight.w400,
                                         textcolor: kseegreyColor,
                                       ),
 
                                       if (!isTimerOver) ...[
-                                        const SizedBox(height: 8),
+                                        SizedBox(height: 8),
                                         CustomText(
-                                          text: "Time left: $minutes:$seconds",
+                                          text:
+                                              "${lang.timeLeft} $minutes:$seconds",
                                           fontSize: 15,
                                           fontWeight: FontWeight.w600,
                                           textcolor: korangeColor,
@@ -1297,8 +1225,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const CustomText(
-                            text: "Route Information",
+                          CustomText(
+                            text: lang.routeInformation,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             textcolor: korangeColor,
@@ -1312,8 +1240,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                 children: [
                                   _buildDot(Colors.green),
                                   const SizedBox(width: 10),
-                                  const CustomText(
-                                    text: "Pickup Location",
+                                  CustomText(
+                                    text: lang.pickupLocation,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                     textcolor: Colors.green,
@@ -1386,8 +1314,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                   CustomText(
                                     text:
                                         drop2Location.isEmpty
-                                            ? "Drop Location"
-                                            : "Drop Location 1",
+                                            ? lang.dropLocation
+                                            : lang.dropLocation1,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                     textcolor:
@@ -1454,8 +1382,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                       children: [
                                         _buildDot(Colors.red),
                                         const SizedBox(width: 8),
-                                        const CustomText(
-                                          text: "Drop Location 2",
+                                        CustomText(
+                                          text: lang.dropLocation2,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
                                           textcolor: KredColor,
@@ -1522,8 +1450,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                             children: [
                               Column(
                                 children: [
-                                  const CustomText(
-                                    text: "Distance",
+                                  CustomText(
+                                    text: lang.distance,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,
                                     textcolor: kseegreyColor,
@@ -1545,7 +1473,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                               Column(
                                 children: [
                                   CustomText(
-                                    text: "Duration",
+                                    text: lang.duration,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,
                                     textcolor: kseegreyColor,
@@ -1627,9 +1555,9 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                       ScaffoldMessenger.of(
                                         context,
                                       ).showSnackBar(
-                                        const SnackBar(
+                                        SnackBar(
                                           content: Text(
-                                            "Unable to open Google Maps.",
+                                            lang.unableToOpenGoogleMaps,
                                           ),
                                           behavior: SnackBarBehavior.floating,
                                           backgroundColor: Colors.redAccent,
@@ -1641,7 +1569,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                          "Error opening directions: ${e.toString()}",
+                                          "${lang.errorOpeningDirections} ${e.toString()}",
                                         ),
                                         behavior: SnackBarBehavior.floating,
                                         backgroundColor: Colors.redAccent,
@@ -1650,8 +1578,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                   }
                                 },
 
-                                child: const CustomText(
-                                  text: "Get Directions",
+                                child: CustomText(
+                                  text: lang.getDirections,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   textcolor: kwhiteColor,
@@ -1693,8 +1621,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const CustomText(
-                                text: "Trip Details",
+                              CustomText(
+                                text: lang.tripDetails,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 textcolor: korangeColor,
@@ -1746,7 +1674,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                     const SizedBox(width: 8),
                                     CustomText(
                                       text:
-                                          'City Limit : $citylimithours Hours',
+                                          '${lang.cityLimit} $citylimithours ${lang.hours}',
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
                                       textcolor: KblackColor,
@@ -1781,8 +1709,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const CustomText(
-                                text: "Slot Details",
+                              CustomText(
+                                text: lang.slotDetails,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 textcolor: korangeColor,
@@ -1799,7 +1727,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                     children: [
                                       if (tripMode == "Round Trip")
                                         CustomText(
-                                          text: "Depature",
+                                          text: lang.departure,
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500,
                                           textcolor: Colors.grey.shade700,
@@ -1846,7 +1774,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         CustomText(
-                                          text: "Arrival",
+                                          text: lang.arrival,
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500,
                                           textcolor: Colors.grey.shade700,
@@ -1916,8 +1844,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const CustomText(
-                                text: "Contact Details",
+                              CustomText(
+                                text: lang.contactDetails,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 textcolor: korangeColor,
@@ -2049,8 +1977,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const CustomText(
-                                      text: "Driver Details",
+                                    CustomText(
+                                      text: lang.driverDetails,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                       textcolor: korangeColor,
@@ -2141,8 +2069,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const CustomText(
-                                text: "Payment Summary",
+                              CustomText(
+                                text: lang.paymentSummary,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 textcolor: korangeColor,
@@ -2153,8 +2081,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const CustomText(
-                                    text: "Service Price",
+                                  CustomText(
+                                    text: lang.servicePrice,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
                                     textcolor: KblackColor,
@@ -2175,8 +2103,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const CustomText(
-                                    text: "Convenience Fee",
+                                  CustomText(
+                                    text: lang.convenienceFee,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
                                     textcolor: KblackColor,
@@ -2199,7 +2127,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     CustomText(
-                                      text: "Coupon Applied ",
+                                      text: lang.couponApplied,
                                       fontSize: 13,
                                       fontWeight: FontWeight.w500,
                                       textcolor: Colors.green,
@@ -2224,8 +2152,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const CustomText(
-                                    text: "Total Price",
+                                  CustomText(
+                                    text: lang.totalPrice,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w700,
                                     textcolor: korangeColor,
@@ -2267,8 +2195,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                             ),
                             child:
                                 reviewsList.isEmpty
-                                    ? const CustomText(
-                                      text: "No review available",
+                                    ? CustomText(
+                                      text: lang.noReviewAvailable,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                       textcolor: KblackColor,
@@ -2277,8 +2205,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const CustomText(
-                                          text: "Your Review",
+                                        CustomText(
+                                          text: lang.yourReview,
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                           textcolor: korangeColor,
@@ -2287,8 +2215,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
 
                                         Row(
                                           children: [
-                                            const CustomText(
-                                              text: "Rating :",
+                                            CustomText(
+                                              text: lang.rating,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w400,
                                               textcolor: KblackColor,
@@ -2322,8 +2250,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            const CustomText(
-                                              text: "Feedback : ",
+                                            CustomText(
+                                              text: lang.feedback,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w400,
                                               textcolor: KblackColor,
@@ -2349,8 +2277,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            const CustomText(
-                                              text: "Comment : ",
+                                            CustomText(
+                                              text: lang.comment,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w400,
                                               textcolor: KblackColor,
@@ -2384,7 +2312,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                     _buildCard(
                       context,
                       imagePath: 'images/copoun_image.png',
-                      text: 'Coupons & Offers',
+                      text: lang.couponsOffers,
                       onTap: () {
                         _showCouponsBottomSheet();
                       },
@@ -2395,7 +2323,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                     _buildCard(
                       context,
                       imagePath: 'images/cancel_image.png',
-                      text: 'Cancellation policy',
+                      text: lang.cancellationPolicy,
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -2428,6 +2356,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
             final data = snapshot.data!.data() as Map<String, dynamic>;
             final rideStatus = data['status'] ?? '';
             final paymentStatus = data['paymentStatus'] ?? '';
+            final lang = AppLocalizations.of(context)!;
 
             String bottomButtonText = '';
             VoidCallback? bottomButtonAction;
@@ -2435,16 +2364,16 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
 
             if (rideStatus == 'New' || rideStatus == 'Accepted') {
               buttonColor = Colors.red;
-              bottomButtonText = 'Cancel Ride';
+              bottomButtonText = lang.cancelRide;
               bottomButtonAction = () => _showCancelRideDialog(data);
             } else if (rideStatus == 'Ongoing') {
               buttonColor = Colors.green;
-              bottomButtonText = "Ride Ongoing";
+              bottomButtonText = lang.rideOngoing;
               bottomButtonAction = null;
             } else if (rideStatus == 'Completed' &&
                 paymentStatus != 'Success') {
               buttonColor = Colors.orange;
-              bottomButtonText = 'Proceed to Payment';
+              bottomButtonText = lang.proceedToPayment;
               bottomButtonAction = () {
                 double latestTotal =
                     (double.tryParse(totalPrice) ?? 0) - appliedDiscount;
@@ -2454,10 +2383,10 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
             } else if (rideStatus == 'Completed' &&
                 paymentStatus == 'Success') {
               buttonColor = Colors.green;
-              bottomButtonText = 'Payment Completed';
+              bottomButtonText = lang.paymentCompleted;
               bottomButtonAction = null;
             } else {
-              bottomButtonText = 'Ride $rideStatus';
+              bottomButtonText = '${lang.ride} $rideStatus';
               bottomButtonAction = null;
             }
 
@@ -2531,6 +2460,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (_) {
+        final lang = AppLocalizations.of(context)!;
         return Padding(
           padding: const EdgeInsets.all(16),
           child: SizedBox(
@@ -2553,7 +2483,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
 
                 Center(
                   child: CustomText(
-                    text: "Coupons & Offers",
+                    text: lang.couponsOffers,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                     textcolor: Colors.black,
@@ -2578,7 +2508,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                       if (snapshot.data!.docs.isEmpty) {
                         return Center(
                           child: Text(
-                            "No Offers Available",
+                            lang.noOffersAvailable,
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey.shade600,
@@ -2641,6 +2571,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     String offerValue,
     Function() onApply,
   ) {
+    final lang = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(
@@ -2672,7 +2603,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                   const SizedBox(height: 4),
 
                   CustomText(
-                    text: 'Valid Till: ${formatDateTime(endDate)}',
+                    text: '${lang.validTill} ${formatDateTime(endDate)}',
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                     textcolor: kseegreyColor,
@@ -2733,8 +2664,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                     child: CustomText(
                       text:
                           isCouponApplied && appliedCouponCode == title
-                              ? "APPLIED"
-                              : "APPLY NOW",
+                              ? lang.applied
+                              : lang.applyNow,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       textcolor: Colors.orange.shade700,
@@ -2764,6 +2695,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
 
   Future<void> _showCancelRideDialog(Map<String, dynamic> data) async {
     bool isFree = await _isFreeCancellation();
+    final lang = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder:
@@ -2773,17 +2705,14 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
             ),
             title: Center(
               child: CustomText(
-                text: "Cancel Ride",
+                text: lang.cancelRide,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 textcolor: korangeColor,
               ),
             ),
             content: CustomText(
-              text:
-                  isFree
-                      ? "You can cancel this ride for FREE. Are you sure?"
-                      : "Cancelling now will charge ₹59.\nDo you want to proceed?",
+              text: isFree ? lang.cancelRideFree : lang.cancelRideCharge,
               fontSize: 14,
               fontWeight: FontWeight.w400,
               textcolor: KblackColor,
@@ -2805,7 +2734,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                       ),
                     ),
                     child: Text(
-                      "No",
+                      lang.no,
                       style: TextStyle(
                         color: korangeColor,
                         fontWeight: FontWeight.w600,
@@ -2834,7 +2763,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                       }
                     },
                     child: Text(
-                      isFree ? "Cancel Ride" : "Pay ₹59",
+                      isFree ? lang.yes : lang.pay59,
                       style: TextStyle(
                         color: kwhiteColor,
                         fontWeight: FontWeight.w600,
@@ -2983,14 +2912,15 @@ bool isLoading = false;
 void _showRatingDialog(BuildContext context, data) {
   int selectedStars = 0;
   final TextEditingController commentController = TextEditingController();
+  final lang = AppLocalizations.of(context)!;
   final List<FeedbackOption> feedbackOptions = [
     FeedbackOption(
-      label: "Polite Driver",
+      label: lang.politeDriver,
       imagePath: "images/politeDriver.png",
     ),
-    FeedbackOption(label: "Cleanliness", imagePath: "images/cleanlines.png"),
-    FeedbackOption(label: "Smooth Driving", imagePath: "images/home.png"),
-    FeedbackOption(label: "On Time", imagePath: "images/onTime.png"),
+    FeedbackOption(label: lang.cleanliness, imagePath: "images/cleanlines.png"),
+    FeedbackOption(label: lang.smoothDriving, imagePath: "images/home.png"),
+    FeedbackOption(label: lang.onTime, imagePath: "images/onTime.png"),
   ];
 
   final Set<String> selectedFeedback = {};
@@ -3012,14 +2942,14 @@ void _showRatingDialog(BuildContext context, data) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomText(
-                    text: "How was your trip with\n ${data['driverName']}?",
+                    text: "${lang.howWasYourTrip} ${data['driverName']}?",
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     textcolor: korangeColor,
                   ),
                   const SizedBox(height: 12),
-                  const CustomText(
-                    text: "Tap to rate your driver",
+                  CustomText(
+                    text: lang.tapToRateDriver,
                     textcolor: KblackColor,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -3046,8 +2976,8 @@ void _showRatingDialog(BuildContext context, data) {
                   ),
 
                   const SizedBox(height: 16),
-                  const CustomText(
-                    text: "Give Feedback",
+                  CustomText(
+                    text: lang.giveFeedback,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     textcolor: KblackColor,
@@ -3121,7 +3051,7 @@ void _showRatingDialog(BuildContext context, data) {
                     controller: commentController,
                     maxLines: 3,
                     decoration: InputDecoration(
-                      hintText: "Leave a comment (optional)",
+                      hintText: lang.leaveCommentOptional,
                       hintStyle: TextStyle(
                         color: kseegreyColor,
                         fontSize: 12,
@@ -3153,11 +3083,13 @@ void _showRatingDialog(BuildContext context, data) {
                       )
                       : Center(
                         child: CustomButton(
-                          text: 'Submit',
+                          text: lang.submit,
                           onPressed: () async {
                             if (selectedStars == 0) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Please select rating")),
+                                SnackBar(
+                                  content: Text(lang.pleaseSelectRating),
+                                ),
                               );
                               return;
                             }
@@ -3231,9 +3163,7 @@ void _showRatingDialog(BuildContext context, data) {
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(
-                                  "Thank you! Your review is submitted",
-                                ),
+                                content: Text(lang.thankYouReviewSubmitted),
                               ),
                             );
                           },

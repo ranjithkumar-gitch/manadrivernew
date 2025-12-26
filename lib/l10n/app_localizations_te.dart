@@ -720,8 +720,236 @@ class AppLocalizationsTe extends AppLocalizations {
   String get paymentCompleted => 'చెల్లింపు పూర్తయింది';
 
   @override
-  String get paymentFailed => 'చెల్లింపు విఫలమైంది';
+  String get paymentFailed => 'చెల్లింపు విఫలమైంది:';
 
   @override
   String get rideCompleted => 'ప్రయాణం పూర్తయింది';
+
+  @override
+  String get all => 'అన్నీ';
+
+  @override
+  String get newRide => 'కొత్త ప్రయాణం';
+
+  @override
+  String get accepted => 'అంగీకరించబడింది';
+
+  @override
+  String get ongoing => 'కొనసాగుతోంది';
+
+  @override
+  String get completed => 'పూర్తయింది';
+
+  @override
+  String get cancelled => 'రద్దు చేయబడింది';
+
+  @override
+  String get noRidesAvailable => 'ప్రయాణాలు అందుబాటులో లేవు';
+
+  @override
+  String get vehicleNotAssigned => 'వాహనం కేటాయించబడలేదు';
+
+  @override
+  String get driverNotAssigned => 'డ్రైవర్ కేటాయించబడలేదు';
+
+  @override
+  String get notAvailable => 'లభ్యం కాదు';
+
+  @override
+  String get cancelRide => 'ప్రయాణాన్ని రద్దు చేయండి';
+
+  @override
+  String get confirmCancelRide => 'మీరు నిజంగా ఈ ప్రయాణాన్ని రద్దు చేయాలనుకుంటున్నారా? ఈ చర్యను తిరిగి మార్చలేము.';
+
+  @override
+  String get cancelRideFree => 'మీరు ఈ ప్రయాణాన్ని ఉచితంగా రద్దు చేయవచ్చు. మీరు ఖచ్చితంగా రద్దు చేయాలనుకుంటున్నారా?';
+
+  @override
+  String get cancelRideCharge => 'ఇప్పుడు రద్దు చేస్తే ₹59 ఛార్జ్ అవుతుంది.\nమీరు కొనసాగించాలనుకుంటున్నారా?';
+
+  @override
+  String get pay59 => '₹59 చెల్లించండి';
+
+  @override
+  String get couldNotOpenGoogleMaps => 'Google Maps తెరవలేకపోయాం.';
+
+  @override
+  String get locationPermissionDenied => 'స్థానం అనుమతి నిరాకరించబడింది లేదా అందుబాటులో లేదు.';
+
+  @override
+  String get loading => 'లోడ్ అవుతోంది...';
+
+  @override
+  String get driverAssigned => 'డ్రైవర్ కేటాయించబడింది';
+
+  @override
+  String get ride => 'ప్రయాణం';
+
+  @override
+  String get loadingDriver => 'డ్రైవర్ లోడ్ అవుతోంది...';
+
+  @override
+  String get typeMessage => 'సందేశం టైప్ చేయండి...';
+
+  @override
+  String get writeReview => 'సమీక్ష రాయాలా?';
+
+  @override
+  String get experienceQuestion => 'మీ అనుభవం ఎలా ఉంది?';
+
+  @override
+  String get giveRating => 'రేటింగ్ ఇవ్వండి';
+
+  @override
+  String get verificationCodeRide => 'ప్రయాణం ప్రారంభించడానికి ధృవీకరణ కోడ్';
+
+  @override
+  String get shareOtpDriver => 'ప్రయాణం ప్రారంభించడానికి ఈ OTPని మీ డ్రైవర్‌తో పంచుకోండి.';
+
+  @override
+  String get fourDigitOtp => '4-అంకెల OTP';
+
+  @override
+  String get noCaptainsAvailable => 'క్యాప్టెన్లు అందుబాటులో లేరు';
+
+  @override
+  String get rideRequestReceived => 'ప్రయాణ అభ్యర్థన అందింది';
+
+  @override
+  String get noCaptainsAccepted => 'ప్రస్తుతం ఎవరూ క్యాప్టెన్లు అంగీకరించలేదు. దయచేసి క్రింద ప్రయాణాన్ని రద్దు చేయండి.';
+
+  @override
+  String get waitingForCaptains => 'క్యాప్టెన్లు మీ ప్రయాణాన్ని అంగీకరించడానికి వేచి ఉంది';
+
+  @override
+  String get timeLeft => 'మిగిలిన సమయం:';
+
+  @override
+  String get routeInformation => 'మార్గ సమాచారం';
+
+  @override
+  String get duration => 'వ్యవధి';
+
+  @override
+  String get unableToOpenGoogleMaps => 'Google Maps తెరవలేకపోయాం.';
+
+  @override
+  String get errorOpeningDirections => 'దిశలు తెరవడంలో లోపం:';
+
+  @override
+  String get getDirections => 'దిశలు పొందండి';
+
+  @override
+  String get tripDetails => 'ప్రయాణ వివరాలు';
+
+  @override
+  String get cityLimit => 'నగర పరిమితి :';
+
+  @override
+  String get hours => 'గంటలు';
+
+  @override
+  String get slotDetails => 'స్లాట్ వివరాలు';
+
+  @override
+  String get departure => 'ప్రయాణ ప్రారంభం';
+
+  @override
+  String get arrival => 'వచ్చే సమయం';
+
+  @override
+  String get contactDetails => 'సంప్రదింపు వివరాలు';
+
+  @override
+  String get driverDetails => 'డ్రైవర్ వివరాలు';
+
+  @override
+  String get paymentSummary => 'చెల్లింపు సారాంశం';
+
+  @override
+  String get couponApplied => 'కూపన్ వర్తింపబడింది';
+
+  @override
+  String get noReviewAvailable => 'సమీక్ష అందుబాటులో లేదు';
+
+  @override
+  String get yourReview => 'మీ సమీక్ష';
+
+  @override
+  String get rating => 'రేటింగ్ : ';
+
+  @override
+  String get feedback => 'అభిప్రాయం : ';
+
+  @override
+  String get comment => 'వ్యాఖ్య : ';
+
+  @override
+  String get cancellationPolicy => 'రద్దు విధానం';
+
+  @override
+  String get couponsOffers => 'కూపన్లు & ఆఫర్లు';
+
+  @override
+  String get validTill => 'వర్తించే తేదీ :';
+
+  @override
+  String get applied => 'వర్తింపబడింది';
+
+  @override
+  String get applyNow => 'వర్తించండి';
+
+  @override
+  String get noOffersAvailable => 'ఆఫర్లు అందుబాటులో లేవు';
+
+  @override
+  String get politeDriver => 'మర్యాదపూర్వక డ్రైవర్';
+
+  @override
+  String get cleanliness => 'శుభ్రత';
+
+  @override
+  String get smoothDriving => 'సాఫీగా డ్రైవింగ్';
+
+  @override
+  String get onTime => 'సమయానికి';
+
+  @override
+  String get tapToRateDriver => 'మీ డ్రైవర్‌ను రేట్ చేయడానికి ట్యాప్ చేయండి';
+
+  @override
+  String get howWasYourTrip => 'మీ ప్రయాణం ఎలా ఉంది\n';
+
+  @override
+  String get giveFeedback => 'అభిప్రాయం ఇవ్వండి';
+
+  @override
+  String get leaveCommentOptional => 'వ్యాఖ్యను వదలండి (ఐచ్చికం)';
+
+  @override
+  String get submit => 'సమర్పించండి';
+
+  @override
+  String get thankYouReviewSubmitted => 'ధన్యవాదాలు! మీ సమీక్ష సమర్పించబడింది';
+
+  @override
+  String get pleaseSelectRating => 'దయచేసి రేటింగ్ ఎంచుకోండి';
+
+  @override
+  String get paymentSuccessful => 'చెల్లింపు విజయవంతం:';
+
+  @override
+  String get bookingDocumentNotFound => 'బుకింగ్ డాక్యుమెంట్ ID కనబడలేదు';
+
+  @override
+  String get rideCancelledSuccessfully => 'ప్రయాణం విజయవంతంగా రద్దు చేయబడింది';
+
+  @override
+  String get errorCancellingRide => 'ప్రయాణం రద్దు చేయడంలో లోపం:';
+
+  @override
+  String get rideOngoing => 'ప్రయాణం కొనసాగుతోంది';
+
+  @override
+  String get proceedToPayment => 'చెల్లింపుకు కొనసాగండి';
 }

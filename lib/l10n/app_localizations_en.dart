@@ -720,8 +720,236 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentCompleted => 'Payment Completed';
 
   @override
-  String get paymentFailed => 'Payment Failed';
+  String get paymentFailed => 'Payment Failed:';
 
   @override
   String get rideCompleted => 'Ride Completed';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get newRide => 'New Ride';
+
+  @override
+  String get accepted => 'Accepted';
+
+  @override
+  String get ongoing => 'Ongoing';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get cancelled => 'Cancelled';
+
+  @override
+  String get noRidesAvailable => 'No rides available';
+
+  @override
+  String get vehicleNotAssigned => 'Vehicle not assigned';
+
+  @override
+  String get driverNotAssigned => 'Driver Not Assigned';
+
+  @override
+  String get notAvailable => 'N/A';
+
+  @override
+  String get cancelRide => 'Cancel Ride';
+
+  @override
+  String get confirmCancelRide => 'Are you sure you want to cancel this ride? This action cannot be undone.';
+
+  @override
+  String get cancelRideFree => 'You can cancel this ride for FREE. Are you sure?';
+
+  @override
+  String get cancelRideCharge => 'Cancelling now will charge ₹59.\nDo you want to proceed?';
+
+  @override
+  String get pay59 => 'Pay ₹59';
+
+  @override
+  String get couldNotOpenGoogleMaps => 'Could not open Google Maps.';
+
+  @override
+  String get locationPermissionDenied => 'Location permission denied or not available.';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get driverAssigned => 'Driver Assigned';
+
+  @override
+  String get ride => 'Ride';
+
+  @override
+  String get loadingDriver => 'Loading driver...';
+
+  @override
+  String get typeMessage => 'Type a message...';
+
+  @override
+  String get writeReview => 'Write a review?';
+
+  @override
+  String get experienceQuestion => 'How was your experience?';
+
+  @override
+  String get giveRating => 'Give a rating';
+
+  @override
+  String get verificationCodeRide => 'Verification code to start the ride';
+
+  @override
+  String get shareOtpDriver => 'Share this OTP with your driver to start the ride.';
+
+  @override
+  String get fourDigitOtp => '4-Digit OTP';
+
+  @override
+  String get noCaptainsAvailable => 'No captains available';
+
+  @override
+  String get rideRequestReceived => 'Ride request received';
+
+  @override
+  String get noCaptainsAccepted => 'At the moment no captains accepted. Please cancel the ride below.';
+
+  @override
+  String get waitingForCaptains => 'Waiting for captains to accept your ride';
+
+  @override
+  String get timeLeft => 'Time left:';
+
+  @override
+  String get routeInformation => 'Route Information';
+
+  @override
+  String get duration => 'Duration';
+
+  @override
+  String get unableToOpenGoogleMaps => 'Unable to open Google Maps.';
+
+  @override
+  String get errorOpeningDirections => 'Error opening directions:';
+
+  @override
+  String get getDirections => 'Get Directions';
+
+  @override
+  String get tripDetails => 'Trip Details';
+
+  @override
+  String get cityLimit => 'City Limit :';
+
+  @override
+  String get hours => 'Hours';
+
+  @override
+  String get slotDetails => 'Slot Details';
+
+  @override
+  String get departure => 'Departure';
+
+  @override
+  String get arrival => 'Arrival';
+
+  @override
+  String get contactDetails => 'Contact Details';
+
+  @override
+  String get driverDetails => 'Driver Details';
+
+  @override
+  String get paymentSummary => 'Payment Summary';
+
+  @override
+  String get couponApplied => 'Coupon Applied';
+
+  @override
+  String get noReviewAvailable => 'No review available';
+
+  @override
+  String get yourReview => 'Your Review';
+
+  @override
+  String get rating => 'Rating : ';
+
+  @override
+  String get feedback => 'Feedback : ';
+
+  @override
+  String get comment => 'Comment : ';
+
+  @override
+  String get cancellationPolicy => 'Cancellation policy';
+
+  @override
+  String get couponsOffers => 'Coupons & Offers';
+
+  @override
+  String get validTill => 'Valid Till:';
+
+  @override
+  String get applied => 'APPLIED';
+
+  @override
+  String get applyNow => 'APPLY NOW';
+
+  @override
+  String get noOffersAvailable => 'No Offers Available';
+
+  @override
+  String get politeDriver => 'Polite Driver';
+
+  @override
+  String get cleanliness => 'Cleanliness';
+
+  @override
+  String get smoothDriving => 'Smooth Driving';
+
+  @override
+  String get onTime => 'On Time';
+
+  @override
+  String get tapToRateDriver => 'Tap to rate your driver';
+
+  @override
+  String get howWasYourTrip => 'How was your trip with\n';
+
+  @override
+  String get giveFeedback => 'Give Feedback';
+
+  @override
+  String get leaveCommentOptional => 'Leave a comment (optional)';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String get thankYouReviewSubmitted => 'Thank you! Your review is submitted';
+
+  @override
+  String get pleaseSelectRating => 'Please select rating';
+
+  @override
+  String get paymentSuccessful => 'Payment Successful:';
+
+  @override
+  String get bookingDocumentNotFound => 'Booking document ID not found';
+
+  @override
+  String get rideCancelledSuccessfully => 'Ride cancelled successfully';
+
+  @override
+  String get errorCancellingRide => 'Error cancelling ride:';
+
+  @override
+  String get rideOngoing => 'Ride Ongoing';
+
+  @override
+  String get proceedToPayment => 'Proceed to Payment';
 }

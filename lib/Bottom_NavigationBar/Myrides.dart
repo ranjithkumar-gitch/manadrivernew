@@ -6,6 +6,7 @@ import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Vehicles/confirm_details.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
+import 'package:mana_driver/l10n/app_localizations.dart';
 
 class MyRidesScreen extends StatefulWidget {
   @override
@@ -83,6 +84,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
     String driverDocId = bookingData['driverdocId'] ?? "";
     String driverRating = "N/A";
     // String price = bookingData['fare'] ?? "";
+    final lang = AppLocalizations.of(context)!;
     double price = double.parse(bookingData['fare']?.toString() ?? '0.00');
 
     String convertDate(String date) {
@@ -99,7 +101,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                   .get()
               : Future.value(null),
       builder: (context, vehicleSnapshot) {
-        String vehicleName = "Vehicle not assigned";
+        String vehicleName = lang.vehicleNotAssigned;
         if (vehicleSnapshot.hasData &&
             vehicleSnapshot.data != null &&
             vehicleSnapshot.data!.exists) {
@@ -118,7 +120,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                       .get()
                   : Future.value(null),
           builder: (context, driverSnapshot) {
-            String userName = "Driver not assigned";
+            String userName = lang.driverNotAssigned;
 
             String profileUrl = "";
             if (driverSnapshot.hasData &&
@@ -131,7 +133,8 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                       .trim();
               profileUrl = driverData['profileUrl'] ?? "";
 
-              driverRating = driverData['averageRating']?.toString() ?? "N/A";
+              driverRating =
+                  driverData['averageRating']?.toString() ?? lang.notAvailable;
               double avg = (driverData['averageRating'] ?? 0).toDouble();
               double finalRating = (avg * 2).round() / 2;
               driverRating = finalRating.toString();
@@ -270,8 +273,20 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                                       : Color(0xFFC9DFFF),
                               borderRadius: BorderRadius.circular(30),
                             ),
+
                             child: Text(
-                              status,
+                              status == "New"
+                                  ? lang.newRide
+                                  : status == "Accepted"
+                                  ? lang.accepted
+                                  : status == "Ongoing"
+                                  ? lang.ongoing
+                                  : status == "Completed"
+                                  ? lang.completed
+                                  : status == "Cancelled"
+                                  ? lang.cancelled
+                                  : status,
+
                               style: TextStyle(
                                 color:
                                     status == "Completed"
@@ -321,9 +336,10 @@ class _MyRidesScreenState extends State<MyRidesScreen>
   final currentUserId = SharedPrefServices.getUserId().toString();
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       // appBar: const CustomMainAppBar(),
-      appBar: const CustomMainAppBar(title: "My Rides"),
+      appBar: CustomMainAppBar(title: localizations.bottomNavMyRides),
 
       body: Column(
         children: [
@@ -341,12 +357,12 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                 dividerColor: Colors.transparent,
                 indicatorColor: Colors.transparent,
                 tabs: [
-                  buildTab("All", 0),
-                  buildTab("New", 1),
-                  buildTab("Accepted", 2),
-                  buildTab("Ongoing", 3),
-                  buildTab("Completed", 4),
-                  buildTab("Cancelled", 5),
+                  buildTab(localizations.all, 0),
+                  buildTab(localizations.newRide, 1),
+                  buildTab(localizations.accepted, 2),
+                  buildTab(localizations.ongoing, 3),
+                  buildTab(localizations.completed, 4),
+                  buildTab(localizations.cancelled, 5),
                 ],
               ),
             ),
@@ -401,7 +417,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                 }
 
                 if (filteredBookings.isEmpty) {
-                  return Center(child: Text("No rides available"));
+                  return Center(child: Text(localizations.noRidesAvailable));
                 }
 
                 return ListView.builder(

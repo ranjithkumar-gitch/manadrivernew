@@ -17,6 +17,7 @@ import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Vehicles/full_image_view.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:mana_driver/l10n/app_localizations.dart';
 import 'package:mana_driver/service.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -298,6 +299,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final currentUserId = SharedPrefServices.getUserId().toString();
+    final lang = AppLocalizations.of(context)!;
     print('driverID ${widget.driverId}');
 
     return Scaffold(
@@ -629,7 +631,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                     color: korangeColor,
                                   ),
 
-                                  title: const Text("Camera"),
+                                  title: Text(lang.camera),
 
                                   onTap: () {
                                     Navigator.pop(context);
@@ -645,7 +647,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                     color: korangeColor,
                                   ),
 
-                                  title: const Text("Gallery"),
+                                  title: Text(lang.gallery),
 
                                   onTap: () {
                                     Navigator.pop(context);
@@ -667,7 +669,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                     maxLines: null,
 
                     decoration: InputDecoration(
-                      hintText: "Type a message...",
+                      hintText: lang.typeMessage,
 
                       hintStyle: const TextStyle(color: Colors.grey),
 

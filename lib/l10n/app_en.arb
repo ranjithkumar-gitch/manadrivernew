@@ -254,5 +254,22 @@
   "cancellationCharges": "Cancellation Charges",
   "paymentCompleted": "Payment Completed",
   "paymentFailed": "Payment Failed",
-  "rideCompleted": "Ride Completed"
+  "rideCompleted": "Ride Completed",
+  "all": "All", "newRide": "New Ride", "accepted": "Accepted", "ongoing": "Ongoing", "completed": "Completed", "cancelled": "Cancelled",
+  "noRidesAvailable": "No rides available",
+  "vehicleNotAssigned": "Vehicle not assigned", "driverNotAssigned": "Driver not assigned", "notAvailable": "N/A",
+  "cancelRide": "Cancel Ride ?",
+  "confirmCancelRide": "Are you sure you want to cancel this ride? This action cannot be undone.",
+  "cancelRideFree": "You can cancel this ride for FREE. Are you sure?", "cancelRideCharge": "Cancelling now will charge ₹59.\nDo you want to proceed?", "pay59": "Pay ₹59",
+  "couldNotOpenGoogleMaps": "Could not open Google Maps.", "locationPermissionDenied": "Location permission denied or not available.", "loading": "Loading...", "driverNotAssigned": "Driver Not Assigned", "driverAssigned": "Driver Assigned", "rideCompleted": "Ride Completed", "ride": "Ride",
+  "loadingDriver": "Loading driver...", "typeMessage": "Type a message...", "writeReview": "Write a review?", "experienceQuestion": "How was your experience?", "giveRating": "Give a rating", "verificationCodeRide": "Verification code to start the ride", "shareOtpDriver": "Share this OTP with your driver to start the ride.", 
+  "fourDigitOtp": "4-Digit OTP", "noCaptainsAvailable": "No captains available", "rideRequestReceived": "Ride request received", "noCaptainsAccepted": "At the moment no captains accepted. Please cancel the ride below.", "waitingForCaptains": "Waiting for captains to accept your ride", "timeLeft": "Time left:",
+  "routeInformation": "Route Information", "duration": "Duration", "unableToOpenGoogleMaps": "Unable to open Google Maps.", "errorOpeningDirections": "Error opening directions:", "getDirections": "Get Directions", "tripDetails": "Trip Details", "cityLimit": "City Limit :", "hours": "Hours", "slotDetails": "Slot Details",
+   "departure": "Departure", "arrival": "Arrival", "contactDetails": "Contact Details", "driverDetails": "Driver Details", "paymentSummary": "Payment Summary", "servicePrice": "Service Price", "convenienceFee": "Convenience Fee", "couponApplied": "Coupon Applied", "totalPrice": "Total Price", "noReviewAvailable": "No review available",
+    "yourReview": "Your Review", "rating": "Rating : ", "feedback": "Feedback : ", "comment": "Comment : ", "cancellationPolicy": "Cancellation policy",
+    "couponsOffers": "Coupons & Offers", "validTill": "Valid Till:", "applied": "APPLIED", "applyNow": "APPLY NOW",
+    "noOffersAvailable": "No Offers Available",
+    "politeDriver": "Polite Driver", "cleanliness": "Cleanliness", "smoothDriving": "Smooth Driving", "onTime": "On Time", "tapToRateDriver": "Tap to rate your driver", "howWasYourTrip": "How was your trip with\n", "giveFeedback": "Give Feedback", "leaveCommentOptional": "Leave a comment (optional)", "submit": "Submit", "thankYouReviewSubmitted": "Thank you! Your review is submitted",
+    "pleaseSelectRating": "Please select rating",
+    "paymentSuccessful": "Payment Successful:", "paymentFailed": "Payment Failed:", "bookingDocumentNotFound": "Booking document ID not found", "rideCancelledSuccessfully": "Ride cancelled successfully", "errorCancellingRide": "Error cancelling ride:", "cancelRide": "Cancel Ride", "rideOngoing": "Ride Ongoing", "proceedToPayment": "Proceed to Payment", "paymentCompleted": "Payment Completed", "ride": "Ride"
 }

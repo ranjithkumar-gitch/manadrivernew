@@ -1522,7 +1522,7 @@ abstract class AppLocalizations {
   /// No description provided for @paymentFailed.
   ///
   /// In en, this message translates to:
-  /// **'Payment Failed'**
+  /// **'Payment Failed:'**
   String get paymentFailed;
 
   /// No description provided for @rideCompleted.
@@ -1530,6 +1530,462 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ride Completed'**
   String get rideCompleted;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @newRide.
+  ///
+  /// In en, this message translates to:
+  /// **'New Ride'**
+  String get newRide;
+
+  /// No description provided for @accepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get accepted;
+
+  /// No description provided for @ongoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Ongoing'**
+  String get ongoing;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get cancelled;
+
+  /// No description provided for @noRidesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No rides available'**
+  String get noRidesAvailable;
+
+  /// No description provided for @vehicleNotAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle not assigned'**
+  String get vehicleNotAssigned;
+
+  /// No description provided for @driverNotAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Not Assigned'**
+  String get driverNotAssigned;
+
+  /// No description provided for @notAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'N/A'**
+  String get notAvailable;
+
+  /// No description provided for @cancelRide.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Ride'**
+  String get cancelRide;
+
+  /// No description provided for @confirmCancelRide.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel this ride? This action cannot be undone.'**
+  String get confirmCancelRide;
+
+  /// No description provided for @cancelRideFree.
+  ///
+  /// In en, this message translates to:
+  /// **'You can cancel this ride for FREE. Are you sure?'**
+  String get cancelRideFree;
+
+  /// No description provided for @cancelRideCharge.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelling now will charge ₹59.\nDo you want to proceed?'**
+  String get cancelRideCharge;
+
+  /// No description provided for @pay59.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay ₹59'**
+  String get pay59;
+
+  /// No description provided for @couldNotOpenGoogleMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open Google Maps.'**
+  String get couldNotOpenGoogleMaps;
+
+  /// No description provided for @locationPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission denied or not available.'**
+  String get locationPermissionDenied;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
+  /// No description provided for @driverAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Assigned'**
+  String get driverAssigned;
+
+  /// No description provided for @ride.
+  ///
+  /// In en, this message translates to:
+  /// **'Ride'**
+  String get ride;
+
+  /// No description provided for @loadingDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading driver...'**
+  String get loadingDriver;
+
+  /// No description provided for @typeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message...'**
+  String get typeMessage;
+
+  /// No description provided for @writeReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a review?'**
+  String get writeReview;
+
+  /// No description provided for @experienceQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How was your experience?'**
+  String get experienceQuestion;
+
+  /// No description provided for @giveRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Give a rating'**
+  String get giveRating;
+
+  /// No description provided for @verificationCodeRide.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code to start the ride'**
+  String get verificationCodeRide;
+
+  /// No description provided for @shareOtpDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this OTP with your driver to start the ride.'**
+  String get shareOtpDriver;
+
+  /// No description provided for @fourDigitOtp.
+  ///
+  /// In en, this message translates to:
+  /// **'4-Digit OTP'**
+  String get fourDigitOtp;
+
+  /// No description provided for @noCaptainsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No captains available'**
+  String get noCaptainsAvailable;
+
+  /// No description provided for @rideRequestReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Ride request received'**
+  String get rideRequestReceived;
+
+  /// No description provided for @noCaptainsAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'At the moment no captains accepted. Please cancel the ride below.'**
+  String get noCaptainsAccepted;
+
+  /// No description provided for @waitingForCaptains.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for captains to accept your ride'**
+  String get waitingForCaptains;
+
+  /// No description provided for @timeLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Time left:'**
+  String get timeLeft;
+
+  /// No description provided for @routeInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Route Information'**
+  String get routeInformation;
+
+  /// No description provided for @duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
+
+  /// No description provided for @unableToOpenGoogleMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to open Google Maps.'**
+  String get unableToOpenGoogleMaps;
+
+  /// No description provided for @errorOpeningDirections.
+  ///
+  /// In en, this message translates to:
+  /// **'Error opening directions:'**
+  String get errorOpeningDirections;
+
+  /// No description provided for @getDirections.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Directions'**
+  String get getDirections;
+
+  /// No description provided for @tripDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip Details'**
+  String get tripDetails;
+
+  /// No description provided for @cityLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'City Limit :'**
+  String get cityLimit;
+
+  /// No description provided for @hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get hours;
+
+  /// No description provided for @slotDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Slot Details'**
+  String get slotDetails;
+
+  /// No description provided for @departure.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure'**
+  String get departure;
+
+  /// No description provided for @arrival.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival'**
+  String get arrival;
+
+  /// No description provided for @contactDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Details'**
+  String get contactDetails;
+
+  /// No description provided for @driverDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Details'**
+  String get driverDetails;
+
+  /// No description provided for @paymentSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Summary'**
+  String get paymentSummary;
+
+  /// No description provided for @couponApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon Applied'**
+  String get couponApplied;
+
+  /// No description provided for @noReviewAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No review available'**
+  String get noReviewAvailable;
+
+  /// No description provided for @yourReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Review'**
+  String get yourReview;
+
+  /// No description provided for @rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating : '**
+  String get rating;
+
+  /// No description provided for @feedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback : '**
+  String get feedback;
+
+  /// No description provided for @comment.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment : '**
+  String get comment;
+
+  /// No description provided for @cancellationPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancellation policy'**
+  String get cancellationPolicy;
+
+  /// No description provided for @couponsOffers.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupons & Offers'**
+  String get couponsOffers;
+
+  /// No description provided for @validTill.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid Till:'**
+  String get validTill;
+
+  /// No description provided for @applied.
+  ///
+  /// In en, this message translates to:
+  /// **'APPLIED'**
+  String get applied;
+
+  /// No description provided for @applyNow.
+  ///
+  /// In en, this message translates to:
+  /// **'APPLY NOW'**
+  String get applyNow;
+
+  /// No description provided for @noOffersAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No Offers Available'**
+  String get noOffersAvailable;
+
+  /// No description provided for @politeDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'Polite Driver'**
+  String get politeDriver;
+
+  /// No description provided for @cleanliness.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleanliness'**
+  String get cleanliness;
+
+  /// No description provided for @smoothDriving.
+  ///
+  /// In en, this message translates to:
+  /// **'Smooth Driving'**
+  String get smoothDriving;
+
+  /// No description provided for @onTime.
+  ///
+  /// In en, this message translates to:
+  /// **'On Time'**
+  String get onTime;
+
+  /// No description provided for @tapToRateDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to rate your driver'**
+  String get tapToRateDriver;
+
+  /// No description provided for @howWasYourTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'How was your trip with\n'**
+  String get howWasYourTrip;
+
+  /// No description provided for @giveFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Give Feedback'**
+  String get giveFeedback;
+
+  /// No description provided for @leaveCommentOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave a comment (optional)'**
+  String get leaveCommentOptional;
+
+  /// No description provided for @submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
+
+  /// No description provided for @thankYouReviewSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you! Your review is submitted'**
+  String get thankYouReviewSubmitted;
+
+  /// No description provided for @pleaseSelectRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select rating'**
+  String get pleaseSelectRating;
+
+  /// No description provided for @paymentSuccessful.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Successful:'**
+  String get paymentSuccessful;
+
+  /// No description provided for @bookingDocumentNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking document ID not found'**
+  String get bookingDocumentNotFound;
+
+  /// No description provided for @rideCancelledSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Ride cancelled successfully'**
+  String get rideCancelledSuccessfully;
+
+  /// No description provided for @errorCancellingRide.
+  ///
+  /// In en, this message translates to:
+  /// **'Error cancelling ride:'**
+  String get errorCancellingRide;
+
+  /// No description provided for @rideOngoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Ride Ongoing'**
+  String get rideOngoing;
+
+  /// No description provided for @proceedToPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Proceed to Payment'**
+  String get proceedToPayment;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

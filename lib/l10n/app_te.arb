@@ -252,6 +252,19 @@
   "cancellationCharges": "రద్దు ఛార్జీలు",
   "paymentCompleted": "చెల్లింపు పూర్తయింది",
   "paymentFailed": "చెల్లింపు విఫలమైంది",
-  "rideCompleted": "ప్రయాణం పూర్తయింది"
+  "rideCompleted": "ప్రయాణం పూర్తయింది",
+  "all": "అన్నీ", "newRide": "కొత్త ప్రయాణం", "accepted": "అంగీకరించబడింది", "ongoing": "కొనసాగుతోంది", "completed": "పూర్తయింది", "cancelled": "రద్దు చేయబడింది",
+  "noRidesAvailable": "ప్రయాణాలు అందుబాటులో లేవు",
+  "vehicleNotAssigned": "వాహనం కేటాయించబడలేదు", "driverNotAssigned": "డ్రైవర్ కేటాయించబడలేదు", "notAvailable": "లభ్యం కాదు",
+  "cancelRide": "ప్రయాణాన్ని రద్దు చేయాలా ?", "confirmCancelRide": "మీరు నిజంగా ఈ ప్రయాణాన్ని రద్దు చేయాలనుకుంటున్నారా? ఈ చర్యను తిరిగి మార్చలేము.",
+  "cancelRideFree": "మీరు ఈ ప్రయాణాన్ని ఉచితంగా రద్దు చేయవచ్చు. మీరు ఖచ్చితంగా రద్దు చేయాలనుకుంటున్నారా?", "cancelRideCharge": "ఇప్పుడు రద్దు చేస్తే ₹59 ఛార్జ్ అవుతుంది.\nమీరు కొనసాగించాలనుకుంటున్నారా?", "pay59": "₹59 చెల్లించండి",
+  "couldNotOpenGoogleMaps": "Google Maps తెరవలేకపోయాం.", "locationPermissionDenied": "స్థానం అనుమతి నిరాకరించబడింది లేదా అందుబాటులో లేదు.", "loading": "లోడ్ అవుతోంది...", "driverNotAssigned": "డ్రైవర్ కేటాయించబడలేదు", "driverAssigned": "డ్రైవర్ కేటాయించబడింది", "rideCompleted": "ప్రయాణం పూర్తయింది", "ride": "ప్రయాణం",
+  "loadingDriver": "డ్రైవర్ లోడ్ అవుతోంది...", "typeMessage": "సందేశం టైప్ చేయండి...", "writeReview": "సమీక్ష రాయాలా?", "experienceQuestion": "మీ అనుభవం ఎలా ఉంది?", "giveRating": "రేటింగ్ ఇవ్వండి", "verificationCodeRide": "ప్రయాణం ప్రారంభించడానికి ధృవీకరణ కోడ్", "shareOtpDriver": "ప్రయాణం ప్రారంభించడానికి ఈ OTPని మీ డ్రైవర్‌తో పంచుకోండి.", "fourDigitOtp": "4-అంకెల OTP", "noCaptainsAvailable": "క్యాప్టెన్లు అందుబాటులో లేరు", "rideRequestReceived": "ప్రయాణ అభ్యర్థన అందింది", "noCaptainsAccepted": "ప్రస్తుతం ఎవరూ క్యాప్టెన్లు అంగీకరించలేదు. దయచేసి క్రింద ప్రయాణాన్ని రద్దు చేయండి.", "waitingForCaptains": "క్యాప్టెన్లు మీ ప్రయాణాన్ని అంగీకరించడానికి వేచి ఉంది", "timeLeft": "మిగిలిన సమయం:",
+  "routeInformation": "మార్గ సమాచారం", "duration": "వ్యవధి", "unableToOpenGoogleMaps": "Google Maps తెరవలేకపోయాం.", "errorOpeningDirections": "దిశలు తెరవడంలో లోపం:", "getDirections": "దిశలు పొందండి", "tripDetails": "ప్రయాణ వివరాలు", "cityLimit": "నగర పరిమితి :", "hours": "గంటలు", "slotDetails": "స్లాట్ వివరాలు", "departure": "ప్రయాణ ప్రారంభం", "arrival": "వచ్చే సమయం", "contactDetails": "సంప్రదింపు వివరాలు", "driverDetails": "డ్రైవర్ వివరాలు", "paymentSummary": "చెల్లింపు సారాంశం", "servicePrice": "సేవ ధర", "convenienceFee": "సౌకర్య రుసుము", "couponApplied": "కూపన్ వర్తింపబడింది", "totalPrice": "మొత్తం ధర", "noReviewAvailable": "సమీక్ష అందుబాటులో లేదు", "yourReview": "మీ సమీక్ష", "rating": "రేటింగ్ : ", "feedback": "అభిప్రాయం : ", "comment": "వ్యాఖ్య : ", "cancellationPolicy": "రద్దు విధానం",
+  "couponsOffers": "కూపన్లు & ఆఫర్లు", "validTill": "వర్తించే తేదీ :", "applied": "వర్తింపబడింది", "applyNow": "వర్తించండి",
+  "noOffersAvailable": "ఆఫర్లు అందుబాటులో లేవు",
+  "politeDriver": "మర్యాదపూర్వక డ్రైవర్", "cleanliness": "శుభ్రత", "smoothDriving": "సాఫీగా డ్రైవింగ్", "onTime": "సమయానికి", "tapToRateDriver": "మీ డ్రైవర్‌ను రేట్ చేయడానికి ట్యాప్ చేయండి", "howWasYourTrip": "మీ ప్రయాణం ఎలా ఉంది\n", "giveFeedback": "అభిప్రాయం ఇవ్వండి", "leaveCommentOptional": "వ్యాఖ్యను వదలండి (ఐచ్చికం)", "submit": "సమర్పించండి", "thankYouReviewSubmitted": "ధన్యవాదాలు! మీ సమీక్ష సమర్పించబడింది",
+  "pleaseSelectRating": "దయచేసి రేటింగ్ ఎంచుకోండి",
+  "paymentSuccessful": "చెల్లింపు విజయవంతం:", "paymentFailed": "చెల్లింపు విఫలమైంది:", "bookingDocumentNotFound": "బుకింగ్ డాక్యుమెంట్ ID కనబడలేదు", "rideCancelledSuccessfully": "ప్రయాణం విజయవంతంగా రద్దు చేయబడింది", "errorCancellingRide": "ప్రయాణం రద్దు చేయడంలో లోపం:", "cancelRide": "ప్రయాణాన్ని రద్దు చేయండి", "rideOngoing": "ప్రయాణం కొనసాగుతోంది", "proceedToPayment": "చెల్లింపుకు కొనసాగండి", "paymentCompleted": "చెల్లింపు పూర్తయింది", "ride": "ప్రయాణం"
  
 }
