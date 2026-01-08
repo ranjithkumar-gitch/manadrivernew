@@ -40,6 +40,10 @@ class SharedPrefServices {
   static const _keyprivateKey = 'privateKey';
   static const _keyuniverseDomain = 'universeDomain';
 
+  static const _keyrazorapiKey = 'razorapiKey';
+
+  static const _keyrazorsecretkey = 'razorsecretkey';
+
   static const _keyisOnline = 'isOnline';
 
   static Future init() async => prefs = await SharedPreferences.getInstance();
@@ -137,6 +141,12 @@ class SharedPrefServices {
   static Future setEmail(String email) async =>
       await prefs!.setString(_keyemail, email);
 
+  static Future setRazorapiKey(String razorapiKey) async =>
+      await prefs!.setString(_keyrazorapiKey, razorapiKey);
+
+  static Future setRazorsecretKey(String razorsecretKey) async =>
+      await prefs!.setString(_keyrazorsecretkey, razorsecretKey);
+
   static Future setStatus(String status) async =>
       await prefs!.setString(_keystatus, status);
 
@@ -192,6 +202,9 @@ class SharedPrefServices {
 
   static String? getUniverseDomain() => prefs!.getString(_keyuniverseDomain);
 
+  static String? getRazorapiKey() => prefs!.getString(_keyrazorapiKey);
+  static String? getRazorsecretKey() => prefs!.getString(_keyrazorsecretkey);
+
   static Future<void> clearUserFromSharedPrefs() async {
     prefs = await SharedPreferences.getInstance();
     await prefs!.setString(_keyfcmToken, "");
@@ -217,6 +230,8 @@ class SharedPrefServices {
     await prefs!.setString(_keytokenUri, "");
     await prefs!.setString(_keyprivateKey, "");
     await prefs!.setString(_keyuniverseDomain, "");
+    await prefs!.setString(_keyrazorapiKey, "");
+    await prefs!.setString(_keyrazorsecretkey, "");
 
     print('User data reset in SharedPreferences.');
   }

@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.mana_driver"
+    namespace = "com.example.nyzo"
     compileSdk = 36
     ndkVersion = "27.0.12077973"
 
@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.mana_driver"
+        applicationId = "com.example.nyzo"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

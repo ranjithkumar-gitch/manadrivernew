@@ -1,4 +1,4 @@
-package com.example.mana_driver
+package com.example.nyzo
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,8 +24,13 @@ import 'package:mana_driver/Widgets/customText.dart';
 
 class OtpLogin extends StatefulWidget {
   final String phoneNumber;
+  final String verificationId;
 
-  const OtpLogin({super.key, required this.phoneNumber});
+  const OtpLogin({
+    super.key,
+    required this.phoneNumber,
+    required this.verificationId,
+  });
 
   @override
   State<OtpLogin> createState() => _OtpLoginState();
@@ -30,12 +39,33 @@ class OtpLogin extends StatefulWidget {
 class _OtpLoginState extends State<OtpLogin> {
   final TextEditingController otpController = TextEditingController();
   bool _isLoading = false;
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _checkUserRole();
-  // }
+  String? _currentVerificationId;
+  bool _isResending = false;
 
+  int _secondsLeft = 60;
+  Timer? _timer;
+  String? _otpErrorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    print('OTP ${widget.verificationId}');
+    _currentVerificationId = widget.verificationId;
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    setState(() => _secondsLeft = 60);
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_secondsLeft == 0) {
+        timer.cancel();
+      } else {
+        setState(() => _secondsLeft--);
+      }
+    });
+  }
   // Future<void> _checkUserRole() async {
   //   final role = await SharedPrefServices.getRoleCode();
 
@@ -49,6 +79,43 @@ class _OtpLoginState extends State<OtpLogin> {
   //     Navigator.pop(context); // or redirect to login/home
   //   }
   // }
+
+  Future<void> _resendOtp() async {
+    if (_isResending) return;
+
+    setState(() => _isResending = true);
+
+    try {
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: "+91${widget.phoneNumber}",
+        timeout: const Duration(seconds: 60),
+
+        verificationCompleted: (PhoneAuthCredential credential) async {},
+
+        verificationFailed: (FirebaseAuthException e) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(e.message ?? "Resend failed")));
+        },
+
+        codeSent: (String verificationId, int? resendToken) {
+          setState(() {
+            _currentVerificationId = verificationId;
+            _otpErrorMessage = null;
+          });
+          _startTimer();
+
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text("OTP resent")));
+        },
+
+        codeAutoRetrievalTimeout: (_) {},
+      );
+    } finally {
+      setState(() => _isResending = false);
+    }
+  }
 
   final FCMService fcmService = FCMService();
 
@@ -77,6 +144,9 @@ class _OtpLoginState extends State<OtpLogin> {
       await SharedPrefServices.setTokenUri(data["tokenUri"] ?? "");
       await SharedPrefServices.setUniverseDomain(data["universeDomain"] ?? "");
 
+      await SharedPrefServices.setRazorapiKey(data["razor_apiKey"] ?? "");
+      await SharedPrefServices.setRazorsecretKey(data["razor_secretKey"] ?? "");
+
       print("Service keys saved to SharedPreferences!");
 
       print("authProvider      : ${SharedPrefServices.getAuthProvider()}");
@@ -88,6 +158,8 @@ class _OtpLoginState extends State<OtpLogin> {
       print("privateKey        : ${SharedPrefServices.getPrivateKey()}");
       print("tokenUri          : ${SharedPrefServices.getTokenUri()}");
       print("universeDomain    : ${SharedPrefServices.getUniverseDomain()}");
+      print("razorAPIKey    : ${SharedPrefServices.getRazorapiKey()}");
+      print("razorSecretKey    : ${SharedPrefServices.getRazorsecretKey()}");
     } catch (e) {
       print("Error loading service keys: $e");
     }
@@ -141,7 +213,7 @@ class _OtpLoginState extends State<OtpLogin> {
                           const SizedBox(height: 50),
                           Pinput(
                             controller: otpController,
-                            length: 4,
+                            length: 6,
                             keyboardType: TextInputType.number,
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
@@ -158,9 +230,7 @@ class _OtpLoginState extends State<OtpLogin> {
                                 border: Border.all(color: kbordergreyColor),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ),
+                              margin: const EdgeInsets.symmetric(horizontal: 5),
                             ),
                             focusedPinTheme: PinTheme(
                               width: 60,
@@ -192,12 +262,31 @@ class _OtpLoginState extends State<OtpLogin> {
                                 children: [
                                   TextSpan(text: localizations.otpNotReceived),
                                   TextSpan(
-                                    text: localizations.resendOtp,
+                                    text:
+                                        _secondsLeft > 0
+                                            ? "Resend OTP in 00:${_secondsLeft.toString().padLeft(2, '0')}"
+                                            : "Resend OTP",
                                     style: TextStyle(
-                                      color: korangeColor,
+                                      color:
+                                          _secondsLeft > 0
+                                              ? kgreyColor
+                                              : korangeColor,
                                       fontWeight: FontWeight.w600,
                                     ),
+                                    recognizer:
+                                        _secondsLeft > 0
+                                            ? null
+                                            : (TapGestureRecognizer()
+                                              ..onTap = _resendOtp),
                                   ),
+
+                                  // TextSpan(
+                                  //   text: localizations.resendOtp,
+                                  //   style: TextStyle(
+                                  //     color: korangeColor,
+                                  //     fontWeight: FontWeight.w600,
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
@@ -211,16 +300,34 @@ class _OtpLoginState extends State<OtpLogin> {
                         : CustomButton(
                           text: localizations.verifyOtp,
                           onPressed: () async {
+                            if (otpController.text.length != 6) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Enter valid OTP"),
+                                ),
+                              );
+                              return;
+                            }
+
                             setState(() => _isLoading = true);
 
                             try {
-                              final vm = context.read<LoginViewModel>();
+                              final credential = PhoneAuthProvider.credential(
+                                // verificationId: widget.verificationId,
+                                verificationId: _currentVerificationId!,
+                                smsCode: otpController.text.trim(),
+                              );
 
+                              await FirebaseAuth.instance.signInWithCredential(
+                                credential,
+                              );
+
+                              final vm = context.read<LoginViewModel>();
                               await vm.fetchLoggedInUser(widget.phoneNumber);
                               await fetchServiceKeys();
+
                               final role =
                                   await SharedPrefServices.getRoleCode();
-
                               if (!mounted) return;
 
                               if (role == "Owner") {
@@ -234,12 +341,12 @@ class _OtpLoginState extends State<OtpLogin> {
                                           .get();
 
                                   if (snap.exists) {
-                                    final driverToken =
+                                    final ownertoken =
                                         snap.data()?["fcmToken"] ?? "";
 
-                                    if (driverToken.isNotEmpty) {
+                                    if (ownertoken.isNotEmpty) {
                                       await fcmService.sendNotification(
-                                        recipientFCMToken: driverToken,
+                                        recipientFCMToken: ownertoken,
                                         title: localizations.welcomeBack,
                                         body: localizations.loggedInReady,
                                       );
@@ -261,15 +368,29 @@ class _OtpLoginState extends State<OtpLogin> {
                                   ),
                                 );
                               }
-                            } catch (e) {
-                              print(e);
+                            } on FirebaseAuthException catch (e) {
+                              String message =
+                                  "OTP verification failed. Please try again.";
+
+                              if (e.code == 'invalid-verification-code') {
+                                message = "Incorrect OTP. Please try again.";
+                              } else if (e.code == 'session-expired') {
+                                message =
+                                    "OTP expired. Please request a new one.";
+                              }
+
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Error: $e")),
+                                SnackBar(
+                                  content: Text(message),
+                                  behavior: SnackBarBehavior.floating,
+                                  duration: const Duration(seconds: 2),
+                                ),
                               );
                             } finally {
                               setState(() => _isLoading = false);
                             }
                           },
+
                           width: 220,
                           height: 53,
                         ),
@@ -285,3 +406,63 @@ class _OtpLoginState extends State<OtpLogin> {
     );
   }
 }
+ // onPressed: () async {
+                          //   setState(() => _isLoading = true);
+
+                          //   try {
+                          //     final vm = context.read<LoginViewModel>();
+
+                          //     await vm.fetchLoggedInUser(widget.phoneNumber);
+                          //     await fetchServiceKeys();
+                          //     final role =
+                          //         await SharedPrefServices.getRoleCode();
+
+                          //     if (!mounted) return;
+
+                          //       if (role == "Owner") {
+                          //       final docId = SharedPrefServices.getDocId();
+
+                          //       if (docId != null && docId.isNotEmpty) {
+                          //         final snap =
+                          //             await FirebaseFirestore.instance
+                          //                 .collection("users")
+                          //                 .doc(docId)
+                          //                 .get();
+
+                          //         if (snap.exists) {
+                          //           final driverToken =
+                          //               snap.data()?["fcmToken"] ?? "";
+
+                          //           if (driverToken.isNotEmpty) {
+                          //             await fcmService.sendNotification(
+                          //               recipientFCMToken: driverToken,
+                          //               title: localizations.welcomeBack,
+                          //               body: localizations.loggedInReady,
+                          //             );
+                          //             print("Login success notification sent!");
+                          //           }
+                          //         }
+                          //       }
+                          //       Navigator.pushReplacement(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //           builder: (_) => BottomNavigation(),
+                          //         ),
+                          //       );
+                          //     } else {
+                          //       Navigator.pushReplacement(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //           builder: (_) => LanguageSelectionScreen(),
+                          //         ),
+                          //       );
+                          //     }
+                          //   } catch (e) {
+                          //     print(e);
+                          //     ScaffoldMessenger.of(context).showSnackBar(
+                          //       SnackBar(content: Text("Error: $e")),
+                          //     );
+                          //   } finally {
+                          //     setState(() => _isLoading = false);
+                          //   }
+                          // },

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -113,11 +114,16 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                         _isLoading
                             ? localizations.checking
                             : localizations.sendOtp,
+
                     onPressed:
                         _isLoading
                             ? null
                             : () async {
                               final phoneNumber = phoneController.text.trim();
+                              final dialCode = vm.selectedCountry.phoneCode;
+
+                              final phoneNumberwithCode =
+                                  "+$dialCode$phoneNumber";
                               if (phoneNumber.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -134,17 +140,94 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                                   phoneNumber,
                                 );
 
+                                // if (exists) {
+                                //   Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //       builder:
+                                //           (_) => OtpLogin(
+                                //             phoneNumber: phoneNumber,
+                                //           ),
+                                //     ),
+                                //   );
+                                // }
                                 if (exists) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (_) => OtpLogin(
-                                            phoneNumber: phoneNumber,
+                                  await FirebaseAuth.instance.verifyPhoneNumber(
+                                    phoneNumber: phoneNumberwithCode,
+
+                                    timeout: const Duration(seconds: 60),
+
+                                    verificationCompleted: (
+                                      PhoneAuthCredential credential,
+                                    ) async {
+                                      await FirebaseAuth.instance
+                                          .signInWithCredential(credential);
+                                    },
+
+                                    verificationFailed: (
+                                      FirebaseAuthException e,
+                                    ) {
+                                      setState(() => _isLoading = false);
+                                      print(
+                                        'Verification failed: ${e.message}',
+                                      );
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            e.message ?? "OTP failed",
                                           ),
-                                    ),
+                                        ),
+                                      );
+                                    },
+
+                                    codeSent: (
+                                      String verificationId,
+                                      int? resendToken,
+                                    ) async {
+                                      setState(() => _isLoading = true);
+
+                                      await Future.delayed(
+                                        const Duration(milliseconds: 300),
+                                      );
+
+                                      if (!mounted) return;
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (_) => OtpLogin(
+                                                phoneNumber: phoneNumber,
+                                                verificationId: verificationId,
+                                              ),
+                                        ),
+                                      );
+
+                                      setState(() => _isLoading = false);
+                                    },
+
+                                    // codeSent: (
+                                    //   String verificationId,
+                                    //   int? resendToken,
+                                    // ) {
+                                    //   Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //       builder:
+                                    //           (_) => OtpLogin(
+                                    //             phoneNumber: phoneNumber,
+                                    //             verificationId: verificationId,
+                                    //           ),
+                                    //     ),
+                                    //   );
+                                    // },
+                                    codeAutoRetrievalTimeout:
+                                        (String verificationId) {},
                                   );
                                 } else {
+                                  setState(() => _isLoading = false);
                                   showDialog(
                                     context: context,
                                     builder: (context) {
@@ -193,12 +276,14 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                                   );
                                 }
                               } catch (e) {
+                                setState(() => _isLoading = false);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text("Error: $e")),
                                 );
-                              } finally {
-                                setState(() => _isLoading = false);
                               }
+                              //  finally {
+                              //   setState(() => _isLoading = false);
+                              // }
                             },
                     width: 220,
                     height: 50,

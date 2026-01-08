@@ -111,11 +111,14 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
 
   void _openCheckout(double amount) {
     var options = {
-      'key': 'rzp_test_RZa3mGbco9w4Ms',
+      'key': SharedPrefServices.getRazorapiKey(),
       'amount': (amount * 100).toInt(),
       'name': 'Rydyn',
       'description': 'Ride Payment',
-      'prefill': {'contact': '9999999999', 'email': 'test@rydyn.com'},
+      'prefill': {
+        'contact': SharedPrefServices.getNumber().toString(),
+        'email': SharedPrefServices.getEmail().toString(),
+      },
     };
 
     try {
@@ -1661,7 +1664,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                   ),
                                 ],
                               ),
-                              if (tripMode == "City Limits" &&
+                              if (tripMode == "Hourly Trip" &&
                                   citylimithours.isNotEmpty) ...[
                                 const SizedBox(height: 12),
                                 Row(
@@ -1673,8 +1676,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                     ),
                                     const SizedBox(width: 8),
                                     CustomText(
-                                      text:
-                                          '${lang.cityLimit} $citylimithours ${lang.hours}',
+                                      text: '$citylimithours ${lang.hours}',
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
                                       textcolor: KblackColor,

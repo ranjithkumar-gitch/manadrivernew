@@ -1125,31 +1125,31 @@ class _HomeScreenState extends State<HomeScreen> {
     final cleaned = distanceStr.toLowerCase().replaceAll('km', '').trim();
     double dist = double.tryParse(cleaned) ?? 0.0;
 
-    if (isHourlyTrip) {
-      return {
-        'distance': dist,
-        'rate': 549,
-        'total': 549.0,
-        'breakup': [
-          {'km': dist, 'rate': 549, 'amount': 549},
-        ],
-      };
-    }
-    if (isRoundTrip) {
-      dist = dist * 2;
-    }
+    // if (isHourlyTrip) {
+    //   return {
+    //     'distance': dist,
+    //     'rate': 549,
+    //     'total': 549.0,
+    //     'breakup': [
+    //       {'km': dist, 'rate': 549, 'amount': 549},
+    //     ],
+    //   };
+    // }
+
     double rate = 0.0;
+    double billableDistance = dist;
 
     if (isRoundTrip) {
-      if (dist <= 100) {
-        rate = 11.0;
-      } else {
-        rate = 10.0;
-      }
+      billableDistance = dist * 2;
+      rate = 9.0;
     }
 
     if (!isRoundTrip) {
-      if (dist <= 100) {
+      if (dist <= 20) {
+        rate = 16.0;
+      } else if (dist <= 50) {
+        rate = 13.0;
+      } else if (dist <= 100) {
         rate = 12.0;
       } else if (dist <= 200) {
         rate = 11.0;
@@ -1158,23 +1158,80 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    double total = dist * rate;
+    double total = billableDistance * rate;
 
     return {
-      'distance': dist,
+      'distance': billableDistance,
       'rate': rate,
       'total': double.parse(total.toStringAsFixed(2)),
       'breakup': [
-        {'km': dist, 'rate': rate, 'amount': total},
+        {
+          'km': billableDistance,
+          'rate': rate,
+          'amount': double.parse(total.toStringAsFixed(2)),
+        },
       ],
     };
   }
+
+  // Map<String, dynamic> calculateFare(
+  //   String distanceStr, {
+  //   bool isRoundTrip = false,
+  //   bool isHourlyTrip = false,
+  // }) {
+  //   final cleaned = distanceStr.toLowerCase().replaceAll('km', '').trim();
+  //   double dist = double.tryParse(cleaned) ?? 0.0;
+
+  //   if (isHourlyTrip) {
+  //     return {
+  //       'distance': dist,
+  //       'rate': 549,
+  //       'total': 549.0,
+  //       'breakup': [
+  //         {'km': dist, 'rate': 549, 'amount': 549},
+  //       ],
+  //     };
+  //   }
+  //   if (isRoundTrip) {
+  //     dist = dist * 2;
+  //   }
+  //   double rate = 0.0;
+
+  //   if (isRoundTrip) {
+  //     if (dist <= 100) {
+  //       rate = 11.0;
+  //     } else {
+  //       rate = 10.0;
+  //     }
+  //   }
+
+  //   if (!isRoundTrip) {
+  //     if (dist <= 100) {
+  //       rate = 12.0;
+  //     } else if (dist <= 200) {
+  //       rate = 11.0;
+  //     } else {
+  //       rate = 10.0;
+  //     }
+  //   }
+
+  //   double total = dist * rate;
+
+  //   return {
+  //     'distance': dist,
+  //     'rate': rate,
+  //     'total': double.parse(total.toStringAsFixed(2)),
+  //     'breakup': [
+  //       {'km': dist, 'rate': rate, 'amount': total},
+  //     ],
+  //   };
+  // }
 
   void showBookingBottomSheet(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     String selectedTripMode = "One Way";
     String selectedTripTime = "Schedule";
-    int selectedCityHours = 1;
+    // int selectedCityHours = 1;
     // final fareMap = calculateFare(distance);
     Map<String, dynamic> fareMap = calculateFare(
       distance,
@@ -1205,11 +1262,29 @@ class _HomeScreenState extends State<HomeScreen> {
           int days = d2.difference(d1).inDays;
 
           if (days == 0) {
-            return 200;
+            return 99;
           } else {
-            return days * 500;
+            return days * 299;
           }
         }
+
+        int selectedCityHours = 1;
+        int selectedHourlyPrice = 399;
+
+        Map<int, int> hourlyPriceMap = {
+          1: 399,
+          2: 599,
+          3: 799,
+          4: 869,
+          5: 1039,
+          6: 1209,
+          7: 1369,
+          8: 1529,
+          9: 1689,
+          10: 1849,
+          11: 1999,
+          12: 2149,
+        };
 
         return StatefulBuilder(
           builder: (context, setState) {
@@ -1298,6 +1373,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Row(
                               children: [
                                 Expanded(
+                                  flex: 2,
                                   child: tripOption(
                                     selectedTripMode == "Hourly Trip"
                                         ? "${localizations.hourlyTrip} (${selectedCityHours} hr)"
@@ -1307,8 +1383,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                     onTap: () {
                                       setState(() {
                                         selectedTripMode = "Hourly Trip";
-                                        selectedCityHours = 3;
                                       });
+
+                                      showCityLimitsDialog(
+                                        context,
+                                        selectedCityHours,
+                                        (int selectedHour) {
+                                          setState(() {
+                                            selectedCityHours = selectedHour;
+                                            selectedHourlyPrice =
+                                                hourlyPriceMap[selectedHour] ??
+                                                399;
+                                          });
+                                        },
+                                      );
                                     },
                                   ),
                                 ),
@@ -1316,7 +1404,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 if (selectedTripMode == "Hourly Trip")
                                   Expanded(
                                     child: Padding(
-                                      padding: const EdgeInsets.only(right: 8),
+                                      padding: const EdgeInsets.only(right: 6),
                                       child: Text(
                                         " " + localizations.hourlyFare,
                                         style: TextStyle(
@@ -1376,8 +1464,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               onTap: () {
                                 setState(() {
                                   selectedTripTime = "Schedule";
+                                  selectedTripMode = "Hourly Trip";
                                 });
-                                print("Selected Trip Time: $selectedTripTime");
+
+                                showCityLimitsDialog(
+                                  context,
+                                  selectedCityHours,
+                                  (hour) {
+                                    setState(() {
+                                      selectedCityHours = hour;
+                                      selectedHourlyPrice =
+                                          hourlyPriceMap[hour]!;
+                                    });
+                                  },
+                                );
                               },
                             ),
                           ],
@@ -1937,7 +2037,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ? "₹${(fareMap['total'] ?? 0.0).toStringAsFixed(2)}"
                                               : selectedTripMode ==
                                                   "Hourly Trip"
-                                              ? "₹549.00"
+                                              ? "₹${selectedHourlyPrice.toStringAsFixed(2)}"
                                               : "",
 
                                       fontSize: 26,
@@ -1953,6 +2053,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               context,
                                               fareMap,
                                               selectedTripMode,
+                                              selectedHourlyPrice,
                                               finalRoundTripFare,
                                               convenienceFee.toDouble(),
                                               arrivalDate,
@@ -2023,6 +2124,50 @@ class _HomeScreenState extends State<HomeScreen> {
                                         );
                                         return;
                                       }
+                                      // if (selectedTripMode == "Round Trip") {
+                                      //   if (arrivalDate == null ||
+                                      //       arrivalTime == null) {
+                                      //     showDialog(
+                                      //       context: context,
+                                      //       builder: (context) {
+                                      //         return AlertDialog(
+                                      //           shape: RoundedRectangleBorder(
+                                      //             borderRadius:
+                                      //                 BorderRadius.circular(12),
+                                      //           ),
+                                      //           title: Text(
+                                      //             localizations
+                                      //                 .arrivalDetailsRequired,
+                                      //             style: TextStyle(
+                                      //               fontWeight: FontWeight.bold,
+                                      //               fontSize: 16,
+                                      //             ),
+                                      //           ),
+                                      //           content: Text(
+                                      //             localizations
+                                      //                 .arrivalDateTimeRequired,
+                                      //           ),
+                                      //           actions: [
+                                      //             TextButton(
+                                      //               onPressed:
+                                      //                   () => Navigator.pop(
+                                      //                     context,
+                                      //                   ),
+                                      //               child: Text(
+                                      //                 localizations.ok,
+                                      //                 style: TextStyle(
+                                      //                   color: korangeColor,
+                                      //                 ),
+                                      //               ),
+                                      //             ),
+                                      //           ],
+                                      //         );
+                                      //       },
+                                      //     );
+                                      //     return;
+                                      //   }
+                                      // }
+
                                       if (selectedTripMode == "Round Trip") {
                                         if (arrivalDate == null ||
                                             arrivalTime == null) {
@@ -2037,7 +2182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 title: Text(
                                                   localizations
                                                       .arrivalDetailsRequired,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 16,
                                                   ),
@@ -2062,6 +2207,39 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ],
                                               );
                                             },
+                                          );
+                                          return;
+                                        }
+
+                                        final DateTime departureDateTime =
+                                            DateTime(
+                                              selectedDate.year,
+                                              selectedDate.month,
+                                              selectedDate.day,
+                                              selectedTime.hour,
+                                              selectedTime.minute,
+                                            );
+
+                                        final DateTime arrivalDateTime =
+                                            DateTime(
+                                              arrivalDate!.year,
+                                              arrivalDate!.month,
+                                              arrivalDate!.day,
+                                              arrivalTime!.hour,
+                                              arrivalTime!.minute,
+                                            );
+
+                                        if (!arrivalDateTime.isAfter(
+                                          departureDateTime,
+                                        )) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                "Arrival time must be after departure time.",
+                                              ),
+                                            ),
                                           );
                                           return;
                                         }
@@ -2093,7 +2271,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               finalRoundTripFare.toDouble();
                                         } else if (selectedTripMode ==
                                             "Hourly Trip") {
-                                          finalFare = 549.0;
+                                          finalFare =
+                                              selectedHourlyPrice.toDouble();
                                         } else {
                                           finalFare =
                                               (fareMap['total'] ?? 0.0)
@@ -2328,6 +2507,7 @@ class _HomeScreenState extends State<HomeScreen> {
     BuildContext context,
     Map<String, dynamic> fareMap,
     String selectedTripMode,
+    int selectedHourlyPrice,
     double? finalRoundTripFare,
     double convenienceFee,
     DateTime? arrivalDate,
@@ -2344,7 +2524,7 @@ class _HomeScreenState extends State<HomeScreen> {
     double convFee = 0.0;
 
     if (selectedTripMode == "Hourly Trip") {
-      servicePrice = 549;
+      servicePrice = selectedHourlyPrice.toDouble();
     } else if (selectedTripMode == "One Way") {
       servicePrice = (fareMap['total'] ?? 0.0).toDouble();
     } else if (selectedTripMode == "Round Trip") {

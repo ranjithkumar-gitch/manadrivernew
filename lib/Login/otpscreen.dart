@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,6 +24,7 @@ class OtpScreen extends StatefulWidget {
   final String email;
   final String countryCode;
   final String fcmToken;
+  final String verificationId;
   final bool isTestOtp;
 
   const OtpScreen({
@@ -31,6 +36,7 @@ class OtpScreen extends StatefulWidget {
     required this.email,
     required this.countryCode,
     this.isTestOtp = true,
+    required this.verificationId,
   });
 
   @override
@@ -40,24 +46,73 @@ class OtpScreen extends StatefulWidget {
 final FCMService fcmService = FCMService();
 
 class _OtpScreenState extends State<OtpScreen> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _checkRole();
-  // }
+  bool _isLoading = false;
+  String? _currentVerificationId;
+  bool _isResending = false;
+  String? _otpErrorMessage;
 
-  // Future<void> _checkRole() async {
-  //   final role = await SharedPrefServices.getRoleCode();
-  //   if (role == "Driver" && mounted) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(content: Text("This screen is only for owners.")),
-  //     );
-  //     Navigator.pop(context);
-  //   }
-  // }
+  int _secondsLeft = 60;
+  Timer? _timer;
+  @override
+  void initState() {
+    super.initState();
+    print('OTP ${widget.verificationId}');
+    _currentVerificationId = widget.verificationId;
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    setState(() => _secondsLeft = 60);
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_secondsLeft == 0) {
+        timer.cancel();
+      } else {
+        setState(() => _secondsLeft--);
+      }
+    });
+  }
+
+  Future<void> _resendOtp() async {
+    if (_isResending) return;
+
+    setState(() => _isResending = true);
+
+    try {
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: "+91${widget.phoneNumber}",
+        timeout: const Duration(seconds: 60),
+
+        verificationCompleted: (PhoneAuthCredential credential) async {},
+
+        verificationFailed: (FirebaseAuthException e) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(e.message ?? "Resend failed")));
+        },
+
+        codeSent: (String verificationId, int? resendToken) {
+          setState(() {
+            _currentVerificationId = verificationId;
+            _otpErrorMessage = null;
+          });
+          _startTimer();
+
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text("OTP resent")));
+        },
+
+        codeAutoRetrievalTimeout: (_) {},
+      );
+    } finally {
+      setState(() => _isResending = false);
+    }
+  }
 
   final TextEditingController otpController = TextEditingController();
-  bool _isLoading = false;
+
   String capitalizeFirst(String value) {
     if (value.isEmpty) return value;
     return value[0].toUpperCase() + value.substring(1).toLowerCase();
@@ -111,7 +166,7 @@ class _OtpScreenState extends State<OtpScreen> {
                           const SizedBox(height: 50),
                           Pinput(
                             controller: otpController,
-                            length: 4,
+                            length: 6,
                             keyboardType: TextInputType.number,
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
@@ -128,9 +183,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                 border: Border.all(color: kbordergreyColor),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ),
+                              margin: const EdgeInsets.symmetric(horizontal: 5),
                             ),
                             focusedPinTheme: PinTheme(
                               width: 60,
@@ -162,12 +215,31 @@ class _OtpScreenState extends State<OtpScreen> {
                                 children: [
                                   TextSpan(text: localizations.otpNotReceived),
                                   TextSpan(
-                                    text: localizations.resendOtp,
+                                    text:
+                                        _secondsLeft > 0
+                                            ? "Resend OTP in 00:${_secondsLeft.toString().padLeft(2, '0')}"
+                                            : "Resend OTP",
                                     style: TextStyle(
-                                      color: korangeColor,
+                                      color:
+                                          _secondsLeft > 0
+                                              ? kgreyColor
+                                              : korangeColor,
                                       fontWeight: FontWeight.w600,
                                     ),
+                                    recognizer:
+                                        _secondsLeft > 0
+                                            ? null
+                                            : (TapGestureRecognizer()
+                                              ..onTap = _resendOtp),
                                   ),
+
+                                  // TextSpan(
+                                  //   text: localizations.resendOtp,
+                                  //   style: TextStyle(
+                                  //     color: korangeColor,
+                                  //     fontWeight: FontWeight.w600,
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
@@ -197,12 +269,44 @@ class _OtpScreenState extends State<OtpScreen> {
 
   Future<void> _verifyOtp() async {
     final localizations = AppLocalizations.of(context)!;
+
     final otp = otpController.text.trim();
 
-    if (otp != "1234") {
+    if (otpController.text.length != 6) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text(localizations.invalidOtp)));
+      ).showSnackBar(const SnackBar(content: Text("Enter valid OTP")));
+
+      return;
+    }
+
+    try {
+      final PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: _currentVerificationId!,
+
+        smsCode: otp,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      String message = "OTP verification failed. Please try again.";
+
+      if (e.code == 'invalid-verification-code') {
+        message = "Incorrect OTP. Please try again.";
+      } else if (e.code == 'session-expired') {
+        message = "OTP expired. Please request a new one.";
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+
+          behavior: SnackBarBehavior.floating,
+
+          duration: const Duration(seconds: 2),
+        ),
+      );
+
       return;
     }
 
@@ -211,36 +315,46 @@ class _OtpScreenState extends State<OtpScreen> {
     try {
       final vm = Provider.of<RegisterViewModel>(context, listen: false);
 
-      // Save to Firebase using RegisterViewModel
       final success = await vm.register(
         fisrtName: capitalizeFirst(widget.firstName.trim()),
+
         lastName: widget.lastName,
+
         email: widget.email.isEmpty ? "" : widget.email,
+
         phone: widget.phoneNumber,
+
         countryCode: widget.countryCode,
+
         fcmToken: widget.fcmToken,
       );
 
       if (success) {
         await SharedPrefServices.setFirstName(widget.firstName);
+
         await SharedPrefServices.setLastName(widget.lastName);
+
         await SharedPrefServices.setEmail(
           widget.email.isEmpty ? "" : widget.email,
         );
+
         await SharedPrefServices.setNumber(widget.phoneNumber);
+
         await SharedPrefServices.setCountryCode(widget.countryCode);
+
         await SharedPrefServices.setFcmToken(widget.fcmToken);
+
         await SharedPrefServices.setislogged(true);
 
         await fcmService.sendNotification(
           recipientFCMToken: widget.fcmToken,
+
           title: localizations.welcomeRydyn,
+
           body:
               "${capitalizeFirst(widget.firstName)} ${localizations.registrationSuccessMessage}",
         );
-        print("Registration Success Notification Sent!");
 
-        // final role = await SharedPrefServices.getRoleCode();
         showDialog(
           context: context,
           builder: (context) {
