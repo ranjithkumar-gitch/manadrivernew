@@ -163,6 +163,7 @@ class LoginViewModel extends ChangeNotifier {
     await SharedPrefServices.setisOnline(userData['isOnline'] ?? false);
     await SharedPrefServices.setUserId(userData['userId'] ?? "");
     await SharedPrefServices.setNumber(userData['phone'] ?? "");
+    await SharedPrefServices.setFcmToken(userData['fcmToken'] ?? "");
     await SharedPrefServices.setCountryCode(userData['countryCode'] ?? "");
     await SharedPrefServices.setDOB(userData['dob'] ?? "");
     await SharedPrefServices.setvehicleType(userData['vehicleType'] ?? "");

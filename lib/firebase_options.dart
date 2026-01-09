@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -30,7 +33,10 @@ class DefaultFirebaseOptions {
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -43,19 +49,9 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBU4wVEDMHeKTsXA6-IX8kDoIEN0WMJeqY',
-    appId: '1:159276101326:web:12ed886a80f76371876a9f',
-    messagingSenderId: '159276101326',
-    projectId: 'mana-driver',
-    authDomain: 'mana-driver.firebaseapp.com',
-    storageBucket: 'mana-driver.firebasestorage.app',
-    measurementId: 'G-Z6VH8NWDSW',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBQUFCkp60pYmkP4wOW_S1t-yHV1T_yPH4',
-    appId: '1:159276101326:android:e4cf69e1e59df38b876a9f',
+    appId: '1:159276101326:android:8f08f0c8b1ca8316876a9f',
     messagingSenderId: '159276101326',
     projectId: 'mana-driver',
     storageBucket: 'mana-driver.firebasestorage.app',
@@ -63,20 +59,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCNa20PzKTCPltG3xx5wE7EnRg0oFYiXhE',
-    appId: '1:159276101326:ios:b293135bb28e03d3876a9f',
+    appId: '1:159276101326:ios:d9c91bbf06ec517e876a9f',
     messagingSenderId: '159276101326',
     projectId: 'mana-driver',
     storageBucket: 'mana-driver.firebasestorage.app',
-    iosBundleId: 'com.example.manaDriver',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBU4wVEDMHeKTsXA6-IX8kDoIEN0WMJeqY',
-    appId: '1:159276101326:web:065461d452842909876a9f',
-    messagingSenderId: '159276101326',
-    projectId: 'mana-driver',
-    authDomain: 'mana-driver.firebaseapp.com',
-    storageBucket: 'mana-driver.firebasestorage.app',
-    measurementId: 'G-DB7T6D2M2G',
+    iosBundleId: 'com.example.nyzo',
   );
 }

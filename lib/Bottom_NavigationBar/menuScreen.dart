@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mana_driver/Login/loginScreen.dart';
@@ -15,6 +16,7 @@ import 'package:mana_driver/Sidemenu/privacy_policy.dart';
 import 'package:mana_driver/Sidemenu/profilePage.dart';
 import 'package:mana_driver/Sidemenu/referScreen.dart';
 import 'package:mana_driver/Sidemenu/termsAndConditions.dart';
+import 'package:mana_driver/Sidemenu/update_Number.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customText.dart';
@@ -36,6 +38,8 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   String selectedLanguage = 'English';
+
+  bool _isLoading = false;
 
   final List<Map<String, dynamic>> menuItems = [
     {'image': 'images/address.png', 'title': 'My Address'},
@@ -156,7 +160,6 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
@@ -251,16 +254,21 @@ class _MenuScreenState extends State<MenuScreen> {
                       // ),
                       // const Divider(color: KdeviderColor),
                       InkWell(
-                        onTap:
-                            () => _showUpdateMobileDialog(
-                              uMN: localizations.menuUpdateMobileNumber,
-                              eM: localizations.menuEnterMobile,
-                              eOTP: localizations.menuEnterOTP,
-                              dR: localizations.menuDontRecieved,
-                              rS: localizations.menuResend,
-                              c: localizations.menuCancel,
-                              u: localizations.menuUpdate,
-                            ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => UpdateNumber()),
+                          );
+                        },
+                        // => _showUpdateMobileDialog(
+                        //   uMN: localizations.menuUpdateMobileNumber,
+                        //   eM: localizations.menuEnterMobile,
+                        //   eOTP: localizations.menuEnterOTP,
+                        //   dR: localizations.menuDontRecieved,
+                        //   rS: localizations.menuResend,
+                        //   c: localizations.menuCancel,
+                        //   u: localizations.menuUpdate,
+                        // ),
                         child: Padding(
                           padding: const EdgeInsets.all(3),
                           child: Row(
@@ -634,6 +642,11 @@ class _MenuScreenState extends State<MenuScreen> {
     Country selectedCountry = Country.parse(savedCountryCode);
     phoneController.text = savedNumber;
 
+    String? _verificationId;
+    bool _otpVerified = false;
+
+    final TextEditingController newPhoneController = TextEditingController();
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -653,6 +666,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   PhoneNumberInputField(
+                    readOnly: true,
                     controller: phoneController,
                     selectedCountry: selectedCountry,
                     onCountryChanged: (Country country) {
@@ -661,7 +675,61 @@ class _MenuScreenState extends State<MenuScreen> {
                       });
                     },
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 8),
+                  GestureDetector(
+                    onTap: () async {
+                      String phoneNumberwithCode =
+                          "+${selectedCountry.phoneCode}${phoneController.text.trim()}";
+                      await FirebaseAuth.instance.verifyPhoneNumber(
+                        phoneNumber: phoneNumberwithCode,
+
+                        timeout: const Duration(seconds: 60),
+
+                        verificationCompleted: (
+                          PhoneAuthCredential credential,
+                        ) async {
+                          await FirebaseAuth.instance.signInWithCredential(
+                            credential,
+                          );
+                        },
+
+                        verificationFailed: (FirebaseAuthException e) {
+                          setState(() => _isLoading = false);
+                          print('Verification failed: ${e.message}');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(e.message ?? "OTP failed")),
+                          );
+                        },
+
+                        codeSent: (
+                          String verificationId,
+                          int? resendToken,
+                        ) async {
+                          setState(() => _isLoading = true);
+
+                          await Future.delayed(
+                            const Duration(milliseconds: 300),
+                          );
+
+                          if (!mounted) return;
+                        },
+
+                        codeAutoRetrievalTimeout: (String verificationId) {
+                          print('Code auto-retrieval timeout: $verificationId');
+                        },
+                      );
+                    },
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: CustomText(
+                        text: 'Generate OTP',
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        textcolor: korangeColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 5),
                   CustomText(
                     text: eOTP,
                     textcolor: KblackColor,
@@ -671,11 +739,57 @@ class _MenuScreenState extends State<MenuScreen> {
                   const SizedBox(height: 10),
                   Pinput(
                     controller: otpController,
-                    length: 4,
+                    length: 6,
                     keyboardType: TextInputType.number,
                     defaultPinTheme: _pinTheme(),
                     focusedPinTheme: _focusedPinTheme(),
+
+                    onCompleted: (pin) async {
+                      try {
+                        PhoneAuthCredential credential =
+                            PhoneAuthProvider.credential(
+                              verificationId: _verificationId!,
+                              smsCode: pin,
+                            );
+
+                        await FirebaseAuth.instance.signInWithCredential(
+                          credential,
+                        );
+
+                        setState(() {
+                          _otpVerified = true;
+                        });
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Invalid OTP")),
+                        );
+                      }
+                    },
                   ),
+                  if (_otpVerified) ...[
+                    const SizedBox(height: 20),
+
+                    CustomText(
+                      text: "Enter New Mobile Number",
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      textcolor: KblackColor,
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    TextField(
+                      controller: newPhoneController,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                        hintText: "New mobile number",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                  ],
+
                   const SizedBox(height: 10),
                   Align(
                     alignment: Alignment.centerRight,
@@ -1002,8 +1116,8 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   PinTheme _pinTheme() => PinTheme(
-    width: 60,
-    height: 50,
+    width: 40,
+    height: 40,
     textStyle: GoogleFonts.poppins(
       fontSize: 20,
       fontWeight: FontWeight.w600,
@@ -1017,6 +1131,8 @@ class _MenuScreenState extends State<MenuScreen> {
   );
 
   PinTheme _focusedPinTheme() => _pinTheme().copyWith(
+    width: 40,
+    height: 40,
     textStyle: GoogleFonts.poppins(
       fontSize: 20,
       fontWeight: FontWeight.w600,

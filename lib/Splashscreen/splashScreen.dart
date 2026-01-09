@@ -142,13 +142,11 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _navigateNext() async {
- 
     RemoteMessage? message =
         await FirebaseMessaging.instance.getInitialMessage();
 
     if (message != null) {
       print("App opened via notification");
-     
     }
 
     await Future.delayed(const Duration(seconds: 3));
@@ -205,7 +203,7 @@ class _SplashScreenState extends State<SplashScreen>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'rydyn',
+                      'nyzo',
                       style: GoogleFonts.poppins(
                         textStyle: TextStyle(
                           fontSize: 32,

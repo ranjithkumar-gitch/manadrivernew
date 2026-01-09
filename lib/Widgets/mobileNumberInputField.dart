@@ -7,12 +7,14 @@ import 'package:mana_driver/l10n/app_localizations.dart';
 
 class PhoneNumberInputField extends StatelessWidget {
   final TextEditingController controller;
+  final bool readOnly;
   final Country selectedCountry;
   final Function(Country) onCountryChanged;
 
   const PhoneNumberInputField({
     super.key,
     required this.controller,
+    this.readOnly = false,
     required this.selectedCountry,
     required this.onCountryChanged,
   });
@@ -22,6 +24,7 @@ class PhoneNumberInputField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.number,
+      readOnly: readOnly,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(10),
