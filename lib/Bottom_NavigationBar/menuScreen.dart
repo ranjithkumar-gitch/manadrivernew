@@ -51,7 +51,7 @@ class _MenuScreenState extends State<MenuScreen> {
     {'image': 'images/info.png', 'title': 'Terms & Conditions'},
     {'image': 'images/support.png', 'title': 'Help & Support'},
     {'image': 'images/policy.png', 'title': 'Cancellation policy'},
-    {'image': 'images/aboutMD.png', 'title': 'About Rydyn'},
+    {'image': 'images/aboutMD.png', 'title': 'About Us'},
     {'image': 'images/delete_acnt.png', 'title': 'Delete Account'},
     {'image': 'images/logout.png', 'title': 'Logout'},
   ];

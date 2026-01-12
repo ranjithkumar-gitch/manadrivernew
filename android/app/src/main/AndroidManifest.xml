@@ -7,7 +7,7 @@
 
 
     <application
-        android:label="nyzo"
+        android:label="nyzo Ride"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
       <meta-data

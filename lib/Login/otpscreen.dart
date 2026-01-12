@@ -19,6 +19,7 @@ import 'package:mana_driver/Widgets/customText.dart';
 
 class OtpScreen extends StatefulWidget {
   final String phoneNumber;
+  final String phoneNumberWithCode;
   final String firstName;
   final String lastName;
   final String email;
@@ -30,6 +31,7 @@ class OtpScreen extends StatefulWidget {
   const OtpScreen({
     super.key,
     required this.phoneNumber,
+    required this.phoneNumberWithCode,
     required this.firstName,
     required this.lastName,
     required this.fcmToken,

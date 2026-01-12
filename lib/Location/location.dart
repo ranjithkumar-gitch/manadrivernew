@@ -43,6 +43,55 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   TextEditingController secondDropController = TextEditingController();
   FocusNode secondDropFocus = FocusNode();
 
+  bool _isValidLocation({
+    required TextEditingController controller,
+    required String lat,
+    required String lng,
+  }) {
+    return controller.text.isNotEmpty && lat.isNotEmpty && lng.isNotEmpty;
+  }
+
+  void _showInvalidLocationDialog(String message) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            title: Center(
+              child: Text(
+                "Select Location",
+                style: GoogleFonts.poppins(
+                  color: korangeColor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            content: Text(
+              message,
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  "OK",
+                  style: GoogleFonts.poppins(
+                    color: korangeColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -589,39 +638,68 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                   height: 40,
                   width: 100,
                   child: ElevatedButton(
-                    onPressed:
-                        (currentLocationController.text.isNotEmpty &&
-                                dropLocationController.text.isNotEmpty &&
-                                (!showSecondDrop ||
-                                    secondDropController.text.isNotEmpty))
-                            ? () {
-                              print(
-                                "Pickup: ${currentLocationController.text} | Lat: $pickupLat | Lng: $pickupLng",
-                              );
-                              print(
-                                "Drop1: ${dropLocationController.text} | Lat: $dropLat | Lng: $dropLng",
-                              );
-                              if (showSecondDrop) {
-                                print(
-                                  "Drop2: ${secondDropController.text} | Lat: $drop2Lat | Lng: $drop2Lng",
-                                );
-                              }
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              Navigator.pop(context, {
-                                "current": currentLocationController.text,
-                                "drop": dropLocationController.text,
-                                "drop2": secondDropController.text,
-                                "pickupLat": pickupLat,
-                                "pickupLng": pickupLng,
-                                "dropLat": dropLat,
-                                "dropLng": dropLng,
-                                "drop2Lat": drop2Lat,
-                                "drop2Lng": drop2Lng,
-                                "distance": distanceText ?? "",
-                                "duration": durationText ?? "",
-                              });
-                            }
-                            : null,
+                    onPressed: () {
+                      if (currentLocationController.text.isEmpty) {
+                        _showInvalidLocationDialog(
+                          "Please select pickup location",
+                        );
+                        return;
+                      }
+
+                      if (pickupLat.isEmpty || pickupLng.isEmpty) {
+                        _showInvalidLocationDialog(
+                          "Please select pickup location from suggestions or map",
+                        );
+                        return;
+                      }
+
+                      if (dropLocationController.text.isEmpty) {
+                        _showInvalidLocationDialog(
+                          "Please select drop location",
+                        );
+                        return;
+                      }
+
+                      if (dropLat.isEmpty || dropLng.isEmpty) {
+                        _showInvalidLocationDialog(
+                          "Please select drop location from suggestions or map",
+                        );
+                        return;
+                      }
+
+                      if (showSecondDrop) {
+                        if (secondDropController.text.isEmpty) {
+                          _showInvalidLocationDialog(
+                            "Please select second drop location",
+                          );
+                          return;
+                        }
+
+                        if (drop2Lat.isEmpty || drop2Lng.isEmpty) {
+                          _showInvalidLocationDialog(
+                            "Please select second drop location from suggestions or map",
+                          );
+                          return;
+                        }
+                      }
+
+                      FocusManager.instance.primaryFocus?.unfocus();
+
+                      Navigator.pop(context, {
+                        "current": currentLocationController.text,
+                        "drop": dropLocationController.text,
+                        "drop2": secondDropController.text,
+                        "pickupLat": pickupLat,
+                        "pickupLng": pickupLng,
+                        "dropLat": dropLat,
+                        "dropLng": dropLng,
+                        "drop2Lat": drop2Lat,
+                        "drop2Lng": drop2Lng,
+                        "distance": distanceText ?? "",
+                        "duration": durationText ?? "",
+                      });
+                    },
+
                     style: ElevatedButton.styleFrom(
                       backgroundColor:
                           (currentLocationController.text.isNotEmpty &&
@@ -629,7 +707,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                   (!showSecondDrop ||
                                       secondDropController.text.isNotEmpty))
                               ? korangeColor
-                              : Colors.grey.shade600,
+                              : Colors.grey.shade500,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(22),
                       ),
@@ -648,7 +726,39 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                 ),
               ],
             ),
-
+            // onPressed:
+            // (currentLocationController.text.isNotEmpty &&
+            //         dropLocationController.text.isNotEmpty &&
+            //         (!showSecondDrop ||
+            //             secondDropController.text.isNotEmpty))
+            //     ? () {
+            //       print(
+            //         "Pickup: ${currentLocationController.text} | Lat: $pickupLat | Lng: $pickupLng",
+            //       );
+            //       print(
+            //         "Drop1: ${dropLocationController.text} | Lat: $dropLat | Lng: $dropLng",
+            //       );
+            //       if (showSecondDrop) {
+            //         print(
+            //           "Drop2: ${secondDropController.text} | Lat: $drop2Lat | Lng: $drop2Lng",
+            //         );
+            //       }
+            //       FocusManager.instance.primaryFocus?.unfocus();
+            //       Navigator.pop(context, {
+            //         "current": currentLocationController.text,
+            //         "drop": dropLocationController.text,
+            //         "drop2": secondDropController.text,
+            //         "pickupLat": pickupLat,
+            //         "pickupLng": pickupLng,
+            //         "dropLat": dropLat,
+            //         "dropLng": dropLng,
+            //         "drop2Lat": drop2Lat,
+            //         "drop2Lng": drop2Lng,
+            //         "distance": distanceText ?? "",
+            //         "duration": durationText ?? "",
+            //       });
+            //     }
+            //     : null,
             const SizedBox(height: 12),
             const Divider(),
             Expanded(

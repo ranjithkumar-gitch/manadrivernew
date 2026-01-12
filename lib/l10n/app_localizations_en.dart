@@ -15,7 +15,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectLanguageTitle => 'Select Language.';
 
   @override
-  String get selectLanguageSubtitle => 'Tap to continue in your chosen language.';
+  String get selectLanguageSubtitle =>
+      'Tap to continue in your chosen language.';
 
   @override
   String get chooseLanguage => 'Choose Language';
@@ -27,7 +28,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginTitle => 'Enter Your Mobile Number';
 
   @override
-  String get loginSubtitle => 'Enter your mobile number to get started we\'ll send you an OTP for verification.';
+  String get loginSubtitle =>
+      'Enter your mobile number to get started we\'ll send you an OTP for verification.';
 
   @override
   String get checking => 'Checking...';
@@ -138,7 +140,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuCancelPolicy => 'Cancellation policy';
 
   @override
-  String get menuAbtMD => 'About Rydyn';
+  String get menuAbtMD => 'About Us';
 
   @override
   String get menuDeleteAccount => 'Delete Account';
@@ -177,16 +179,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get address => 'Address,';
 
   @override
-  String get dummy_adres => 'St.No.98, Main Rd, Near JLN House Serilingampally, Kondapur,  500084';
+  String get dummy_adres =>
+      'St.No.98, Main Rd, Near JLN House Serilingampally, Kondapur,  500084';
 
   @override
   String get add_new_Address => 'Add New Address';
 
   @override
-  String get fav_dummy_text => 'You don’t Favourite Drivers at the moment please try after sometime.';
+  String get fav_dummy_text =>
+      'You don’t Favourite Drivers at the moment please try after sometime.';
 
   @override
-  String get offer_dummy_text => 'You don’t have offers at the moment. Please try again later.';
+  String get offer_dummy_text =>
+      'You don’t have offers at the moment. Please try again later.';
 
   @override
   String get rat_Txt1 => 'Refer to your friend and get Rewards of 100/-';
@@ -198,7 +203,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rat_Txt3 => 'Your friend signup';
 
   @override
-  String get rat_Txt4 => 'You’ll both get cash when your friend first book a ride';
+  String get rat_Txt4 =>
+      'You’ll both get cash when your friend first book a ride';
 
   @override
   String get rat_Txt5 => 'Send a Invitation';
@@ -207,55 +213,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tDt1 => '1. Introduction';
 
   @override
-  String get tD_D1 => 'Welcome to our app. By using this application, you agree to the following terms and conditions.';
+  String get tD_D1 =>
+      'Welcome to our app. By using this application, you agree to the following terms and conditions.';
 
   @override
   String get tDt2 => '2. User Obligations';
 
   @override
-  String get tD_D2 => 'Users must ensure all information provided is accurate and must not misuse the service.';
+  String get tD_D2 =>
+      'Users must ensure all information provided is accurate and must not misuse the service.';
 
   @override
   String get tDt3 => '3. Account Security';
 
   @override
-  String get tD_D3 => 'You are responsible for maintaining the confidentiality of your account credentials.';
+  String get tD_D3 =>
+      'You are responsible for maintaining the confidentiality of your account credentials.';
 
   @override
   String get tDt4 => '4. Data Privacy';
 
   @override
-  String get tD_D4 => 'We value your privacy. Your data is stored securely and handled as per our privacy policy.';
+  String get tD_D4 =>
+      'We value your privacy. Your data is stored securely and handled as per our privacy policy.';
 
   @override
   String get tDt5 => '5. Intellectual Property';
 
   @override
-  String get tD_D5 => 'All content in the app is protected by copyright and may not be reused without permission.';
+  String get tD_D5 =>
+      'All content in the app is protected by copyright and may not be reused without permission.';
 
   @override
   String get tDt6 => '6. Service Changes';
 
   @override
-  String get tD_D6 => 'We reserve the right to modify or discontinue the service without notice.';
+  String get tD_D6 =>
+      'We reserve the right to modify or discontinue the service without notice.';
 
   @override
   String get tDt7 => '7. Termination';
 
   @override
-  String get tD_D7 => 'We may suspend or terminate your access if you violate any terms outlined here.';
+  String get tD_D7 =>
+      'We may suspend or terminate your access if you violate any terms outlined here.';
 
   @override
   String get tDt8 => '8. Third-party Links';
 
   @override
-  String get tD_D8 => 'We may include links to third-party sites. We are not responsible for their content.';
+  String get tD_D8 =>
+      'We may include links to third-party sites. We are not responsible for their content.';
 
   @override
   String get tDt9 => '9. Governing Law';
 
   @override
-  String get tD_D9 => 'These terms shall be governed in accordance with the laws of your country or region.';
+  String get tD_D9 =>
+      'These terms shall be governed in accordance with the laws of your country or region.';
 
   @override
   String get hS_t1 => 'How can I help you today?';
@@ -273,7 +288,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cP_q1 => '1. Free Cancellation Window';
 
   @override
-  String get cP_a1 => 'You can cancel your booking within 5 minutes of confirmation without any charges.';
+  String get cP_a1 =>
+      'You can cancel your booking within 5 minutes of confirmation without any charges.';
 
   @override
   String get cP_q2 => '2. Cancellation After 5 Minutes';
@@ -291,22 +307,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cP_q3 => '3. No-Show Policy (Customer absent)';
 
   @override
-  String get cP_a3 => 'If customer is not available at pickup point even after 15 minutes, trip will be auto-cancelled. #100 will be charged as no-show';
+  String get cP_a3 =>
+      'If customer is not available at pickup point even after 15 minutes, trip will be auto-cancelled. #100 will be charged as no-show';
 
   @override
   String get cP_q4 => '4. Driver Cancellation';
 
   @override
-  String get cP_a4 => 'If a driver cancels after accepting, we will reassign another driver. Repeated cancellations by drivers will lead to penalties and suspension.';
+  String get cP_a4 =>
+      'If a driver cancels after accepting, we will reassign another driver. Repeated cancellations by drivers will lead to penalties and suspension.';
 
   @override
   String get cP_q5 => '5. Refund Timeline';
 
   @override
-  String get cP_a5 => 'If you paid online, eligible refunds will be processed within 3-5 business days.';
+  String get cP_a5 =>
+      'If you paid online, eligible refunds will be processed within 3-5 business days.';
 
   @override
-  String get mDdisk => 'Mana Driver - Mee Vahanam, Maa Driver!\nMana Driver is your trusted platform to book professional, verified drivers anytime you need. Whether it\'s a one-way ride, round trip, hourly booking, or outstation travel - we\'ve got you covered.';
+  String get mDdisk =>
+      'Mana Driver - Mee Vahanam, Maa Driver!\nMana Driver is your trusted platform to book professional, verified drivers anytime you need. Whether it\'s a one-way ride, round trip, hourly booking, or outstation travel - we\'ve got you covered.';
 
   @override
   String get dA_t1 => 'Warning';
@@ -366,7 +386,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get getStartedMinute => 'It only takes a minute to get started.';
 
   @override
-  String get quickSimpleRegistration => 'Quick. Simple. Hassle-free registration.';
+  String get quickSimpleRegistration =>
+      'Quick. Simple. Hassle-free registration.';
 
   @override
   String get firstName => 'First Name';
@@ -393,13 +414,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mobileNumberExists => 'Mobile Number Exists';
 
   @override
-  String get mobileRegisteredOwner => 'This mobile number is already registered as an Owner.';
+  String get mobileRegisteredOwner =>
+      'This mobile number is already registered as an Owner.';
 
   @override
   String get ok => 'OK';
 
   @override
-  String get mobileRegisteredDriver => 'This mobile number is already registered as a Driver.';
+  String get mobileRegisteredDriver =>
+      'This mobile number is already registered as a Driver.';
 
   @override
   String get haveAccount => 'You have an account? ';
@@ -408,10 +431,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signIn => 'Sign In';
 
   @override
-  String get welcomeRydyn => 'Welcome to Rydyn!';
+  String get welcomeRydyn => 'Welcome to Nyzo Ride!';
 
   @override
-  String get registrationSuccessMessage => 'Your registration was successful. Please log in to continue.';
+  String get registrationSuccessMessage =>
+      'Your registration was successful. Please log in to continue.';
 
   @override
   String get pleaseLogin => 'Please login to continue';
@@ -471,7 +495,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addNewVehicle => 'Add New Vehicle';
 
   @override
-  String get confirmDeleteVehicle => 'Are you sure you want to delete this vehicle?';
+  String get confirmDeleteVehicle =>
+      'Are you sure you want to delete this vehicle?';
 
   @override
   String get addOnceUseEveryTime => 'Add once, use every time';
@@ -555,7 +580,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectCategory => 'Please select a category';
 
   @override
-  String get validVehicleNumber => 'Please enter valid vehicle number (e.g. TS05BY1234)';
+  String get validVehicleNumber =>
+      'Please enter valid vehicle number (e.g. TS05BY1234)';
 
   @override
   String get uploadAtLeastOneImage => 'Please upload at least 1 image';
@@ -597,7 +623,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get edit => 'Edit';
 
   @override
-  String get exceptionalPerformance => 'Exceptional performance and premium comfort features.';
+  String get exceptionalPerformance =>
+      'Exceptional performance and premium comfort features.';
 
   @override
   String get keySpecifications => 'Key Specifications';
@@ -651,7 +678,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get arrivalDateRequired => 'Arrival Date Required';
 
   @override
-  String get selectArrivalBeforeTime => 'Please select the arrival date before choosing the arrival time.';
+  String get selectArrivalBeforeTime =>
+      'Please select the arrival date before choosing the arrival time.';
 
   @override
   String get invalidArrivalTime => 'Invalid Arrival Time';
@@ -678,7 +706,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get arrivalDetailsRequired => 'Arrival Details Required';
 
   @override
-  String get arrivalDateTimeRequired => 'Please select both arrival date and arrival time to continue.';
+  String get arrivalDateTimeRequired =>
+      'Please select both arrival date and arrival time to continue.';
 
   @override
   String get driverRequestedSuccess => 'Requested a driver successfully';
@@ -759,13 +788,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancelRide => 'Cancel Ride';
 
   @override
-  String get confirmCancelRide => 'Are you sure you want to cancel this ride? This action cannot be undone.';
+  String get confirmCancelRide =>
+      'Are you sure you want to cancel this ride? This action cannot be undone.';
 
   @override
-  String get cancelRideFree => 'You can cancel this ride for FREE. Are you sure?';
+  String get cancelRideFree =>
+      'You can cancel this ride for FREE. Are you sure?';
 
   @override
-  String get cancelRideCharge => 'Cancelling now will charge ₹59.\nDo you want to proceed?';
+  String get cancelRideCharge =>
+      'Cancelling now will charge ₹59.\nDo you want to proceed?';
 
   @override
   String get pay59 => 'Pay ₹59';
@@ -774,7 +806,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get couldNotOpenGoogleMaps => 'Could not open Google Maps.';
 
   @override
-  String get locationPermissionDenied => 'Location permission denied or not available.';
+  String get locationPermissionDenied =>
+      'Location permission denied or not available.';
 
   @override
   String get loading => 'Loading...';
@@ -804,7 +837,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verificationCodeRide => 'Verification code to start the ride';
 
   @override
-  String get shareOtpDriver => 'Share this OTP with your driver to start the ride.';
+  String get shareOtpDriver =>
+      'Share this OTP with your driver to start the ride.';
 
   @override
   String get fourDigitOtp => '4-Digit OTP';
@@ -816,7 +850,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rideRequestReceived => 'Ride request received';
 
   @override
-  String get noCaptainsAccepted => 'At the moment no captains accepted. Please cancel the ride below.';
+  String get noCaptainsAccepted =>
+      'At the moment no captains accepted. Please cancel the ride below.';
 
   @override
   String get waitingForCaptains => 'Waiting for captains to accept your ride';

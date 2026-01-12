@@ -66,22 +66,154 @@ class AboutManaDriverScreen extends StatelessWidget {
               children: [
                 CustomText(
                   text: conditions[index]['title']!,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
                   textcolor: KblackColor,
                 ),
                 SizedBox(height: 8),
                 CustomText(
-                  text: conditions[index]['description']!,
-                  fontSize: 12,
+                  text:
+                      "We are a technology-driven platform built to simplify the connection between vehicle owners and independent, verified drivers.",
                   fontWeight: FontWeight.w400,
-                  textcolor: kseegreyColor,
+                  fontSize: 14,
+                  textcolor: KblackColor,
+                ),
+                const SizedBox(height: 8),
+                CustomText(
+                  text:
+                      "Our goal is to make it easy for vehicle owners to find reliable drivers whenever they need—whether it is for one-way trips, round trips, hourly usage, or outstation travel.",
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  textcolor: KblackColor,
+                ),
+                const SizedBox(height: 8),
+                CustomText(
+                  text:
+                      "We act only as a facilitator, providing a digital platform that enables owners and drivers to connect, communicate, and complete trips smoothly. We do not employ drivers, nor do we provide transportation services directly.",
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  textcolor: KblackColor,
+                ),
+                const SizedBox(height: 10),
+                sectionTitle('What We Do'),
+                const SizedBox(height: 5),
+                bullet(
+                  'Connect vehicle owners with available independent drivers',
+                ),
+                const SizedBox(height: 5),
+                bullet(
+                  'Provide a transparent booking and trip management system',
+                ),
+                const SizedBox(height: 5),
+                bullet('Enable easy communication between owners and drivers'),
+                const SizedBox(height: 5),
+                bullet('Promote convenience, flexibility, and efficiency'),
+
+                const SizedBox(height: 10),
+                sectionTitle('What We Do Not Do'),
+                const SizedBox(height: 5),
+                bullet('We do not employ drivers as staff or agents'),
+                const SizedBox(height: 5),
+                bullet('We do not own or operate vehicles'),
+                const SizedBox(height: 5),
+                bullet('We do not guarantee driver availability'),
+                const SizedBox(height: 5),
+                bullet(
+                  'We do not take responsibility for personal disputes between owners and drivers',
+                ),
+                const SizedBox(height: 10),
+                sectionTitle('Our Vision'),
+                const SizedBox(height: 5),
+                CustomText(
+                  text:
+                      "To become a trusted and convenient driver-connection platform, empowering vehicle owners with flexibility and peace of mind while supporting independent drivers through fair opportunities.",
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  textcolor: KblackColor,
+                ),
+                const SizedBox(height: 10),
+                sectionTitle('Our Commitment'),
+                const SizedBox(height: 5),
+                CustomText(
+                  text: "We are committed to:",
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  textcolor: KblackColor,
+                ),
+                const SizedBox(height: 5),
+
+                bullet('Transparency in platform usage'),
+                const SizedBox(height: 5),
+                bullet('User safety and data privacy'),
+                const SizedBox(height: 5),
+                bullet('Continuous improvement based on user feedback'),
+                CustomText(
+                  text:
+                      "By using this platform, owners and drivers agree to interact responsibly, respectfully, and in accordance with our Terms & Conditions.",
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  textcolor: KblackColor,
                 ),
               ],
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget bullet(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("•  ", style: TextStyle(fontSize: 16)),
+          Expanded(
+            child: CustomText(
+              text: text,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              textcolor: KblackColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget support(String text, String title) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomText(
+            text: title,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            textcolor: Colors.black,
+          ),
+          const Text(" ", style: TextStyle(fontSize: 16)),
+          Expanded(
+            child: CustomText(
+              text: text,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              textcolor: Colors.blue,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget sectionTitle(String text) {
+    return CustomText(
+      text: text,
+      fontWeight: FontWeight.w500,
+      fontSize: 14,
+      textcolor: KblackColor,
     );
   }
 }

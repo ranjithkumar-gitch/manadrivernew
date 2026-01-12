@@ -342,19 +342,18 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             ),
             const SizedBox(height: 8),
             GestureDetector(
-              onTap: () => _sendEmail("support@nyzoride.com"),
-              child: support("support@nyzoride.com", "Email:"),
+              onTap: () => _sendEmail("hello@nyzoride.com"),
+              child: support("hello@nyzoride.com", "Email:"),
             ),
             GestureDetector(
-              onTap: () => _callNumber("9010443536"),
-              child: support("9010443536", "Phone:"),
+              onTap: () => _callNumber("9000464851"),
+              child: support("9000464851", "Phone:"),
             ),
 
-            GestureDetector(
-              onTap: () => _callNumber("8520851338"),
-              child: support("8520851338", "Phone:"),
-            ),
-
+            // GestureDetector(
+            //   onTap: () => _callNumber("8520851338"),
+            //   child: support("8520851338", "Phone:"),
+            // ),
             const SizedBox(height: 40),
           ],
         ),

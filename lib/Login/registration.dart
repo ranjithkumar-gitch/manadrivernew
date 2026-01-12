@@ -378,7 +378,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       );
 
                                       if (!mounted) return;
-
+                                      final String rawPhoneNumber =
+                                          phoneController.text.trim();
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -386,7 +387,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               (_) => OtpScreen(
                                                 verificationId: verificationId,
                                                 fcmToken: fcmToken ?? "",
-                                                phoneNumber:
+                                                phoneNumber: rawPhoneNumber,
+                                                phoneNumberWithCode:
                                                     phoneNumberWithCode,
                                                 firstName: firstName,
                                                 lastName: lastName,
