@@ -218,8 +218,8 @@ class _SplashScreenState extends State<SplashScreen>
               // ),
               child: Image.asset(
                 'images/nyzo_ride_.png',
-                height: 300,
-                width: 300,
+                height: 200,
+                width: 200,
                 fit: BoxFit.contain,
               ),
             ),
