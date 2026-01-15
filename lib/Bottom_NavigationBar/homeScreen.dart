@@ -1002,8 +1002,25 @@ class _HomeScreenState extends State<HomeScreen> {
     BuildContext context,
     int initialSelected,
     Function(int) onSelected,
-  ) {
+   ) {
     int tempSelected = initialSelected;
+    const double hydMinLat = 17.2169;
+    const double hydMaxLat = 17.5990;
+    const double hydMinLng = 78.2580;
+    const double hydMaxLng = 78.6560;
+
+    bool isWithinHyderabad(double lat, double lng) {
+      return lat >= hydMinLat &&
+          lat <= hydMaxLat &&
+          lng >= hydMinLng &&
+          lng <= hydMaxLng;
+    }
+
+    bool isLocationInsideHyd({required String lat, required String lng}) {
+      if (lat.isEmpty || lng.isEmpty) return false;
+
+      return isWithinHyderabad(double.parse(lat), double.parse(lng));
+    }
 
     showDialog(
       context: context,
@@ -1089,13 +1106,89 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: CustomButton(
                         onPressed: () {
-                          onSelected(tempSelected);
-                          Navigator.pop(context);
+                          final bool pickupInside = isLocationInsideHyd(
+                            lat: pickupLat,
+                            lng: pickupLng,
+                          );
+
+                          final bool dropInside = isLocationInsideHyd(
+                            lat: dropLat,
+                            lng: dropLng,
+                          );
+
+                          if (pickupInside && dropInside) {
+                            print(" Hourly Trip Allowed");
+                            print("Pickup is inside Hyderabad city limits");
+                            print("Drop is inside Hyderabad city limits");
+
+                            onSelected(tempSelected);
+                            Navigator.pop(context);
+                          } else {
+                            print(" Hourly Trip Blocked");
+
+                            if (!pickupInside) {
+                              print("Pickup is OUTSIDE Hyderabad city limits");
+                              print("Pickup Lat: $pickupLat, Lng: $pickupLng");
+                            }
+
+                            if (!dropInside) {
+                              print("Drop is OUTSIDE Hyderabad city limits");
+                              print("Drop Lat: $dropLat, Lng: $dropLng");
+                            }
+
+                            showDialog(
+                              context: context,
+                              builder:
+                                  (_) => AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    title: CustomText(
+                                      text: "City Limits Restriction",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      textcolor: KblackColor,
+                                    ),
+                                    content: CustomText(
+                                      text:
+                                          "Hourly trips are available only within Hyderabad city limits. Please update your pickup or drop location.",
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: KblackColor,
+                                    ),
+
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          "OK",
+                                          style: TextStyle(color: korangeColor),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                            );
+
+                            return;
+                          }
                         },
                         text: 'Confirm',
                         height: 46,
                         width: 140,
                       ),
+
+                      // CustomButton(
+                      //   onPressed: () {
+                      //     onSelected(tempSelected);
+                      //     Navigator.pop(context);
+                      //   },
+                      //   text: 'Confirm',
+                      //   height: 46,
+                      //   width: 140,
+                      // ),
                     ),
                   ],
                 ),
@@ -1233,6 +1326,25 @@ class _HomeScreenState extends State<HomeScreen> {
     String selectedTripTime = "Schedule";
     // int selectedCityHours = 1;
     // final fareMap = calculateFare(distance);
+
+    const double hydMinLat = 17.2169;
+    const double hydMaxLat = 17.5990;
+    const double hydMinLng = 78.2580;
+    const double hydMaxLng = 78.6560;
+
+    bool isWithinHyderabad(double lat, double lng) {
+      return lat >= hydMinLat &&
+          lat <= hydMaxLat &&
+          lng >= hydMinLng &&
+          lng <= hydMaxLng;
+    }
+
+    bool isLocationInsideHyd({required String lat, required String lng}) {
+      if (lat.isEmpty || lng.isEmpty) return false;
+
+      return isWithinHyderabad(double.parse(lat), double.parse(lng));
+    }
+
     Map<String, dynamic> fareMap = calculateFare(
       distance,
       isRoundTrip: selectedTripMode == "Round Trip",
@@ -2240,6 +2352,91 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 "Arrival time must be after departure time.",
                                               ),
                                             ),
+                                          );
+                                          return;
+                                        }
+                                      }
+                                      if (selectedTripMode == "Hourly Trip") {
+                                        final bool pickupInside =
+                                            isLocationInsideHyd(
+                                              lat: pickupLat,
+                                              lng: pickupLng,
+                                            );
+
+                                        final bool dropInside =
+                                            isLocationInsideHyd(
+                                              lat: dropLat,
+                                              lng: dropLng,
+                                            );
+
+                                        if (pickupInside && dropInside) {
+                                          print(" Hourly Trip Allowed");
+                                          print(
+                                            "Pickup is inside Hyderabad city limits",
+                                          );
+                                          print(
+                                            "Drop is inside Hyderabad city limits",
+                                          );
+                                        } else {
+                                          print(" Hourly Trip Blocked");
+
+                                          if (!pickupInside) {
+                                            print(
+                                              "Pickup is OUTSIDE Hyderabad city limits",
+                                            );
+                                            print(
+                                              "Pickup Lat: $pickupLat, Lng: $pickupLng",
+                                            );
+                                          }
+
+                                          if (!dropInside) {
+                                            print(
+                                              "Drop is OUTSIDE Hyderabad city limits",
+                                            );
+                                            print(
+                                              "Drop Lat: $dropLat, Lng: $dropLng",
+                                            );
+                                          }
+
+                                          showDialog(
+                                            context: context,
+                                            builder:
+                                                (_) => AlertDialog(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          12,
+                                                        ),
+                                                  ),
+                                                  title: CustomText(
+                                                    text:
+                                                        "City Limits Restriction",
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                    textcolor: KblackColor,
+                                                  ),
+                                                  content: CustomText(
+                                                    text:
+                                                        "Hourly trips are available only within Hyderabad city limits. Please update your pickup or drop location.",
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w400,
+                                                    textcolor: KblackColor,
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed:
+                                                          () => Navigator.pop(
+                                                            context,
+                                                          ),
+                                                      child: Text(
+                                                        "OK",
+                                                        style: TextStyle(
+                                                          color: korangeColor,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                           );
                                           return;
                                         }

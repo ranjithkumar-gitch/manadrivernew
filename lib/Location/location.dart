@@ -8,6 +8,8 @@ import 'package:mana_driver/Widgets/customText.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 class LocationSelectionScreen extends StatefulWidget {
   const LocationSelectionScreen({super.key});
@@ -92,10 +94,53 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
     );
   }
 
+  Future<void> _setCurrentLocationAsPickup() async {
+    try {
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied ||
+            permission == LocationPermission.deniedForever) {
+          return;
+        }
+      }
+
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      pickupLat = position.latitude.toString();
+      pickupLng = position.longitude.toString();
+
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks.first;
+
+        String address =
+            "${place.name}, ${place.subLocality}, ${place.locality}";
+
+        setState(() {
+          currentLocationController.text = address;
+          isPickupSelection = false;
+        });
+      }
+    } catch (e) {
+      print("Error getting current location: $e");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     places = FlutterGooglePlacesSdk("AIzaSyDMihIxRDdcdyNby8aKMLIwsBFGLGuhLFI");
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _setCurrentLocationAsPickup();
+    });
   }
 
   Future<void> _calculateDistance() async {

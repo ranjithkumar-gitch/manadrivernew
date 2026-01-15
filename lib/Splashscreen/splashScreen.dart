@@ -27,17 +27,17 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 4),
-    );
+    // _controller = AnimationController(
+    //   vsync: this,
+    //   duration: const Duration(seconds: 4),
+    // );
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.0, // start at normal size
-      end: 1.0, // shrink to nothing (zoom out)
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    // _scaleAnimation = Tween<double>(
+    //   begin: 0.0,
+    //   end: 1.0,
+    // ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
-    _controller.forward();
+    // _controller.forward();
     startSplashFlow();
 
     print('DOCID ${SharedPrefServices.getDocId().toString()}');
@@ -196,32 +196,32 @@ class _SplashScreenState extends State<SplashScreen>
         children: [
           Expanded(
             child: Center(
-              child: ScaleTransition(
-                scale: _scaleAnimation,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'nyzo',
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          letterSpacing: 1.0,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              //   Image.asset(
-              //     'images/rydyn_captain.png',
-              //     height: 400,
-              //     fit: BoxFit.contain,
+              // child: ScaleTransition(
+              //   scale: _scaleAnimation,
+              //   child: Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     children: [
+              //       Text(
+              //         'nyzo',
+              //         style: GoogleFonts.poppins(
+              //           textStyle: TextStyle(
+              //             fontSize: 32,
+              //             fontWeight: FontWeight.bold,
+              //             color: Colors.white,
+              //             letterSpacing: 1.0,
+              //           ),
+              //         ),
+              //       ),
+              //     ],
               //   ),
+              // ),
+              child: Image.asset(
+                'images/nyzo_ride_.png',
+                height: 300,
+                width: 300,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
 
@@ -251,80 +251,3 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 }
-
-
-
-
-
-
-
- // Expanded(
-          //   child: Center(
-          //     child: SizedBox(
-          //       width: MediaQuery.of(context).size.width * 0.8,
-          //       child: AnimatedTextKit(
-          //         repeatForever: true,
-          //         animatedTexts: [
-          //           ColorizeAnimatedText(
-          //             'rydyn',
-          //             textStyle: colorizeTextStyle,
-          //             colors: colorizeColors,
-          //             textAlign: TextAlign.center,
-          //           ),
-          //         ],
-          //         isRepeatingAnimation: true,
-          //         pause: const Duration(milliseconds: 200),
-          //       ),
-          //     ),
-          //   ),
-
-          //   // Center(
-          //   //   child: Image.asset(
-          //   //     'images/rydyn_user.png',
-          //   //     height: 400,
-          //   //     fit: BoxFit.contain,
-          //   //   ),
-          //   // ),
-          // ),
-//  const SizedBox(),
-
-//           Center(
-//             child: SizedBox(
-//               width: MediaQuery.of(context).size.width * 0.8,
-//               child: AnimatedTextKit(
-//                 repeatForever: true,
-//                 animatedTexts: [
-//                   ColorizeAnimatedText(
-//                     'rydyn',
-//                     textStyle: colorizeTextStyle,
-//                     colors: colorizeColors,
-//                     textAlign: TextAlign.center,
-//                   ),
-//                 ],
-//                 isRepeatingAnimation: true,
-//                 pause: const Duration(milliseconds: 200),
-//               ),
-//             ),
-//           ),
-
-//           Padding(
-//             padding: const EdgeInsets.only(bottom: 40),
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 CustomText(
-//                   text: 'Made in India',
-//                   fontSize: 18,
-//                   fontWeight: FontWeight.w500,
-//                   textcolor: kwhiteColor,
-//                 ),
-//                 const SizedBox(width: 5),
-//                 Image.asset(
-//                   'images/flag.png',
-//                   width: 21,
-//                   height: 17,
-//                   fit: BoxFit.contain,
-//                 ),
-//               ],
-//             ),
-//           ),
