@@ -66,8 +66,8 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
 
                   Image.asset(
                     'images/nyzo_ride.png',
-                    width: 100,
-                    height: 100,
+                    width: 200,
+                    height: 200,
                     fit: BoxFit.contain,
                   ),
                   const Spacer(),
