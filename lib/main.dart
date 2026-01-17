@@ -97,7 +97,7 @@ class MyApp extends StatelessWidget {
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
-            ], 
+            ],
             initialRoute: '/',
             routes: {
               '/': (context) => const SplashScreen(),

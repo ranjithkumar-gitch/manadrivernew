@@ -105,9 +105,9 @@ class SectionDescription extends StatelessWidget {
         SizedBox(height: 8),
         CustomText(
           text: text,
-          textcolor: kgreyColor,
+          fontSize: 14,
           fontWeight: FontWeight.w400,
-          fontSize: 12,
+          textcolor: KblackColor,
         ),
       ],
     );

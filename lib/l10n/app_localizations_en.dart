@@ -318,7 +318,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'If a driver cancels after accepting, we will reassign another driver. Repeated cancellations by drivers will lead to penalties and suspension.';
 
   @override
-  String get cP_q5 => '5. Refund Timeline';
+  String get cP_q5 => '3. Refund Timeline';
 
   @override
   String get cP_a5 =>

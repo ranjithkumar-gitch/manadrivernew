@@ -75,7 +75,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             CustomText(
               text: "Last Updated: January 2026",
               fontSize: 14,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w400,
               textcolor: KblackColor,
             ),
 
@@ -83,9 +83,9 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
 
             CustomText(
               text:
-                  "Nyzo Ride (“Nyzo”, “we”, “our”, “us”) respects your privacy and is committed to protecting the personal information of users (“you”, “user”, “driver”, “vehicle owner”) who use the Nyzo Ride mobile application, website, and related services (collectively, the “Platform”).",
+                  "Nyzo Ride (“Nyzo Ride”, “we”, “our”, “us”) respects your privacy and is committed to protecting the personal information of users (“you”, “user”, “driver”, “vehicle owner”) who use the Nyzo Ride mobile application, website, and related services (collectively, the “Platform”).",
 
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w400,
               fontSize: 14,
               textcolor: KblackColor,
             ),
@@ -94,7 +94,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             CustomText(
               text:
                   "This Privacy Policy explains how we collect, use, store, share, and protect your information.",
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w400,
               fontSize: 14,
               textcolor: KblackColor,
             ),
@@ -107,7 +107,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             CustomText(
               text: "1.1 Personal Information",
               fontWeight: FontWeight.w600,
-              fontSize: 15,
+              fontSize: 14,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 8),
@@ -127,12 +127,12 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             ),
             bullet("Vehicle details (vehicle owners)"),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
 
             CustomText(
               text: "1.2 Location Information",
               fontWeight: FontWeight.w600,
-              fontSize: 15,
+              fontSize: 14,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 8),
@@ -155,7 +155,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             CustomText(
               text: "1.3 Usage & Device Information",
               fontWeight: FontWeight.w600,
-              fontSize: 15,
+              fontSize: 14,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 8),
@@ -169,14 +169,14 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             CustomText(
               text: "1.4 Payment Information",
               fontWeight: FontWeight.w600,
-              fontSize: 15,
+              fontSize: 14,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 8),
             bullet("Payment status"),
             bullet("Transaction ID"),
             bullet(
-              "Payment method (Nyzo does NOT store card or UPI credentials)",
+              "Payment method (Nyzo Ride does NOT store card or UPI credentials)",
             ),
 
             const SizedBox(height: 20),
@@ -302,9 +302,9 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
               textcolor: KblackColor,
             ),
             const SizedBox(height: 8),
-            bullet("Nyzo is not a transport operator"),
-            bullet("Nyzo does not own vehicles"),
-            bullet("Nyzo does not employ drivers"),
+            bullet("Nyzo Ride is not a transport operator"),
+            bullet("Nyzo Ride does not own vehicles"),
+            bullet("Nyzo Ride does not employ drivers"),
             bullet(
               "Drivers and vehicle owners are independent service providers",
             ),
@@ -336,7 +336,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             const SizedBox(height: 10),
             CustomText(
               text: "Nyzo Ride Support",
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
               fontSize: 14,
               textcolor: KblackColor,
             ),
@@ -372,7 +372,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             child: CustomText(
               text: text,
               fontSize: 14,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w400,
               textcolor: KblackColor,
             ),
           ),
@@ -411,7 +411,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
     return CustomText(
       text: text,
       fontWeight: FontWeight.w600,
-      fontSize: 16,
+      fontSize: 15,
       textcolor: KblackColor,
     );
   }

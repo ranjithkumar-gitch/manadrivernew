@@ -98,7 +98,7 @@
 "cP_a3":"If customer is not available at pickup point even after 15 minutes, trip will be auto-cancelled. #100 will be charged as no-show",
 "cP_q4":"4. Driver Cancellation",
 "cP_a4":"If a driver cancels after accepting, we will reassign another driver. Repeated cancellations by drivers will lead to penalties and suspension.",
-"cP_q5":"5. Refund Timeline",
+"cP_q5":"3. Refund Timeline",
 "cP_a5":"If you paid online, eligible refunds will be processed within 3-5 business days.",
 "mDdisk": "Mana Driver - Mee Vahanam, Maa Driver!\nMana Driver is your trusted platform to book professional, verified drivers anytime you need. Whether it's a one-way ride, round trip, hourly booking, or outstation travel - we've got you covered.",
 "dA_t1": "Warning",
