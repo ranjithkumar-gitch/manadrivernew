@@ -5,14 +5,15 @@ import 'package:http/http.dart' as http;
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 
 class FCMService {
-  Future<String> _getAccessToken() async {
+  Future<String> _getAccessToken() async {  
     try {
       String scope = 'https://www.googleapis.com/auth/firebase.messaging';
       String rawKey = SharedPrefServices.getPrivateKey() ?? "";
-      String cleanedPrivateKey = rawKey.replaceAll("\\\\n", "\n");
+      // String cleanedPrivateKey = rawKey.replaceAll("\\\\n", "\n");
+      String cleanedPrivateKey = rawKey.replaceAll(r'\n', '\n');
       Map<String, dynamic> serviceAccountJson = {
         "type": "service_account",
-        "project_id": "mana-driver",
+        "project_id": "nyzoride-69ab6",
         "private_key_id": SharedPrefServices.getPrimaryKey(),
         "private_key": cleanedPrivateKey,
         "client_email": SharedPrefServices.getClientEmail(),
@@ -40,7 +41,7 @@ class FCMService {
     required String body,
   }) async {
     final String accessToken = await _getAccessToken();
-    const String projectId = 'mana-driver';
+    const String projectId = 'nyzoride-69ab6';
     final Uri url = Uri.parse(
       'https://fcm.googleapis.com/v1/projects/$projectId/messages:send',
     );

@@ -821,38 +821,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
 
-                    // Container(
-                    //   height: 140,
-                    //   child: PageView.builder(
-                    //     controller: _offerPageController,
-                    //     itemCount: offerImages.length,
-                    //     itemBuilder: (context, index) {
-                    //       return Padding(
-                    //         padding: const EdgeInsets.symmetric(horizontal: 6),
-                    //         child: ClipRRect(
-                    //           borderRadius: BorderRadius.circular(12),
-                    //           child: Image.asset(
-                    //             offerImages[index],
-                    //             fit: BoxFit.cover,
-                    //           ),
-                    //         ),
-                    //       );
-                    //     },
-                    //   ),
-                    // ),
                     SizedBox(height: 12),
-                    Center(
-                      child: SmoothPageIndicator(
-                        controller: _offerPageController,
-                        count: offerImages.length,
-                        effect: WormEffect(
-                          dotHeight: 6,
-                          dotWidth: 40,
-                          activeDotColor: korangeColor,
-                          dotColor: Colors.grey.shade300,
+                    if (offerImages.isNotEmpty)
+                      Center(
+                        child: SmoothPageIndicator(
+                          controller: _offerPageController,
+                          count: offerImages.length,
+                          effect: WormEffect(
+                            dotHeight: 6,
+                            dotWidth: 40,
+                            activeDotColor: korangeColor,
+                            dotColor: Colors.grey.shade300,
+                          ),
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -998,11 +980,72 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _showHourlyCityRestrictionDialog(
+    BuildContext context, {
+    required VoidCallback onProceed,
+  }) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: CustomText(
+            text: "City Limits Restriction",
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            textcolor: KblackColor,
+          ),
+          content: const CustomText(
+            text:
+                "Hourly trips are allowed only within city limits.\n\nPlease choose One Way to continue.",
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            textcolor: KblackColor,
+          ),
+          actions: [
+            Row(
+              children: [
+                Expanded(
+                  child: CustomCancelButton(
+                    text: 'Cancel',
+                    onPressed: () {
+                      Navigator.pop(context); // close dialog
+                      Navigator.of(
+                        context,
+                        rootNavigator: true,
+                      ).pop(); // close bottom sheet
+                    },
+                    height: 46,
+                    width: 140,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: CustomButton(
+                    onPressed: () {
+                      onProceed(); // 🔥 PARENT setState
+                      Navigator.pop(context); // close dialog ONLY
+                    },
+                    text: 'Proceed',
+                    height: 43,
+                    width: 140,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void showCityLimitsDialog(
     BuildContext context,
     int initialSelected,
     Function(int) onSelected,
-   ) {
+  ) {
     int tempSelected = initialSelected;
     const double hydMinLat = 17.2169;
     const double hydMaxLat = 17.5990;
@@ -1136,41 +1179,41 @@ class _HomeScreenState extends State<HomeScreen> {
                               print("Drop Lat: $dropLat, Lng: $dropLng");
                             }
 
-                            showDialog(
-                              context: context,
-                              builder:
-                                  (_) => AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    title: CustomText(
-                                      text: "City Limits Restriction",
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      textcolor: KblackColor,
-                                    ),
-                                    content: CustomText(
-                                      text:
-                                          "Hourly trips are available only within Hyderabad city limits. Please update your pickup or drop location.",
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w400,
-                                      textcolor: KblackColor,
-                                    ),
+                            // showDialog(
+                            //   context: context,
+                            //   builder:
+                            //       (_) => AlertDialog(
+                            //         shape: RoundedRectangleBorder(
+                            //           borderRadius: BorderRadius.circular(12),
+                            //         ),
+                            //         title: CustomText(
+                            //           text: "City Limits Restriction",
+                            //           fontSize: 16,
+                            //           fontWeight: FontWeight.w600,
+                            //           textcolor: KblackColor,
+                            //         ),
+                            //         content: CustomText(
+                            //           text:
+                            //               "Hourly trips are available only within Hyderabad city limits. Please update your pickup or drop location.",
+                            //           fontSize: 15,
+                            //           fontWeight: FontWeight.w400,
+                            //           textcolor: KblackColor,
+                            //         ),
 
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text(
-                                          "OK",
-                                          style: TextStyle(color: korangeColor),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                            );
+                            //         actions: [
+                            //           TextButton(
+                            //             onPressed: () {
+                            //               Navigator.pop(context);
+                            //               Navigator.pop(context);
+                            //             },
+                            //             child: Text(
+                            //               "OK",
+                            //               style: TextStyle(color: korangeColor),
+                            //             ),
+                            //           ),
+                            //         ],
+                            //       ),
+                            // );
 
                             return;
                           }
@@ -1179,16 +1222,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 46,
                         width: 140,
                       ),
-
-                      // CustomButton(
-                      //   onPressed: () {
-                      //     onSelected(tempSelected);
-                      //     Navigator.pop(context);
-                      //   },
-                      //   text: 'Confirm',
-                      //   height: 46,
-                      //   width: 140,
-                      // ),
                     ),
                   ],
                 ),
@@ -1493,23 +1526,66 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Icons.access_time,
                                     selected: selectedTripMode == "Hourly Trip",
                                     onTap: () {
+                                      final bool pickupInside =
+                                          isLocationInsideHyd(
+                                            lat: pickupLat,
+                                            lng: pickupLng,
+                                          );
+
+                                      final bool dropInside =
+                                          isLocationInsideHyd(
+                                            lat: dropLat,
+                                            lng: dropLng,
+                                          );
+
                                       setState(() {
                                         selectedTripMode = "Hourly Trip";
                                       });
 
-                                      showCityLimitsDialog(
-                                        context,
-                                        selectedCityHours,
-                                        (int selectedHour) {
-                                          setState(() {
-                                            selectedCityHours = selectedHour;
-                                            selectedHourlyPrice =
-                                                hourlyPriceMap[selectedHour] ??
-                                                399;
-                                          });
-                                        },
-                                      );
+                                      if (pickupInside && dropInside) {
+                                        showCityLimitsDialog(
+                                          context,
+                                          selectedCityHours,
+                                          (int selectedHour) {
+                                            setState(() {
+                                              selectedCityHours = selectedHour;
+                                              selectedHourlyPrice =
+                                                  hourlyPriceMap[selectedHour] ??
+                                                  399;
+                                            });
+                                          },
+                                        );
+                                      } else {
+                                        _showHourlyCityRestrictionDialog(
+                                          context,
+                                          onProceed: () {
+                                            setState(() {
+                                              selectedTripMode =
+                                                  "One Way"; // 🔥 MAIN FIX
+                                            });
+                                          },
+                                        );
+                                      }
                                     },
+
+                                    // onTap: () {
+                                    //   setState(() {
+                                    //     selectedTripMode = "Hourly Trip";
+                                    //   });
+
+                                    //   showCityLimitsDialog(
+                                    //     context,
+                                    //     selectedCityHours,
+                                    //     (int selectedHour) {
+                                    //       setState(() {
+                                    //         selectedCityHours = selectedHour;
+                                    //         selectedHourlyPrice =
+                                    //             hourlyPriceMap[selectedHour] ??
+                                    //             399;
+                                    //       });
+                                    //     },
+                                    //   );
+                                    // },
                                   ),
                                 ),
 

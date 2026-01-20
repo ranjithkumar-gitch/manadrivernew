@@ -137,7 +137,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   @override
   void initState() {
     super.initState();
-    places = FlutterGooglePlacesSdk("AIzaSyDMihIxRDdcdyNby8aKMLIwsBFGLGuhLFI");
+    places = FlutterGooglePlacesSdk("AIzaSyDO2t2rWkr3N1VJFrz7fAxg8pKnrFQmvc0");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _setCurrentLocationAsPickup();
     });
@@ -152,7 +152,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
       return;
     }
 
-    const apiKey = "AIzaSyDMihIxRDdcdyNby8aKMLIwsBFGLGuhLFI";
+    const apiKey = "AIzaSyDO2t2rWkr3N1VJFrz7fAxg8pKnrFQmvc0";
 
     double totalDistanceMeters = 0;
     double totalDurationSeconds = 0;
