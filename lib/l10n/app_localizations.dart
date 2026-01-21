@@ -63,8 +63,7 @@ import 'app_localizations_te.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -72,8 +71,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -85,19 +83,18 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
     Locale('hi'),
-    Locale('te'),
+    Locale('te')
   ];
 
   /// No description provided for @appTitle.
@@ -175,7 +172,7 @@ abstract class AppLocalizations {
   /// No description provided for @mobileNumber.
   ///
   /// In en, this message translates to:
-  /// **'Mobile Number'**
+  /// **'Mobile number'**
   String get mobileNumber;
 
   /// No description provided for @invalidOtp.
@@ -361,7 +358,7 @@ abstract class AppLocalizations {
   /// No description provided for @menuAbtMD.
   ///
   /// In en, this message translates to:
-  /// **'About Rydyn'**
+  /// **'About Us'**
   String get menuAbtMD;
 
   /// No description provided for @menuDeleteAccount.
@@ -685,7 +682,7 @@ abstract class AppLocalizations {
   /// No description provided for @cP_q5.
   ///
   /// In en, this message translates to:
-  /// **'5. Refund Timeline'**
+  /// **'3. Refund Timeline'**
   String get cP_q5;
 
   /// No description provided for @cP_a5.
@@ -1249,7 +1246,7 @@ abstract class AppLocalizations {
   /// No description provided for @vehicleDetails.
   ///
   /// In en, this message translates to:
-  /// **'Vehicle Details'**
+  /// **'Vehicle details (vehicle owners)'**
   String get vehicleDetails;
 
   /// No description provided for @deleteVehicle.
@@ -1989,10 +1986,861 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Proceed to Payment'**
   String get proceedToPayment;
+
+  /// No description provided for @privacyPolicyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'NYZO RIDE – OWNER'**
+  String get privacyPolicyTitle;
+
+  /// No description provided for @lastUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated: January 2026'**
+  String get lastUpdated;
+
+  /// No description provided for @privacyIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Nyzo Ride (“Nyzo Ride”, “we”, “our”, “us”) respects your privacy and is committed to protecting the personal information of users (“you”, “user”, “driver”, “vehicle owner”) who use the Nyzo Ride mobile application, website, and related services (collectively, the “Platform”).'**
+  String get privacyIntro;
+
+  /// No description provided for @privacyPolicyExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'This Privacy Policy explains how we collect, use, store, share, and protect your information.'**
+  String get privacyPolicyExplanation;
+
+  /// No description provided for @informationWeCollect.
+  ///
+  /// In en, this message translates to:
+  /// **'INFORMATION WE COLLECT'**
+  String get informationWeCollect;
+
+  /// No description provided for @personalInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'1.1 Personal Information'**
+  String get personalInformation;
+
+  /// No description provided for @weMayCollectFollowing.
+  ///
+  /// In en, this message translates to:
+  /// **'We may collect the following:'**
+  String get weMayCollectFollowing;
+
+  /// No description provided for @fullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get fullName;
+
+  /// No description provided for @emailOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Email address (optional)'**
+  String get emailOptional;
+
+  /// No description provided for @profilePhotoOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile photo (optional)'**
+  String get profilePhotoOptional;
+
+  /// No description provided for @governmentIdDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Government ID details (for drivers – License, PAN/Aadhaar where required)'**
+  String get governmentIdDetails;
+
+  /// No description provided for @locationInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'1.2 Location Information'**
+  String get locationInformation;
+
+  /// No description provided for @realTimeLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Real-time location during active trips'**
+  String get realTimeLocation;
+
+  /// No description provided for @pickupDropLocations.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup and drop locations'**
+  String get pickupDropLocations;
+
+  /// No description provided for @tripRoutesDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip routes and distance data'**
+  String get tripRoutesDistance;
+
+  /// No description provided for @locationCollectionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Location is collected only when the app is in use and for trip-related purposes.'**
+  String get locationCollectionNote;
+
+  /// No description provided for @usageDeviceInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'1.3 Usage & Device Information'**
+  String get usageDeviceInformation;
+
+  /// No description provided for @deviceModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Device model'**
+  String get deviceModel;
+
+  /// No description provided for @osVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'OS version'**
+  String get osVersion;
+
+  /// No description provided for @appUsageData.
+  ///
+  /// In en, this message translates to:
+  /// **'App usage data'**
+  String get appUsageData;
+
+  /// No description provided for @ipAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'IP address'**
+  String get ipAddress;
+
+  /// No description provided for @crashLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Crash logs and diagnostic data'**
+  String get crashLogs;
+
+  /// No description provided for @paymentInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'1.4 Payment Information'**
+  String get paymentInformation;
+
+  /// No description provided for @paymentStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment status'**
+  String get paymentStatus;
+
+  /// No description provided for @transactionId.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction ID'**
+  String get transactionId;
+
+  /// No description provided for @paymentMethodNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment method (Nyzo Ride does NOT store card or UPI credentials)'**
+  String get paymentMethodNote;
+
+  /// No description provided for @howWeUseInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'2. HOW WE USE YOUR INFORMATION'**
+  String get howWeUseInformation;
+
+  /// No description provided for @weUseYourInformationTo.
+  ///
+  /// In en, this message translates to:
+  /// **'We use your information to:'**
+  String get weUseYourInformationTo;
+
+  /// No description provided for @connectOwnersDrivers.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect vehicle owners with drivers'**
+  String get connectOwnersDrivers;
+
+  /// No description provided for @enableBookingsTrips.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable bookings and trip management'**
+  String get enableBookingsTrips;
+
+  /// No description provided for @verifyDriverIdentity.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify driver identity and eligibility'**
+  String get verifyDriverIdentity;
+
+  /// No description provided for @processPaymentsRefunds.
+  ///
+  /// In en, this message translates to:
+  /// **'Process payments and refunds'**
+  String get processPaymentsRefunds;
+
+  /// No description provided for @improveAppPerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Improve app performance and user experience'**
+  String get improveAppPerformance;
+
+  /// No description provided for @communicateUpdatesAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Communicate service updates and alerts'**
+  String get communicateUpdatesAlerts;
+
+  /// No description provided for @preventFraudMisuse.
+  ///
+  /// In en, this message translates to:
+  /// **'Prevent fraud and misuse'**
+  String get preventFraudMisuse;
+
+  /// No description provided for @complyLegalObligations.
+  ///
+  /// In en, this message translates to:
+  /// **'Comply with legal obligations'**
+  String get complyLegalObligations;
+
+  /// No description provided for @informationSharing.
+  ///
+  /// In en, this message translates to:
+  /// **'3. INFORMATION SHARING'**
+  String get informationSharing;
+
+  /// No description provided for @noSellRentData.
+  ///
+  /// In en, this message translates to:
+  /// **'Nyzo Ride does not sell or rent your personal data.'**
+  String get noSellRentData;
+
+  /// No description provided for @weMayShareLimitedInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'We may share limited information with:'**
+  String get weMayShareLimitedInfo;
+
+  /// No description provided for @shareDriversOwners.
+  ///
+  /// In en, this message translates to:
+  /// **'Drivers / Vehicle Owners – only what is required for a trip'**
+  String get shareDriversOwners;
+
+  /// No description provided for @sharePaymentGateways.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment gateways – for transaction processing'**
+  String get sharePaymentGateways;
+
+  /// No description provided for @shareCloudPartners.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud & technology partners – app hosting, analytics'**
+  String get shareCloudPartners;
+
+  /// No description provided for @shareLawAuthorities.
+  ///
+  /// In en, this message translates to:
+  /// **'Law enforcement / government authorities – when legally required'**
+  String get shareLawAuthorities;
+
+  /// No description provided for @dataStorageSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'4. DATA STORAGE & SECURITY'**
+  String get dataStorageSecurity;
+
+  /// No description provided for @dataStoredSecureServers.
+  ///
+  /// In en, this message translates to:
+  /// **'Data is stored on secure servers'**
+  String get dataStoredSecureServers;
+
+  /// No description provided for @industryEncryptionUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Industry-standard encryption is used'**
+  String get industryEncryptionUsed;
+
+  /// No description provided for @accessLimitedAuthorized.
+  ///
+  /// In en, this message translates to:
+  /// **'Access is limited to authorized personnel only'**
+  String get accessLimitedAuthorized;
+
+  /// No description provided for @regularSecurityAudits.
+  ///
+  /// In en, this message translates to:
+  /// **'Regular security audits are conducted'**
+  String get regularSecurityAudits;
+
+  /// No description provided for @noSystemFullySecure.
+  ///
+  /// In en, this message translates to:
+  /// **'Despite best efforts, no digital system is 100% secure. Users share data at their own risk.'**
+  String get noSystemFullySecure;
+
+  /// No description provided for @userRights.
+  ///
+  /// In en, this message translates to:
+  /// **'5. USER RIGHTS'**
+  String get userRights;
+
+  /// No description provided for @youHaveTheRightTo.
+  ///
+  /// In en, this message translates to:
+  /// **'You have the right to:'**
+  String get youHaveTheRightTo;
+
+  /// No description provided for @accessPersonalData.
+  ///
+  /// In en, this message translates to:
+  /// **'Access your personal data'**
+  String get accessPersonalData;
+
+  /// No description provided for @updateInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Update or correct your information'**
+  String get updateInformation;
+
+  /// No description provided for @requestAccountDeletion.
+  ///
+  /// In en, this message translates to:
+  /// **'Request deletion of your account'**
+  String get requestAccountDeletion;
+
+  /// No description provided for @withdrawConsent.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw consent (where applicable)'**
+  String get withdrawConsent;
+
+  /// No description provided for @accountDeletionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion requests may be subject to legal or regulatory retention requirements.'**
+  String get accountDeletionNote;
+
+  /// No description provided for @dataRetention.
+  ///
+  /// In en, this message translates to:
+  /// **'6. DATA RETENTION'**
+  String get dataRetention;
+
+  /// No description provided for @dataRetainedAsNecessary.
+  ///
+  /// In en, this message translates to:
+  /// **'Data is retained only as long as necessary'**
+  String get dataRetainedAsNecessary;
+
+  /// No description provided for @tripTransactionRetention.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip and transaction records may be retained for legal, tax, or dispute purposes'**
+  String get tripTransactionRetention;
+
+  /// No description provided for @inactiveAccountsDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive accounts may be deleted after a defined period'**
+  String get inactiveAccountsDeleted;
+
+  /// No description provided for @childrensPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'7. CHILDREN’S PRIVACY'**
+  String get childrensPrivacy;
+
+  /// No description provided for @notForUnder18.
+  ///
+  /// In en, this message translates to:
+  /// **'Nyzo Ride is not intended for users under 18 years'**
+  String get notForUnder18;
+
+  /// No description provided for @noMinorDataCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'We do not knowingly collect data from minors'**
+  String get noMinorDataCollection;
+
+  /// No description provided for @thirdPartyServices.
+  ///
+  /// In en, this message translates to:
+  /// **'8. THIRD-PARTY SERVICES'**
+  String get thirdPartyServices;
+
+  /// No description provided for @mayContainThirdPartyLinks.
+  ///
+  /// In en, this message translates to:
+  /// **'Nyzo Ride may contain links or integrations with third-party services'**
+  String get mayContainThirdPartyLinks;
+
+  /// No description provided for @notResponsibleThirdPartyPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'We are not responsible for their privacy practices'**
+  String get notResponsibleThirdPartyPrivacy;
+
+  /// No description provided for @platformDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'9. PLATFORM NATURE DISCLAIMER'**
+  String get platformDisclaimer;
+
+  /// No description provided for @platformOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Nyzo Ride is a technology platform only:'**
+  String get platformOnly;
+
+  /// No description provided for @notTransportOperator.
+  ///
+  /// In en, this message translates to:
+  /// **'Nyzo Ride is not a transport operator'**
+  String get notTransportOperator;
+
+  /// No description provided for @doesNotOwnVehicles.
+  ///
+  /// In en, this message translates to:
+  /// **'Nyzo Ride does not own vehicles'**
+  String get doesNotOwnVehicles;
+
+  /// No description provided for @doesNotEmployDrivers.
+  ///
+  /// In en, this message translates to:
+  /// **'Nyzo Ride does not employ drivers'**
+  String get doesNotEmployDrivers;
+
+  /// No description provided for @independentProviders.
+  ///
+  /// In en, this message translates to:
+  /// **'Drivers and vehicle owners are independent service providers'**
+  String get independentProviders;
+
+  /// No description provided for @policyChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'10. CHANGES TO THIS POLICY'**
+  String get policyChanges;
+
+  /// No description provided for @policyMayUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Nyzo Ride may update this Privacy Policy from time to time'**
+  String get policyMayUpdate;
+
+  /// No description provided for @policyUpdatedVersions.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated versions will be published within the app or website'**
+  String get policyUpdatedVersions;
+
+  /// No description provided for @policyContinuedUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Continued use of the platform implies acceptance of the revised policy'**
+  String get policyContinuedUse;
+
+  /// No description provided for @contactUs.
+  ///
+  /// In en, this message translates to:
+  /// **'11. CONTACT US'**
+  String get contactUs;
+
+  /// No description provided for @privacyConcernsContact.
+  ///
+  /// In en, this message translates to:
+  /// **'For privacy concerns or data requests, contact:'**
+  String get privacyConcernsContact;
+
+  /// No description provided for @nyzoRideSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Nyzo Ride Support'**
+  String get nyzoRideSupport;
+
+  /// No description provided for @nyzoRideEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'hello@nyzoride.com'**
+  String get nyzoRideEmail;
+
+  /// No description provided for @nyzoRidePhone.
+  ///
+  /// In en, this message translates to:
+  /// **'9000464851'**
+  String get nyzoRidePhone;
+
+  /// No description provided for @termsConditionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'NYZO RIDE – OWNER, Terms & Conditions'**
+  String get termsConditionsTitle;
+
+  /// No description provided for @platformPurpose.
+  ///
+  /// In en, this message translates to:
+  /// **'1. PLATFORM PURPOSE'**
+  String get platformPurpose;
+
+  /// No description provided for @platformPurposeDesc1.
+  ///
+  /// In en, this message translates to:
+  /// **'This application is only a technology platform that connects vehicle owners with independent drivers.'**
+  String get platformPurposeDesc1;
+
+  /// No description provided for @platformPurposeDesc2.
+  ///
+  /// In en, this message translates to:
+  /// **'The platform does not provide drivers as employees, does not guarantee driver availability, and does not offer transportation services.'**
+  String get platformPurposeDesc2;
+
+  /// No description provided for @eligibility.
+  ///
+  /// In en, this message translates to:
+  /// **'2. ELIGIBILITY'**
+  String get eligibility;
+
+  /// No description provided for @eligibilityDesc1.
+  ///
+  /// In en, this message translates to:
+  /// **'The vehicle owner must be 18 years or older.'**
+  String get eligibilityDesc1;
+
+  /// No description provided for @eligibilityDesc2.
+  ///
+  /// In en, this message translates to:
+  /// **'The owner must have legal ownership or valid authorization to use the vehicle.'**
+  String get eligibilityDesc2;
+
+  /// No description provided for @eligibilityDesc3.
+  ///
+  /// In en, this message translates to:
+  /// **'Only legally registered vehicles are allowed on the platform.'**
+  String get eligibilityDesc3;
+
+  /// No description provided for @vehicleResponsibility.
+  ///
+  /// In en, this message translates to:
+  /// **'3. VEHICLE RESPONSIBILITY'**
+  String get vehicleResponsibility;
+
+  /// No description provided for @vehicleResponsibilityDesc1.
+  ///
+  /// In en, this message translates to:
+  /// **'The owner is fully responsible for the condition, safety, and legality of the vehicle.'**
+  String get vehicleResponsibilityDesc1;
+
+  /// No description provided for @vehicleResponsibilityDesc2.
+  ///
+  /// In en, this message translates to:
+  /// **'Before every trip, the owner must ensure:'**
+  String get vehicleResponsibilityDesc2;
+
+  /// No description provided for @vehicleResponsibilityPoint1.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle is in good running condition'**
+  String get vehicleResponsibilityPoint1;
+
+  /// No description provided for @vehicleResponsibilityPoint2.
+  ///
+  /// In en, this message translates to:
+  /// **'Adequate fuel is available'**
+  String get vehicleResponsibilityPoint2;
+
+  /// No description provided for @vehicleResponsibilityPoint3.
+  ///
+  /// In en, this message translates to:
+  /// **'All documents (RC, Insurance, PUC, permits if applicable) are valid'**
+  String get vehicleResponsibilityPoint3;
+
+  /// No description provided for @driverRelationship.
+  ///
+  /// In en, this message translates to:
+  /// **'4. DRIVER RELATIONSHIP'**
+  String get driverRelationship;
+
+  /// No description provided for @driversIndependent.
+  ///
+  /// In en, this message translates to:
+  /// **'Drivers on the platform are independent individuals, not employees or agents of the platform.'**
+  String get driversIndependent;
+
+  /// No description provided for @platformNotResponsibleDrivers.
+  ///
+  /// In en, this message translates to:
+  /// **'The platform is not responsible for the conduct, behavior, or actions of drivers.'**
+  String get platformNotResponsibleDrivers;
+
+  /// No description provided for @ownersFreeAcceptReject.
+  ///
+  /// In en, this message translates to:
+  /// **'Owners are free to accept or reject any driver request.'**
+  String get ownersFreeAcceptReject;
+
+  /// No description provided for @bookingTripDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'5. BOOKING & TRIP DETAILS'**
+  String get bookingTripDetails;
+
+  /// No description provided for @ownersSelectTripType.
+  ///
+  /// In en, this message translates to:
+  /// **'Owners must clearly select the correct trip type (One Way / Round Trip / Hourly / Outstation).'**
+  String get ownersSelectTripType;
+
+  /// No description provided for @pickupDropDurationInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup, drop location, duration, and special instructions must be clearly mentioned.'**
+  String get pickupDropDurationInstructions;
+
+  /// No description provided for @tripChangesAgreement.
+  ///
+  /// In en, this message translates to:
+  /// **'Any change during the trip must be mutually agreed between owner and driver.'**
+  String get tripChangesAgreement;
+
+  /// No description provided for @payments.
+  ///
+  /// In en, this message translates to:
+  /// **'6. PAYMENTS'**
+  String get payments;
+
+  /// No description provided for @paymentDetailsShown.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment details are shown before booking confirmation.'**
+  String get paymentDetailsShown;
+
+  /// No description provided for @platformFacilitatesPayments.
+  ///
+  /// In en, this message translates to:
+  /// **'The platform only facilitates payments and is not responsible for off-app or cash transactions.'**
+  String get platformFacilitatesPayments;
+
+  /// No description provided for @additionalChargesSettlement.
+  ///
+  /// In en, this message translates to:
+  /// **'Any additional charges must be settled directly between owner and driver.'**
+  String get additionalChargesSettlement;
+
+  /// No description provided for @cancellations.
+  ///
+  /// In en, this message translates to:
+  /// **'7. CANCELLATIONS'**
+  String get cancellations;
+
+  /// No description provided for @repeatedCancellationsSuspension.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeated cancellations by the owner may result in temporary or permanent suspension.'**
+  String get repeatedCancellationsSuspension;
+
+  /// No description provided for @cancellationChargesDisplayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancellation charges, if applicable, will be displayed before confirmation.'**
+  String get cancellationChargesDisplayed;
+
+  /// No description provided for @safetyLiability.
+  ///
+  /// In en, this message translates to:
+  /// **'8. SAFETY & LIABILITY'**
+  String get safetyLiability;
+
+  /// No description provided for @platformNotResponsibleSafety.
+  ///
+  /// In en, this message translates to:
+  /// **'The platform is not responsible for accidents, injuries, damages, theft, or losses during the trip.'**
+  String get platformNotResponsibleSafety;
+
+  /// No description provided for @insuranceClaimsHandledDirectly.
+  ///
+  /// In en, this message translates to:
+  /// **'Any insurance claims must be handled directly between the owner, driver, and insurance company.'**
+  String get insuranceClaimsHandledDirectly;
+
+  /// No description provided for @ownersEnsureInsurance.
+  ///
+  /// In en, this message translates to:
+  /// **'Owners are advised to ensure active insurance coverage before every trip.'**
+  String get ownersEnsureInsurance;
+
+  /// No description provided for @postTripInspection.
+  ///
+  /// In en, this message translates to:
+  /// **'9. POST-TRIP VEHICLE INSPECTION & BELONGINGS'**
+  String get postTripInspection;
+
+  /// No description provided for @ownerInspectVehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'After trip completion, the owner must immediately inspect the vehicle.'**
+  String get ownerInspectVehicle;
+
+  /// No description provided for @platformNotResponsible.
+  ///
+  /// In en, this message translates to:
+  /// **'The platform is not responsible for:'**
+  String get platformNotResponsible;
+
+  /// No description provided for @notResponsibleBelongings.
+  ///
+  /// In en, this message translates to:
+  /// **'Any personal belongings (cash, mobile phones, documents, valuables, etc.) left inside the vehicle'**
+  String get notResponsibleBelongings;
+
+  /// No description provided for @notResponsibleDamages.
+  ///
+  /// In en, this message translates to:
+  /// **'Any scratches, dents, or damages identified after trip completion'**
+  String get notResponsibleDamages;
+
+  /// No description provided for @raiseIssueImmediately.
+  ///
+  /// In en, this message translates to:
+  /// **'If any issue is noticed, the owner must raise it immediately with the driver.'**
+  String get raiseIssueImmediately;
+
+  /// No description provided for @complaintsNotEntertained.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaints raised after delay or after leaving the vehicle will not be entertained.'**
+  String get complaintsNotEntertained;
+
+  /// No description provided for @prohibitedActivities.
+  ///
+  /// In en, this message translates to:
+  /// **'10. PROHIBITED ACTIVITIES'**
+  String get prohibitedActivities;
+
+  /// No description provided for @falseInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Provide false vehicle or personal information'**
+  String get falseInformation;
+
+  /// No description provided for @illegalActivities.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the platform for illegal activities'**
+  String get illegalActivities;
+
+  /// No description provided for @misbehaveDrivers.
+  ///
+  /// In en, this message translates to:
+  /// **'Misbehave, threaten, or harass drivers'**
+  String get misbehaveDrivers;
+
+  /// No description provided for @violationAccountTermination.
+  ///
+  /// In en, this message translates to:
+  /// **'Violation may lead to account termination without prior notice.'**
+  String get violationAccountTermination;
+
+  /// No description provided for @ratingsFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'11. RATINGS & FEEDBACK'**
+  String get ratingsFeedback;
+
+  /// No description provided for @ownersProvideFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Owners should provide honest and fair feedback.'**
+  String get ownersProvideFeedback;
+
+  /// No description provided for @fakeReviewsRestriction.
+  ///
+  /// In en, this message translates to:
+  /// **'Fake, abusive, or misleading reviews may result in account restrictions.'**
+  String get fakeReviewsRestriction;
+
+  /// No description provided for @accountSuspensionTermination.
+  ///
+  /// In en, this message translates to:
+  /// **'12. ACCOUNT SUSPENSION OR TERMINATION'**
+  String get accountSuspensionTermination;
+
+  /// No description provided for @platformSuspendTerminate.
+  ///
+  /// In en, this message translates to:
+  /// **'The platform reserves the right to suspend or terminate accounts if:'**
+  String get platformSuspendTerminate;
+
+  /// No description provided for @termsViolated.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Conditions are violated'**
+  String get termsViolated;
+
+  /// No description provided for @fraudulentActivityDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'Fraudulent activity is detected'**
+  String get fraudulentActivityDetected;
+
+  /// No description provided for @repeatedComplaintsReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeated complaints are received'**
+  String get repeatedComplaintsReceived;
+
+  /// No description provided for @dataUsagePrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'13. DATA USAGE & PRIVACY'**
+  String get dataUsagePrivacy;
+
+  /// No description provided for @ownerDataServicePurpose.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner data is used only for service-related purposes.'**
+  String get ownerDataServicePurpose;
+
+  /// No description provided for @personalInfoSharedLaw.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal information will not be shared except when required by law.'**
+  String get personalInfoSharedLaw;
+
+  /// No description provided for @changesToTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'14. CHANGES TO TERMS'**
+  String get changesToTerms;
+
+  /// No description provided for @platformModifyTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'The platform may modify these Terms & Conditions at any time.'**
+  String get platformModifyTerms;
+
+  /// No description provided for @continuedUseAcceptance.
+  ///
+  /// In en, this message translates to:
+  /// **'Continued use of the app means acceptance of updated terms.'**
+  String get continuedUseAcceptance;
+
+  /// No description provided for @acceptance.
+  ///
+  /// In en, this message translates to:
+  /// **'15. ACCEPTANCE'**
+  String get acceptance;
+
+  /// No description provided for @ownerAcceptance.
+  ///
+  /// In en, this message translates to:
+  /// **'By using this application, the owner confirms that they have read, understood, and agreed to all the above Terms & Conditions.'**
+  String get ownerAcceptance;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -2001,28 +2849,26 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'hi', 'te'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'hi', 'te'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return AppLocalizationsEn();
-    case 'hi':
-      return AppLocalizationsHi();
-    case 'te':
-      return AppLocalizationsTe();
+    case 'en': return AppLocalizationsEn();
+    case 'hi': return AppLocalizationsHi();
+    case 'te': return AppLocalizationsTe();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
+    'that was used.'
   );
 }

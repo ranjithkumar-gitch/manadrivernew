@@ -582,7 +582,7 @@ class AppLocalizationsTe extends AppLocalizations {
   String get updateVehicleDetails => 'వాహన వివరాలను నవీకరించండి';
 
   @override
-  String get vehicleDetails => 'వాహన వివరాలు';
+  String get vehicleDetails => 'వాహన వివరాలు (వాహన యజమానులు)';
 
   @override
   String get deleteVehicle => 'వాహనాన్ని తొలగించండి';
@@ -952,4 +952,430 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get proceedToPayment => 'చెల్లింపుకు కొనసాగండి';
+
+  @override
+  String get privacyPolicyTitle => 'NYZO RIDE – యజమాని';
+
+  @override
+  String get lastUpdated => 'చివరి నవీకరణ: జనవరి 2026';
+
+  @override
+  String get privacyIntro => 'Nyzo Ride (“Nyzo Ride”, “మేము”, “మా”) మీ గోప్యతను గౌరవిస్తుంది మరియు Nyzo Ride మొబైల్ అప్లికేషన్, వెబ్‌సైట్ మరియు సంబంధిత సేవలను (“ప్లాట్‌ఫారమ్”) ఉపయోగించే వినియోగదారులు (“మీరు”, “వినియోగదారు”, “డ్రైవర్”, “వాహన యజమాని”) యొక్క వ్యక్తిగత సమాచారాన్ని రక్షించడానికి కట్టుబడి ఉంది.';
+
+  @override
+  String get privacyPolicyExplanation => 'ఈ గోప్యతా విధానం మేము మీ సమాచారాన్ని ఎలా సేకరిస్తాము, ఉపయోగిస్తాము, నిల్వ చేస్తాము, పంచుకుంటాము మరియు రక్షిస్తాము అనేది వివరిస్తుంది.';
+
+  @override
+  String get informationWeCollect => 'మేము సేకరించే సమాచారం';
+
+  @override
+  String get personalInformation => '1.1 వ్యక్తిగత సమాచారం';
+
+  @override
+  String get weMayCollectFollowing => 'మేము క్రింది సమాచారాన్ని సేకరించవచ్చు:';
+
+  @override
+  String get fullName => 'పూర్తి పేరు';
+
+  @override
+  String get emailOptional => 'ఇమెయిల్ చిరునామా (ఐచ్చికం)';
+
+  @override
+  String get profilePhotoOptional => 'ప్రొఫైల్ ఫోటో (ఐచ్చికం)';
+
+  @override
+  String get governmentIdDetails => 'ప్రభుత్వ ID వివరాలు (డ్రైవర్ల కోసం – లైసెన్స్, PAN/ఆధార్ అవసరమైన చోట)';
+
+  @override
+  String get locationInformation => '1.2 స్థానం సమాచారం';
+
+  @override
+  String get realTimeLocation => 'క్రియాశీల ప్రయాణాల సమయంలో రియల్-టైమ్ స్థానం';
+
+  @override
+  String get pickupDropLocations => 'పికప్ మరియు డ్రాప్ స్థానాలు';
+
+  @override
+  String get tripRoutesDistance => 'ప్రయాణ మార్గాలు మరియు దూరం డేటా';
+
+  @override
+  String get locationCollectionNote => 'యాప్ ఉపయోగంలో ఉన్నప్పుడు మరియు ప్రయాణ సంబంధిత ప్రయోజనాల కోసం మాత్రమే స్థానం సేకరించబడుతుంది.';
+
+  @override
+  String get usageDeviceInformation => '1.3 వినియోగం & పరికర సమాచారం';
+
+  @override
+  String get deviceModel => 'పరికర మోడల్';
+
+  @override
+  String get osVersion => 'ఆపరేటింగ్ సిస్టమ్ వెర్షన్';
+
+  @override
+  String get appUsageData => 'యాప్ వినియోగ డేటా';
+
+  @override
+  String get ipAddress => 'IP చిరునామా';
+
+  @override
+  String get crashLogs => 'క్రాష్ లాగ్స్ మరియు డయాగ్నస్టిక్ డేటా';
+
+  @override
+  String get paymentInformation => '1.4 చెల్లింపు సమాచారం';
+
+  @override
+  String get paymentStatus => 'చెల్లింపు స్థితి';
+
+  @override
+  String get transactionId => 'లావాదేవీ ID';
+
+  @override
+  String get paymentMethodNote => 'చెల్లింపు విధానం (Nyzo Ride కార్డ్ లేదా UPI వివరాలను నిల్వ చేయదు)';
+
+  @override
+  String get howWeUseInformation => '2. మేము మీ సమాచారాన్ని ఎలా ఉపయోగిస్తాము';
+
+  @override
+  String get weUseYourInformationTo => 'మేము మీ సమాచారాన్ని ఉపయోగిస్తాము:';
+
+  @override
+  String get connectOwnersDrivers => 'వాహన యజమానులను డ్రైవర్లతో కలపడం';
+
+  @override
+  String get enableBookingsTrips => 'బుకింగ్స్ మరియు ప్రయాణ నిర్వహణను ప్రారంభించడం';
+
+  @override
+  String get verifyDriverIdentity => 'డ్రైవర్ గుర్తింపు మరియు అర్హతను ధృవీకరించడం';
+
+  @override
+  String get processPaymentsRefunds => 'చెల్లింపులు మరియు రీఫండ్‌లను ప్రాసెస్ చేయడం';
+
+  @override
+  String get improveAppPerformance => 'యాప్ పనితీరు మరియు వినియోగదారు అనుభవాన్ని మెరుగుపరచడం';
+
+  @override
+  String get communicateUpdatesAlerts => 'సేవా నవీకరణలు మరియు అలర్ట్‌లను తెలియజేయడం';
+
+  @override
+  String get preventFraudMisuse => 'మోసం మరియు దుర్వినియోగాన్ని నివారించడం';
+
+  @override
+  String get complyLegalObligations => 'చట్టపరమైన బాధ్యతలను అనుసరించడం';
+
+  @override
+  String get informationSharing => '3. సమాచారం పంచుకోవడం';
+
+  @override
+  String get noSellRentData => 'Nyzo Ride మీ వ్యక్తిగత డేటాను అమ్మదు లేదా అద్దెకు ఇవ్వదు.';
+
+  @override
+  String get weMayShareLimitedInfo => 'మేము పరిమిత సమాచారాన్ని పంచుకోవచ్చు:';
+
+  @override
+  String get shareDriversOwners => 'డ్రైవర్లు / వాహన యజమానులు – ప్రయాణానికి అవసరమైన సమాచారం మాత్రమే';
+
+  @override
+  String get sharePaymentGateways => 'చెల్లింపు గేట్వేలు – లావాదేవీ ప్రాసెసింగ్ కోసం';
+
+  @override
+  String get shareCloudPartners => 'క్లౌడ్ & టెక్నాలజీ భాగస్వాములు – యాప్ హోస్టింగ్, విశ్లేషణ';
+
+  @override
+  String get shareLawAuthorities => 'చట్ట అమలు / ప్రభుత్వ అధికారులు – చట్టపరంగా అవసరమైనప్పుడు';
+
+  @override
+  String get dataStorageSecurity => '4. డేటా నిల్వ & భద్రత';
+
+  @override
+  String get dataStoredSecureServers => 'డేటా సురక్షిత సర్వర్లలో నిల్వ చేయబడుతుంది';
+
+  @override
+  String get industryEncryptionUsed => 'పరిశ్రమ-ప్రామాణిక గుప్తీకరణ ఉపయోగించబడుతుంది';
+
+  @override
+  String get accessLimitedAuthorized => 'ప్రవేశం కేవలం అధికృత సిబ్బందికి మాత్రమే పరిమితం';
+
+  @override
+  String get regularSecurityAudits => 'నియమిత భద్రతా ఆడిట్‌లు నిర్వహించబడతాయి';
+
+  @override
+  String get noSystemFullySecure => 'ఉత్తమ ప్రయత్నాలున్నప్పటికీ, ఏ డిజిటల్ వ్యవస్థ 100% సురక్షితం కాదు. వినియోగదారులు తమ స్వంత ప్రమాదంతో డేటాను పంచుకుంటారు.';
+
+  @override
+  String get userRights => '5. వినియోగదారుల హక్కులు';
+
+  @override
+  String get youHaveTheRightTo => 'మీకు హక్కు ఉంది:';
+
+  @override
+  String get accessPersonalData => 'మీ వ్యక్తిగత డేటాను యాక్సెస్ చేయండి';
+
+  @override
+  String get updateInformation => 'మీ సమాచారాన్ని నవీకరించండి లేదా సరిదిద్దండి';
+
+  @override
+  String get requestAccountDeletion => 'మీ ఖాతాను తొలగించమని అభ్యర్థించండి';
+
+  @override
+  String get withdrawConsent => 'సమ్మతి ఉపసంహరించుకోండి (అన్వయించబడితే)';
+
+  @override
+  String get accountDeletionNote => 'ఖాతా తొలగింపు అభ్యర్థనలు చట్టపరమైన లేదా నియంత్రణ పరిరక్షణ అవసరాలకు లోబడి ఉండవచ్చు.';
+
+  @override
+  String get dataRetention => '6. డేటా నిల్వ';
+
+  @override
+  String get dataRetainedAsNecessary => 'డేటా అవసరమైనంత కాలం మాత్రమే నిల్వ చేయబడుతుంది';
+
+  @override
+  String get tripTransactionRetention => 'ప్రయాణం మరియు లావాదేవీ రికార్డులు చట్ట, పన్ను లేదా వివాద ప్రయోజనాల కోసం నిల్వ చేయబడవచ్చు';
+
+  @override
+  String get inactiveAccountsDeleted => 'క్రియాశీలం కాని ఖాతాలు నిర్వచిత కాలం తర్వాత తొలగించబడవచ్చు';
+
+  @override
+  String get childrensPrivacy => '7. పిల్లల గోప్యత';
+
+  @override
+  String get notForUnder18 => 'Nyzo Ride 18 సంవత్సరాల లోపు వినియోగదారుల కోసం ఉద్దేశించబడలేదు';
+
+  @override
+  String get noMinorDataCollection => 'మేము చిన్నారుల నుండి డేటాను ఉద్దేశపూర్వకంగా సేకరించము';
+
+  @override
+  String get thirdPartyServices => '8. తృతీయ పక్ష సేవలు';
+
+  @override
+  String get mayContainThirdPartyLinks => 'Nyzo Ride లో తృతీయ పక్ష సేవల లింకులు లేదా ఇంటిగ్రేషన్లు ఉండవచ్చు';
+
+  @override
+  String get notResponsibleThirdPartyPrivacy => 'మేము వారి గోప్యతా విధానాలకు బాధ్యత వహించము';
+
+  @override
+  String get platformDisclaimer => '9. ప్లాట్‌ఫారమ్ స్వభావ నిరాకరణ';
+
+  @override
+  String get platformOnly => 'Nyzo Ride కేవలం ఒక సాంకేతిక ప్లాట్‌ఫారమ్ మాత్రమే:';
+
+  @override
+  String get notTransportOperator => 'Nyzo Ride రవాణా ఆపరేటర్ కాదు';
+
+  @override
+  String get doesNotOwnVehicles => 'Nyzo Ride వాహనాలను కలిగి లేదు';
+
+  @override
+  String get doesNotEmployDrivers => 'Nyzo Ride డ్రైవర్లను నియమించదు';
+
+  @override
+  String get independentProviders => 'డ్రైవర్లు మరియు వాహన యజమానులు స్వతంత్ర సేవా ప్రదాతలు';
+
+  @override
+  String get policyChanges => '10. ఈ విధానంలో మార్పులు';
+
+  @override
+  String get policyMayUpdate => 'Nyzo Ride ఈ గోప్యతా విధానాన్ని సమయానుకూలంగా నవీకరించవచ్చు';
+
+  @override
+  String get policyUpdatedVersions => 'నవీకరించిన వెర్షన్లు యాప్ లేదా వెబ్‌సైట్‌లో ప్రచురించబడతాయి';
+
+  @override
+  String get policyContinuedUse => 'ప్లాట్‌ఫారమ్‌ను నిరంతరం ఉపయోగించడం సవరించిన విధానాన్ని అంగీకరించినట్లే';
+
+  @override
+  String get contactUs => '11. మమ్మల్ని సంప్రదించండి';
+
+  @override
+  String get privacyConcernsContact => 'గోప్యతా సమస్యలు లేదా డేటా అభ్యర్థనల కోసం సంప్రదించండి:';
+
+  @override
+  String get nyzoRideSupport => 'Nyzo Ride సహాయం';
+
+  @override
+  String get nyzoRideEmail => 'ఇమెయిల్: hello@nyzoride.com';
+
+  @override
+  String get nyzoRidePhone => 'ఫోన్: 9000464851';
+
+  @override
+  String get termsConditionsTitle => 'NYZO RIDE – యజమాని, నిబంధనలు & షరతులు';
+
+  @override
+  String get platformPurpose => '1. ప్లాట్‌ఫారమ్ ఉద్దేశ్యం';
+
+  @override
+  String get platformPurposeDesc1 => 'ఈ అప్లికేషన్ వాహన యజమానులను స్వతంత్ర డ్రైవర్లతో కలిపే సాంకేతిక ప్లాట్‌ఫారమ్ మాత్రమే.';
+
+  @override
+  String get platformPurposeDesc2 => 'ప్లాట్‌ఫారమ్ డ్రైవర్లను ఉద్యోగులుగా ఇవ్వదు, డ్రైవర్ లభ్యతకు హామీ ఇవ్వదు మరియు రవాణా సేవలను అందించదు.';
+
+  @override
+  String get eligibility => '2. అర్హత';
+
+  @override
+  String get eligibilityDesc1 => 'వాహన యజమాని వయస్సు 18 సంవత్సరాలు లేదా అంతకంటే ఎక్కువగా ఉండాలి.';
+
+  @override
+  String get eligibilityDesc2 => 'యజమానికి వాహనంపై చట్టబద్ధమైన యాజమాన్యం లేదా ఉపయోగించడానికి చెల్లుబాటు అయ్యే అనుమతి ఉండాలి.';
+
+  @override
+  String get eligibilityDesc3 => 'కేవలం చట్టబద్ధంగా నమోదు చేసిన వాహనాలు మాత్రమే ప్లాట్‌ఫారమ్‌లో అనుమతించబడతాయి.';
+
+  @override
+  String get vehicleResponsibility => '3. వాహన బాధ్యత';
+
+  @override
+  String get vehicleResponsibilityDesc1 => 'వాహన స్థితి, భద్రత మరియు చట్టబద్ధతకు యజమాని పూర్తిగా బాధ్యత వహించాలి.';
+
+  @override
+  String get vehicleResponsibilityDesc2 => 'ప్రతి ప్రయాణానికి ముందు, యజమాని నిర్ధారించాలి:';
+
+  @override
+  String get vehicleResponsibilityPoint1 => 'వాహనం మంచి స్థితిలో ఉంది';
+
+  @override
+  String get vehicleResponsibilityPoint2 => 'తగినంత ఇంధనం అందుబాటులో ఉంది';
+
+  @override
+  String get vehicleResponsibilityPoint3 => 'అన్ని పత్రాలు (RC, ఇన్సూరెన్స్, PUC, అనుమతులు అవసరమైతే) చెల్లుబాటు అయ్యేవి';
+
+  @override
+  String get driverRelationship => '4. డ్రైవర్ సంబంధం';
+
+  @override
+  String get driversIndependent => 'ప్లాట్‌ఫారమ్‌లోని డ్రైవర్లు స్వతంత్ర వ్యక్తులు, ఉద్యోగులు లేదా ఏజెంట్లు కాదు.';
+
+  @override
+  String get platformNotResponsibleDrivers => 'డ్రైవర్ల ప్రవర్తన, ప్రవర్తన లేదా చర్యలకు ప్లాట్‌ఫారమ్ బాధ్యత వహించదు.';
+
+  @override
+  String get ownersFreeAcceptReject => 'యజమానులు ఏ డ్రైవర్ అభ్యర్థనను అంగీకరించడానికి లేదా తిరస్కరించడానికి స్వేచ్ఛ కలిగి ఉంటారు.';
+
+  @override
+  String get bookingTripDetails => '5. బుకింగ్ & ప్రయాణ వివరాలు';
+
+  @override
+  String get ownersSelectTripType => 'యజమానులు సరైన ప్రయాణ రకం (ఒకదారి / రౌండ్ ట్రిప్ / గంటల వారీగా / అవుట్‌స్టేషన్) స్పష్టంగా ఎంచుకోవాలి.';
+
+  @override
+  String get pickupDropDurationInstructions => 'పికప్, డ్రాప్ స్థానం, వ్యవధి మరియు ప్రత్యేక సూచనలు స్పష్టంగా పేర్కొనాలి.';
+
+  @override
+  String get tripChangesAgreement => 'ప్రయాణ సమయంలో ఏదైనా మార్పు యజమాని మరియు డ్రైవర్ పరస్పర అంగీకారంతో ఉండాలి.';
+
+  @override
+  String get payments => '6. చెల్లింపులు';
+
+  @override
+  String get paymentDetailsShown => 'బుకింగ్ నిర్ధారణకు ముందు చెల్లింపు వివరాలు చూపబడతాయి.';
+
+  @override
+  String get platformFacilitatesPayments => 'ప్లాట్‌ఫారమ్ కేవలం చెల్లింపులను సులభతరం చేస్తుంది మరియు యాప్ వెలుపల లేదా నగదు లావాదేవీలకు బాధ్యత వహించదు.';
+
+  @override
+  String get additionalChargesSettlement => 'ఏదైనా అదనపు ఛార్జీలు యజమాని మరియు డ్రైవర్ మధ్య నేరుగా పరిష్కరించాలి.';
+
+  @override
+  String get cancellations => '7. రద్దులు';
+
+  @override
+  String get repeatedCancellationsSuspension => 'యజమాని తరచుగా రద్దు చేస్తే తాత్కాలిక లేదా శాశ్వత సస్పెన్షన్‌కు దారితీస్తుంది.';
+
+  @override
+  String get cancellationChargesDisplayed => 'రద్దు ఛార్జీలు, అవసరమైతే, నిర్ధారణకు ముందు చూపబడతాయి.';
+
+  @override
+  String get safetyLiability => '8. భద్రత & బాధ్యత';
+
+  @override
+  String get platformNotResponsibleSafety => 'ప్రయాణ సమయంలో జరిగే ప్రమాదాలు, గాయాలు, నష్టం, దొంగతనం లేదా నష్టాలకు ప్లాట్‌ఫారమ్ బాధ్యత వహించదు.';
+
+  @override
+  String get insuranceClaimsHandledDirectly => 'ఏదైనా బీమా క్లెయిమ్‌లు యజమాని, డ్రైవర్ మరియు బీమా కంపెనీ మధ్య నేరుగా పరిష్కరించాలి.';
+
+  @override
+  String get ownersEnsureInsurance => 'ప్రతి ప్రయాణానికి ముందు యజమానులు చురుకైన బీమా కవరేజీని నిర్ధారించుకోవాలని సలహా ఇవ్వబడింది.';
+
+  @override
+  String get postTripInspection => '9. ప్రయాణం తర్వాత వాహన తనిఖీ & వస్తువులు';
+
+  @override
+  String get ownerInspectVehicle => 'ప్రయాణం పూర్తయిన తర్వాత యజమాని వెంటనే వాహనాన్ని తనిఖీ చేయాలి.';
+
+  @override
+  String get platformNotResponsible => 'ప్లాట్‌ఫారమ్ బాధ్యత వహించదు:';
+
+  @override
+  String get notResponsibleBelongings => 'వాహనంలో వదిలిన ఏవైనా వ్యక్తిగత వస్తువులు (నగదు, మొబైల్ ఫోన్లు, పత్రాలు, విలువైనవి మొదలైనవి)';
+
+  @override
+  String get notResponsibleDamages => 'ప్రయాణం పూర్తయిన తర్వాత గుర్తించిన ఏవైనా గీతలు, డెంట్లు లేదా నష్టాలు';
+
+  @override
+  String get raiseIssueImmediately => 'ఏదైనా సమస్య గమనిస్తే, యజమాని వెంటనే డ్రైవర్‌తో చెప్పాలి.';
+
+  @override
+  String get complaintsNotEntertained => 'విలంబం తర్వాత లేదా వాహనం వదిలిన తర్వాత చేసిన ఫిర్యాదులు పరిగణించబడవు.';
+
+  @override
+  String get prohibitedActivities => '10. నిషేధిత కార్యకలాపాలు';
+
+  @override
+  String get falseInformation => 'తప్పుడు వాహన లేదా వ్యక్తిగత సమాచారాన్ని ఇవ్వడం';
+
+  @override
+  String get illegalActivities => 'ప్లాట్‌ఫారమ్‌ను అక్రమ కార్యకలాపాలకు ఉపయోగించడం';
+
+  @override
+  String get misbehaveDrivers => 'డ్రైవర్లతో దుర్వినియోగం చేయడం, బెదిరించడం లేదా వేధించడం';
+
+  @override
+  String get violationAccountTermination => 'ఉల్లంఘన వల్ల ముందస్తు నోటీసు లేకుండా ఖాతా రద్దు కావచ్చు.';
+
+  @override
+  String get ratingsFeedback => '11. రేటింగ్‌లు & అభిప్రాయం';
+
+  @override
+  String get ownersProvideFeedback => 'యజమానులు నిజాయితీగా మరియు న్యాయంగా అభిప్రాయం ఇవ్వాలి.';
+
+  @override
+  String get fakeReviewsRestriction => 'నకిలీ, దుర్వినియోగం లేదా తప్పుదారి పట్టించే సమీక్షలు ఖాతా పరిమితులకు దారితీస్తాయి.';
+
+  @override
+  String get accountSuspensionTermination => '12. ఖాతా సస్పెన్షన్ లేదా రద్దు';
+
+  @override
+  String get platformSuspendTerminate => 'క్రింది సందర్భాల్లో ప్లాట్‌ఫారమ్ ఖాతాలను సస్పెండ్ లేదా రద్దు చేసే హక్కు కలిగి ఉంటుంది:';
+
+  @override
+  String get termsViolated => 'నిబంధనలు & షరతులు ఉల్లంఘించబడ్డాయి';
+
+  @override
+  String get fraudulentActivityDetected => 'మోసపూరిత కార్యకలాపం గుర్తించబడింది';
+
+  @override
+  String get repeatedComplaintsReceived => 'పునరావృత ఫిర్యాదులు అందాయి';
+
+  @override
+  String get dataUsagePrivacy => '13. డేటా వినియోగం & గోప్యత';
+
+  @override
+  String get ownerDataServicePurpose => 'యజమాని డేటా కేవలం సేవా సంబంధిత ప్రయోజనాల కోసం మాత్రమే ఉపయోగించబడుతుంది.';
+
+  @override
+  String get personalInfoSharedLaw => 'వ్యక్తిగత సమాచారం చట్టం ద్వారా అవసరమైనప్పుడు మాత్రమే పంచబడుతుంది.';
+
+  @override
+  String get changesToTerms => '14. నిబంధనల్లో మార్పులు';
+
+  @override
+  String get platformModifyTerms => 'ప్లాట్‌ఫారమ్ ఎప్పుడైనా ఈ నిబంధనలు & షరతులను మార్చవచ్చు.';
+
+  @override
+  String get continuedUseAcceptance => 'యాప్‌ను నిరంతరం ఉపయోగించడం నవీకరించిన నిబంధనలను అంగీకరించినట్లే.';
+
+  @override
+  String get acceptance => '15. అంగీకారం';
+
+  @override
+  String get ownerAcceptance => 'ఈ అప్లికేషన్‌ను ఉపయోగించడం ద్వారా, యజమాని పై నిబంధనలు & షరతులను చదివి, అర్థం చేసుకుని, అంగీకరించినట్లు ధృవీకరిస్తాడు.';
 }

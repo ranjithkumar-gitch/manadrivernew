@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mana_driver/Widgets/colors.dart';
 import 'package:mana_driver/Widgets/customText.dart';
-
+import 'package:mana_driver/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PrivacyPolicy extends StatefulWidget {
@@ -14,6 +14,7 @@ class PrivacyPolicy extends StatefulWidget {
 class _PrivacyPolicyState extends State<PrivacyPolicy> {
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -65,7 +66,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomText(
-              text: "NYZO RIDE – OWNER",
+              text: localizations.privacyPolicyTitle,
               fontSize: 16,
               fontWeight: FontWeight.w600,
               textcolor: KblackColor,
@@ -73,7 +74,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             const SizedBox(height: 10),
 
             CustomText(
-              text: "Last Updated: January 2026",
+              text: localizations.lastUpdated,
               fontSize: 14,
               fontWeight: FontWeight.w400,
               textcolor: KblackColor,
@@ -82,8 +83,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             const SizedBox(height: 20),
 
             CustomText(
-              text:
-                  "Nyzo Ride (“Nyzo Ride”, “we”, “our”, “us”) respects your privacy and is committed to protecting the personal information of users (“you”, “user”, “driver”, “vehicle owner”) who use the Nyzo Ride mobile application, website, and related services (collectively, the “Platform”).",
+              text: localizations.privacyIntro,
 
               fontWeight: FontWeight.w400,
               fontSize: 14,
@@ -92,8 +92,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
             const SizedBox(height: 10),
 
             CustomText(
-              text:
-                  "This Privacy Policy explains how we collect, use, store, share, and protect your information.",
+              text: localizations.privacyPolicyExplanation,
               fontWeight: FontWeight.w400,
               fontSize: 14,
               textcolor: KblackColor,
@@ -101,142 +100,132 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
 
             const SizedBox(height: 25),
 
-            sectionTitle("1. INFORMATION WE COLLECT"),
+            sectionTitle(localizations.informationWeCollect),
             const SizedBox(height: 15),
 
             CustomText(
-              text: "1.1 Personal Information",
+              text: localizations.personalInformation,
               fontWeight: FontWeight.w600,
               fontSize: 14,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 8),
             CustomText(
-              text: "We may collect the following:",
+              text: localizations.weMayCollectFollowing,
               fontSize: 14,
               fontWeight: FontWeight.w500,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 8),
-            bullet("Full name"),
-            bullet("Mobile number"),
-            bullet("Email address (optional)"),
-            bullet("Profile photo (optional)"),
-            bullet(
-              "Government ID details (for drivers – License, PAN/Aadhaar where required)",
-            ),
-            bullet("Vehicle details (vehicle owners)"),
+            bullet(localizations.fullName),
+            bullet(localizations.mobileNumber),
+            bullet(localizations.emailOptional),
+            bullet(localizations.profilePhotoOptional),
+            bullet(localizations.governmentIdDetails),
+            bullet(localizations.vehicleDetails),
 
             const SizedBox(height: 15),
 
             CustomText(
-              text: "1.2 Location Information",
+              text: localizations.locationInformation,
               fontWeight: FontWeight.w600,
               fontSize: 14,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 8),
-            bullet("Real-time location during active trips"),
-            bullet("Pickup and drop locations"),
-            bullet("Trip routes and distance data"),
+            bullet(localizations.realTimeLocation),
+            bullet(localizations.pickupDropLocations),
+            bullet(localizations.tripRoutesDistance),
 
             const SizedBox(height: 8),
             CustomText(
-              text:
-                  "Location is collected only when the app is in use and for trip-related purposes.",
+              text: localizations.locationCollectionNote,
               fontSize: 14,
               fontWeight: FontWeight.w500,
               textcolor: KblackColor,
             ),
-            const SizedBox(height: 8),
 
             const SizedBox(height: 20),
 
             CustomText(
-              text: "1.3 Usage & Device Information",
+              text: localizations.usageDeviceInformation,
               fontWeight: FontWeight.w600,
               fontSize: 14,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 8),
-            bullet("Device model, OS version"),
-            bullet("App usage data"),
-            bullet("IP address"),
-            bullet("Crash logs and diagnostic data"),
+            bullet(localizations.deviceModel),
+            bullet(localizations.osVersion),
+            bullet(localizations.appUsageData),
+            bullet(localizations.ipAddress),
+            bullet(localizations.crashLogs),
 
             const SizedBox(height: 20),
 
             CustomText(
-              text: "1.4 Payment Information",
+              text: localizations.paymentInformation,
               fontWeight: FontWeight.w600,
               fontSize: 14,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 8),
-            bullet("Payment status"),
-            bullet("Transaction ID"),
-            bullet(
-              "Payment method (Nyzo Ride does NOT store card or UPI credentials)",
-            ),
+            bullet(localizations.paymentStatus),
+            bullet(localizations.transactionId),
+            bullet(localizations.paymentMethodNote),
 
             const SizedBox(height: 20),
 
-            sectionTitle("2. HOW WE USE YOUR INFORMATION"),
+            sectionTitle(localizations.howWeUseInformation),
             const SizedBox(height: 5),
             CustomText(
-              text: "We use your information to:",
+              text: localizations.weUseYourInformationTo,
               fontWeight: FontWeight.w500,
               fontSize: 14,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 5),
-            bullet("Connect vehicle owners with drivers"),
-            bullet("Enable bookings and trip management"),
-            bullet("Verify driver identity and eligibility"),
-            bullet("Process payments and refunds"),
-            bullet("Improve app performance and user experience"),
-            bullet("Communicate service updates and alerts"),
-            bullet("Prevent fraud and misuse"),
-            bullet("Comply with legal obligations"),
+            bullet(localizations.connectOwnersDrivers),
+            bullet(localizations.enableBookingsTrips),
+            bullet(localizations.verifyDriverIdentity),
+            bullet(localizations.processPaymentsRefunds),
+            bullet(localizations.improveAppPerformance),
+            bullet(localizations.communicateUpdatesAlerts),
+            bullet(localizations.preventFraudMisuse),
+            bullet(localizations.complyLegalObligations),
 
             const SizedBox(height: 20),
 
-            sectionTitle("3. INFORMATION SHARING"),
+            sectionTitle(localizations.informationSharing),
             const SizedBox(height: 5),
             CustomText(
-              text: "Nyzo Ride does not sell or rent your personal data",
+              text: localizations.noSellRentData,
               fontWeight: FontWeight.w500,
               fontSize: 14,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 5),
             CustomText(
-              text: "We may share limited information with:",
+              text: localizations.weMayShareLimitedInfo,
               fontWeight: FontWeight.w500,
               fontSize: 14,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 5),
-            bullet(
-              "Drivers / Vehicle Owners – only what is required for a trip",
-            ),
-            bullet("Payment gateways – for transaction processing"),
-            bullet("Cloud & technology partners – app hosting, analytics"),
-            bullet(
-              "Law enforcement / government authorities – when legally required",
-            ),
+            bullet(localizations.shareDriversOwners),
+            bullet(localizations.sharePaymentGateways),
+            bullet(localizations.shareCloudPartners),
+            bullet(localizations.shareLawAuthorities),
 
             const SizedBox(height: 20),
 
-            sectionTitle("4. DATA STORAGE & SECURITY"),
+            sectionTitle(localizations.dataStorageSecurity),
             const SizedBox(height: 10),
-            bullet("Data is stored on secure servers"),
-            bullet("Industry-standard encryption is used"),
-            bullet("Access is limited to authorized personnel only"),
-            bullet("Regular security audits are conducted"),
+            bullet(localizations.dataStoredSecureServers),
+            bullet(localizations.industryEncryptionUsed),
+            bullet(localizations.accessLimitedAuthorized),
+            bullet(localizations.regularSecurityAudits),
             CustomText(
-              text:
-                  "Despite best efforts, no digital system is 100% secure. Users share data at their own risk.",
+              text: localizations.noSystemFullySecure,
               fontWeight: FontWeight.w500,
               fontSize: 14,
               textcolor: KblackColor,
@@ -244,22 +233,23 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
 
             const SizedBox(height: 20),
 
-            sectionTitle("5. USER RIGHTS"),
+            const SizedBox(height: 20),
+
+            sectionTitle(localizations.userRights),
             const SizedBox(height: 10),
             CustomText(
-              text: "You have the right to:",
+              text: localizations.youHaveTheRightTo,
               fontWeight: FontWeight.w500,
               fontSize: 14,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 8),
-            bullet("Access your personal data"),
-            bullet("Update or correct your information"),
-            bullet("Request deletion of your account"),
-            bullet("Withdraw consent (where applicable)"),
+            bullet(localizations.accessPersonalData),
+            bullet(localizations.updateInformation),
+            bullet(localizations.requestAccountDeletion),
+            bullet(localizations.withdrawConsent),
             CustomText(
-              text:
-                  "Account deletion requests may be subject to legal or regulatory retention requirements.",
+              text: localizations.accountDeletionNote,
               fontWeight: FontWeight.w500,
               fontSize: 14,
               textcolor: KblackColor,
@@ -267,92 +257,84 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
 
             const SizedBox(height: 20),
 
-            sectionTitle("6. DATA RETENTION"),
+            sectionTitle(localizations.dataRetention),
             const SizedBox(height: 10),
-            bullet("Data is retained only as long as necessary"),
-            bullet(
-              "Trip and transaction records may be retained for legal, tax, or dispute purposes",
-            ),
-            bullet("Inactive accounts may be deleted after a defined period"),
+            bullet(localizations.dataRetainedAsNecessary),
+            bullet(localizations.tripTransactionRetention),
+            bullet(localizations.inactiveAccountsDeleted),
 
             const SizedBox(height: 20),
 
-            sectionTitle("7. CHILDREN’S PRIVACY"),
+            sectionTitle(localizations.childrensPrivacy),
             const SizedBox(height: 10),
-            bullet("Nyzo Ride is not intended for users under 18 years."),
-            bullet("We do not knowingly collect data from minors."),
+            bullet(localizations.notForUnder18),
+            bullet(localizations.noMinorDataCollection),
 
             const SizedBox(height: 20),
 
-            sectionTitle("8. THIRD-PARTY SERVICES"),
+            sectionTitle(localizations.thirdPartyServices),
             const SizedBox(height: 10),
-            bullet(
-              "Nyzo Ride may contain links or integrations with third-party services.",
-            ),
-            bullet("We are not responsible for their privacy practices."),
+            bullet(localizations.mayContainThirdPartyLinks),
+            bullet(localizations.notResponsibleThirdPartyPrivacy),
 
             const SizedBox(height: 20),
 
-            sectionTitle("9. PLATFORM NATURE DISCLAIMER"),
+            sectionTitle(localizations.platformDisclaimer),
             const SizedBox(height: 10),
             CustomText(
-              text: "Nyzo Ride is a technology platform only:",
+              text: localizations.platformOnly,
               fontWeight: FontWeight.w500,
               fontSize: 14,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 8),
-            bullet("Nyzo Ride is not a transport operator"),
-            bullet("Nyzo Ride does not own vehicles"),
-            bullet("Nyzo Ride does not employ drivers"),
-            bullet(
-              "Drivers and vehicle owners are independent service providers",
-            ),
+            bullet(localizations.notTransportOperator),
+            bullet(localizations.doesNotOwnVehicles),
+            bullet(localizations.doesNotEmployDrivers),
+            bullet(localizations.independentProviders),
 
             const SizedBox(height: 20),
 
-            sectionTitle("10. CHANGES TO THIS POLICY"),
+            sectionTitle(localizations.policyChanges),
             const SizedBox(height: 10),
-            bullet(
-              "Nyzo Ride may update this Privacy Policy from time to time.",
-            ),
-            bullet(
-              "Updated versions will be published within the app or website.",
-            ),
-            bullet(
-              "Continued use of the platform implies acceptance of the revised policy.",
-            ),
+            bullet(localizations.policyMayUpdate),
+            bullet(localizations.policyUpdatedVersions),
+            bullet(localizations.policyContinuedUse),
 
             const SizedBox(height: 20),
 
-            sectionTitle("11. CONTACT US"),
+            sectionTitle(localizations.contactUs),
             const SizedBox(height: 10),
             CustomText(
-              text: "For privacy concerns or data requests, contact:",
+              text: localizations.privacyConcernsContact,
               fontWeight: FontWeight.w500,
               fontSize: 14,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 10),
             CustomText(
-              text: "Nyzo Ride Support",
+              text: localizations.nyzoRideSupport,
               fontWeight: FontWeight.w500,
               fontSize: 14,
               textcolor: KblackColor,
             ),
             const SizedBox(height: 8),
             GestureDetector(
-              onTap: () => _sendEmail("hello@nyzoride.com"),
-              child: support("hello@nyzoride.com", "Email:"),
+              onTap: () => _sendEmail(localizations.nyzoRideEmail),
+              child: support(localizations.nyzoRideEmail, "Email:"),
             ),
             GestureDetector(
-              onTap: () => _callNumber("9000464851"),
-              child: support("9000464851", "Phone:"),
+              onTap: () => _callNumber(localizations.nyzoRidePhone),
+              child: support(localizations.nyzoRidePhone, "Phone:"),
             ),
 
             // GestureDetector(
-            //   onTap: () => _callNumber("8520851338"),
-            //   child: support("8520851338", "Phone:"),
+            //   onTap: () => _sendEmail("hello@nyzoride.com"),
+            //   child: support("hello@nyzoride.com", "Email:"),
+            // ),
+            // GestureDetector(
+            //   onTap: () => _callNumber("9000464851"),
+            //   child: support("9000464851", "Phone:"),
             // ),
             const SizedBox(height: 40),
           ],

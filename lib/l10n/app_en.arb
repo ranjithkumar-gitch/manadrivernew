@@ -271,5 +271,255 @@
     "noOffersAvailable": "No Offers Available",
     "politeDriver": "Polite Driver", "cleanliness": "Cleanliness", "smoothDriving": "Smooth Driving", "onTime": "On Time", "tapToRateDriver": "Tap to rate your driver", "howWasYourTrip": "How was your trip with\n", "giveFeedback": "Give Feedback", "leaveCommentOptional": "Leave a comment (optional)", "submit": "Submit", "thankYouReviewSubmitted": "Thank you! Your review is submitted",
     "pleaseSelectRating": "Please select rating",
-    "paymentSuccessful": "Payment Successful:", "paymentFailed": "Payment Failed:", "bookingDocumentNotFound": "Booking document ID not found", "rideCancelledSuccessfully": "Ride cancelled successfully", "errorCancellingRide": "Error cancelling ride:", "cancelRide": "Cancel Ride", "rideOngoing": "Ride Ongoing", "proceedToPayment": "Proceed to Payment", "paymentCompleted": "Payment Completed", "ride": "Ride"
+    "paymentSuccessful": "Payment Successful:", "paymentFailed": "Payment Failed:", "bookingDocumentNotFound": "Booking document ID not found", "rideCancelledSuccessfully": "Ride cancelled successfully", "errorCancellingRide": "Error cancelling ride:", "cancelRide": "Cancel Ride", "rideOngoing": "Ride Ongoing", "proceedToPayment": "Proceed to Payment", "paymentCompleted": "Payment Completed", "ride": "Ride",
+    "privacyPolicyTitle": "NYZO RIDE – OWNER",
+     "lastUpdated": "Last Updated: January 2026",
+      "privacyIntro": "Nyzo Ride (“Nyzo Ride”, “we”, “our”, “us”) respects your privacy and is committed to protecting the personal information of users (“you”, “user”, “driver”, “vehicle owner”) who use the Nyzo Ride mobile application, website, and related services (collectively, the “Platform”).",
+       "privacyPolicyExplanation": "This Privacy Policy explains how we collect, use, store, share, and protect your information.",
+         "informationWeCollect": "INFORMATION WE COLLECT",
+
+       "personalInformation": "1.1 Personal Information",
+
+  "weMayCollectFollowing": "We may collect the following:",
+
+  "fullName": "Full name",
+
+  "mobileNumber": "Mobile number",
+
+  "emailOptional": "Email address (optional)",
+
+  "profilePhotoOptional": "Profile photo (optional)",
+
+  "governmentIdDetails": "Government ID details (for drivers – License, PAN/Aadhaar where required)",
+
+  "vehicleDetails": "Vehicle details (vehicle owners)",
+  "locationInformation": "1.2 Location Information",
+  "realTimeLocation": "Real-time location during active trips",
+  "pickupDropLocations": "Pickup and drop locations",
+  "tripRoutesDistance": "Trip routes and distance data",
+  "locationCollectionNote": "Location is collected only when the app is in use and for trip-related purposes.",
+  "usageDeviceInformation": "1.3 Usage & Device Information",
+  "deviceModel": "Device model",
+  "osVersion": "OS version",
+  "appUsageData": "App usage data",
+  "ipAddress": "IP address",
+  "crashLogs": "Crash logs and diagnostic data",
+  "paymentInformation": "1.4 Payment Information", 
+  "paymentStatus": "Payment status",
+   "transactionId": "Transaction ID", 
+   "paymentMethodNote": "Payment method (Nyzo Ride does NOT store card or UPI credentials)",
+   "howWeUseInformation": "2. HOW WE USE YOUR INFORMATION",
+  "weUseYourInformationTo": "We use your information to:",
+  "connectOwnersDrivers": "Connect vehicle owners with drivers",
+  "enableBookingsTrips": "Enable bookings and trip management",
+  "verifyDriverIdentity": "Verify driver identity and eligibility",
+  "processPaymentsRefunds": "Process payments and refunds",
+  "improveAppPerformance": "Improve app performance and user experience",
+  "communicateUpdatesAlerts": "Communicate service updates and alerts",
+  "preventFraudMisuse": "Prevent fraud and misuse",
+  "complyLegalObligations": "Comply with legal obligations",
+  "informationSharing": "3. INFORMATION SHARING",
+  "noSellRentData": "Nyzo Ride does not sell or rent your personal data.",
+  "weMayShareLimitedInfo": "We may share limited information with:",
+  "shareDriversOwners": "Drivers / Vehicle Owners – only what is required for a trip",
+  "sharePaymentGateways": "Payment gateways – for transaction processing",
+  "shareCloudPartners": "Cloud & technology partners – app hosting, analytics",
+  "shareLawAuthorities": "Law enforcement / government authorities – when legally required",
+  "dataStorageSecurity": "4. DATA STORAGE & SECURITY",
+  "dataStoredSecureServers": "Data is stored on secure servers",
+  "industryEncryptionUsed": "Industry-standard encryption is used",
+  "accessLimitedAuthorized": "Access is limited to authorized personnel only",
+  "regularSecurityAudits": "Regular security audits are conducted",
+  "noSystemFullySecure": "Despite best efforts, no digital system is 100% secure. Users share data at their own risk.",
+  "userRights": "5. USER RIGHTS",
+
+  "youHaveTheRightTo": "You have the right to:",
+
+  "accessPersonalData": "Access your personal data",
+
+  "updateInformation": "Update or correct your information",
+
+  "requestAccountDeletion": "Request deletion of your account",
+
+  "withdrawConsent": "Withdraw consent (where applicable)",
+
+  "accountDeletionNote": "Account deletion requests may be subject to legal or regulatory retention requirements.",
+
+  "dataRetention": "6. DATA RETENTION",
+
+  "dataRetainedAsNecessary": "Data is retained only as long as necessary",
+
+  "tripTransactionRetention": "Trip and transaction records may be retained for legal, tax, or dispute purposes",
+
+  "inactiveAccountsDeleted": "Inactive accounts may be deleted after a defined period",
+
+  "childrensPrivacy": "7. CHILDREN’S PRIVACY",
+
+  "notForUnder18": "Nyzo Ride is not intended for users under 18 years",
+
+  "noMinorDataCollection": "We do not knowingly collect data from minors",
+
+  "thirdPartyServices": "8. THIRD-PARTY SERVICES",
+
+  "mayContainThirdPartyLinks": "Nyzo Ride may contain links or integrations with third-party services",
+
+  "notResponsibleThirdPartyPrivacy": "We are not responsible for their privacy practices",
+  "platformDisclaimer": "9. PLATFORM NATURE DISCLAIMER",
+
+  "platformOnly": "Nyzo Ride is a technology platform only:",
+
+  "notTransportOperator": "Nyzo Ride is not a transport operator",
+
+  "doesNotOwnVehicles": "Nyzo Ride does not own vehicles",
+
+  "doesNotEmployDrivers": "Nyzo Ride does not employ drivers",
+
+  "independentProviders": "Drivers and vehicle owners are independent service providers",
+
+  "policyChanges": "10. CHANGES TO THIS POLICY",
+
+  "policyMayUpdate": "Nyzo Ride may update this Privacy Policy from time to time",
+
+  "policyUpdatedVersions": "Updated versions will be published within the app or website",
+
+  "policyContinuedUse": "Continued use of the platform implies acceptance of the revised policy",
+
+  "contactUs": "11. CONTACT US",
+
+  "privacyConcernsContact": "For privacy concerns or data requests, contact:",
+
+  "nyzoRideSupport": "Nyzo Ride Support",
+
+  "nyzoRideEmail": "hello@nyzoride.com",
+
+  "nyzoRidePhone": "9000464851",
+  
+  "termsConditionsTitle": "NYZO RIDE – OWNER, Terms & Conditions",
+
+  "platformPurpose": "1. PLATFORM PURPOSE",
+
+  "platformPurposeDesc1": "This application is only a technology platform that connects vehicle owners with independent drivers.",
+
+  "platformPurposeDesc2": "The platform does not provide drivers as employees, does not guarantee driver availability, and does not offer transportation services.",
+
+  "eligibility": "2. ELIGIBILITY",
+
+  "eligibilityDesc1": "The vehicle owner must be 18 years or older.",
+
+  "eligibilityDesc2": "The owner must have legal ownership or valid authorization to use the vehicle.",
+
+  "eligibilityDesc3": "Only legally registered vehicles are allowed on the platform.",
+
+  "vehicleResponsibility": "3. VEHICLE RESPONSIBILITY",
+
+  "vehicleResponsibilityDesc1": "The owner is fully responsible for the condition, safety, and legality of the vehicle.",
+
+  "vehicleResponsibilityDesc2": "Before every trip, the owner must ensure:",
+
+  "vehicleResponsibilityPoint1": "Vehicle is in good running condition",
+
+  "vehicleResponsibilityPoint2": "Adequate fuel is available",
+
+  "vehicleResponsibilityPoint3": "All documents (RC, Insurance, PUC, permits if applicable) are valid",
+
+  "driverRelationship": "4. DRIVER RELATIONSHIP",
+
+  "driversIndependent": "Drivers on the platform are independent individuals, not employees or agents of the platform.",
+
+  "platformNotResponsibleDrivers": "The platform is not responsible for the conduct, behavior, or actions of drivers.",
+
+  "ownersFreeAcceptReject": "Owners are free to accept or reject any driver request.",
+
+  "bookingTripDetails": "5. BOOKING & TRIP DETAILS",
+
+  "ownersSelectTripType": "Owners must clearly select the correct trip type (One Way / Round Trip / Hourly / Outstation).",
+
+  "pickupDropDurationInstructions": "Pickup, drop location, duration, and special instructions must be clearly mentioned.",
+
+  "tripChangesAgreement": "Any change during the trip must be mutually agreed between owner and driver.",
+
+  "payments": "6. PAYMENTS",
+
+  "paymentDetailsShown": "Payment details are shown before booking confirmation.",
+
+  "platformFacilitatesPayments": "The platform only facilitates payments and is not responsible for off-app or cash transactions.",
+
+  "additionalChargesSettlement": "Any additional charges must be settled directly between owner and driver.",
+
+  "cancellations": "7. CANCELLATIONS",
+
+  "repeatedCancellationsSuspension": "Repeated cancellations by the owner may result in temporary or permanent suspension.",
+
+  "cancellationChargesDisplayed": "Cancellation charges, if applicable, will be displayed before confirmation.",
+
+  "safetyLiability": "8. SAFETY & LIABILITY",
+
+  "platformNotResponsibleSafety": "The platform is not responsible for accidents, injuries, damages, theft, or losses during the trip.",
+
+  "insuranceClaimsHandledDirectly": "Any insurance claims must be handled directly between the owner, driver, and insurance company.",
+
+  "ownersEnsureInsurance": "Owners are advised to ensure active insurance coverage before every trip.",
+
+  "postTripInspection": "9. POST-TRIP VEHICLE INSPECTION & BELONGINGS",
+
+  "ownerInspectVehicle": "After trip completion, the owner must immediately inspect the vehicle.",
+
+  "platformNotResponsible": "The platform is not responsible for:",
+
+  "notResponsibleBelongings": "Any personal belongings (cash, mobile phones, documents, valuables, etc.) left inside the vehicle",
+
+  "notResponsibleDamages": "Any scratches, dents, or damages identified after trip completion",
+
+  "raiseIssueImmediately": "If any issue is noticed, the owner must raise it immediately with the driver.",
+
+  "complaintsNotEntertained": "Complaints raised after delay or after leaving the vehicle will not be entertained.",
+
+  "prohibitedActivities": "10. PROHIBITED ACTIVITIES",
+
+  "falseInformation": "Provide false vehicle or personal information",
+
+  "illegalActivities": "Use the platform for illegal activities",
+
+  "misbehaveDrivers": "Misbehave, threaten, or harass drivers",
+
+  "violationAccountTermination": "Violation may lead to account termination without prior notice.",
+
+  "ratingsFeedback": "11. RATINGS & FEEDBACK",
+
+  "ownersProvideFeedback": "Owners should provide honest and fair feedback.",
+
+  "fakeReviewsRestriction": "Fake, abusive, or misleading reviews may result in account restrictions.",
+
+  "accountSuspensionTermination": "12. ACCOUNT SUSPENSION OR TERMINATION",
+
+  "platformSuspendTerminate": "The platform reserves the right to suspend or terminate accounts if:",
+
+  "termsViolated": "Terms & Conditions are violated",
+
+  "fraudulentActivityDetected": "Fraudulent activity is detected",
+
+  "repeatedComplaintsReceived": "Repeated complaints are received",
+
+  "dataUsagePrivacy": "13. DATA USAGE & PRIVACY",
+
+  "ownerDataServicePurpose": "Owner data is used only for service-related purposes.",
+
+  "personalInfoSharedLaw": "Personal information will not be shared except when required by law.",
+
+  "changesToTerms": "14. CHANGES TO TERMS",
+
+  "platformModifyTerms": "The platform may modify these Terms & Conditions at any time.",
+
+  "continuedUseAcceptance": "Continued use of the app means acceptance of updated terms.",
+
+  "acceptance": "15. ACCEPTANCE",
+
+  "ownerAcceptance": "By using this application, the owner confirms that they have read, understood, and agreed to all the above Terms & Conditions."
+ 
+ 
+ 
+ 
+
+
 }
+
