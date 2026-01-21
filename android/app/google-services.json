@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "159276101326",
-    "project_id": "mana-driver",
-    "storage_bucket": "mana-driver.firebasestorage.app"
+    "project_number": "759100098277",
+    "project_id": "nyzoride-69ab6",
+    "storage_bucket": "nyzoride-69ab6.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:159276101326:android:8f08f0c8b1ca8316876a9f",
+        "mobilesdk_app_id": "1:759100098277:android:01581f4f5c2f6b6fc2360c",
         "android_client_info": {
           "package_name": "com.example.nyzo"
         }
@@ -15,26 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBQUFCkp60pYmkP4wOW_S1t-yHV1T_yPH4"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:159276101326:android:92919cf93e2ca6b3876a9f",
-        "android_client_info": {
-          "package_name": "com.example.rydynadmin"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBQUFCkp60pYmkP4wOW_S1t-yHV1T_yPH4"
+          "current_key": "AIzaSyCeUXWCR972pTy5Id2g6uHdPDd26w3eqHw"
         }
       ],
       "services": {
