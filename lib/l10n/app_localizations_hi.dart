@@ -408,7 +408,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get signIn => 'साइन इन करें';
 
   @override
-  String get welcomeRydyn => 'Rydyn में आपका स्वागत है!';
+  String get welcomeNyzoRide => 'Welcome to Nyzo Ride!';
 
   @override
   String get registrationSuccessMessage => 'आपका पंजीकरण सफल रहा। कृपया जारी रखने के लिए लॉगिन करें।';

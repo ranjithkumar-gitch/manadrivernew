@@ -113,7 +113,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     var options = {
       'key': SharedPrefServices.getRazorapiKey(),
       'amount': (amount * 100).toInt(),
-      'name': 'Rydyn',
+      'name': 'Nyzo Ride',
       'description': 'Ride Payment',
       'prefill': {
         'contact': SharedPrefServices.getNumber().toString(),
@@ -527,7 +527,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
               final liveData = snapshot.data!;
               final rideStatus = liveData['status'] ?? "New";
 
-              String appBarTitle = "";      
+              String appBarTitle = "";
 
               if (rideStatus == 'New') {
                 appBarTitle = lang.driverNotAssigned;

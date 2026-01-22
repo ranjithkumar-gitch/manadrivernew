@@ -408,7 +408,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signIn => 'Sign In';
 
   @override
-  String get welcomeRydyn => 'Welcome to Rydyn!';
+  String get welcomeNyzoRide => 'Welcome to Nyzo Ride!';
 
   @override
   String get registrationSuccessMessage => 'Your registration was successful. Please log in to continue.';

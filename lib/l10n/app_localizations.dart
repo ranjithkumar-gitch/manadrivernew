@@ -895,11 +895,11 @@ abstract class AppLocalizations {
   /// **'Sign In'**
   String get signIn;
 
-  /// No description provided for @welcomeRydyn.
+  /// No description provided for @welcomeNyzoRide.
   ///
   /// In en, this message translates to:
-  /// **'Welcome to Rydyn!'**
-  String get welcomeRydyn;
+  /// **'Welcome to Nyzo Ride!'**
+  String get welcomeNyzoRide;
 
   /// No description provided for @registrationSuccessMessage.
   ///

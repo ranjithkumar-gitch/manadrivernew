@@ -47,7 +47,7 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
     {'image': 'images/info.png', 'title': 'Terms & Conditions'},
     {'image': 'images/support.png', 'title': 'Help & Support'},
     {'image': 'images/policy.png', 'title': 'Cancellation policy'},
-    {'image': 'images/aboutMD.png', 'title': 'About Rydyn'},
+    {'image': 'images/aboutMD.png', 'title': 'About Nyzo Ride'},
     {'image': 'images/delete_acnt.png', 'title': 'Delete Account'},
     {'image': 'images/logout.png', 'title': 'Logout'},
   ];

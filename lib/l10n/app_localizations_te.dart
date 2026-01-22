@@ -408,7 +408,7 @@ class AppLocalizationsTe extends AppLocalizations {
   String get signIn => 'సైన్ ఇన్ చేయండి';
 
   @override
-  String get welcomeRydyn => 'Rydyn కు స్వాగతం!';
+  String get welcomeNyzoRide => 'Welcome to Nyzo Ride!';
 
   @override
   String get registrationSuccessMessage => 'మీ నమోదు విజయవంతమైంది. కొనసాగడానికి దయచేసి లాగిన్ చేయండి.';

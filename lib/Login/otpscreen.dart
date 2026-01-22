@@ -351,7 +351,7 @@ class _OtpScreenState extends State<OtpScreen> {
         await fcmService.sendNotification(
           recipientFCMToken: widget.fcmToken,
 
-          title: localizations.welcomeRydyn,
+          title: localizations.welcomeNyzoRide,
 
           body:
               "${capitalizeFirst(widget.firstName)} ${localizations.registrationSuccessMessage}",
