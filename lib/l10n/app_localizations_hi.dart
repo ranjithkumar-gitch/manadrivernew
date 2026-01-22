@@ -1038,7 +1038,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get weUseYourInformationTo => 'हम आपकी जानकारी का उपयोग करते हैं:';
 
   @override
-  String get connectOwnersDrivers => 'वाहन मालिकों को ड्राइवरों से जोड़ना';
+  String get connectOwnersDrivers => 'वाहन मालिकों को उपलब्ध स्वतंत्र ड्राइवरों से जोड़ना';
 
   @override
   String get enableBookingsTrips => 'बुकिंग और यात्रा प्रबंधन सक्षम करना';
@@ -1197,7 +1197,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get nyzoRidePhone => 'फ़ोन: 9000464851';
 
   @override
-  String get termsConditionsTitle => 'NYZO RIDE – मालिक, नियम और शर्तें';
+  String get termsConditions => 'Terms & Conditions';
+
+  @override
+  String get termsConditionsTitle => 'NYZO RIDE – मालिक';
 
   @override
   String get platformPurpose => '1. प्लेटफ़ॉर्म उद्देश्य';
@@ -1378,4 +1381,109 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get ownerAcceptance => 'इस एप्लिकेशन का उपयोग करके, मालिक पुष्टि करता है कि उसने उपरोक्त सभी नियमों और शर्तों को पढ़ा, समझा और स्वीकार किया है।';
+
+  @override
+  String get cityLimits => 'शहर सीमा प्रतिबंध';
+
+  @override
+  String get hourlyTripsCityOnly => 'घंटे के आधार पर यात्राएँ केवल शहर की सीमाओं के भीतर ही अनुमत हैं।.\n\nजारी रखने के लिए कृपया वन वे चुनें।.';
+
+  @override
+  String get chooseOneWay => 'जारी रखने के लिए कृपया वन वे चुनें।';
+
+  @override
+  String get proceed => 'जारी रखें';
+
+  @override
+  String get selectHours => 'घंटे चुनें';
+
+  @override
+  String get confirm => 'पुष्टि करें';
+
+  @override
+  String get updateMobileNumber => 'मोबाइल नंबर अपडेट करें';
+
+  @override
+  String get generateOtpInfo => 'कृपया अपना मोबाइल नंबर अपडेट करने के लिए OTP जनरेट करें।';
+
+  @override
+  String get generateOtpIn => 'OTP जनरेट करें';
+
+  @override
+  String get generateOtp => 'OTP जनरेट';
+
+  @override
+  String get enterNewMobileNumber => 'नया मोबाइल नंबर दर्ज करें';
+
+  @override
+  String get generateOtpVerifyNew => 'नए नंबर को सत्यापित करने के लिए OTP जनरेट करें';
+
+  @override
+  String get update => 'अपडेट करें';
+
+  @override
+  String get aboutUsTitle => 'हमारे बारे में';
+
+  @override
+  String get aboutUsHeading => 'हमारे बारे में';
+
+  @override
+  String get aboutUsDescription => 'हम एक तकनीक-आधारित प्लेटफ़ॉर्म हैं जो वाहन मालिकों और स्वतंत्र, सत्यापित ड्राइवरों के बीच संबंध को सरल बनाने के लिए बनाया गया है।';
+
+  @override
+  String get ourGoalDescription => 'हमारा लक्ष्य वाहन मालिकों के लिए विश्वसनीय ड्राइवरों को ढूँढना आसान बनाना है—चाहे वह एकतरफ़ा यात्रा हो, राउंड ट्रिप हो, प्रति घंटा उपयोग हो, या आउटस्टेशन यात्रा।';
+
+  @override
+  String get facilitatorDescription => 'हम केवल एक सुविधादाता के रूप में कार्य करते हैं, एक डिजिटल प्लेटफ़ॉर्म प्रदान करते हैं जो मालिकों और ड्राइवरों को जोड़ने, संवाद करने और यात्राओं को सुचारू रूप से पूरा करने में सक्षम बनाता है। हम ड्राइवरों को नियुक्त नहीं करते और न ही सीधे परिवहन सेवाएँ प्रदान करते हैं।';
+
+  @override
+  String get whatWeDoTitle => 'हम क्या करते हैं';
+
+  @override
+  String get transparentBookingSystem => 'एक पारदर्शी बुकिंग और यात्रा प्रबंधन प्रणाली प्रदान करना';
+
+  @override
+  String get easyCommunication => 'मालिकों और ड्राइवरों के बीच आसान संचार सक्षम करना';
+
+  @override
+  String get promoteConvenience => 'सुविधा, लचीलापन और दक्षता को बढ़ावा देना';
+
+  @override
+  String get whatWeDoNotDoTitle => 'हम क्या नहीं करते';
+
+  @override
+  String get notEmployDrivers => 'हम ड्राइवरों को कर्मचारी या एजेंट के रूप में नियुक्त नहीं करते';
+
+  @override
+  String get notOwnVehicles => 'हम वाहन के मालिक या संचालक नहीं हैं';
+
+  @override
+  String get notGuaranteeAvailability => 'हम ड्राइवर उपलब्धता की गारंटी नहीं देते';
+
+  @override
+  String get notResponsibleDisputes => 'हम मालिकों और ड्राइवरों के बीच व्यक्तिगत विवादों के लिए जिम्मेदार नहीं हैं';
+
+  @override
+  String get ourVisionTitle => 'हमारा दृष्टिकोण';
+
+  @override
+  String get ourVisionDescription => 'एक विश्वसनीय और सुविधाजनक ड्राइवर-कनेक्शन प्लेटफ़ॉर्म बनना, जो वाहन मालिकों को लचीलापन और मानसिक शांति प्रदान करे तथा स्वतंत्र ड्राइवरों को निष्पक्ष अवसरों के माध्यम से समर्थन दे।';
+
+  @override
+  String get ourCommitmentTitle => 'हमारी प्रतिबद्धता';
+
+  @override
+  String get ourCommitmentIntro => 'हम प्रतिबद्ध हैं:';
+
+  @override
+  String get commitmentTransparency => 'प्लेटफ़ॉर्म उपयोग में पारदर्शिता';
+
+  @override
+  String get commitmentSafetyPrivacy => 'उपयोगकर्ता सुरक्षा और डेटा गोपनीयता';
+
+  @override
+  String get commitmentImprovement => 'उपयोगकर्ता प्रतिक्रिया के आधार पर निरंतर सुधार';
+
+  @override
+  String get commitmentAgreement => 'इस प्लेटफ़ॉर्म का उपयोग करके, मालिक और ड्राइवर जिम्मेदारीपूर्वक, सम्मानपूर्वक और हमारे नियमों एवं शर्तों के अनुसार बातचीत करने के लिए सहमत होते हैं।';
 }

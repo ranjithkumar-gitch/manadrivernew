@@ -10,6 +10,7 @@ import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 import 'package:mana_driver/Widgets/customButton.dart';
 import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
 import 'package:mana_driver/Widgets/mobileNumberInputField.dart';
+import 'package:mana_driver/l10n/app_localizations.dart';
 import 'package:pinput/pinput.dart';
 
 import 'package:mana_driver/Widgets/colors.dart';
@@ -209,6 +210,7 @@ class _UpdateNumberState extends State<UpdateNumber> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: kwhiteColor,
 
@@ -234,9 +236,9 @@ class _UpdateNumberState extends State<UpdateNumber> {
                 ),
               ),
             ),
-            const Center(
+            Center(
               child: CustomText(
-                text: 'Update Mobile Number',
+                text: localizations.updateMobileNumber,
                 textcolor: KblackColor,
                 fontSize: 22,
                 fontWeight: FontWeight.w600,
@@ -267,9 +269,8 @@ class _UpdateNumberState extends State<UpdateNumber> {
 
                         const SizedBox(height: 15),
 
-                        const CustomText(
-                          text:
-                              'Please generate an OTP to update your mobile number.',
+                        CustomText(
+                          text: localizations.generateOtpInfo,
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                           textcolor: KblackColor,
@@ -352,8 +353,8 @@ class _UpdateNumberState extends State<UpdateNumber> {
                                     : CustomText(
                                       text:
                                           !_canGenerateOtp
-                                              ? "Generate OTP in 00:${_secondsLeft.toString().padLeft(2, '0')}"
-                                              : "Generate OTP",
+                                              ? "${localizations.generateOtpIn} 00:${_secondsLeft.toString().padLeft(2, '0')}"
+                                              : localizations.generateOtp,
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                       textcolor:
@@ -414,8 +415,8 @@ class _UpdateNumberState extends State<UpdateNumber> {
                         if (_otpVerified) ...[
                           const SizedBox(height: 20),
 
-                          const CustomText(
-                            text: "Enter New Mobile Number",
+                          CustomText(
+                            text: localizations.enterNewMobileNumber,
                             textcolor: KblackColor,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -469,8 +470,9 @@ class _UpdateNumberState extends State<UpdateNumber> {
                                       : CustomText(
                                         text:
                                             !_canGenerateNewOtp
-                                                ? "Generate OTP in 00:${_newOtpSecondsLeft.toString().padLeft(2, '0')}"
-                                                : "Generate OTP to verify new number",
+                                                ? "${localizations.generateOtpIn} 00:${_newOtpSecondsLeft.toString().padLeft(2, '0')}"
+                                                : localizations
+                                                    .generateOtpVerifyNew,
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                         textcolor:
@@ -521,7 +523,7 @@ class _UpdateNumberState extends State<UpdateNumber> {
                               child: SizedBox(
                                 height: 45,
                                 child: CustomCancelButton(
-                                  text: 'Cancel',
+                                  text: localizations.cancel,
                                   onPressed: () => Navigator.pop(context),
                                 ),
                               ),
@@ -531,7 +533,7 @@ class _UpdateNumberState extends State<UpdateNumber> {
                               child: SizedBox(
                                 height: 45,
                                 child: CustomButton(
-                                  text: 'Update',
+                                  text: localizations.update,
 
                                   onPressed:
                                       !_newOtpVerified || _isUpdating

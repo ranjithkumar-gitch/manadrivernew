@@ -984,6 +984,7 @@ class _HomeScreenState extends State<HomeScreen> {
     BuildContext context, {
     required VoidCallback onProceed,
   }) {
+    final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (_) {
@@ -992,14 +993,14 @@ class _HomeScreenState extends State<HomeScreen> {
             borderRadius: BorderRadius.circular(12),
           ),
           title: CustomText(
-            text: "City Limits Restriction",
+            text: localizations.cityLimits,
             fontSize: 16,
             fontWeight: FontWeight.w600,
             textcolor: KblackColor,
           ),
-          content: const CustomText(
-            text:
-                "Hourly trips are allowed only within city limits.\n\nPlease choose One Way to continue.",
+          content: CustomText(
+            text: localizations.hourlyTripsCityOnly,
+
             fontSize: 14,
             fontWeight: FontWeight.w400,
             textcolor: KblackColor,
@@ -1009,26 +1010,23 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Expanded(
                   child: CustomCancelButton(
-                    text: 'Cancel',
+                    text: localizations.cancel,
                     onPressed: () {
-                      Navigator.pop(context); // close dialog
-                      Navigator.of(
-                        context,
-                        rootNavigator: true,
-                      ).pop(); // close bottom sheet
+                      Navigator.pop(context);
+                      Navigator.of(context, rootNavigator: true).pop();
                     },
                     height: 46,
                     width: 140,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 5),
                 Expanded(
                   child: CustomButton(
                     onPressed: () {
-                      onProceed(); // 🔥 PARENT setState
-                      Navigator.pop(context); // close dialog ONLY
+                      Navigator.pop(context);
+                      onProceed();
                     },
-                    text: 'Proceed',
+                    text: localizations.proceed,
                     height: 43,
                     width: 140,
                   ),
@@ -1065,6 +1063,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return isWithinHyderabad(double.parse(lat), double.parse(lng));
     }
 
+    final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) {
@@ -1077,7 +1076,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomText(
-                  text: "Select Hours",
+                  text: localizations.selectHours,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   textcolor: KblackColor,
@@ -1139,7 +1138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Expanded(
                       child: CustomCancelButton(
-                        text: 'Cancel',
+                        text: localizations.cancel,
                         onPressed: () => Navigator.pop(context),
                         height: 46,
                         width: 140,
@@ -1160,65 +1159,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
 
                           if (pickupInside && dropInside) {
-                            print(" Hourly Trip Allowed");
-                            print("Pickup is inside Hyderabad city limits");
-                            print("Drop is inside Hyderabad city limits");
-
                             onSelected(tempSelected);
                             Navigator.pop(context);
                           } else {
                             print(" Hourly Trip Blocked");
 
-                            if (!pickupInside) {
-                              print("Pickup is OUTSIDE Hyderabad city limits");
-                              print("Pickup Lat: $pickupLat, Lng: $pickupLng");
-                            }
+                            if (!pickupInside) {}
 
-                            if (!dropInside) {
-                              print("Drop is OUTSIDE Hyderabad city limits");
-                              print("Drop Lat: $dropLat, Lng: $dropLng");
-                            }
-
-                            // showDialog(
-                            //   context: context,
-                            //   builder:
-                            //       (_) => AlertDialog(
-                            //         shape: RoundedRectangleBorder(
-                            //           borderRadius: BorderRadius.circular(12),
-                            //         ),
-                            //         title: CustomText(
-                            //           text: "City Limits Restriction",
-                            //           fontSize: 16,
-                            //           fontWeight: FontWeight.w600,
-                            //           textcolor: KblackColor,
-                            //         ),
-                            //         content: CustomText(
-                            //           text:
-                            //               "Hourly trips are available only within Hyderabad city limits. Please update your pickup or drop location.",
-                            //           fontSize: 15,
-                            //           fontWeight: FontWeight.w400,
-                            //           textcolor: KblackColor,
-                            //         ),
-
-                            //         actions: [
-                            //           TextButton(
-                            //             onPressed: () {
-                            //               Navigator.pop(context);
-                            //               Navigator.pop(context);
-                            //             },
-                            //             child: Text(
-                            //               "OK",
-                            //               style: TextStyle(color: korangeColor),
-                            //             ),
-                            //           ),
-                            //         ],
-                            //       ),
-                            // );
+                            if (!dropInside) {}
 
                             return;
                           }
                         },
-                        text: 'Confirm',
+                        text: localizations.confirm,
                         height: 46,
                         width: 140,
                       ),
@@ -1560,8 +1513,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           context,
                                           onProceed: () {
                                             setState(() {
-                                              selectedTripMode =
-                                                  "One Way"; // 🔥 MAIN FIX
+                                              selectedTripMode = "One Way";
                                             });
                                           },
                                         );

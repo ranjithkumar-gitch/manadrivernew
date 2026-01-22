@@ -1038,7 +1038,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weUseYourInformationTo => 'We use your information to:';
 
   @override
-  String get connectOwnersDrivers => 'Connect vehicle owners with drivers';
+  String get connectOwnersDrivers => 'Connect vehicle owners with available independent drivers';
 
   @override
   String get enableBookingsTrips => 'Enable bookings and trip management';
@@ -1197,7 +1197,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nyzoRidePhone => '9000464851';
 
   @override
-  String get termsConditionsTitle => 'NYZO RIDE – OWNER, Terms & Conditions';
+  String get termsConditions => 'Terms & Conditions';
+
+  @override
+  String get termsConditionsTitle => 'NYZO RIDE – OWNER';
 
   @override
   String get platformPurpose => '1. PLATFORM PURPOSE';
@@ -1378,4 +1381,109 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ownerAcceptance => 'By using this application, the owner confirms that they have read, understood, and agreed to all the above Terms & Conditions.';
+
+  @override
+  String get cityLimits => 'City Limits Restriction';
+
+  @override
+  String get hourlyTripsCityOnly => 'Hourly trips are allowed only within city limits.\n\nPlease choose One Way to continue.';
+
+  @override
+  String get chooseOneWay => 'Please choose One Way to continue.';
+
+  @override
+  String get proceed => 'Proceed';
+
+  @override
+  String get selectHours => 'Select Hours';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get updateMobileNumber => 'Update Mobile Number';
+
+  @override
+  String get generateOtpInfo => 'Please generate an OTP to update your mobile number.';
+
+  @override
+  String get generateOtpIn => 'Generate OTP in';
+
+  @override
+  String get generateOtp => 'Generate OTP';
+
+  @override
+  String get enterNewMobileNumber => 'Enter New Mobile Number';
+
+  @override
+  String get generateOtpVerifyNew => 'Generate OTP to verify new number';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get aboutUsTitle => 'ABOUT US';
+
+  @override
+  String get aboutUsHeading => 'About Us';
+
+  @override
+  String get aboutUsDescription => 'We are a technology-driven platform built to simplify the connection between vehicle owners and independent, verified drivers.';
+
+  @override
+  String get ourGoalDescription => 'Our goal is to make it easy for vehicle owners to find reliable drivers whenever they need—whether it is for one-way trips, round trips, hourly usage, or outstation travel.';
+
+  @override
+  String get facilitatorDescription => 'We act only as a facilitator, providing a digital platform that enables owners and drivers to connect, communicate, and complete trips smoothly. We do not employ drivers, nor do we provide transportation services directly.';
+
+  @override
+  String get whatWeDoTitle => 'What We Do';
+
+  @override
+  String get transparentBookingSystem => 'Provide a transparent booking and trip management system';
+
+  @override
+  String get easyCommunication => 'Enable easy communication between owners and drivers';
+
+  @override
+  String get promoteConvenience => 'Promote convenience, flexibility, and efficiency';
+
+  @override
+  String get whatWeDoNotDoTitle => 'What We Do Not Do';
+
+  @override
+  String get notEmployDrivers => 'We do not employ drivers as staff or agents';
+
+  @override
+  String get notOwnVehicles => 'We do not own or operate vehicles';
+
+  @override
+  String get notGuaranteeAvailability => 'We do not guarantee driver availability';
+
+  @override
+  String get notResponsibleDisputes => 'We do not take responsibility for personal disputes between owners and drivers';
+
+  @override
+  String get ourVisionTitle => 'Our Vision';
+
+  @override
+  String get ourVisionDescription => 'To become a trusted and convenient driver-connection platform, empowering vehicle owners with flexibility and peace of mind while supporting independent drivers through fair opportunities.';
+
+  @override
+  String get ourCommitmentTitle => 'Our Commitment';
+
+  @override
+  String get ourCommitmentIntro => 'We are committed to:';
+
+  @override
+  String get commitmentTransparency => 'Transparency in platform usage';
+
+  @override
+  String get commitmentSafetyPrivacy => 'User safety and data privacy';
+
+  @override
+  String get commitmentImprovement => 'Continuous improvement based on user feedback';
+
+  @override
+  String get commitmentAgreement => 'By using this platform, owners and drivers agree to interact responsibly, respectfully, and in accordance with our Terms & Conditions.';
 }

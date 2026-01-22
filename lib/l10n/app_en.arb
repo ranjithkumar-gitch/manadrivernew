@@ -393,8 +393,11 @@
   "nyzoRideEmail": "hello@nyzoride.com",
 
   "nyzoRidePhone": "9000464851",
+  "privacyPolicy": "Privacy Policy",
+"termsConditions": "Terms & Conditions",
+
   
-  "termsConditionsTitle": "NYZO RIDE – OWNER, Terms & Conditions",
+  "termsConditionsTitle": "NYZO RIDE – OWNER",
 
   "platformPurpose": "1. PLATFORM PURPOSE",
 
@@ -514,7 +517,49 @@
 
   "acceptance": "15. ACCEPTANCE",
 
-  "ownerAcceptance": "By using this application, the owner confirms that they have read, understood, and agreed to all the above Terms & Conditions."
+  "ownerAcceptance": "By using this application, the owner confirms that they have read, understood, and agreed to all the above Terms & Conditions.",
+
+ "cityLimits": "City Limits Restriction",
+ "hourlyTripsCityOnly": "Hourly trips are allowed only within city limits.\n\nPlease choose One Way to continue.",
+"chooseOneWay": "Please choose One Way to continue.",
+"cancel": "Cancel",
+"proceed": "Proceed",
+"selectHours": "Select Hours",
+"confirm": "Confirm",
+"updateMobileNumber": "Update Mobile Number",
+"generateOtpInfo": "Please generate an OTP to update your mobile number.",
+"generateOtpIn": "Generate OTP in",
+"generateOtp": "Generate OTP",
+"enterNewMobileNumber": "Enter New Mobile Number",
+"generateOtpVerifyNew": "Generate OTP to verify new number",
+"update": "Update",
+  "aboutUsTitle": "ABOUT US",
+  "aboutUsHeading": "About Us",
+  "aboutUsDescription": "We are a technology-driven platform built to simplify the connection between vehicle owners and independent, verified drivers.",
+  "ourGoalDescription": "Our goal is to make it easy for vehicle owners to find reliable drivers whenever they need—whether it is for one-way trips, round trips, hourly usage, or outstation travel.",
+  "facilitatorDescription": "We act only as a facilitator, providing a digital platform that enables owners and drivers to connect, communicate, and complete trips smoothly. We do not employ drivers, nor do we provide transportation services directly.",
+  "whatWeDoTitle": "What We Do",
+  "connectOwnersDrivers": "Connect vehicle owners with available independent drivers",
+  "transparentBookingSystem": "Provide a transparent booking and trip management system",
+  "easyCommunication": "Enable easy communication between owners and drivers",
+  "promoteConvenience": "Promote convenience, flexibility, and efficiency",
+  "whatWeDoNotDoTitle": "What We Do Not Do",
+  "notEmployDrivers": "We do not employ drivers as staff or agents",
+  "notOwnVehicles": "We do not own or operate vehicles",
+  "notGuaranteeAvailability": "We do not guarantee driver availability",
+  "notResponsibleDisputes": "We do not take responsibility for personal disputes between owners and drivers",
+  "ourVisionTitle": "Our Vision",
+  "ourVisionDescription": "To become a trusted and convenient driver-connection platform, empowering vehicle owners with flexibility and peace of mind while supporting independent drivers through fair opportunities.",
+  "ourCommitmentTitle": "Our Commitment",
+  "ourCommitmentIntro": "We are committed to:",
+  "commitmentTransparency": "Transparency in platform usage",
+  "commitmentSafetyPrivacy": "User safety and data privacy",
+  "commitmentImprovement": "Continuous improvement based on user feedback",
+  "commitmentAgreement": "By using this platform, owners and drivers agree to interact responsibly, respectfully, and in accordance with our Terms & Conditions."
+
+
+
+
  
  
  

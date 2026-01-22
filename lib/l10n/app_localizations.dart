@@ -2158,7 +2158,7 @@ abstract class AppLocalizations {
   /// No description provided for @connectOwnersDrivers.
   ///
   /// In en, this message translates to:
-  /// **'Connect vehicle owners with drivers'**
+  /// **'Connect vehicle owners with available independent drivers'**
   String get connectOwnersDrivers;
 
   /// No description provided for @enableBookingsTrips.
@@ -2473,10 +2473,16 @@ abstract class AppLocalizations {
   /// **'9000464851'**
   String get nyzoRidePhone;
 
+  /// No description provided for @termsConditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Conditions'**
+  String get termsConditions;
+
   /// No description provided for @termsConditionsTitle.
   ///
   /// In en, this message translates to:
-  /// **'NYZO RIDE – OWNER, Terms & Conditions'**
+  /// **'NYZO RIDE – OWNER'**
   String get termsConditionsTitle;
 
   /// No description provided for @platformPurpose.
@@ -2838,6 +2844,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'By using this application, the owner confirms that they have read, understood, and agreed to all the above Terms & Conditions.'**
   String get ownerAcceptance;
+
+  /// No description provided for @cityLimits.
+  ///
+  /// In en, this message translates to:
+  /// **'City Limits Restriction'**
+  String get cityLimits;
+
+  /// No description provided for @hourlyTripsCityOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Hourly trips are allowed only within city limits.\n\nPlease choose One Way to continue.'**
+  String get hourlyTripsCityOnly;
+
+  /// No description provided for @chooseOneWay.
+  ///
+  /// In en, this message translates to:
+  /// **'Please choose One Way to continue.'**
+  String get chooseOneWay;
+
+  /// No description provided for @proceed.
+  ///
+  /// In en, this message translates to:
+  /// **'Proceed'**
+  String get proceed;
+
+  /// No description provided for @selectHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Hours'**
+  String get selectHours;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @updateMobileNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Mobile Number'**
+  String get updateMobileNumber;
+
+  /// No description provided for @generateOtpInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Please generate an OTP to update your mobile number.'**
+  String get generateOtpInfo;
+
+  /// No description provided for @generateOtpIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate OTP in'**
+  String get generateOtpIn;
+
+  /// No description provided for @generateOtp.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate OTP'**
+  String get generateOtp;
+
+  /// No description provided for @enterNewMobileNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter New Mobile Number'**
+  String get enterNewMobileNumber;
+
+  /// No description provided for @generateOtpVerifyNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate OTP to verify new number'**
+  String get generateOtpVerifyNew;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @aboutUsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'ABOUT US'**
+  String get aboutUsTitle;
+
+  /// No description provided for @aboutUsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'About Us'**
+  String get aboutUsHeading;
+
+  /// No description provided for @aboutUsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'We are a technology-driven platform built to simplify the connection between vehicle owners and independent, verified drivers.'**
+  String get aboutUsDescription;
+
+  /// No description provided for @ourGoalDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Our goal is to make it easy for vehicle owners to find reliable drivers whenever they need—whether it is for one-way trips, round trips, hourly usage, or outstation travel.'**
+  String get ourGoalDescription;
+
+  /// No description provided for @facilitatorDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'We act only as a facilitator, providing a digital platform that enables owners and drivers to connect, communicate, and complete trips smoothly. We do not employ drivers, nor do we provide transportation services directly.'**
+  String get facilitatorDescription;
+
+  /// No description provided for @whatWeDoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What We Do'**
+  String get whatWeDoTitle;
+
+  /// No description provided for @transparentBookingSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Provide a transparent booking and trip management system'**
+  String get transparentBookingSystem;
+
+  /// No description provided for @easyCommunication.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable easy communication between owners and drivers'**
+  String get easyCommunication;
+
+  /// No description provided for @promoteConvenience.
+  ///
+  /// In en, this message translates to:
+  /// **'Promote convenience, flexibility, and efficiency'**
+  String get promoteConvenience;
+
+  /// No description provided for @whatWeDoNotDoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What We Do Not Do'**
+  String get whatWeDoNotDoTitle;
+
+  /// No description provided for @notEmployDrivers.
+  ///
+  /// In en, this message translates to:
+  /// **'We do not employ drivers as staff or agents'**
+  String get notEmployDrivers;
+
+  /// No description provided for @notOwnVehicles.
+  ///
+  /// In en, this message translates to:
+  /// **'We do not own or operate vehicles'**
+  String get notOwnVehicles;
+
+  /// No description provided for @notGuaranteeAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'We do not guarantee driver availability'**
+  String get notGuaranteeAvailability;
+
+  /// No description provided for @notResponsibleDisputes.
+  ///
+  /// In en, this message translates to:
+  /// **'We do not take responsibility for personal disputes between owners and drivers'**
+  String get notResponsibleDisputes;
+
+  /// No description provided for @ourVisionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Our Vision'**
+  String get ourVisionTitle;
+
+  /// No description provided for @ourVisionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'To become a trusted and convenient driver-connection platform, empowering vehicle owners with flexibility and peace of mind while supporting independent drivers through fair opportunities.'**
+  String get ourVisionDescription;
+
+  /// No description provided for @ourCommitmentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Our Commitment'**
+  String get ourCommitmentTitle;
+
+  /// No description provided for @ourCommitmentIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'We are committed to:'**
+  String get ourCommitmentIntro;
+
+  /// No description provided for @commitmentTransparency.
+  ///
+  /// In en, this message translates to:
+  /// **'Transparency in platform usage'**
+  String get commitmentTransparency;
+
+  /// No description provided for @commitmentSafetyPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'User safety and data privacy'**
+  String get commitmentSafetyPrivacy;
+
+  /// No description provided for @commitmentImprovement.
+  ///
+  /// In en, this message translates to:
+  /// **'Continuous improvement based on user feedback'**
+  String get commitmentImprovement;
+
+  /// No description provided for @commitmentAgreement.
+  ///
+  /// In en, this message translates to:
+  /// **'By using this platform, owners and drivers agree to interact responsibly, respectfully, and in accordance with our Terms & Conditions.'**
+  String get commitmentAgreement;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
