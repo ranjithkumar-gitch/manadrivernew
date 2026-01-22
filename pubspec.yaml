@@ -60,7 +60,6 @@ dependencies:
   url_launcher: ^6.3.2
   flutter_google_places_sdk: ^0.4.2+1
   geocoding: ^4.0.0
-  flutter_launcher_icons: ^0.14.4
   firebase_database: ^12.0.3
   razorpay_flutter: ^1.4.0
   hexcolor: ^3.0.1
@@ -70,15 +69,6 @@ dependencies:
   firebase_messaging: ^16.0.4
   flutter_local_notifications: ^19.5.0
   photo_view: ^0.15.0
-
-
-
- 
-flutter_launcher_icons:
-  android: "launcher_icon"
-  ios: true
-  image_path: "images/nyzo_ride.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

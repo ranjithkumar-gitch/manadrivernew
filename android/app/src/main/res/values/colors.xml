@@ -1,3 +1,5 @@
 <resources>
     <color name="notification_color">#FFA500</color> <!-- Orange -->
+    <color name="korangeColor">#FF6B00</color>
 </resources>
+

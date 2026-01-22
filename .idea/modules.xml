@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/mana_driver.iml" filepath="$PROJECT_DIR$/mana_driver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/mana_driver_android.iml" filepath="$PROJECT_DIR$/android/mana_driver_android.iml" />
+    </modules>
+  </component>
+</project>
