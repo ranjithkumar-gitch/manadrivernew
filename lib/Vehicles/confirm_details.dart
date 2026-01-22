@@ -114,7 +114,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
       'key': SharedPrefServices.getRazorapiKey(),
       'amount': (amount * 100).toInt(),
       'name': 'Nyzo Ride',
-      'description': 'Ride Payment',
+      'description': 'Nyzo Ride Trip Payment',
       'prefill': {
         'contact': SharedPrefServices.getNumber().toString(),
         'email': SharedPrefServices.getEmail().toString(),
