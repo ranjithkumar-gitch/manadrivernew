@@ -138,7 +138,7 @@ class _SplashScreenState extends State<SplashScreen>
       print(' Failed to get device FCM token');
     }
 
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 1));
   }
 
   Future<void> _navigateNext() async {
@@ -149,7 +149,7 @@ class _SplashScreenState extends State<SplashScreen>
       print("App opened via notification");
     }
 
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 1));
 
     await SharedPrefServices.init();
     bool isLoggedIn = SharedPrefServices.getislogged();
