@@ -68,6 +68,27 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute(builder: (_) => LocationSelectionScreen()),
     );
 
+    if (result["clearLocations"] == true) {
+      setState(() {
+        pickupController.clear();
+        dropController.clear();
+        drop2Controller.clear();
+
+        pickupLat = "";
+        pickupLng = "";
+        dropLat = "";
+        dropLng = "";
+        drop2Lat = "";
+        drop2Lng = "";
+
+        distance = "";
+        time = "";
+
+        isDropLocation2Visible = false;
+      });
+      return;
+    }
+
     if (result != null && result is Map) {
       setState(() {
         pickupController.text = result["current"] ?? "";
@@ -790,51 +811,55 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         final offers = snapshot.data!.docs;
 
-                        return Container(
-                          height: 140,
-                          child: PageView.builder(
-                            controller: _offerPageController,
-                            itemCount: offers.length,
-                            itemBuilder: (context, index) {
-                              final data =
-                                  offers[index].data() as Map<String, dynamic>;
+                        return Column(
+                          children: [
+                            Container(
+                              height: 140,
+                              child: PageView.builder(
+                                controller: _offerPageController,
+                                itemCount: offers.length,
+                                itemBuilder: (context, index) {
+                                  final data =
+                                      offers[index].data()
+                                          as Map<String, dynamic>;
 
-                              final orderId = data['offerCode'] ?? '';
-                              final offerMode =
-                                  data['offerMode'] ?? 'Percentage';
-                              final offerValue = data['offerValue'] ?? '';
+                                  final orderId = data['offerCode'] ?? '';
+                                  final offerMode =
+                                      data['offerMode'] ?? 'Percentage';
+                                  final offerValue = data['offerValue'] ?? '';
 
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6,
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                    ),
+                                    child: offerCard(
+                                      orderId: orderId,
+                                      offerMode: offerMode,
+                                      offerValue: offerValue,
+                                      imagePath: "images/newOffer.png",
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            SizedBox(height: 12),
+                            if (offers.isNotEmpty)
+                              Center(
+                                child: SmoothPageIndicator(
+                                  controller: _offerPageController,
+                                  count: offers.length,
+                                  effect: WormEffect(
+                                    dotHeight: 6,
+                                    dotWidth: 40,
+                                    activeDotColor: korangeColor,
+                                    dotColor: Colors.grey.shade300,
+                                  ),
                                 ),
-                                child: offerCard(
-                                  orderId: orderId,
-                                  offerMode: offerMode,
-                                  offerValue: offerValue,
-                                  imagePath: "images/newOffer.png",
-                                ),
-                              );
-                            },
-                          ),
+                              ),
+                          ],
                         );
                       },
                     ),
-
-                    SizedBox(height: 12),
-                    if (offerImages.isNotEmpty)
-                      Center(
-                        child: SmoothPageIndicator(
-                          controller: _offerPageController,
-                          count: offerImages.length,
-                          effect: WormEffect(
-                            dotHeight: 6,
-                            dotWidth: 40,
-                            activeDotColor: korangeColor,
-                            dotColor: Colors.grey.shade300,
-                          ),
-                        ),
-                      ),
                   ],
                 ),
               ),
@@ -1604,20 +1629,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               onTap: () {
                                 setState(() {
                                   selectedTripTime = "Schedule";
-                                  selectedTripMode = "Hourly Trip";
+                                  // selectedTripMode = "Hourly Trip";
                                 });
 
-                                showCityLimitsDialog(
-                                  context,
-                                  selectedCityHours,
-                                  (hour) {
-                                    setState(() {
-                                      selectedCityHours = hour;
-                                      selectedHourlyPrice =
-                                          hourlyPriceMap[hour]!;
-                                    });
-                                  },
-                                );
+                                // showCityLimitsDialog(
+                                //   context,
+                                //   selectedCityHours,
+                                //   (hour) {
+                                //     setState(() {
+                                //       selectedCityHours = hour;
+                                //       selectedHourlyPrice =
+                                //           hourlyPriceMap[hour]!;
+                                //     });
+                                //   },
+                                // );
                               },
                             ),
                           ],

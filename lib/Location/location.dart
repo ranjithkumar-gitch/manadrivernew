@@ -366,7 +366,10 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                 alignment: Alignment.centerLeft,
                 child: GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  onTap: () => Navigator.pop(context),
+                  onTap: () {
+                    Navigator.pop(context, {"clearLocations": true});
+                  },
+
                   child: Container(
                     width: 50,
                     height: 50,
@@ -684,6 +687,12 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                   width: 100,
                   child: ElevatedButton(
                     onPressed: () {
+                      if (distanceText == null || durationText == null) {
+                        _showInvalidLocationDialog(
+                          "Unable to calculate distance and duration. Please select the pickup and drop locations again.",
+                        );
+                        return;
+                      }
                       if (currentLocationController.text.isEmpty) {
                         _showInvalidLocationDialog(
                           "Please select pickup location",
@@ -750,7 +759,9 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                           (currentLocationController.text.isNotEmpty &&
                                   dropLocationController.text.isNotEmpty &&
                                   (!showSecondDrop ||
-                                      secondDropController.text.isNotEmpty))
+                                      secondDropController.text.isNotEmpty) &&
+                                  distanceText != null &&
+                                  durationText != null)
                               ? korangeColor
                               : Colors.grey.shade500,
                       shape: RoundedRectangleBorder(
