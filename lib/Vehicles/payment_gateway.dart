@@ -19,9 +19,10 @@ class _PaymentGatewayState extends State<PaymentGateway> {
 
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => BottomNavigation()),
+          (route) => false,
         );
       }
     });

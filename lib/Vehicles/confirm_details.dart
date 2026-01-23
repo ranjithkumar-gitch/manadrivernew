@@ -1453,7 +1453,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                 textcolor: KorangeColorNew,
                               ),
                               CustomText(
-                                text: widget.bookingdocID,
+                                text: widget.bookingData['bookingId'],
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
                                 textcolor: KblackColor,

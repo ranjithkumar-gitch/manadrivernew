@@ -2704,8 +2704,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 (_) => ConfirmDetails(
                                                   bookingData: bookingWithId,
                                                   fromHome: true,
-                                                  bookingdocID:
-                                                      bookingWithId['id'],
+                                                  bookingdocID: '',
                                                 ),
                                           ),
                                         );

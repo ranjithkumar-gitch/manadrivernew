@@ -102,7 +102,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     );
   }
 
-  /// 🔥 PURE STREAM PIPELINE (NO FUTUREBUILDER)
   Stream<List<Map<String, dynamic>>> _transactionsStream() {
     return FirebaseFirestore.instance
         .collection('transactions')
@@ -162,6 +161,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               tx['driverName'] = driverName;
               tx['vehicleName'] = vehicleName;
               tx['bookingStatus'] = bookingStatus;
+              tx['bookingDocId'] = bookingDocId;
+
               filtered.add(tx);
             }
           }
@@ -182,7 +183,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     final driverName = tx['driverName'];
     final vehicleName = tx['vehicleName'];
     final bookingStatus = tx['bookingStatus'] ?? '';
-
+    final bookingdocId = tx['bookingDocId'] ?? '';
     final dateString =
         "${timestamp.day.toString().padLeft(2, '0')}/${timestamp.month.toString().padLeft(2, '0')}/${timestamp.year}";
     final hour =
@@ -278,6 +279,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       fontWeight: FontWeight.w400,
                     ),
                   ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Image.asset('images/idcard.png'),
+                const SizedBox(width: 8),
+                CustomText(
+                  text: 'Ride Id : $bookingdocId',
+                  fontSize: 13,
+                  textcolor: kseegreyColor,
+                  fontWeight: FontWeight.w400,
                 ),
               ],
             ),
