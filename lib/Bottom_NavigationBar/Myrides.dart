@@ -83,6 +83,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
     String vehicleId = bookingData['vehicleId'] ?? "";
     String driverDocId = bookingData['driverdocId'] ?? "";
     String driverRating = "N/A";
+
     // String price = bookingData['fare'] ?? "";
     final lang = AppLocalizations.of(context)!;
     double price = double.parse(bookingData['fare']?.toString() ?? '0.00');
@@ -149,6 +150,7 @@ class _MyRidesScreenState extends State<MyRidesScreen>
                         (context) => ConfirmDetails(
                           bookingData: bookingData,
                           fromHome: false,
+                          bookingdocID: bookingData['bookingId'],
                         ),
                   ),
                 );

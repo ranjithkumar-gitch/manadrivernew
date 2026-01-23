@@ -327,6 +327,9 @@ class AppLocalizationsTe extends AppLocalizations {
   String get p_email => 'ఇమెయిల్ చిరునామా';
 
   @override
+  String get email => 'ఇమెయిల్:';
+
+  @override
   String get p_phoneNumner => 'ఫోన్ నంబర్';
 
   @override
@@ -376,6 +379,9 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get emailId => 'ఇమెయిల్ ఐడి';
+
+  @override
+  String get phone => 'ఫోన్:';
 
   @override
   String get registerAsUser => 'నమోదు చేయండి';
@@ -1191,10 +1197,10 @@ class AppLocalizationsTe extends AppLocalizations {
   String get nyzoRideSupport => 'Nyzo Ride సహాయం';
 
   @override
-  String get nyzoRideEmail => 'ఇమెయిల్: hello@nyzoride.com';
+  String get nyzoRideEmail => 'hello@nyzoride.com';
 
   @override
-  String get nyzoRidePhone => 'ఫోన్: 9000464851';
+  String get nyzoRidePhone => '9000464851';
 
   @override
   String get termsConditions => 'నిబంధనలు & షరతులు';
@@ -1486,4 +1492,10 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get commitmentAgreement => 'ఈ ప్లాట్‌ఫారమ్‌ను ఉపయోగించడం ద్వారా, యజమానులు మరియు డ్రైవర్లు బాధ్యతాయుతంగా, గౌరవప్రదంగా మరియు మా నిబంధనలు & షరతుల ప్రకారం పరస్పరం వ్యవహరించడానికి అంగీకరిస్తారు.';
+
+  @override
+  String get rideId => 'రైడ్ ఐడి';
+
+  @override
+  String get freeCancellationInfo => 'నిర్ధారణ అయిన 5 నిమిషాల లోపల మీరు ఎలాంటి ఛార్జీలు లేకుండా మీ బుకింగ్‌ను రద్దు చేసుకోవచ్చు.';
 }

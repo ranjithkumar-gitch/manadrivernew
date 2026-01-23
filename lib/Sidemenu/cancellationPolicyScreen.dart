@@ -58,9 +58,7 @@ class CancellationPolicyScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SectionTitle(localizations.cP_q1),
-            SectionDescription(
-              'You can cancel your booking within 5 minutes of confirmation without any charges.',
-            ),
+            SectionDescription(localizations.freeCancellationInfo),
             const SizedBox(height: 20),
             SectionTitle(localizations.cP_q2),
             SectionDescription(localizations.cP_a2),

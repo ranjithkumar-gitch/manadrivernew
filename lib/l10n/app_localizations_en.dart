@@ -327,6 +327,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get p_email => 'Email Address';
 
   @override
+  String get email => 'Email:';
+
+  @override
   String get p_phoneNumner => 'Phone Number';
 
   @override
@@ -376,6 +379,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get emailId => 'Email ID';
+
+  @override
+  String get phone => 'Phone:';
 
   @override
   String get registerAsUser => 'Register';
@@ -1486,4 +1492,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commitmentAgreement => 'By using this platform, owners and drivers agree to interact responsibly, respectfully, and in accordance with our Terms & Conditions.';
+
+  @override
+  String get rideId => 'Ride ID';
+
+  @override
+  String get freeCancellationInfo => 'You can cancel your booking within 5 minutes of confirmation without any charges.';
 }

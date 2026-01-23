@@ -25,11 +25,13 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 class ConfirmDetails extends StatefulWidget {
   final Map<String, dynamic> bookingData;
   final bool fromHome;
+  final String bookingdocID;
 
   const ConfirmDetails({
     super.key,
     required this.bookingData,
     required this.fromHome,
+    required this.bookingdocID,
   });
 
   @override
@@ -1440,6 +1442,24 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                               ],
                             ),
 
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              CustomText(
+                                text: '${lang.rideId} : ',
+                                fontSize: 12,
+
+                                fontWeight: FontWeight.w400,
+                                textcolor: KorangeColorNew,
+                              ),
+                              CustomText(
+                                text: widget.bookingdocID,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                textcolor: KblackColor,
+                              ),
+                            ],
+                          ),
                           const SizedBox(height: 15),
                           DottedLine(
                             dashColor: kbordergreyColor,

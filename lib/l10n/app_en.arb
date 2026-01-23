@@ -107,6 +107,7 @@
 "p_firstName": "First Name",
 "p_lastName": "last Name",
 "p_email": "Email Address",
+"email": "Email:",
 "p_phoneNumner": "Phone Number",
 "p_verified": "Verified",
 "p_editProfile": "Edit Profile",
@@ -126,6 +127,7 @@
   "firstName": "First Name",
   "lastName": "Last Name",
   "emailId": "Email ID",
+  "phone": "Phone:",
   "registerAsUser": "Register",
   "validFirstName": "Please enter a valid first name",
   "validLastName": "Please enter a valid last name",
@@ -555,7 +557,10 @@
   "commitmentTransparency": "Transparency in platform usage",
   "commitmentSafetyPrivacy": "User safety and data privacy",
   "commitmentImprovement": "Continuous improvement based on user feedback",
-  "commitmentAgreement": "By using this platform, owners and drivers agree to interact responsibly, respectfully, and in accordance with our Terms & Conditions."
+  "commitmentAgreement": "By using this platform, owners and drivers agree to interact responsibly, respectfully, and in accordance with our Terms & Conditions.",
+  "rideId": "Ride ID",
+  "freeCancellationInfo": "You can cancel your booking within 5 minutes of confirmation without any charges."
+
 
 
 

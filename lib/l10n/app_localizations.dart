@@ -733,6 +733,12 @@ abstract class AppLocalizations {
   /// **'Email Address'**
   String get p_email;
 
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email:'**
+  String get email;
+
   /// No description provided for @p_phoneNumner.
   ///
   /// In en, this message translates to:
@@ -834,6 +840,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Email ID'**
   String get emailId;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone:'**
+  String get phone;
 
   /// No description provided for @registerAsUser.
   ///
@@ -3054,6 +3066,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'By using this platform, owners and drivers agree to interact responsibly, respectfully, and in accordance with our Terms & Conditions.'**
   String get commitmentAgreement;
+
+  /// No description provided for @rideId.
+  ///
+  /// In en, this message translates to:
+  /// **'Ride ID'**
+  String get rideId;
+
+  /// No description provided for @freeCancellationInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'You can cancel your booking within 5 minutes of confirmation without any charges.'**
+  String get freeCancellationInfo;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -253,6 +253,7 @@
   "paymentCompleted": "भुगतान पूरा हुआ",
   "paymentFailed": "भुगतान विफल",
   "rideCompleted": "यात्रा पूरी हुई",
+  "rideId": "राइड आईडी",
   
   "all": "सभी", "newRide": "नई यात्रा", "accepted": "स्वीकृत", "ongoing": "चालू", "completed": "पूर्ण", "cancelled": "रद्द",
   "noRidesAvailable": "कोई यात्रा उपलब्ध नहीं है",
@@ -359,8 +360,11 @@
   "contactUs": "11. हमसे संपर्क करें",
   "privacyConcernsContact": "गोपनीयता चिंताओं या डेटा अनुरोधों के लिए संपर्क करें:",
   "nyzoRideSupport": "Nyzo Ride समर्थन",
-  "nyzoRideEmail": "ईमेल: hello@nyzoride.com",
+  "nyzoRideEmail": "hello@nyzoride.com",
+  "phone": "फ़ोन:",
+  "email": "ईमेल:",
   "nyzoRidePhone": "फ़ोन: 9000464851",
+  "termsConditions": "नियम और शर्तें",
   "termsConditionsTitle": "NYZO RIDE – मालिक",
   "platformPurpose": "1. प्लेटफ़ॉर्म उद्देश्य",
   "platformPurposeDesc1": "यह एप्लिकेशन केवल एक तकनीकी प्लेटफ़ॉर्म है जो वाहन मालिकों को स्वतंत्र ड्राइवरों से जोड़ता है।",
@@ -459,7 +463,9 @@
   "commitmentTransparency": "प्लेटफ़ॉर्म उपयोग में पारदर्शिता",
   "commitmentSafetyPrivacy": "उपयोगकर्ता सुरक्षा और डेटा गोपनीयता",
   "commitmentImprovement": "उपयोगकर्ता प्रतिक्रिया के आधार पर निरंतर सुधार",
-  "commitmentAgreement": "इस प्लेटफ़ॉर्म का उपयोग करके, मालिक और ड्राइवर जिम्मेदारीपूर्वक, सम्मानपूर्वक और हमारे नियमों एवं शर्तों के अनुसार बातचीत करने के लिए सहमत होते हैं।"
+  "commitmentAgreement": "इस प्लेटफ़ॉर्म का उपयोग करके, मालिक और ड्राइवर जिम्मेदारीपूर्वक, सम्मानपूर्वक और हमारे नियमों एवं शर्तों के अनुसार बातचीत करने के लिए सहमत होते हैं।",
+  "freeCancellationInfo": "पुष्टि के 5 मिनट के भीतर आप बिना किसी शुल्क के अपनी बुकिंग रद्द कर सकते हैं।"
+
 
 
 
