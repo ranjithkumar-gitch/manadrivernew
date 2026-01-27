@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
 
 class FCMService {
-  Future<String> _getAccessToken() async {  
+  Future<String> _getAccessToken() async {
     try {
       String scope = 'https://www.googleapis.com/auth/firebase.messaging';
       String rawKey = SharedPrefServices.getPrivateKey() ?? "";
@@ -56,10 +56,7 @@ class FCMService {
         "token": recipientFCMToken,
         "notification": {"title": title, "body": body},
 
-        "data": {
-          "route": "/splash",
-          "click_action": "FLUTTER_NOTIFICATION_CLICK",
-        },
+        "data": {"route": "/", "click_action": "FLUTTER_NOTIFICATION_CLICK"},
 
         // "android": {
         //   "notification": {"click_action": "FLUTTER_NOTIFICATION_CLICK"},

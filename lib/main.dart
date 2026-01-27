@@ -32,20 +32,44 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  await Geolocator.requestPermission();
-  await Geolocator.isLocationServiceEnabled();
-  await _requestNotificationPermission();
+  // Initialize notifications without blocking
   await FirebaseApi().initNotifications();
+  _setupNotificationListeners();
 
-  if (Platform.isAndroid) {
-    // Code specific to Android
-    print("Running on Android");
-  } else if (Platform.isIOS) {
-    // Code specific to iOS
-    await FirebaseApi().iosNotifications();
-    print("Running on iOS");
-  }
+  // Initialize permissions asynchronously without blocking
+  _initializePermissionsAsync();
+
   runApp(const MyApp());
+}
+
+void _setupNotificationListeners() {
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    if (message.data['route'] != null) {
+      navigatorKey.currentState?.pushNamed(message.data['route']);
+    }
+  });
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    if (message.data['route'] != null) {
+      navigatorKey.currentState?.pushNamed(message.data['route']);
+    }
+  });
+}
+
+Future<void> _initializePermissionsAsync() async {
+  try {
+    await Future.wait([
+      Geolocator.requestPermission(),
+      Geolocator.isLocationServiceEnabled(),
+      _requestNotificationPermission(),
+    ]);
+
+    if (Platform.isIOS) {
+      await FirebaseApi().iosNotifications();
+    }
+  } catch (e) {
+    debugPrint('Permission initialization error: $e');
+  }
 }
 
 Future<void> _requestNotificationPermission() async {
@@ -58,8 +82,6 @@ Future<void> _requestNotificationPermission() async {
   );
   print('User granted permission: ${settings.authorizationStatus}');
 }
-
-// final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
