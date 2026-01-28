@@ -102,7 +102,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterDropLocation2 => 'Enter drop location 2';
 
   @override
-  String get bookADriver => 'Book A Driver';
+  String get bookADriver => 'Book A Captain';
 
   @override
   String get myVehicles => 'My Vehicles';
@@ -114,7 +114,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menumyAddress => 'My Address';
 
   @override
-  String get menuFavDrivers => 'Favourite Drivers';
+  String get menuFavDrivers => 'Favourite Captains';
 
   @override
   String get menuUpdateMobileNumber => 'Update Mobile Number';
@@ -183,7 +183,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get add_new_Address => 'Add New Address';
 
   @override
-  String get fav_dummy_text => 'You don’t Favourite Drivers at the moment please try after sometime.';
+  String get fav_dummy_text => 'You don’t Favourite Captains at the moment please try after sometime.';
 
   @override
   String get offer_dummy_text => 'You don’t have offers at the moment. Please try again later.';
@@ -282,10 +282,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cP_a2 => '• 59 cancellation fee will be charged if:';
 
   @override
-  String get cP_a22 => '• Driver already started the trip.';
+  String get cP_a22 => '• Captain already started the trip.';
 
   @override
-  String get cP_a23 => '• Driver waited at your location for more than 10';
+  String get cP_a23 => '• Captain waited at your location for more than 10';
 
   @override
   String get cP_q3 => '3. No-Show Policy (Customer absent)';
@@ -294,10 +294,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cP_a3 => 'If customer is not available at pickup point even after 15 minutes, trip will be auto-cancelled. #100 will be charged as no-show';
 
   @override
-  String get cP_q4 => '4. Driver Cancellation';
+  String get cP_q4 => '4. Captain Cancellation';
 
   @override
-  String get cP_a4 => 'If a driver cancels after accepting, we will reassign another driver. Repeated cancellations by drivers will lead to penalties and suspension.';
+  String get cP_a4 => 'If a captain cancels after accepting, we will reassign another captain. Repeated cancellations by Captains will lead to penalties and suspension.';
 
   @override
   String get cP_q5 => '3. Refund Timeline';
@@ -306,7 +306,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cP_a5 => 'If you paid online, eligible refunds will be processed within 3-5 business days.';
 
   @override
-  String get mDdisk => 'Mana Driver - Mee Vahanam, Maa Driver!\nMana Driver is your trusted platform to book professional, verified drivers anytime you need. Whether it\'s a one-way ride, round trip, hourly booking, or outstation travel - we\'ve got you covered.';
+  String get mDdisk => 'Mana Captain - Mee Vahanam, Maa Captain!\nMana Captain is your trusted platform to book professional, verified Captains anytime you need. Whether it\'s a one-way ride, round trip, hourly booking, or outstation travel - we\'ve got you covered.';
 
   @override
   String get dA_t1 => 'Warning';
@@ -405,7 +405,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ok => 'OK';
 
   @override
-  String get mobileRegisteredDriver => 'This mobile number is already registered as a Driver.';
+  String get mobileRegisteredDriver => 'This mobile number is already registered as a Captain.';
 
   @override
   String get haveAccount => 'You have an account? ';
@@ -687,7 +687,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get arrivalDateTimeRequired => 'Please select both arrival date and arrival time to continue.';
 
   @override
-  String get driverRequestedSuccess => 'Requested a driver successfully';
+  String get driverRequestedSuccess => 'Requested a captain successfully';
 
   @override
   String get paymentBreakup => 'Payment Breakup';
@@ -756,7 +756,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get vehicleNotAssigned => 'Vehicle not assigned';
 
   @override
-  String get driverNotAssigned => 'Driver Not Assigned';
+  String get driverNotAssigned => 'Captain Not Assigned';
 
   @override
   String get notAvailable => 'N/A';
@@ -786,13 +786,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loading => 'Loading...';
 
   @override
-  String get driverAssigned => 'Driver Assigned';
+  String get driverAssigned => 'Captain Assigned';
 
   @override
   String get ride => 'Ride';
 
   @override
-  String get loadingDriver => 'Loading driver...';
+  String get loadingDriver => 'Loading captian...';
 
   @override
   String get typeMessage => 'Type a message...';
@@ -810,7 +810,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verificationCodeRide => 'Verification code to start the ride';
 
   @override
-  String get shareOtpDriver => 'Share this OTP with your driver to start the ride.';
+  String get shareOtpDriver => 'Share this OTP with your captain to start the ride.';
 
   @override
   String get fourDigitOtp => '4-Digit OTP';
@@ -867,7 +867,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contactDetails => 'Contact Details';
 
   @override
-  String get driverDetails => 'Driver Details';
+  String get driverDetails => 'Captain Details';
 
   @override
   String get paymentSummary => 'Payment Summary';
@@ -909,7 +909,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noOffersAvailable => 'No Offers Available';
 
   @override
-  String get politeDriver => 'Polite Driver';
+  String get politeDriver => 'Polite Captain';
 
   @override
   String get cleanliness => 'Cleanliness';
@@ -921,7 +921,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onTime => 'On Time';
 
   @override
-  String get tapToRateDriver => 'Tap to rate your driver';
+  String get tapToRateDriver => 'Tap to rate your captain';
 
   @override
   String get howWasYourTrip => 'How was your trip with\n';
@@ -966,7 +966,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lastUpdated => 'Last Updated: January 2026';
 
   @override
-  String get privacyIntro => 'Nyzo Ride (“Nyzo Ride”, “we”, “our”, “us”) respects your privacy and is committed to protecting the personal information of users (“you”, “user”, “driver”, “vehicle owner”) who use the Nyzo Ride mobile application, website, and related services (collectively, the “Platform”).';
+  String get privacyIntro => 'Nyzo Ride (“Nyzo Ride”, “we”, “our”, “us”) respects your privacy and is committed to protecting the personal information of users (“you”, “user”, captain, “vehicle owner”) who use the Nyzo Ride mobile application, website, and related services (collectively, the “Platform”).';
 
   @override
   String get privacyPolicyExplanation => 'This Privacy Policy explains how we collect, use, store, share, and protect your information.';
@@ -990,7 +990,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profilePhotoOptional => 'Profile photo (optional)';
 
   @override
-  String get governmentIdDetails => 'Government ID details (for drivers – License, PAN/Aadhaar where required)';
+  String get governmentIdDetails => 'Government ID details (for captains – License, PAN/Aadhaar where required)';
 
   @override
   String get locationInformation => '1.2 Location Information';
@@ -1044,13 +1044,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weUseYourInformationTo => 'We use your information to:';
 
   @override
-  String get connectOwnersDrivers => 'Connect vehicle owners with available independent drivers';
+  String get connectOwnersDrivers => 'Connect vehicle owners with available independent captains';
 
   @override
   String get enableBookingsTrips => 'Enable bookings and trip management';
 
   @override
-  String get verifyDriverIdentity => 'Verify driver identity and eligibility';
+  String get verifyDriverIdentity => 'Verify captain identity and eligibility';
 
   @override
   String get processPaymentsRefunds => 'Process payments and refunds';
@@ -1077,7 +1077,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weMayShareLimitedInfo => 'We may share limited information with:';
 
   @override
-  String get shareDriversOwners => 'Drivers / Vehicle Owners – only what is required for a trip';
+  String get shareDriversOwners => 'Captains / Vehicle Owners – only what is required for a trip';
 
   @override
   String get sharePaymentGateways => 'Payment gateways – for transaction processing';
@@ -1170,10 +1170,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get doesNotOwnVehicles => 'Nyzo Ride does not own vehicles';
 
   @override
-  String get doesNotEmployDrivers => 'Nyzo Ride does not employ drivers';
+  String get doesNotEmployDrivers => 'Nyzo Ride does not employ captains';
 
   @override
-  String get independentProviders => 'Drivers and vehicle owners are independent service providers';
+  String get independentProviders => 'Captains and vehicle owners are independent service providers';
 
   @override
   String get policyChanges => '10. CHANGES TO THIS POLICY';
@@ -1212,10 +1212,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get platformPurpose => '1. PLATFORM PURPOSE';
 
   @override
-  String get platformPurposeDesc1 => 'This application is only a technology platform that connects vehicle owners with independent drivers.';
+  String get platformPurposeDesc1 => 'This application is only a technology platform that connects vehicle owners with independent captains.';
 
   @override
-  String get platformPurposeDesc2 => 'The platform does not provide drivers as employees, does not guarantee driver availability, and does not offer transportation services.';
+  String get platformPurposeDesc2 => 'The platform does not provide captains as employees, does not guarantee captain availability, and does not offer transportation services.';
 
   @override
   String get eligibility => '2. ELIGIBILITY';
@@ -1248,16 +1248,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get vehicleResponsibilityPoint3 => 'All documents (RC, Insurance, PUC, permits if applicable) are valid';
 
   @override
-  String get driverRelationship => '4. DRIVER RELATIONSHIP';
+  String get driverRelationship => '4.CAPTAIN RELATIONSHIP';
 
   @override
-  String get driversIndependent => 'Drivers on the platform are independent individuals, not employees or agents of the platform.';
+  String get driversIndependent => 'Captains on the platform are independent individuals, not employees or agents of the platform.';
 
   @override
-  String get platformNotResponsibleDrivers => 'The platform is not responsible for the conduct, behavior, or actions of drivers.';
+  String get platformNotResponsibleDrivers => 'The platform is not responsible for the conduct, behavior, or actions of captains.';
 
   @override
-  String get ownersFreeAcceptReject => 'Owners are free to accept or reject any driver request.';
+  String get ownersFreeAcceptReject => 'Owners are free to accept or reject any captain request.';
 
   @override
   String get bookingTripDetails => '5. BOOKING & TRIP DETAILS';
@@ -1269,7 +1269,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pickupDropDurationInstructions => 'Pickup, drop location, duration, and special instructions must be clearly mentioned.';
 
   @override
-  String get tripChangesAgreement => 'Any change during the trip must be mutually agreed between owner and driver.';
+  String get tripChangesAgreement => 'Any change during the trip must be mutually agreed between owner and captain.';
 
   @override
   String get payments => '6. PAYMENTS';
@@ -1281,7 +1281,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get platformFacilitatesPayments => 'The platform only facilitates payments and is not responsible for off-app or cash transactions.';
 
   @override
-  String get additionalChargesSettlement => 'Any additional charges must be settled directly between owner and driver.';
+  String get additionalChargesSettlement => 'Any additional charges must be settled directly between owner and captain.';
 
   @override
   String get cancellations => '7. CANCELLATIONS';
@@ -1299,7 +1299,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get platformNotResponsibleSafety => 'The platform is not responsible for accidents, injuries, damages, theft, or losses during the trip.';
 
   @override
-  String get insuranceClaimsHandledDirectly => 'Any insurance claims must be handled directly between the owner, driver, and insurance company.';
+  String get insuranceClaimsHandledDirectly => 'Any insurance claims must be handled directly between the owner, captain, and insurance company.';
 
   @override
   String get ownersEnsureInsurance => 'Owners are advised to ensure active insurance coverage before every trip.';
@@ -1320,7 +1320,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notResponsibleDamages => 'Any scratches, dents, or damages identified after trip completion';
 
   @override
-  String get raiseIssueImmediately => 'If any issue is noticed, the owner must raise it immediately with the driver.';
+  String get raiseIssueImmediately => 'If any issue is noticed, the owner must raise it immediately with the captain.';
 
   @override
   String get complaintsNotEntertained => 'Complaints raised after delay or after leaving the vehicle will not be entertained.';
@@ -1335,7 +1335,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get illegalActivities => 'Use the platform for illegal activities';
 
   @override
-  String get misbehaveDrivers => 'Misbehave, threaten, or harass drivers';
+  String get misbehaveDrivers => 'Misbehave, threaten, or harass captains';
 
   @override
   String get violationAccountTermination => 'Violation may lead to account termination without prior notice.';
@@ -1434,13 +1434,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutUsHeading => 'About Us';
 
   @override
-  String get aboutUsDescription => 'We are a technology-driven platform built to simplify the connection between vehicle owners and independent, verified drivers.';
+  String get aboutUsDescription => 'We are a technology-driven platform built to simplify the connection between vehicle owners and independent, verified captains.';
 
   @override
-  String get ourGoalDescription => 'Our goal is to make it easy for vehicle owners to find reliable drivers whenever they need—whether it is for one-way trips, round trips, hourly usage, or outstation travel.';
+  String get ourGoalDescription => 'Our goal is to make it easy for vehicle owners to find reliable captains whenever they need—whether it is for one-way trips, round trips, hourly usage, or outstation travel.';
 
   @override
-  String get facilitatorDescription => 'We act only as a facilitator, providing a digital platform that enables owners and drivers to connect, communicate, and complete trips smoothly. We do not employ drivers, nor do we provide transportation services directly.';
+  String get facilitatorDescription => 'We act only as a facilitator, providing a digital platform that enables owners and captains to connect, communicate, and complete trips smoothly. We do not employ captains, nor do we provide transportation services directly.';
 
   @override
   String get whatWeDoTitle => 'What We Do';
@@ -1449,7 +1449,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get transparentBookingSystem => 'Provide a transparent booking and trip management system';
 
   @override
-  String get easyCommunication => 'Enable easy communication between owners and drivers';
+  String get easyCommunication => 'Enable easy communication between owners and captains';
 
   @override
   String get promoteConvenience => 'Promote convenience, flexibility, and efficiency';
@@ -1458,22 +1458,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get whatWeDoNotDoTitle => 'What We Do Not Do';
 
   @override
-  String get notEmployDrivers => 'We do not employ drivers as staff or agents';
+  String get notEmployDrivers => 'We do not employ captains as staff or agents';
 
   @override
   String get notOwnVehicles => 'We do not own or operate vehicles';
 
   @override
-  String get notGuaranteeAvailability => 'We do not guarantee driver availability';
+  String get notGuaranteeAvailability => 'We do not guarantee captain availability';
 
   @override
-  String get notResponsibleDisputes => 'We do not take responsibility for personal disputes between owners and drivers';
+  String get notResponsibleDisputes => 'We do not take responsibility for personal disputes between owners and captains';
 
   @override
   String get ourVisionTitle => 'Our Vision';
 
   @override
-  String get ourVisionDescription => 'To become a trusted and convenient driver-connection platform, empowering vehicle owners with flexibility and peace of mind while supporting independent drivers through fair opportunities.';
+  String get ourVisionDescription => 'To become a trusted and convenient captain-connection platform, empowering vehicle owners with flexibility and peace of mind while supporting independent captains through fair opportunities.';
 
   @override
   String get ourCommitmentTitle => 'Our Commitment';
@@ -1491,7 +1491,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commitmentImprovement => 'Continuous improvement based on user feedback';
 
   @override
-  String get commitmentAgreement => 'By using this platform, owners and drivers agree to interact responsibly, respectfully, and in accordance with our Terms & Conditions.';
+  String get commitmentAgreement => 'By using this platform, owners and captains agree to interact responsibly, respectfully, and in accordance with our Terms & Conditions.';
 
   @override
   String get rideId => 'Ride ID';

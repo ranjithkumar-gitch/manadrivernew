@@ -286,7 +286,7 @@ abstract class AppLocalizations {
   /// No description provided for @bookADriver.
   ///
   /// In en, this message translates to:
-  /// **'Book A Driver'**
+  /// **'Book A Captain'**
   String get bookADriver;
 
   /// No description provided for @myVehicles.
@@ -310,7 +310,7 @@ abstract class AppLocalizations {
   /// No description provided for @menuFavDrivers.
   ///
   /// In en, this message translates to:
-  /// **'Favourite Drivers'**
+  /// **'Favourite Captains'**
   String get menuFavDrivers;
 
   /// No description provided for @menuUpdateMobileNumber.
@@ -448,7 +448,7 @@ abstract class AppLocalizations {
   /// No description provided for @fav_dummy_text.
   ///
   /// In en, this message translates to:
-  /// **'You don’t Favourite Drivers at the moment please try after sometime.'**
+  /// **'You don’t Favourite Captains at the moment please try after sometime.'**
   String get fav_dummy_text;
 
   /// No description provided for @offer_dummy_text.
@@ -646,13 +646,13 @@ abstract class AppLocalizations {
   /// No description provided for @cP_a22.
   ///
   /// In en, this message translates to:
-  /// **'• Driver already started the trip.'**
+  /// **'• Captain already started the trip.'**
   String get cP_a22;
 
   /// No description provided for @cP_a23.
   ///
   /// In en, this message translates to:
-  /// **'• Driver waited at your location for more than 10'**
+  /// **'• Captain waited at your location for more than 10'**
   String get cP_a23;
 
   /// No description provided for @cP_q3.
@@ -670,13 +670,13 @@ abstract class AppLocalizations {
   /// No description provided for @cP_q4.
   ///
   /// In en, this message translates to:
-  /// **'4. Driver Cancellation'**
+  /// **'4. Captain Cancellation'**
   String get cP_q4;
 
   /// No description provided for @cP_a4.
   ///
   /// In en, this message translates to:
-  /// **'If a driver cancels after accepting, we will reassign another driver. Repeated cancellations by drivers will lead to penalties and suspension.'**
+  /// **'If a captain cancels after accepting, we will reassign another captain. Repeated cancellations by Captains will lead to penalties and suspension.'**
   String get cP_a4;
 
   /// No description provided for @cP_q5.
@@ -694,7 +694,7 @@ abstract class AppLocalizations {
   /// No description provided for @mDdisk.
   ///
   /// In en, this message translates to:
-  /// **'Mana Driver - Mee Vahanam, Maa Driver!\nMana Driver is your trusted platform to book professional, verified drivers anytime you need. Whether it\'s a one-way ride, round trip, hourly booking, or outstation travel - we\'ve got you covered.'**
+  /// **'Mana Captain - Mee Vahanam, Maa Captain!\nMana Captain is your trusted platform to book professional, verified Captains anytime you need. Whether it\'s a one-way ride, round trip, hourly booking, or outstation travel - we\'ve got you covered.'**
   String get mDdisk;
 
   /// No description provided for @dA_t1.
@@ -892,7 +892,7 @@ abstract class AppLocalizations {
   /// No description provided for @mobileRegisteredDriver.
   ///
   /// In en, this message translates to:
-  /// **'This mobile number is already registered as a Driver.'**
+  /// **'This mobile number is already registered as a Captain.'**
   String get mobileRegisteredDriver;
 
   /// No description provided for @haveAccount.
@@ -1456,7 +1456,7 @@ abstract class AppLocalizations {
   /// No description provided for @driverRequestedSuccess.
   ///
   /// In en, this message translates to:
-  /// **'Requested a driver successfully'**
+  /// **'Requested a captain successfully'**
   String get driverRequestedSuccess;
 
   /// No description provided for @paymentBreakup.
@@ -1594,7 +1594,7 @@ abstract class AppLocalizations {
   /// No description provided for @driverNotAssigned.
   ///
   /// In en, this message translates to:
-  /// **'Driver Not Assigned'**
+  /// **'Captain Not Assigned'**
   String get driverNotAssigned;
 
   /// No description provided for @notAvailable.
@@ -1654,7 +1654,7 @@ abstract class AppLocalizations {
   /// No description provided for @driverAssigned.
   ///
   /// In en, this message translates to:
-  /// **'Driver Assigned'**
+  /// **'Captain Assigned'**
   String get driverAssigned;
 
   /// No description provided for @ride.
@@ -1666,7 +1666,7 @@ abstract class AppLocalizations {
   /// No description provided for @loadingDriver.
   ///
   /// In en, this message translates to:
-  /// **'Loading driver...'**
+  /// **'Loading captian...'**
   String get loadingDriver;
 
   /// No description provided for @typeMessage.
@@ -1702,7 +1702,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareOtpDriver.
   ///
   /// In en, this message translates to:
-  /// **'Share this OTP with your driver to start the ride.'**
+  /// **'Share this OTP with your captain to start the ride.'**
   String get shareOtpDriver;
 
   /// No description provided for @fourDigitOtp.
@@ -1816,7 +1816,7 @@ abstract class AppLocalizations {
   /// No description provided for @driverDetails.
   ///
   /// In en, this message translates to:
-  /// **'Driver Details'**
+  /// **'Captain Details'**
   String get driverDetails;
 
   /// No description provided for @paymentSummary.
@@ -1900,7 +1900,7 @@ abstract class AppLocalizations {
   /// No description provided for @politeDriver.
   ///
   /// In en, this message translates to:
-  /// **'Polite Driver'**
+  /// **'Polite Captain'**
   String get politeDriver;
 
   /// No description provided for @cleanliness.
@@ -1924,7 +1924,7 @@ abstract class AppLocalizations {
   /// No description provided for @tapToRateDriver.
   ///
   /// In en, this message translates to:
-  /// **'Tap to rate your driver'**
+  /// **'Tap to rate your captain'**
   String get tapToRateDriver;
 
   /// No description provided for @howWasYourTrip.
@@ -2014,7 +2014,7 @@ abstract class AppLocalizations {
   /// No description provided for @privacyIntro.
   ///
   /// In en, this message translates to:
-  /// **'Nyzo Ride (“Nyzo Ride”, “we”, “our”, “us”) respects your privacy and is committed to protecting the personal information of users (“you”, “user”, “driver”, “vehicle owner”) who use the Nyzo Ride mobile application, website, and related services (collectively, the “Platform”).'**
+  /// **'Nyzo Ride (“Nyzo Ride”, “we”, “our”, “us”) respects your privacy and is committed to protecting the personal information of users (“you”, “user”, captain, “vehicle owner”) who use the Nyzo Ride mobile application, website, and related services (collectively, the “Platform”).'**
   String get privacyIntro;
 
   /// No description provided for @privacyPolicyExplanation.
@@ -2062,7 +2062,7 @@ abstract class AppLocalizations {
   /// No description provided for @governmentIdDetails.
   ///
   /// In en, this message translates to:
-  /// **'Government ID details (for drivers – License, PAN/Aadhaar where required)'**
+  /// **'Government ID details (for captains – License, PAN/Aadhaar where required)'**
   String get governmentIdDetails;
 
   /// No description provided for @locationInformation.
@@ -2170,7 +2170,7 @@ abstract class AppLocalizations {
   /// No description provided for @connectOwnersDrivers.
   ///
   /// In en, this message translates to:
-  /// **'Connect vehicle owners with available independent drivers'**
+  /// **'Connect vehicle owners with available independent captains'**
   String get connectOwnersDrivers;
 
   /// No description provided for @enableBookingsTrips.
@@ -2182,7 +2182,7 @@ abstract class AppLocalizations {
   /// No description provided for @verifyDriverIdentity.
   ///
   /// In en, this message translates to:
-  /// **'Verify driver identity and eligibility'**
+  /// **'Verify captain identity and eligibility'**
   String get verifyDriverIdentity;
 
   /// No description provided for @processPaymentsRefunds.
@@ -2236,7 +2236,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareDriversOwners.
   ///
   /// In en, this message translates to:
-  /// **'Drivers / Vehicle Owners – only what is required for a trip'**
+  /// **'Captains / Vehicle Owners – only what is required for a trip'**
   String get shareDriversOwners;
 
   /// No description provided for @sharePaymentGateways.
@@ -2422,13 +2422,13 @@ abstract class AppLocalizations {
   /// No description provided for @doesNotEmployDrivers.
   ///
   /// In en, this message translates to:
-  /// **'Nyzo Ride does not employ drivers'**
+  /// **'Nyzo Ride does not employ captains'**
   String get doesNotEmployDrivers;
 
   /// No description provided for @independentProviders.
   ///
   /// In en, this message translates to:
-  /// **'Drivers and vehicle owners are independent service providers'**
+  /// **'Captains and vehicle owners are independent service providers'**
   String get independentProviders;
 
   /// No description provided for @policyChanges.
@@ -2506,13 +2506,13 @@ abstract class AppLocalizations {
   /// No description provided for @platformPurposeDesc1.
   ///
   /// In en, this message translates to:
-  /// **'This application is only a technology platform that connects vehicle owners with independent drivers.'**
+  /// **'This application is only a technology platform that connects vehicle owners with independent captains.'**
   String get platformPurposeDesc1;
 
   /// No description provided for @platformPurposeDesc2.
   ///
   /// In en, this message translates to:
-  /// **'The platform does not provide drivers as employees, does not guarantee driver availability, and does not offer transportation services.'**
+  /// **'The platform does not provide captains as employees, does not guarantee captain availability, and does not offer transportation services.'**
   String get platformPurposeDesc2;
 
   /// No description provided for @eligibility.
@@ -2578,25 +2578,25 @@ abstract class AppLocalizations {
   /// No description provided for @driverRelationship.
   ///
   /// In en, this message translates to:
-  /// **'4. DRIVER RELATIONSHIP'**
+  /// **'4.CAPTAIN RELATIONSHIP'**
   String get driverRelationship;
 
   /// No description provided for @driversIndependent.
   ///
   /// In en, this message translates to:
-  /// **'Drivers on the platform are independent individuals, not employees or agents of the platform.'**
+  /// **'Captains on the platform are independent individuals, not employees or agents of the platform.'**
   String get driversIndependent;
 
   /// No description provided for @platformNotResponsibleDrivers.
   ///
   /// In en, this message translates to:
-  /// **'The platform is not responsible for the conduct, behavior, or actions of drivers.'**
+  /// **'The platform is not responsible for the conduct, behavior, or actions of captains.'**
   String get platformNotResponsibleDrivers;
 
   /// No description provided for @ownersFreeAcceptReject.
   ///
   /// In en, this message translates to:
-  /// **'Owners are free to accept or reject any driver request.'**
+  /// **'Owners are free to accept or reject any captain request.'**
   String get ownersFreeAcceptReject;
 
   /// No description provided for @bookingTripDetails.
@@ -2620,7 +2620,7 @@ abstract class AppLocalizations {
   /// No description provided for @tripChangesAgreement.
   ///
   /// In en, this message translates to:
-  /// **'Any change during the trip must be mutually agreed between owner and driver.'**
+  /// **'Any change during the trip must be mutually agreed between owner and captain.'**
   String get tripChangesAgreement;
 
   /// No description provided for @payments.
@@ -2644,7 +2644,7 @@ abstract class AppLocalizations {
   /// No description provided for @additionalChargesSettlement.
   ///
   /// In en, this message translates to:
-  /// **'Any additional charges must be settled directly between owner and driver.'**
+  /// **'Any additional charges must be settled directly between owner and captain.'**
   String get additionalChargesSettlement;
 
   /// No description provided for @cancellations.
@@ -2680,7 +2680,7 @@ abstract class AppLocalizations {
   /// No description provided for @insuranceClaimsHandledDirectly.
   ///
   /// In en, this message translates to:
-  /// **'Any insurance claims must be handled directly between the owner, driver, and insurance company.'**
+  /// **'Any insurance claims must be handled directly between the owner, captain, and insurance company.'**
   String get insuranceClaimsHandledDirectly;
 
   /// No description provided for @ownersEnsureInsurance.
@@ -2722,7 +2722,7 @@ abstract class AppLocalizations {
   /// No description provided for @raiseIssueImmediately.
   ///
   /// In en, this message translates to:
-  /// **'If any issue is noticed, the owner must raise it immediately with the driver.'**
+  /// **'If any issue is noticed, the owner must raise it immediately with the captain.'**
   String get raiseIssueImmediately;
 
   /// No description provided for @complaintsNotEntertained.
@@ -2752,7 +2752,7 @@ abstract class AppLocalizations {
   /// No description provided for @misbehaveDrivers.
   ///
   /// In en, this message translates to:
-  /// **'Misbehave, threaten, or harass drivers'**
+  /// **'Misbehave, threaten, or harass captains'**
   String get misbehaveDrivers;
 
   /// No description provided for @violationAccountTermination.
@@ -2950,19 +2950,19 @@ abstract class AppLocalizations {
   /// No description provided for @aboutUsDescription.
   ///
   /// In en, this message translates to:
-  /// **'We are a technology-driven platform built to simplify the connection between vehicle owners and independent, verified drivers.'**
+  /// **'We are a technology-driven platform built to simplify the connection between vehicle owners and independent, verified captains.'**
   String get aboutUsDescription;
 
   /// No description provided for @ourGoalDescription.
   ///
   /// In en, this message translates to:
-  /// **'Our goal is to make it easy for vehicle owners to find reliable drivers whenever they need—whether it is for one-way trips, round trips, hourly usage, or outstation travel.'**
+  /// **'Our goal is to make it easy for vehicle owners to find reliable captains whenever they need—whether it is for one-way trips, round trips, hourly usage, or outstation travel.'**
   String get ourGoalDescription;
 
   /// No description provided for @facilitatorDescription.
   ///
   /// In en, this message translates to:
-  /// **'We act only as a facilitator, providing a digital platform that enables owners and drivers to connect, communicate, and complete trips smoothly. We do not employ drivers, nor do we provide transportation services directly.'**
+  /// **'We act only as a facilitator, providing a digital platform that enables owners and captains to connect, communicate, and complete trips smoothly. We do not employ captains, nor do we provide transportation services directly.'**
   String get facilitatorDescription;
 
   /// No description provided for @whatWeDoTitle.
@@ -2980,7 +2980,7 @@ abstract class AppLocalizations {
   /// No description provided for @easyCommunication.
   ///
   /// In en, this message translates to:
-  /// **'Enable easy communication between owners and drivers'**
+  /// **'Enable easy communication between owners and captains'**
   String get easyCommunication;
 
   /// No description provided for @promoteConvenience.
@@ -2998,7 +2998,7 @@ abstract class AppLocalizations {
   /// No description provided for @notEmployDrivers.
   ///
   /// In en, this message translates to:
-  /// **'We do not employ drivers as staff or agents'**
+  /// **'We do not employ captains as staff or agents'**
   String get notEmployDrivers;
 
   /// No description provided for @notOwnVehicles.
@@ -3010,13 +3010,13 @@ abstract class AppLocalizations {
   /// No description provided for @notGuaranteeAvailability.
   ///
   /// In en, this message translates to:
-  /// **'We do not guarantee driver availability'**
+  /// **'We do not guarantee captain availability'**
   String get notGuaranteeAvailability;
 
   /// No description provided for @notResponsibleDisputes.
   ///
   /// In en, this message translates to:
-  /// **'We do not take responsibility for personal disputes between owners and drivers'**
+  /// **'We do not take responsibility for personal disputes between owners and captains'**
   String get notResponsibleDisputes;
 
   /// No description provided for @ourVisionTitle.
@@ -3028,7 +3028,7 @@ abstract class AppLocalizations {
   /// No description provided for @ourVisionDescription.
   ///
   /// In en, this message translates to:
-  /// **'To become a trusted and convenient driver-connection platform, empowering vehicle owners with flexibility and peace of mind while supporting independent drivers through fair opportunities.'**
+  /// **'To become a trusted and convenient captain-connection platform, empowering vehicle owners with flexibility and peace of mind while supporting independent captains through fair opportunities.'**
   String get ourVisionDescription;
 
   /// No description provided for @ourCommitmentTitle.
@@ -3064,7 +3064,7 @@ abstract class AppLocalizations {
   /// No description provided for @commitmentAgreement.
   ///
   /// In en, this message translates to:
-  /// **'By using this platform, owners and drivers agree to interact responsibly, respectfully, and in accordance with our Terms & Conditions.'**
+  /// **'By using this platform, owners and captains agree to interact responsibly, respectfully, and in accordance with our Terms & Conditions.'**
   String get commitmentAgreement;
 
   /// No description provided for @rideId.

@@ -9,7 +9,7 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
-  String get appTitle => 'माना ड्राइवर';
+  String get appTitle => 'माना कप्तान';
 
   @override
   String get selectLanguageTitle => 'अपनी भाषा चुनें।';
@@ -102,7 +102,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get enterDropLocation2 => 'ड्रॉप स्थान 2 दर्ज करें';
 
   @override
-  String get bookADriver => 'ड्राइवर बुक करें';
+  String get bookADriver => 'कप्तान बुक करें';
 
   @override
   String get myVehicles => 'मेरे वाहन';
@@ -114,7 +114,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get menumyAddress => 'मेरा पता';
 
   @override
-  String get menuFavDrivers => 'पसंदीदा ड्राइवर';
+  String get menuFavDrivers => 'पसंदीदा कप्तान';
 
   @override
   String get menuUpdateMobileNumber => 'मोबाइल नंबर अपडेट करें';
@@ -138,7 +138,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get menuCancelPolicy => 'रद्दीकरण नीति';
 
   @override
-  String get menuAbtMD => 'मैना ड्राइवर के बारे में';
+  String get menuAbtMD => 'मैना कप्तान के बारे में';
 
   @override
   String get menuDeleteAccount => 'खाता हटा दो';
@@ -183,7 +183,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get add_new_Address => 'नया पता जोड़ें';
 
   @override
-  String get fav_dummy_text => 'इस समय आपके पास पसंदीदा ड्राइवर नहीं है, कृपया कुछ समय बाद प्रयास करें।';
+  String get fav_dummy_text => 'इस समय आपके पास पसंदीदा कप्तान नहीं है, कृपया कुछ समय बाद प्रयास करें।';
 
   @override
   String get offer_dummy_text => 'फ़िलहाल आपके पास कोई ऑफ़र नहीं है। कृपया बाद में फिर से कोशिश करें।';
@@ -282,10 +282,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get cP_a2 => '• 50 रद्दीकरण शुल्क लिया जाएगा यदि:';
 
   @override
-  String get cP_a22 => '• ड्राइवर ने पहले ही यात्रा शुरू कर दी है।';
+  String get cP_a22 => '• कप्तान ने पहले ही यात्रा शुरू कर दी है।';
 
   @override
-  String get cP_a23 => '• ड्राइवर आपके स्थान पर 10 मिनट से अधिक समय तक इंतज़ार करता रहा';
+  String get cP_a23 => '• कप्तान आपके स्थान पर 10 मिनट से अधिक समय तक इंतज़ार करता रहा';
 
   @override
   String get cP_q3 => '3. नो-शो नीति (ग्राहक अनुपस्थित)';
@@ -294,10 +294,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get cP_a3 => 'यदि ग्राहक 15 मिनट के बाद भी पिकअप पॉइंट पर उपलब्ध नहीं होता है, तो यात्रा स्वतः रद्द हो जाएगी। नो-शो के रूप में 100 रुपये का शुल्क लिया जाएगा।';
 
   @override
-  String get cP_q4 => '4. ड्राइवर रद्दीकरण';
+  String get cP_q4 => '4. कप्तान रद्दीकरण';
 
   @override
-  String get cP_a4 => 'अगर कोई ड्राइवर स्वीकार करने के बाद रद्द करता है, तो हम किसी दूसरे ड्राइवर को नियुक्त कर देंगे। ड्राइवरों द्वारा बार-बार रद्द करने पर जुर्माना और निलंबन लगाया जाएगा।';
+  String get cP_a4 => 'अगर कोई कप्तान स्वीकार करने के बाद रद्द करता है, तो हम किसी दूसरे कप्तान को नियुक्त कर देंगे। कप्तान द्वारा बार-बार रद्द करने पर जुर्माना और निलंबन लगाया जाएगा।';
 
   @override
   String get cP_q5 => '5. धनवापसी समयरेखा';
@@ -306,7 +306,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get cP_a5 => 'यदि आपने ऑनलाइन भुगतान किया है, तो पात्र रिफंड 3-5 व्यावसायिक दिनों के भीतर संसाधित किया जाएगा।';
 
   @override
-  String get mDdisk => 'माना ड्राइवर - मी वाहनम, माँ ड्राइवर! माना ड्राइवर आपका विश्वसनीय प्लेटफ़ॉर्म है जहाँ आप कभी भी ज़रूरत पड़ने पर पेशेवर, सत्यापित ड्राइवर बुक कर सकते हैं। चाहे एकतरफ़ा यात्रा हो, राउंड ट्रिप हो, प्रति घंटा बुकिंग हो, या बाहरी यात्रा हो - हम आपकी हर ज़रूरत पूरी करते हैं।';
+  String get mDdisk => 'माना कप्तान - मी वाहनम, माँ कप्तान! माना कप्तान आपका विश्वसनीय प्लेटफ़ॉर्म है जहाँ आप कभी भी ज़रूरत पड़ने पर पेशेवर, सत्यापित कप्तान बुक कर सकते हैं। चाहे एकतरफ़ा यात्रा हो, राउंड ट्रिप हो, प्रति घंटा बुकिंग हो, या बाहरी यात्रा हो - हम आपकी हर ज़रूरत पूरी करते हैं।';
 
   @override
   String get dA_t1 => 'चेतावनी';
@@ -405,7 +405,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get ok => 'ठीक है';
 
   @override
-  String get mobileRegisteredDriver => 'यह मोबाइल नंबर पहले से ही ड्राइवर के रूप में पंजीकृत है।';
+  String get mobileRegisteredDriver => 'यह मोबाइल नंबर पहले से ही कप्तान के रूप में पंजीकृत है।';
 
   @override
   String get haveAccount => 'क्या आपके पास खाता है? ';
@@ -414,7 +414,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get signIn => 'साइन इन करें';
 
   @override
-  String get welcomeNyzoRide => 'Welcome to Nyzo Ride!';
+  String get welcomeNyzoRide => 'Nyzo Ride में आपका स्वागत है!';
 
   @override
   String get registrationSuccessMessage => 'आपका पंजीकरण सफल रहा। कृपया जारी रखने के लिए लॉगिन करें।';
@@ -687,7 +687,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get arrivalDateTimeRequired => 'जारी रखने के लिए कृपया आगमन तिथि और समय दोनों चुनें।';
 
   @override
-  String get driverRequestedSuccess => 'ड्राइवर सफलतापूर्वक अनुरोध किया गया';
+  String get driverRequestedSuccess => 'कप्तान सफलतापूर्वक अनुरोध किया गया';
 
   @override
   String get paymentBreakup => 'भुगतान विवरण';
@@ -756,7 +756,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get vehicleNotAssigned => 'वाहन असाइन नहीं किया गया';
 
   @override
-  String get driverNotAssigned => 'ड्राइवर असाइन नहीं किया गया';
+  String get driverNotAssigned => 'कप्तान असाइन नहीं किया गया';
 
   @override
   String get notAvailable => 'उपलब्ध नहीं';
@@ -786,13 +786,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get loading => 'लोड हो रहा है...';
 
   @override
-  String get driverAssigned => 'ड्राइवर असाइन किया गया';
+  String get driverAssigned => 'कप्तान असाइन किया गया';
 
   @override
   String get ride => 'यात्रा';
 
   @override
-  String get loadingDriver => 'ड्राइवर लोड हो रहा है...';
+  String get loadingDriver => 'कप्तान लोड हो रहा है...';
 
   @override
   String get typeMessage => 'संदेश लिखें...';
@@ -810,7 +810,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get verificationCodeRide => 'यात्रा शुरू करने के लिए सत्यापन कोड';
 
   @override
-  String get shareOtpDriver => 'यात्रा शुरू करने के लिए यह OTP अपने ड्राइवर के साथ साझा करें।';
+  String get shareOtpDriver => 'यात्रा शुरू करने के लिए यह OTP अपने कप्तान के साथ साझा करें।';
 
   @override
   String get fourDigitOtp => '4-अंकीय OTP';
@@ -867,7 +867,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get contactDetails => 'संपर्क विवरण';
 
   @override
-  String get driverDetails => 'ड्राइवर विवरण';
+  String get driverDetails => 'कप्तान विवरण';
 
   @override
   String get paymentSummary => 'भुगतान सारांश';
@@ -909,7 +909,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get noOffersAvailable => 'कोई ऑफ़र उपलब्ध नहीं है';
 
   @override
-  String get politeDriver => 'विनम्र ड्राइवर';
+  String get politeDriver => 'विनम्र कप्तान';
 
   @override
   String get cleanliness => 'स्वच्छता';
@@ -921,7 +921,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get onTime => 'समय पर';
 
   @override
-  String get tapToRateDriver => 'अपने ड्राइवर को रेट करने के लिए टैप करें';
+  String get tapToRateDriver => 'अपने कप्तान को रेट करने के लिए टैप करें';
 
   @override
   String get howWasYourTrip => 'आपकी यात्रा कैसी रही\n';
@@ -966,7 +966,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get lastUpdated => 'अंतिम अपडेट: जनवरी 2026';
 
   @override
-  String get privacyIntro => 'Nyzo Ride (“Nyzo Ride”, “हम”, “हमारा”) आपकी गोपनीयता का सम्मान करता है और उन उपयोगकर्ताओं (“आप”, “उपयोगकर्ता”, “ड्राइवर”, “वाहन मालिक”) की व्यक्तिगत जानकारी की सुरक्षा के लिए प्रतिबद्ध है जो Nyzo Ride मोबाइल एप्लिकेशन, वेबसाइट और संबंधित सेवाओं (सामूहिक रूप से “प्लेटफ़ॉर्म”) का उपयोग करते हैं।';
+  String get privacyIntro => 'Nyzo Ride (“Nyzo Ride”, “हम”, “हमारा”) आपकी गोपनीयता का सम्मान करता है और उन उपयोगकर्ताओं (“आप”, “उपयोगकर्ता”, कप्तान, “वाहन मालिक”) की व्यक्तिगत जानकारी की सुरक्षा के लिए प्रतिबद्ध है जो Nyzo Ride मोबाइल एप्लिकेशन, वेबसाइट और संबंधित सेवाओं (सामूहिक रूप से “प्लेटफ़ॉर्म”) का उपयोग करते हैं।';
 
   @override
   String get privacyPolicyExplanation => 'यह गोपनीयता नीति बताती है कि हम आपकी जानकारी कैसे एकत्रित, उपयोग, संग्रहीत, साझा और सुरक्षित करते हैं।';
@@ -990,7 +990,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get profilePhotoOptional => 'प्रोफ़ाइल फोटो (वैकल्पिक)';
 
   @override
-  String get governmentIdDetails => 'सरकारी पहचान विवरण (ड्राइवरों के लिए – लाइसेंस, पैन/आधार जहाँ आवश्यक हो)';
+  String get governmentIdDetails => 'सरकारी पहचान विवरण (कप्तानों के लिए – लाइसेंस, पैन/आधार जहाँ आवश्यक हो)';
 
   @override
   String get locationInformation => '1.2 स्थान जानकारी';
@@ -1044,13 +1044,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get weUseYourInformationTo => 'हम आपकी जानकारी का उपयोग करते हैं:';
 
   @override
-  String get connectOwnersDrivers => 'वाहन मालिकों को उपलब्ध स्वतंत्र ड्राइवरों से जोड़ना';
+  String get connectOwnersDrivers => 'वाहन मालिकों को उपलब्ध स्वतंत्र कप्तानों से जोड़ना';
 
   @override
   String get enableBookingsTrips => 'बुकिंग और यात्रा प्रबंधन सक्षम करना';
 
   @override
-  String get verifyDriverIdentity => 'ड्राइवर की पहचान और पात्रता सत्यापित करना';
+  String get verifyDriverIdentity => 'कप्तान की पहचान और पात्रता सत्यापित करना';
 
   @override
   String get processPaymentsRefunds => 'भुगतान और रिफंड संसाधित करना';
@@ -1077,7 +1077,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get weMayShareLimitedInfo => 'हम सीमित जानकारी साझा कर सकते हैं:';
 
   @override
-  String get shareDriversOwners => 'ड्राइवर / वाहन मालिक – केवल यात्रा के लिए आवश्यक जानकारी';
+  String get shareDriversOwners => 'कप्तान / वाहन मालिक – केवल यात्रा के लिए आवश्यक जानकारी';
 
   @override
   String get sharePaymentGateways => 'भुगतान गेटवे – लेन-देन प्रसंस्करण के लिए';
@@ -1170,10 +1170,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get doesNotOwnVehicles => 'Nyzo Ride वाहनों का मालिक नहीं है';
 
   @override
-  String get doesNotEmployDrivers => 'Nyzo Ride ड्राइवरों को नियुक्त नहीं करता';
+  String get doesNotEmployDrivers => 'Nyzo Ride कप्तानों को नियुक्त नहीं करता';
 
   @override
-  String get independentProviders => 'ड्राइवर और वाहन मालिक स्वतंत्र सेवा प्रदाता हैं';
+  String get independentProviders => 'कप्तान और वाहन मालिक स्वतंत्र सेवा प्रदाता हैं';
 
   @override
   String get policyChanges => '10. इस नीति में बदलाव';
@@ -1212,10 +1212,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get platformPurpose => '1. प्लेटफ़ॉर्म उद्देश्य';
 
   @override
-  String get platformPurposeDesc1 => 'यह एप्लिकेशन केवल एक तकनीकी प्लेटफ़ॉर्म है जो वाहन मालिकों को स्वतंत्र ड्राइवरों से जोड़ता है।';
+  String get platformPurposeDesc1 => 'यह एप्लिकेशन केवल एक तकनीकी प्लेटफ़ॉर्म है जो वाहन मालिकों को स्वतंत्र कप्तानों से जोड़ता है।';
 
   @override
-  String get platformPurposeDesc2 => 'प्लेटफ़ॉर्म ड्राइवरों को कर्मचारी के रूप में प्रदान नहीं करता, ड्राइवर उपलब्धता की गारंटी नहीं देता और परिवहन सेवाएँ नहीं देता।';
+  String get platformPurposeDesc2 => 'प्लेटफ़ॉर्म कप्तानों को कर्मचारी के रूप में प्रदान नहीं करता, कप्तान उपलब्धता की गारंटी नहीं देता और परिवहन सेवाएँ नहीं देता।';
 
   @override
   String get eligibility => '2. पात्रता';
@@ -1248,16 +1248,16 @@ class AppLocalizationsHi extends AppLocalizations {
   String get vehicleResponsibilityPoint3 => 'सभी दस्तावेज़ (RC, बीमा, PUC, परमिट यदि लागू हो) वैध हैं';
 
   @override
-  String get driverRelationship => '4. ड्राइवर संबंध';
+  String get driverRelationship => '4. कप्तान संबंध';
 
   @override
-  String get driversIndependent => 'प्लेटफ़ॉर्म पर ड्राइवर स्वतंत्र व्यक्ति हैं, प्लेटफ़ॉर्म के कर्मचारी या एजेंट नहीं।';
+  String get driversIndependent => 'प्लेटफ़ॉर्म पर कप्तान स्वतंत्र व्यक्ति हैं, प्लेटफ़ॉर्म के कर्मचारी या एजेंट नहीं।';
 
   @override
-  String get platformNotResponsibleDrivers => 'प्लेटफ़ॉर्म ड्राइवरों के आचरण, व्यवहार या कार्यों के लिए जिम्मेदार नहीं है।';
+  String get platformNotResponsibleDrivers => 'प्लेटफ़ॉर्म कप्तानों के आचरण, व्यवहार या कार्यों के लिए जिम्मेदार नहीं है।';
 
   @override
-  String get ownersFreeAcceptReject => 'मालिक किसी भी ड्राइवर अनुरोध को स्वीकार या अस्वीकार करने के लिए स्वतंत्र हैं।';
+  String get ownersFreeAcceptReject => 'मालिक किसी भी कप्तान अनुरोध को स्वीकार या अस्वीकार करने के लिए स्वतंत्र हैं।';
 
   @override
   String get bookingTripDetails => '5. बुकिंग और यात्रा विवरण';
@@ -1269,7 +1269,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get pickupDropDurationInstructions => 'पिकअप, ड्रॉप स्थान, अवधि और विशेष निर्देश स्पष्ट रूप से उल्लेखित होने चाहिए।';
 
   @override
-  String get tripChangesAgreement => 'यात्रा के दौरान किसी भी बदलाव को मालिक और ड्राइवर के बीच पारस्परिक सहमति से किया जाना चाहिए।';
+  String get tripChangesAgreement => 'यात्रा के दौरान किसी भी बदलाव को मालिक और कप्तान के बीच पारस्परिक सहमति से किया जाना चाहिए।';
 
   @override
   String get payments => '6. भुगतान';
@@ -1281,7 +1281,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get platformFacilitatesPayments => 'प्लेटफ़ॉर्म केवल भुगतान की सुविधा प्रदान करता है और ऑफ़-ऐप या नकद लेन-देन के लिए जिम्मेदार नहीं है।';
 
   @override
-  String get additionalChargesSettlement => 'कोई भी अतिरिक्त शुल्क सीधे मालिक और ड्राइवर के बीच निपटाया जाना चाहिए।';
+  String get additionalChargesSettlement => 'कोई भी अतिरिक्त शुल्क सीधे मालिक और कप्तान के बीच निपटाया जाना चाहिए।';
 
   @override
   String get cancellations => '7. रद्दीकरण';
@@ -1320,7 +1320,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get notResponsibleDamages => 'यात्रा पूरी होने के बाद पहचानी गई कोई भी खरोंच, डेंट या क्षति';
 
   @override
-  String get raiseIssueImmediately => 'यदि कोई समस्या दिखाई देती है, तो मालिक को तुरंत ड्राइवर के साथ उठाना चाहिए।';
+  String get raiseIssueImmediately => 'यदि कोई समस्या दिखाई देती है, तो मालिक को तुरंत कप्तान के साथ उठाना चाहिए।';
 
   @override
   String get complaintsNotEntertained => 'देरी के बाद या वाहन छोड़ने के बाद की गई शिकायतों पर विचार नहीं किया जाएगा।';
@@ -1335,7 +1335,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get illegalActivities => 'प्लेटफ़ॉर्म का उपयोग अवैध गतिविधियों के लिए करना';
 
   @override
-  String get misbehaveDrivers => 'ड्राइवरों के साथ दुर्व्यवहार करना, धमकाना या परेशान करना';
+  String get misbehaveDrivers => 'कप्तानों के साथ दुर्व्यवहार करना, धमकाना या परेशान करना';
 
   @override
   String get violationAccountTermination => 'उल्लंघन से बिना पूर्व सूचना के खाता समाप्त हो सकता है।';
@@ -1434,13 +1434,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get aboutUsHeading => 'हमारे बारे में';
 
   @override
-  String get aboutUsDescription => 'हम एक तकनीक-आधारित प्लेटफ़ॉर्म हैं जो वाहन मालिकों और स्वतंत्र, सत्यापित ड्राइवरों के बीच संबंध को सरल बनाने के लिए बनाया गया है।';
+  String get aboutUsDescription => 'हम एक तकनीक-आधारित प्लेटफ़ॉर्म हैं जो वाहन मालिकों और स्वतंत्र, सत्यापित कप्तानों के बीच संबंध को सरल बनाने के लिए बनाया गया है।';
 
   @override
-  String get ourGoalDescription => 'हमारा लक्ष्य वाहन मालिकों के लिए विश्वसनीय ड्राइवरों को ढूँढना आसान बनाना है—चाहे वह एकतरफ़ा यात्रा हो, राउंड ट्रिप हो, प्रति घंटा उपयोग हो, या आउटस्टेशन यात्रा।';
+  String get ourGoalDescription => 'हमारा लक्ष्य वाहन मालिकों के लिए विश्वसनीय कप्तानों को ढूँढना आसान बनाना है—चाहे वह एकतरफ़ा यात्रा हो, राउंड ट्रिप हो, प्रति घंटा उपयोग हो, या आउटस्टेशन यात्रा।';
 
   @override
-  String get facilitatorDescription => 'हम केवल एक सुविधादाता के रूप में कार्य करते हैं, एक डिजिटल प्लेटफ़ॉर्म प्रदान करते हैं जो मालिकों और ड्राइवरों को जोड़ने, संवाद करने और यात्राओं को सुचारू रूप से पूरा करने में सक्षम बनाता है। हम ड्राइवरों को नियुक्त नहीं करते और न ही सीधे परिवहन सेवाएँ प्रदान करते हैं।';
+  String get facilitatorDescription => 'हम केवल एक सुविधादाता के रूप में कार्य करते हैं, एक डिजिटल प्लेटफ़ॉर्म प्रदान करते हैं जो मालिकों और कप्तानों को जोड़ने, संवाद करने और यात्राओं को सुचारू रूप से पूरा करने में सक्षम बनाता है। हम कप्तानों को नियुक्त नहीं करते और न ही सीधे परिवहन सेवाएँ प्रदान करते हैं।';
 
   @override
   String get whatWeDoTitle => 'हम क्या करते हैं';
@@ -1449,7 +1449,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get transparentBookingSystem => 'एक पारदर्शी बुकिंग और यात्रा प्रबंधन प्रणाली प्रदान करना';
 
   @override
-  String get easyCommunication => 'मालिकों और ड्राइवरों के बीच आसान संचार सक्षम करना';
+  String get easyCommunication => 'मालिकों और कप्तानों के बीच आसान संचार सक्षम करना';
 
   @override
   String get promoteConvenience => 'सुविधा, लचीलापन और दक्षता को बढ़ावा देना';
@@ -1458,22 +1458,22 @@ class AppLocalizationsHi extends AppLocalizations {
   String get whatWeDoNotDoTitle => 'हम क्या नहीं करते';
 
   @override
-  String get notEmployDrivers => 'हम ड्राइवरों को कर्मचारी या एजेंट के रूप में नियुक्त नहीं करते';
+  String get notEmployDrivers => 'हम कप्तानों को कर्मचारी या एजेंट के रूप में नियुक्त नहीं करते';
 
   @override
   String get notOwnVehicles => 'हम वाहन के मालिक या संचालक नहीं हैं';
 
   @override
-  String get notGuaranteeAvailability => 'हम ड्राइवर उपलब्धता की गारंटी नहीं देते';
+  String get notGuaranteeAvailability => 'हम कप्तान उपलब्धता की गारंटी नहीं देते';
 
   @override
-  String get notResponsibleDisputes => 'हम मालिकों और ड्राइवरों के बीच व्यक्तिगत विवादों के लिए जिम्मेदार नहीं हैं';
+  String get notResponsibleDisputes => 'हम मालिकों और कप्तानों के बीच व्यक्तिगत विवादों के लिए जिम्मेदार नहीं हैं';
 
   @override
   String get ourVisionTitle => 'हमारा दृष्टिकोण';
 
   @override
-  String get ourVisionDescription => 'एक विश्वसनीय और सुविधाजनक ड्राइवर-कनेक्शन प्लेटफ़ॉर्म बनना, जो वाहन मालिकों को लचीलापन और मानसिक शांति प्रदान करे तथा स्वतंत्र ड्राइवरों को निष्पक्ष अवसरों के माध्यम से समर्थन दे।';
+  String get ourVisionDescription => 'एक विश्वसनीय और सुविधाजनक कप्तान-कनेक्शन प्लेटफ़ॉर्म बनना, जो वाहन मालिकों को लचीलापन और मानसिक शांति प्रदान करे तथा स्वतंत्र कप्तानों को निष्पक्ष अवसरों के माध्यम से समर्थन दे।';
 
   @override
   String get ourCommitmentTitle => 'हमारी प्रतिबद्धता';
@@ -1491,7 +1491,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get commitmentImprovement => 'उपयोगकर्ता प्रतिक्रिया के आधार पर निरंतर सुधार';
 
   @override
-  String get commitmentAgreement => 'इस प्लेटफ़ॉर्म का उपयोग करके, मालिक और ड्राइवर जिम्मेदारीपूर्वक, सम्मानपूर्वक और हमारे नियमों एवं शर्तों के अनुसार बातचीत करने के लिए सहमत होते हैं।';
+  String get commitmentAgreement => 'इस प्लेटफ़ॉर्म का उपयोग करके, मालिक और कप्तान जिम्मेदारीपूर्वक, सम्मानपूर्वक और हमारे नियमों एवं शर्तों के अनुसार बातचीत करने के लिए सहमत होते हैं।';
 
   @override
   String get rideId => 'राइड आईडी';

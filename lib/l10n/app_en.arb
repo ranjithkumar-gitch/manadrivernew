@@ -32,11 +32,11 @@
 "enterDropLocation": "Enter drop location",
 "dropLocation2": "Drop Location 2",
 "enterDropLocation2": "Enter drop location 2",
-"bookADriver": "Book A Driver",
+"bookADriver": "Book A Captain",
 "myVehicles": "My Vehicles",
 "viewVehicles": "View Vehicles",
 "menumyAddress": "My Address",
-"menuFavDrivers": "Favourite Drivers",
+"menuFavDrivers": "Favourite Captains",
 "menuUpdateMobileNumber": "Update Mobile Number",
 "menuAppLanguage": "App language",
 "menuOffers": "Offers",
@@ -59,7 +59,7 @@
 "address" : "Address,",
 "dummy_adres":  "St.No.98, Main Rd, Near JLN House Serilingampally, Kondapur,  500084",
 "add_new_Address" : "Add New Address",
-"fav_dummy_text" : "You don’t Favourite Drivers at the moment please try after sometime.",
+"fav_dummy_text" : "You don’t Favourite Captains at the moment please try after sometime.",
 "offer_dummy_text" : "You don’t have offers at the moment. Please try again later.",
 "rat_Txt1" : "Refer to your friend and get Rewards of 100/-",
 "rat_Txt2" : "Send an invitation to a friend",
@@ -92,15 +92,15 @@
 "cP_a1":"You can cancel your booking within 5 minutes of confirmation without any charges.",
 "cP_q2":"2. Cancellation After 5 Minutes",
 "cP_a2":"• 59 cancellation fee will be charged if:",
-"cP_a22":"• Driver already started the trip.",
-"cP_a23":"• Driver waited at your location for more than 10",
+"cP_a22":"• Captain already started the trip.",
+"cP_a23":"• Captain waited at your location for more than 10",
 "cP_q3":"3. No-Show Policy (Customer absent)",
 "cP_a3":"If customer is not available at pickup point even after 15 minutes, trip will be auto-cancelled. #100 will be charged as no-show",
-"cP_q4":"4. Driver Cancellation",
-"cP_a4":"If a driver cancels after accepting, we will reassign another driver. Repeated cancellations by drivers will lead to penalties and suspension.",
+"cP_q4":"4. Captain Cancellation",
+"cP_a4":"If a captain cancels after accepting, we will reassign another captain. Repeated cancellations by Captains will lead to penalties and suspension.",
 "cP_q5":"3. Refund Timeline",
 "cP_a5":"If you paid online, eligible refunds will be processed within 3-5 business days.",
-"mDdisk": "Mana Driver - Mee Vahanam, Maa Driver!\nMana Driver is your trusted platform to book professional, verified drivers anytime you need. Whether it's a one-way ride, round trip, hourly booking, or outstation travel - we've got you covered.",
+"mDdisk": "Mana Captain - Mee Vahanam, Maa Captain!\nMana Captain is your trusted platform to book professional, verified Captains anytime you need. Whether it's a one-way ride, round trip, hourly booking, or outstation travel - we've got you covered.",
 "dA_t1": "Warning",
 "dA_t2": "Are you sure want to delete your account?",
 "profile": "Profile",
@@ -135,7 +135,7 @@
   "mobileNumberExists": "Mobile Number Exists",
   "mobileRegisteredOwner": "This mobile number is already registered as an Owner.",
   "ok": "OK",
-  "mobileRegisteredDriver": "This mobile number is already registered as a Driver.",
+  "mobileRegisteredDriver": "This mobile number is already registered as a Captain.",
   "haveAccount": "You have an account? ",
   "signIn": "Sign In",
   "welcomeNyzoRide": "Welcome to Nyzo Ride!",
@@ -241,7 +241,7 @@
   "selectVehicle": "Please select a vehicle",
   "arrivalDetailsRequired": "Arrival Details Required",
   "arrivalDateTimeRequired": "Please select both arrival date and arrival time to continue.",
-  "driverRequestedSuccess": "Requested a driver successfully",
+  "driverRequestedSuccess": "Requested a captain successfully",
   "paymentBreakup": "Payment Breakup",
   "tripMode": "Trip Mode",
   "distance": "Distance",
@@ -259,24 +259,24 @@
   "rideCompleted": "Ride Completed",
   "all": "All", "newRide": "New Ride", "accepted": "Accepted", "ongoing": "Ongoing", "completed": "Completed", "cancelled": "Cancelled",
   "noRidesAvailable": "No rides available",
-  "vehicleNotAssigned": "Vehicle not assigned", "driverNotAssigned": "Driver not assigned", "notAvailable": "N/A",
+  "vehicleNotAssigned": "Vehicle not assigned", "driverNotAssigned": "Captain not assigned", "notAvailable": "N/A",
   "cancelRide": "Cancel Ride ?",
   "confirmCancelRide": "Are you sure you want to cancel this ride? This action cannot be undone.",
   "cancelRideFree": "You can cancel this ride for FREE. Are you sure?", "cancelRideCharge": "Cancelling now will charge ₹59.\nDo you want to proceed?", "pay59": "Pay ₹59",
-  "couldNotOpenGoogleMaps": "Could not open Google Maps.", "locationPermissionDenied": "Location permission denied or not available.", "loading": "Loading...", "driverNotAssigned": "Driver Not Assigned", "driverAssigned": "Driver Assigned", "rideCompleted": "Ride Completed", "ride": "Ride",
-  "loadingDriver": "Loading driver...", "typeMessage": "Type a message...", "writeReview": "Write a review?", "experienceQuestion": "How was your experience?", "giveRating": "Give a rating", "verificationCodeRide": "Verification code to start the ride", "shareOtpDriver": "Share this OTP with your driver to start the ride.", 
+  "couldNotOpenGoogleMaps": "Could not open Google Maps.", "locationPermissionDenied": "Location permission denied or not available.", "loading": "Loading...", "driverNotAssigned": "Captain Not Assigned", "driverAssigned": "Captain Assigned", "rideCompleted": "Ride Completed", "ride": "Ride",
+  "loadingDriver": "Loading captian...", "typeMessage": "Type a message...", "writeReview": "Write a review?", "experienceQuestion": "How was your experience?", "giveRating": "Give a rating", "verificationCodeRide": "Verification code to start the ride", "shareOtpDriver": "Share this OTP with your captain to start the ride.", 
   "fourDigitOtp": "4-Digit OTP", "noCaptainsAvailable": "No captains available", "rideRequestReceived": "Ride request received", "noCaptainsAccepted": "At the moment no captains accepted. Please cancel the ride below.", "waitingForCaptains": "Waiting for captains to accept your ride", "timeLeft": "Time left:",
   "routeInformation": "Route Information", "duration": "Duration", "unableToOpenGoogleMaps": "Unable to open Google Maps.", "errorOpeningDirections": "Error opening directions:", "getDirections": "Get Directions", "tripDetails": "Trip Details", "cityLimit": "City Limit :", "hours": "Hours", "slotDetails": "Slot Details",
-   "departure": "Departure", "arrival": "Arrival", "contactDetails": "Contact Details", "driverDetails": "Driver Details", "paymentSummary": "Payment Summary", "servicePrice": "Service Price", "convenienceFee": "Convenience Fee", "couponApplied": "Coupon Applied", "totalPrice": "Total Price", "noReviewAvailable": "No review available",
+   "departure": "Departure", "arrival": "Arrival", "contactDetails": "Contact Details", "driverDetails": "Captain Details", "paymentSummary": "Payment Summary", "servicePrice": "Service Price", "convenienceFee": "Convenience Fee", "couponApplied": "Coupon Applied", "totalPrice": "Total Price", "noReviewAvailable": "No review available",
     "yourReview": "Your Review", "rating": "Rating : ", "feedback": "Feedback : ", "comment": "Comment : ", "cancellationPolicy": "Cancellation policy",
     "couponsOffers": "Coupons & Offers", "validTill": "Valid Till:", "applied": "APPLIED", "applyNow": "APPLY NOW",
     "noOffersAvailable": "No Offers Available",
-    "politeDriver": "Polite Driver", "cleanliness": "Cleanliness", "smoothDriving": "Smooth Driving", "onTime": "On Time", "tapToRateDriver": "Tap to rate your driver", "howWasYourTrip": "How was your trip with\n", "giveFeedback": "Give Feedback", "leaveCommentOptional": "Leave a comment (optional)", "submit": "Submit", "thankYouReviewSubmitted": "Thank you! Your review is submitted",
+    "politeDriver": "Polite Captain", "cleanliness": "Cleanliness", "smoothDriving": "Smooth Driving", "onTime": "On Time", "tapToRateDriver": "Tap to rate your captain", "howWasYourTrip": "How was your trip with\n", "giveFeedback": "Give Feedback", "leaveCommentOptional": "Leave a comment (optional)", "submit": "Submit", "thankYouReviewSubmitted": "Thank you! Your review is submitted",
     "pleaseSelectRating": "Please select rating",
     "paymentSuccessful": "Payment Successful:", "paymentFailed": "Payment Failed:", "bookingDocumentNotFound": "Booking document ID not found", "rideCancelledSuccessfully": "Ride cancelled successfully", "errorCancellingRide": "Error cancelling ride:", "cancelRide": "Cancel Ride", "rideOngoing": "Ride Ongoing", "proceedToPayment": "Proceed to Payment", "paymentCompleted": "Payment Completed", "ride": "Ride",
     "privacyPolicyTitle": "NYZO RIDE – OWNER",
      "lastUpdated": "Last Updated: January 2026",
-      "privacyIntro": "Nyzo Ride (“Nyzo Ride”, “we”, “our”, “us”) respects your privacy and is committed to protecting the personal information of users (“you”, “user”, “driver”, “vehicle owner”) who use the Nyzo Ride mobile application, website, and related services (collectively, the “Platform”).",
+      "privacyIntro": "Nyzo Ride (“Nyzo Ride”, “we”, “our”, “us”) respects your privacy and is committed to protecting the personal information of users (“you”, “user”, captain, “vehicle owner”) who use the Nyzo Ride mobile application, website, and related services (collectively, the “Platform”).",
        "privacyPolicyExplanation": "This Privacy Policy explains how we collect, use, store, share, and protect your information.",
          "informationWeCollect": "INFORMATION WE COLLECT",
 
@@ -292,7 +292,7 @@
 
   "profilePhotoOptional": "Profile photo (optional)",
 
-  "governmentIdDetails": "Government ID details (for drivers – License, PAN/Aadhaar where required)",
+  "governmentIdDetails": "Government ID details (for captains – License, PAN/Aadhaar where required)",
 
   "vehicleDetails": "Vehicle details (vehicle owners)",
   "locationInformation": "1.2 Location Information",
@@ -312,9 +312,9 @@
    "paymentMethodNote": "Payment method (Nyzo Ride does NOT store card or UPI credentials)",
    "howWeUseInformation": "2. HOW WE USE YOUR INFORMATION",
   "weUseYourInformationTo": "We use your information to:",
-  "connectOwnersDrivers": "Connect vehicle owners with drivers",
+  "connectOwnersDrivers": "Connect vehicle owners with captains",
   "enableBookingsTrips": "Enable bookings and trip management",
-  "verifyDriverIdentity": "Verify driver identity and eligibility",
+  "verifyDriverIdentity": "Verify captain identity and eligibility",
   "processPaymentsRefunds": "Process payments and refunds",
   "improveAppPerformance": "Improve app performance and user experience",
   "communicateUpdatesAlerts": "Communicate service updates and alerts",
@@ -323,7 +323,7 @@
   "informationSharing": "3. INFORMATION SHARING",
   "noSellRentData": "Nyzo Ride does not sell or rent your personal data.",
   "weMayShareLimitedInfo": "We may share limited information with:",
-  "shareDriversOwners": "Drivers / Vehicle Owners – only what is required for a trip",
+  "shareDriversOwners": "Captains / Vehicle Owners – only what is required for a trip",
   "sharePaymentGateways": "Payment gateways – for transaction processing",
   "shareCloudPartners": "Cloud & technology partners – app hosting, analytics",
   "shareLawAuthorities": "Law enforcement / government authorities – when legally required",
@@ -374,9 +374,9 @@
 
   "doesNotOwnVehicles": "Nyzo Ride does not own vehicles",
 
-  "doesNotEmployDrivers": "Nyzo Ride does not employ drivers",
+  "doesNotEmployDrivers": "Nyzo Ride does not employ captains",
 
-  "independentProviders": "Drivers and vehicle owners are independent service providers",
+  "independentProviders": "Captains and vehicle owners are independent service providers",
 
   "policyChanges": "10. CHANGES TO THIS POLICY",
 
@@ -403,9 +403,9 @@
 
   "platformPurpose": "1. PLATFORM PURPOSE",
 
-  "platformPurposeDesc1": "This application is only a technology platform that connects vehicle owners with independent drivers.",
+  "platformPurposeDesc1": "This application is only a technology platform that connects vehicle owners with independent captains.",
 
-  "platformPurposeDesc2": "The platform does not provide drivers as employees, does not guarantee driver availability, and does not offer transportation services.",
+  "platformPurposeDesc2": "The platform does not provide captains as employees, does not guarantee captain availability, and does not offer transportation services.",
 
   "eligibility": "2. ELIGIBILITY",
 
@@ -427,13 +427,13 @@
 
   "vehicleResponsibilityPoint3": "All documents (RC, Insurance, PUC, permits if applicable) are valid",
 
-  "driverRelationship": "4. DRIVER RELATIONSHIP",
+  "driverRelationship": "4.CAPTAIN RELATIONSHIP",
 
-  "driversIndependent": "Drivers on the platform are independent individuals, not employees or agents of the platform.",
+  "driversIndependent": "Captains on the platform are independent individuals, not employees or agents of the platform.",
 
-  "platformNotResponsibleDrivers": "The platform is not responsible for the conduct, behavior, or actions of drivers.",
+  "platformNotResponsibleDrivers": "The platform is not responsible for the conduct, behavior, or actions of captains.",
 
-  "ownersFreeAcceptReject": "Owners are free to accept or reject any driver request.",
+  "ownersFreeAcceptReject": "Owners are free to accept or reject any captain request.",
 
   "bookingTripDetails": "5. BOOKING & TRIP DETAILS",
 
@@ -441,7 +441,7 @@
 
   "pickupDropDurationInstructions": "Pickup, drop location, duration, and special instructions must be clearly mentioned.",
 
-  "tripChangesAgreement": "Any change during the trip must be mutually agreed between owner and driver.",
+  "tripChangesAgreement": "Any change during the trip must be mutually agreed between owner and captain.",
 
   "payments": "6. PAYMENTS",
 
@@ -449,7 +449,7 @@
 
   "platformFacilitatesPayments": "The platform only facilitates payments and is not responsible for off-app or cash transactions.",
 
-  "additionalChargesSettlement": "Any additional charges must be settled directly between owner and driver.",
+  "additionalChargesSettlement": "Any additional charges must be settled directly between owner and captain.",
 
   "cancellations": "7. CANCELLATIONS",
 
@@ -461,7 +461,7 @@
 
   "platformNotResponsibleSafety": "The platform is not responsible for accidents, injuries, damages, theft, or losses during the trip.",
 
-  "insuranceClaimsHandledDirectly": "Any insurance claims must be handled directly between the owner, driver, and insurance company.",
+  "insuranceClaimsHandledDirectly": "Any insurance claims must be handled directly between the owner, captain, and insurance company.",
 
   "ownersEnsureInsurance": "Owners are advised to ensure active insurance coverage before every trip.",
 
@@ -475,7 +475,7 @@
 
   "notResponsibleDamages": "Any scratches, dents, or damages identified after trip completion",
 
-  "raiseIssueImmediately": "If any issue is noticed, the owner must raise it immediately with the driver.",
+  "raiseIssueImmediately": "If any issue is noticed, the owner must raise it immediately with the captain.",
 
   "complaintsNotEntertained": "Complaints raised after delay or after leaving the vehicle will not be entertained.",
 
@@ -485,7 +485,7 @@
 
   "illegalActivities": "Use the platform for illegal activities",
 
-  "misbehaveDrivers": "Misbehave, threaten, or harass drivers",
+  "misbehaveDrivers": "Misbehave, threaten, or harass captains",
 
   "violationAccountTermination": "Violation may lead to account termination without prior notice.",
 
@@ -537,27 +537,27 @@
 "update": "Update",
   "aboutUsTitle": "ABOUT US",
   "aboutUsHeading": "About Us",
-  "aboutUsDescription": "We are a technology-driven platform built to simplify the connection between vehicle owners and independent, verified drivers.",
-  "ourGoalDescription": "Our goal is to make it easy for vehicle owners to find reliable drivers whenever they need—whether it is for one-way trips, round trips, hourly usage, or outstation travel.",
-  "facilitatorDescription": "We act only as a facilitator, providing a digital platform that enables owners and drivers to connect, communicate, and complete trips smoothly. We do not employ drivers, nor do we provide transportation services directly.",
+  "aboutUsDescription": "We are a technology-driven platform built to simplify the connection between vehicle owners and independent, verified captains.",
+  "ourGoalDescription": "Our goal is to make it easy for vehicle owners to find reliable captains whenever they need—whether it is for one-way trips, round trips, hourly usage, or outstation travel.",
+  "facilitatorDescription": "We act only as a facilitator, providing a digital platform that enables owners and captains to connect, communicate, and complete trips smoothly. We do not employ captains, nor do we provide transportation services directly.",
   "whatWeDoTitle": "What We Do",
-  "connectOwnersDrivers": "Connect vehicle owners with available independent drivers",
+  "connectOwnersDrivers": "Connect vehicle owners with available independent captains",
   "transparentBookingSystem": "Provide a transparent booking and trip management system",
-  "easyCommunication": "Enable easy communication between owners and drivers",
+  "easyCommunication": "Enable easy communication between owners and captains",
   "promoteConvenience": "Promote convenience, flexibility, and efficiency",
   "whatWeDoNotDoTitle": "What We Do Not Do",
-  "notEmployDrivers": "We do not employ drivers as staff or agents",
+  "notEmployDrivers": "We do not employ captains as staff or agents",
   "notOwnVehicles": "We do not own or operate vehicles",
-  "notGuaranteeAvailability": "We do not guarantee driver availability",
-  "notResponsibleDisputes": "We do not take responsibility for personal disputes between owners and drivers",
+  "notGuaranteeAvailability": "We do not guarantee captain availability",
+  "notResponsibleDisputes": "We do not take responsibility for personal disputes between owners and captains",
   "ourVisionTitle": "Our Vision",
-  "ourVisionDescription": "To become a trusted and convenient driver-connection platform, empowering vehicle owners with flexibility and peace of mind while supporting independent drivers through fair opportunities.",
+  "ourVisionDescription": "To become a trusted and convenient captain-connection platform, empowering vehicle owners with flexibility and peace of mind while supporting independent captains through fair opportunities.",
   "ourCommitmentTitle": "Our Commitment",
   "ourCommitmentIntro": "We are committed to:",
   "commitmentTransparency": "Transparency in platform usage",
   "commitmentSafetyPrivacy": "User safety and data privacy",
   "commitmentImprovement": "Continuous improvement based on user feedback",
-  "commitmentAgreement": "By using this platform, owners and drivers agree to interact responsibly, respectfully, and in accordance with our Terms & Conditions.",
+  "commitmentAgreement": "By using this platform, owners and captains agree to interact responsibly, respectfully, and in accordance with our Terms & Conditions.",
   "rideId": "Ride ID",
   "freeCancellationInfo": "You can cancel your booking within 5 minutes of confirmation without any charges.",
   "helpDesc": "We’re here to assist you with any issues related to rides, payments, account, or app usage.",
