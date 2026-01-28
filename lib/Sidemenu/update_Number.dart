@@ -63,7 +63,7 @@ class _UpdateNumberState extends State<UpdateNumber> {
     _newOtpTimer?.cancel();
 
     setState(() {
-      _newOtpSecondsLeft = 60;
+      _newOtpSecondsLeft = 40;
       _canGenerateNewOtp = false;
       _isNewOtpExpired = false;
       _newOtpVerified = false;
@@ -100,7 +100,7 @@ class _UpdateNumberState extends State<UpdateNumber> {
     await fcmService.sendNotification(
       recipientFCMToken: ownerToken,
       title: "Verify New Mobile Number",
-      body: "Your OTP is $otp (valid for 1 minute)",
+      body: "Your OTP is $otp (valid for 40 seconds)",
     );
 
     _startNewOtpTimer();
@@ -182,7 +182,7 @@ class _UpdateNumberState extends State<UpdateNumber> {
     _otpTimer?.cancel();
 
     setState(() {
-      _secondsLeft = 60;
+      _secondsLeft = 40;
       _canGenerateOtp = false;
       _isOtpExpired = false;
       _otpVerified = false;
@@ -292,7 +292,7 @@ class _UpdateNumberState extends State<UpdateNumber> {
                                           .verifyPhoneNumber(
                                             phoneNumber: phoneNumberWithCode,
                                             timeout: const Duration(
-                                              seconds: 60,
+                                              seconds: 40,
                                             ),
 
                                             verificationCompleted: (_) {},
@@ -434,13 +434,12 @@ class _UpdateNumberState extends State<UpdateNumber> {
 
                           GestureDetector(
                             onTap:
-                                (!_canGenerateNewOtp ||
-                                        newPhoneController.text
-                                            .trim()
-                                            .isEmpty ||
-                                        _isGeneratingNewOtp)
+                                newPhoneController.text.trim().isEmpty ||
+                                        _isGeneratingNewOtp
                                     ? null
                                     : () async {
+                                      print("NEW OTP BUTTON CLICKED");
+
                                       setState(
                                         () => _isGeneratingNewOtp = true,
                                       );

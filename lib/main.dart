@@ -32,11 +32,9 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  // Initialize notifications without blocking
   await FirebaseApi().initNotifications();
   _setupNotificationListeners();
 
-  // Initialize permissions asynchronously without blocking
   _initializePermissionsAsync();
 
   runApp(const MyApp());
@@ -61,7 +59,7 @@ Future<void> _initializePermissionsAsync() async {
     await Future.wait([
       Geolocator.requestPermission(),
       Geolocator.isLocationServiceEnabled(),
-      _requestNotificationPermission(),
+      // _requestNotificationPermission(),
     ]);
 
     if (Platform.isIOS) {
@@ -70,17 +68,6 @@ Future<void> _initializePermissionsAsync() async {
   } catch (e) {
     debugPrint('Permission initialization error: $e');
   }
-}
-
-Future<void> _requestNotificationPermission() async {
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-  NotificationSettings settings = await messaging.requestPermission(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-  print('User granted permission: ${settings.authorizationStatus}');
 }
 
 class MyApp extends StatelessWidget {

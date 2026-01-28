@@ -69,8 +69,30 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     // _setupRealtimePresence();
+    _markMessagesAsRead();
     _setUserOnline();
     messageController.addListener(() => _handleTypingStatus());
+  }
+
+  Future<void> _markMessagesAsRead() async {
+    final ownerId = widget.ownerId;
+
+    final unreadMessages =
+        await FirebaseFirestore.instance
+            .collection('bookings')
+            .doc(widget.bookingId)
+            .collection('messages')
+            .where('senderId', isNotEqualTo: ownerId)
+            .where('status', isEqualTo: 'sent')
+            .get();
+
+    final batch = FirebaseFirestore.instance.batch();
+
+    for (var doc in unreadMessages.docs) {
+      batch.update(doc.reference, {'status': 'read'});
+    }
+
+    await batch.commit();
   }
 
   void _setupRealtimePresence() async {

@@ -78,10 +78,10 @@ class LoginViewModel extends ChangeNotifier {
       phoneNumber: fullPhoneNumber,
       timeout: const Duration(seconds: 60),
       verificationCompleted: (PhoneAuthCredential credential) async {
-        debugPrint("✅ verificationCompleted (auto-retrieved)");
+        debugPrint("verificationCompleted (auto-retrieved)");
       },
       verificationFailed: (FirebaseAuthException e) {
-        debugPrint(" verificationFailed: ${e.code} - ${e.message}");
+        debugPrint("verificationFailed: ${e.code} - ${e.message}");
         _state = _state.copyWith(isLoading: false);
         notifyListeners();
         onError(e.message ?? "Verification failed");
@@ -92,7 +92,7 @@ class LoginViewModel extends ChangeNotifier {
         onCodeSent(verificationId);
       },
       codeAutoRetrievalTimeout: (String verificationId) {
-        debugPrint("⏱️ Auto-retrieval timed out");
+        debugPrint("Auto-retrieval timed out");
       },
     );
   }
@@ -101,26 +101,10 @@ class LoginViewModel extends ChangeNotifier {
     final token = await FirebaseMessaging.instance.getToken();
     print('FCM Token on login: $token');
     String? fcmToken = token;
+
     try {
       final withCode = normalizedPhone(phoneNumber);
       final withoutCode = phoneNumber;
-
-      final driverSnap =
-          await FirebaseFirestore.instance
-              .collection('drivers')
-              .where('phone', whereIn: [withCode, withoutCode])
-              .limit(1)
-              .get();
-
-      if (driverSnap.docs.isNotEmpty) {
-        final userData = driverSnap.docs.first.data();
-        _loggedInUser = userData;
-        notifyListeners();
-
-        await _saveDriverDataToSharedPrefs(userData, driverSnap.docs.first.id);
-        print("Driver details stored in SharedPreferences");
-        return;
-      }
 
       final ownerSnap =
           await FirebaseFirestore.instance
@@ -133,65 +117,30 @@ class LoginViewModel extends ChangeNotifier {
         final userData = ownerSnap.docs.first.data();
         _loggedInUser = userData;
         notifyListeners();
-        final driverDocId = ownerSnap.docs.first.id;
+
+        final ownerDocId = ownerSnap.docs.first.id;
+
         await FirebaseFirestore.instance
             .collection('users')
-            .doc(driverDocId)
+            .doc(ownerDocId)
             .update({"fcmToken": fcmToken});
 
-        await _saveOwnerDataToSharedPrefs(userData, ownerSnap.docs.first.id);
+        await _saveOwnerDataToSharedPrefs(userData, ownerDocId, fcmToken);
+
         print("Owner details stored in SharedPreferences");
         return;
       }
 
-      print("No user found in drivers or users collection for $phoneNumber");
+      print("No owner found in users collection for $phoneNumber");
     } catch (e) {
       print("Error in fetchLoggedInUser: $e");
     }
   }
 
-  Future<void> _saveDriverDataToSharedPrefs(
-    Map<String, dynamic> userData,
-    String docId,
-  ) async {
-    await SharedPrefServices.setRoleCode(userData['roleCode'] ?? "");
-
-    await SharedPrefServices.setProfileImage(userData['profileUrl'] ?? "");
-    await SharedPrefServices.setFirstName(userData['firstName'] ?? "");
-    await SharedPrefServices.setLastName(userData['lastName'] ?? "");
-    await SharedPrefServices.setEmail(userData['email'] ?? "");
-    await SharedPrefServices.setisOnline(userData['isOnline'] ?? false);
-    await SharedPrefServices.setUserId(userData['userId'] ?? "");
-    await SharedPrefServices.setNumber(userData['phone'] ?? "");
-    await SharedPrefServices.setFcmToken(userData['fcmToken'] ?? "");
-    await SharedPrefServices.setCountryCode(userData['countryCode'] ?? "");
-    await SharedPrefServices.setDOB(userData['dob'] ?? "");
-    await SharedPrefServices.setvehicleType(userData['vehicleType'] ?? "");
-    await SharedPrefServices.setdrivingLicence(userData['licenceNumber'] ?? "");
-    await SharedPrefServices.setlicenceFront(userData['licenceFrontUrl'] ?? "");
-    await SharedPrefServices.setlicenceBack(userData['licenceBackUrl'] ?? "");
-    await SharedPrefServices.setislogged(true);
-
-    if (userData['bankAccount'] != null) {
-      final bankData = userData['bankAccount'] as Map<String, dynamic>;
-      await SharedPrefServices.setbankNmae(bankData['bankName'] ?? "");
-      await SharedPrefServices.setaccountNumber(
-        bankData['accountNumber'] ?? "",
-      );
-      await SharedPrefServices.setaccountHolderName(
-        bankData['holderName'] ?? "",
-      );
-      await SharedPrefServices.setbranchName(bankData['branch'] ?? "");
-      await SharedPrefServices.setifscCode(bankData['ifsc'] ?? "");
-    }
-
-    await SharedPrefServices.setDocID(docId);
-    // await SharedPrefServices.setislogged(true);
-  }
-
   Future<void> _saveOwnerDataToSharedPrefs(
     Map<String, dynamic> userData,
     String docId,
+    String? fcmToken,
   ) async {
     await SharedPrefServices.setRoleCode(userData['roleCode'] ?? "");
     await SharedPrefServices.setProfileImage(userData['profilePic'] ?? "");
@@ -203,7 +152,7 @@ class LoginViewModel extends ChangeNotifier {
     await SharedPrefServices.setCountryCode(userData['countryCode'] ?? "");
     await SharedPrefServices.setDocID(docId);
     await SharedPrefServices.setislogged(true);
-    await SharedPrefServices.setFcmToken(userData['fcmToken'] ?? "");
+    await SharedPrefServices.setFcmToken(fcmToken ?? "");
   }
 
   void updateUser(Map<String, dynamic> newUserData) {
@@ -225,3 +174,97 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+
+  // Future<void> fetchLoggedInUser(String phoneNumber) async {
+  //   final token = await FirebaseMessaging.instance.getToken();
+  //   print('FCM Token on login: $token');
+  //   String? fcmToken = token;
+  //   try {
+  //     final withCode = normalizedPhone(phoneNumber);
+  //     final withoutCode = phoneNumber;
+
+  //     final driverSnap =
+  //         await FirebaseFirestore.instance
+  //             .collection('drivers')
+  //             .where('phone', whereIn: [withCode, withoutCode])
+  //             .limit(1)
+  //             .get();
+
+  //     if (driverSnap.docs.isNotEmpty) {
+  //       final userData = driverSnap.docs.first.data();
+  //       _loggedInUser = userData;
+  //       notifyListeners();
+
+  //       await _saveDriverDataToSharedPrefs(userData, driverSnap.docs.first.id);
+  //       print("Driver details stored in SharedPreferences");
+  //       return;
+  //     }
+
+  //     final ownerSnap =
+  //         await FirebaseFirestore.instance
+  //             .collection('users')
+  //             .where('phone', whereIn: [withCode, withoutCode])
+  //             .limit(1)
+  //             .get();
+
+  //     if (ownerSnap.docs.isNotEmpty) {
+  //       final userData = ownerSnap.docs.first.data();
+  //       _loggedInUser = userData;
+  //       notifyListeners();
+  //       final driverDocId = ownerSnap.docs.first.id;
+  //       await FirebaseFirestore.instance
+  //           .collection('users')
+  //           .doc(driverDocId)
+  //           .update({"fcmToken": fcmToken});
+
+  //       await _saveOwnerDataToSharedPrefs(userData, ownerSnap.docs.first.id);
+  //       print("Owner details stored in SharedPreferences");
+  //       return;
+  //     }
+
+  //     print("No user found in drivers or users collection for $phoneNumber");
+  //   } catch (e) {
+  //     print("Error in fetchLoggedInUser: $e");
+  //   }
+  // }
+
+  //  Future<void> _saveDriverDataToSharedPrefs(
+  //   Map<String, dynamic> userData,
+  //   String docId,
+  // ) async {
+  //   await SharedPrefServices.setRoleCode(userData['roleCode'] ?? "");
+
+  //   await SharedPrefServices.setProfileImage(userData['profileUrl'] ?? "");
+  //   await SharedPrefServices.setFirstName(userData['firstName'] ?? "");
+  //   await SharedPrefServices.setLastName(userData['lastName'] ?? "");
+  //   await SharedPrefServices.setEmail(userData['email'] ?? "");
+  //   await SharedPrefServices.setisOnline(userData['isOnline'] ?? false);
+  //   await SharedPrefServices.setUserId(userData['userId'] ?? "");
+  //   await SharedPrefServices.setNumber(userData['phone'] ?? "");
+  //   await SharedPrefServices.setFcmToken(userData['fcmToken'] ?? "");
+  //   await SharedPrefServices.setCountryCode(userData['countryCode'] ?? "");
+  //   await SharedPrefServices.setDOB(userData['dob'] ?? "");
+  //   await SharedPrefServices.setvehicleType(userData['vehicleType'] ?? "");
+  //   await SharedPrefServices.setdrivingLicence(userData['licenceNumber'] ?? "");
+  //   await SharedPrefServices.setlicenceFront(userData['licenceFrontUrl'] ?? "");
+  //   await SharedPrefServices.setlicenceBack(userData['licenceBackUrl'] ?? "");
+  //   await SharedPrefServices.setislogged(true);
+
+  //   if (userData['bankAccount'] != null) {
+  //     final bankData = userData['bankAccount'] as Map<String, dynamic>;
+  //     await SharedPrefServices.setbankNmae(bankData['bankName'] ?? "");
+  //     await SharedPrefServices.setaccountNumber(
+  //       bankData['accountNumber'] ?? "",
+  //     );
+  //     await SharedPrefServices.setaccountHolderName(
+  //       bankData['holderName'] ?? "",
+  //     );
+  //     await SharedPrefServices.setbranchName(bankData['branch'] ?? "");
+  //     await SharedPrefServices.setifscCode(bankData['ifsc'] ?? "");
+  //   }
+
+  //   await SharedPrefServices.setDocID(docId);
+  //   // await SharedPrefServices.setislogged(true);
+  // }
+

@@ -345,7 +345,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get home_watch => 'Watch & Learn';
 
   @override
-  String get home_prem => 'PREMIUM FEEL FOR DRIVER SERVICES';
+  String get home_prem => 'Experienced Captains at Your Service';
 
   @override
   String get home_india => 'Made in India';
@@ -366,10 +366,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loggedInReady => 'You\'re now logged in and ready to go.';
 
   @override
-  String get getStartedMinute => 'It only takes a minute to get started.';
+  String get getStartedMinute => 'Get started in just a minute.';
 
   @override
-  String get quickSimpleRegistration => 'Quick. Simple. Hassle-free registration.';
+  String get quickSimpleRegistration => 'Fast and easy registration process.';
 
   @override
   String get firstName => 'First Name';
@@ -1498,4 +1498,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get freeCancellationInfo => 'You can cancel your booking within 5 minutes of confirmation without any charges.';
+
+  @override
+  String get helpDesc => 'We’re here to assist you with any issues related to rides, payments, account, or app usage.';
+
+  @override
+  String get quickHelp => 'Quick Help Options';
+
+  @override
+  String get chooseWay => 'Choose the best way to reach us:';
+
+  @override
+  String get callSupport => 'Call Support';
+
+  @override
+  String get callDesc => 'Get instant help from our support team';
+
+  @override
+  String get availableHours => 'Available during working hours';
+
+  @override
+  String get emailSupport => 'Email Support';
+
+  @override
+  String get emailDesc => 'Send us your queries or concerns';
+
+  @override
+  String get emailReplyTime => 'We usually respond within 24 hours';
 }

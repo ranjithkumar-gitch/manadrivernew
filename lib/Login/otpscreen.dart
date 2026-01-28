@@ -53,7 +53,7 @@ class _OtpScreenState extends State<OtpScreen> {
   bool _isResending = false;
   String? _otpErrorMessage;
 
-  int _secondsLeft = 60;
+  int _secondsLeft = 40;
   Timer? _timer;
   @override
   void initState() {
@@ -65,7 +65,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
   void _startTimer() {
     _timer?.cancel();
-    setState(() => _secondsLeft = 60);
+    setState(() => _secondsLeft = 40);
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_secondsLeft == 0) {
@@ -84,7 +84,7 @@ class _OtpScreenState extends State<OtpScreen> {
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: "+91${widget.phoneNumber}",
-        timeout: const Duration(seconds: 60),
+        timeout: const Duration(seconds: 40),
 
         verificationCompleted: (PhoneAuthCredential credential) async {},
 
@@ -190,6 +190,7 @@ class _OtpScreenState extends State<OtpScreen> {
                             focusedPinTheme: PinTheme(
                               width: 60,
                               height: 60,
+                              margin: const EdgeInsets.symmetric(horizontal: 5),
                               textStyle: GoogleFonts.poppins(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
@@ -346,7 +347,8 @@ class _OtpScreenState extends State<OtpScreen> {
 
         await SharedPrefServices.setFcmToken(widget.fcmToken);
 
-        await SharedPrefServices.setislogged(true);
+        await FirebaseAuth.instance.signOut();
+        await SharedPrefServices.setislogged(false);
 
         await fcmService.sendNotification(
           recipientFCMToken: widget.fcmToken,

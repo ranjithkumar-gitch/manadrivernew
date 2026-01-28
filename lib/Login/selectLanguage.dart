@@ -1,4 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -21,6 +22,24 @@ class LanguageSelectionScreen extends StatefulWidget {
 
 class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   String selectedLanguage = 'English';
+
+  @override
+  void initState() {
+    super.initState();
+
+    _requestNotificationPermission();
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+    print('User granted permission: ${settings.authorizationStatus}');
+  }
 
   @override
   Widget build(BuildContext context) {

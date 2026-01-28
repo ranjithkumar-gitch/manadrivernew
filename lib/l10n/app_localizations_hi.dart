@@ -345,7 +345,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get home_watch => 'देखें & जानें';
 
   @override
-  String get home_prem => 'ड्राइवर सेवाओं के लिए प्रीमियम अनुभव';
+  String get home_prem => 'आपकी सेवा में अनुभवी कैप्टन';
 
   @override
   String get home_india => 'भारत में किए गए';
@@ -366,10 +366,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get loggedInReady => 'आप अब लॉगिन हो चुके हैं और आगे बढ़ने के लिए तैयार हैं।';
 
   @override
-  String get getStartedMinute => 'शुरू करने में केवल एक मिनट लगता है।';
+  String get getStartedMinute => 'सिर्फ एक मिनट में शुरू करें.';
 
   @override
-  String get quickSimpleRegistration => 'तेज़। सरल। परेशानी-मुक्त पंजीकरण।';
+  String get quickSimpleRegistration => 'तेज़ और आसान पंजीकरण प्रक्रिया.';
 
   @override
   String get firstName => 'पहला नाम';
@@ -1498,4 +1498,31 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get freeCancellationInfo => 'पुष्टि के 5 मिनट के भीतर आप बिना किसी शुल्क के अपनी बुकिंग रद्द कर सकते हैं।';
+
+  @override
+  String get helpDesc => 'राइड्स, भुगतान, अकाउंट या ऐप उपयोग से जुड़ी किसी भी समस्या में हम आपकी सहायता के लिए यहाँ हैं।';
+
+  @override
+  String get quickHelp => 'त्वरित सहायता विकल्प';
+
+  @override
+  String get chooseWay => 'हमसे संपर्क करने का सबसे अच्छा तरीका चुनें:';
+
+  @override
+  String get callSupport => 'कॉल सहायता';
+
+  @override
+  String get callDesc => 'हमारी सहायता टीम से तुरंत मदद प्राप्त करें';
+
+  @override
+  String get availableHours => 'कार्य समय के दौरान उपलब्ध';
+
+  @override
+  String get emailSupport => 'ईमेल सहायता';
+
+  @override
+  String get emailDesc => 'अपने प्रश्न या समस्याएँ हमें भेजें';
+
+  @override
+  String get emailReplyTime => 'हम आमतौर पर 24 घंटे के भीतर उत्तर देते हैं';
 }

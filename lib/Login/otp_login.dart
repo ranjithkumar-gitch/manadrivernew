@@ -42,7 +42,7 @@ class _OtpLoginState extends State<OtpLogin> {
   String? _currentVerificationId;
   bool _isResending = false;
 
-  int _secondsLeft = 60;
+  int _secondsLeft = 40;
   Timer? _timer;
   String? _otpErrorMessage;
 
@@ -56,7 +56,7 @@ class _OtpLoginState extends State<OtpLogin> {
 
   void _startTimer() {
     _timer?.cancel();
-    setState(() => _secondsLeft = 60);
+    setState(() => _secondsLeft = 40);
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_secondsLeft == 0) {
@@ -88,7 +88,7 @@ class _OtpLoginState extends State<OtpLogin> {
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: "+91${widget.phoneNumber}",
-        timeout: const Duration(seconds: 60),
+        timeout: const Duration(seconds: 40),
 
         verificationCompleted: (PhoneAuthCredential credential) async {},
 
@@ -359,40 +359,29 @@ class _OtpLoginState extends State<OtpLogin> {
                                 final docId = SharedPrefServices.getDocId();
                                 print(" Owner DocId = $docId");
 
-                                if (docId != null && docId.isNotEmpty) {
-                                  print(" Fetching owner Firestore document");
+                                final ownertoken =
+                                    SharedPrefServices.getfcmToken();
+                                print(
+                                  " Owner FCM Token (from pref) = $ownertoken",
+                                );
 
-                                  final snap =
-                                      await FirebaseFirestore.instance
-                                          .collection("users")
-                                          .doc(docId)
-                                          .get();
+                                await SharedPrefServices.setislogged(true);
 
-                                  if (snap.exists) {
-                                    print(" Owner document exists");
-
-                                    final ownertoken =
-                                        snap.data()?["fcmToken"] ?? "";
-                                    print(" Owner FCM Token = $ownertoken");
-
-                                    if (ownertoken.isNotEmpty) {
-                                      await fcmService.sendNotification(
-                                        recipientFCMToken: ownertoken,
-                                        title: localizations.welcomeBack,
-                                        body: localizations.loggedInReady,
-                                      );
-                                      print(" Login success notification sent");
-                                    } else {
-                                      print(" Owner FCM token EMPTY");
-                                    }
-                                  } else {
-                                    print(" Owner document NOT FOUND");
-                                  }
+                                if (ownertoken != null &&
+                                    ownertoken.isNotEmpty) {
+                                  await fcmService.sendNotification(
+                                    recipientFCMToken: ownertoken,
+                                    title: localizations.welcomeBack,
+                                    body: localizations.loggedInReady,
+                                  );
+                                  print(
+                                    " Login success notification sent (via SharedPref)",
+                                  );
                                 } else {
-                                  print(" DocId is NULL or EMPTY");
+                                  print(" Owner FCM token EMPTY");
                                 }
 
-                                print("➡️ Navigating to BottomNavigation");
+                                print(" Navigating to BottomNavigation");
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -456,91 +445,66 @@ class _OtpLoginState extends State<OtpLogin> {
   }
 }
 
-// : CustomButton(
-                        //   text: localizations.verifyOtp,
-                        //   onPressed: () async {
-                        //     if (otpController.text.length != 6) {
-                        //       ScaffoldMessenger.of(context).showSnackBar(
-                        //         const SnackBar(
-                        //           content: Text("Enter valid OTP"),
-                        //         ),
-                        //       );
-                        //       return;
-                        //     }
-                        //     setState(() => _isLoading = true);
-                        //     try {
-                        //       final credential = PhoneAuthProvider.credential(
-                        //         // verificationId: widget.verificationId,
-                        //         verificationId: _currentVerificationId!,
-                        //         smsCode: otpController.text.trim(),
-                        //       );
-                        //       await FirebaseAuth.instance.signInWithCredential(
-                        //         credential,
-                        //       );
-                        //       final vm = context.read<LoginViewModel>();
-                        //       await vm.fetchLoggedInUser(widget.phoneNumber);
-                        //       await fetchServiceKeys();
-                        //       final role =
-                        //           await SharedPrefServices.getRoleCode();
-                        //       if (!mounted) return;
-                        //       if (role == "Owner") {
-                        //         final docId = SharedPrefServices.getDocId();
-                        //         if (docId != null && docId.isNotEmpty) {
-                        //           final snap =
-                        //               await FirebaseFirestore.instance
-                        //                   .collection("users")
-                        //                   .doc(docId)
-                        //                   .get();
-                        //           if (snap.exists) {
-                        //             final ownertoken =
-                        //                 snap.data()?["fcmToken"] ?? "";
-                        //             if (ownertoken.isNotEmpty) {
-                        //               await fcmService.sendNotification(
-                        //                 recipientFCMToken: ownertoken,
-                        //                 title: localizations.welcomeBack,
-                        //                 body: localizations.loggedInReady,
-                        //               );
-                        //               print("Login success notification sent!");
-                        //             }
-                        //           }
-                        //         }
-                        //         Navigator.pushReplacement(
-                        //           context,
-                        //           MaterialPageRoute(
-                        //             builder: (_) => BottomNavigation(),
-                        //           ),
-                        //         );
-                        //       } else {
-                        //         Navigator.pushReplacement(
-                        //           context,
-                        //           MaterialPageRoute(
-                        //             builder: (_) => LanguageSelectionScreen(),
-                        //           ),
-                        //         );
-                        //       }
-                        //     } on FirebaseAuthException catch (e) {
-                        //       String message =
-                        //           "OTP verification failed. Please try again.";
-                        //       if (e.code == 'invalid-verification-code') {
-                        //         message = "Incorrect OTP. Please try again.";
-                        //       } else if (e.code == 'session-expired') {
-                        //         message =
-                        //             "OTP expired. Please request a new one.";
-                        //       }
-                        //       ScaffoldMessenger.of(context).showSnackBar(
-                        //         SnackBar(
-                        //           content: Text(message),
-                        //           behavior: SnackBarBehavior.floating,
-                        //           duration: const Duration(seconds: 2),
-                        //         ),
-                        //       );
-                        //     } finally {
-                        //       setState(() => _isLoading = false);
-                        //     }
-                        //   },
-                        //   width: 220,
-                        //   height: 53,
-                        // ),
+
+                            // if (role == "Owner") {
+                              //   print(" ROLE IS OWNER");
+
+                              //   final docId = SharedPrefServices.getDocId();
+                              //   print(" Owner DocId = $docId");
+
+                              //   if (docId != null && docId.isNotEmpty) {
+                              //     print(" Fetching owner Firestore document");
+
+                              //     final snap =
+                              //         await FirebaseFirestore.instance
+                              //             .collection("users")
+                              //             .doc(docId)
+                              //             .get();
+
+                              //     if (snap.exists) {
+                              //       print(" Owner document exists");
+
+                              //       final ownertoken =
+                              //           snap.data()?["fcmToken"] ?? "";
+                              //       print(" Owner FCM Token = $ownertoken");
+
+                              //       if (ownertoken.isNotEmpty) {
+                              //         await fcmService.sendNotification(
+                              //           recipientFCMToken: ownertoken,
+                              //           title: localizations.welcomeBack,
+                              //           body: localizations.loggedInReady,
+                              //         );
+                              //         print(" Login success notification sent");
+                              //       } else {
+                              //         print(" Owner FCM token EMPTY");
+                              //       }
+                              //     } else {
+                              //       print(" Owner document NOT FOUND");
+                              //     }
+                              //   } else {
+                              //     print(" DocId is NULL or EMPTY");
+                              //   }
+
+                              //   print(" Navigating to BottomNavigation");
+                              //   Navigator.pushReplacement(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (_) => BottomNavigation(),
+                              //     ),
+                              //   );
+                              // } else {
+                              //   print(" ROLE IS NOT OWNER (role = $role)");
+                              //   print(" Navigating to LanguageSelectionScreen");
+
+                              //   Navigator.pushReplacement(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (_) => LanguageSelectionScreen(),
+                              //     ),
+                              //   );
+                              // }
+
+
 
 
  

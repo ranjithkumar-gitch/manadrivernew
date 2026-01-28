@@ -343,13 +343,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                                   await FirebaseAuth.instance.verifyPhoneNumber(
                                     phoneNumber: phoneNumberWithCode,
-                                    timeout: const Duration(seconds: 60),
+                                    timeout: const Duration(seconds: 40),
 
                                     verificationCompleted: (
                                       PhoneAuthCredential credential,
                                     ) async {
-                                      await FirebaseAuth.instance
-                                          .signInWithCredential(credential);
+                                      // await FirebaseAuth.instance
+                                      //     .signInWithCredential(credential);
                                     },
 
                                     verificationFailed: (

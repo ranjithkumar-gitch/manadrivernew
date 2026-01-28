@@ -113,7 +113,7 @@
 "p_editProfile": "Edit Profile",
 "home_viewoffers":"View Offers",
 "home_watch":"Watch & Learn",
-"home_prem":"PREMIUM FEEL FOR DRIVER SERVICES",
+"home_prem":"Experienced Captains at Your Service",
 "home_india":"Made in India",
 "enterYourOtp": "Enter Your OTP",
   "otpSent": "OTP sent",
@@ -122,8 +122,8 @@
   "verifyOtp": "Verify OTP",
   "welcomeBack": "Welcome Back!",
   "loggedInReady": "You're now logged in and ready to go.",
-  "getStartedMinute": "It only takes a minute to get started.",
-  "quickSimpleRegistration": "Quick. Simple. Hassle-free registration.",
+  "getStartedMinute": "Get started in just a minute.",
+  "quickSimpleRegistration": "Fast and easy registration process.",
   "firstName": "First Name",
   "lastName": "Last Name",
   "emailId": "Email ID",
@@ -559,7 +559,17 @@
   "commitmentImprovement": "Continuous improvement based on user feedback",
   "commitmentAgreement": "By using this platform, owners and drivers agree to interact responsibly, respectfully, and in accordance with our Terms & Conditions.",
   "rideId": "Ride ID",
-  "freeCancellationInfo": "You can cancel your booking within 5 minutes of confirmation without any charges."
+  "freeCancellationInfo": "You can cancel your booking within 5 minutes of confirmation without any charges.",
+  "helpDesc": "We’re here to assist you with any issues related to rides, payments, account, or app usage.",
+  "quickHelp": "Quick Help Options",
+  "chooseWay": "Choose the best way to reach us:",
+  "callSupport": "Call Support",
+  "callDesc": "Get instant help from our support team",
+  "availableHours": "Available during working hours",
+  "emailSupport": "Email Support",
+  "emailDesc": "Send us your queries or concerns",
+  "emailReplyTime": "We usually respond within 24 hours"
+
 
 
 

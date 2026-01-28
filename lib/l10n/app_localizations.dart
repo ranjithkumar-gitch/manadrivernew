@@ -772,7 +772,7 @@ abstract class AppLocalizations {
   /// No description provided for @home_prem.
   ///
   /// In en, this message translates to:
-  /// **'PREMIUM FEEL FOR DRIVER SERVICES'**
+  /// **'Experienced Captains at Your Service'**
   String get home_prem;
 
   /// No description provided for @home_india.
@@ -814,13 +814,13 @@ abstract class AppLocalizations {
   /// No description provided for @getStartedMinute.
   ///
   /// In en, this message translates to:
-  /// **'It only takes a minute to get started.'**
+  /// **'Get started in just a minute.'**
   String get getStartedMinute;
 
   /// No description provided for @quickSimpleRegistration.
   ///
   /// In en, this message translates to:
-  /// **'Quick. Simple. Hassle-free registration.'**
+  /// **'Fast and easy registration process.'**
   String get quickSimpleRegistration;
 
   /// No description provided for @firstName.
@@ -3078,6 +3078,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You can cancel your booking within 5 minutes of confirmation without any charges.'**
   String get freeCancellationInfo;
+
+  /// No description provided for @helpDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'We’re here to assist you with any issues related to rides, payments, account, or app usage.'**
+  String get helpDesc;
+
+  /// No description provided for @quickHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Help Options'**
+  String get quickHelp;
+
+  /// No description provided for @chooseWay.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the best way to reach us:'**
+  String get chooseWay;
+
+  /// No description provided for @callSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Call Support'**
+  String get callSupport;
+
+  /// No description provided for @callDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Get instant help from our support team'**
+  String get callDesc;
+
+  /// No description provided for @availableHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Available during working hours'**
+  String get availableHours;
+
+  /// No description provided for @emailSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Support'**
+  String get emailSupport;
+
+  /// No description provided for @emailDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Send us your queries or concerns'**
+  String get emailDesc;
+
+  /// No description provided for @emailReplyTime.
+  ///
+  /// In en, this message translates to:
+  /// **'We usually respond within 24 hours'**
+  String get emailReplyTime;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

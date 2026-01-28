@@ -87,81 +87,185 @@ class _HelpAndSupportState extends State<HelpAndSupport> {
                   ),
                 ),
 
-                // Main content
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 80.0),
-                          child: Image.asset(
-                            'images/helpand_support.png',
-                            height: 120,
-                            width: 120,
-                            fit: BoxFit.cover,
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight:
+                              MediaQuery.of(context).size.height -
+                              kToolbarHeight -
+                              MediaQuery.of(context).padding.top,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // 🔹 IMAGE
+                              Image.asset(
+                                'images/helpand_support.png',
+                                height: 120,
+                                width: 120,
+                                fit: BoxFit.cover,
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              // 🔹 TITLE
+                              SizedBox(
+                                width: 190,
+                                child: CustomText(
+                                  text: localizations.hS_t1,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w700,
+                                  textcolor: const Color(0xFFFF6B00),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+
+                              const SizedBox(height: 40),
+
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: CustomText(
+                                  text: localizations.hS_t2,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+
+                              const SizedBox(height: 10),
+
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: CustomText(
+                                  text: localizations.helpDesc,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: Colors.grey.shade700,
+                                ),
+                              ),
+
+                              const SizedBox(height: 20),
+
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: CustomText(
+                                  text: localizations.quickHelp,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+
+                              const SizedBox(height: 10),
+
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: CustomText(
+                                  text: localizations.chooseWay,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: Colors.grey.shade700,
+                                ),
+                              ),
+
+                              const SizedBox(height: 15),
+
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: CustomText(
+                                  text: localizations.callSupport,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: CustomText(
+                                  text: localizations.callDesc,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: Colors.grey.shade700,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: GestureDetector(
+                                  onTap: () => _callNumber("+91 9000464851"),
+                                  child: CustomText(
+                                    text: "+91 9000464851",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    textcolor: const Color(0xFFFF6B00),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: CustomText(
+                                  text: localizations.availableHours,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: Colors.grey,
+                                ),
+                              ),
+
+                              const SizedBox(height: 20),
+
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: CustomText(
+                                  text: localizations.emailSupport,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  textcolor: KblackColor,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: CustomText(
+                                  text: localizations.emailDesc,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: Colors.grey.shade700,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: GestureDetector(
+                                  onTap: () => _sendEmail("hello@nyzoride.com"),
+                                  child: CustomText(
+                                    text: "hello@nyzoride.com",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    textcolor: const Color(0xFFFF6B00),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: CustomText(
+                                  text: localizations.emailReplyTime,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: Colors.grey,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(height: 16),
-
-                        SizedBox(
-                          width: 190,
-                          child: CustomText(
-                            text: localizations.hS_t1,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
-                            textcolor: Color(0xFFFF6B00),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        SizedBox(height: 12),
-
-                        // Center(
-                        //   child: CustomText(
-                        //     text:
-                        //         "Lorem Ipsum is simply dummy text\nof the printing and typesetting industry.",
-                        //     fontSize: 14,
-                        //     fontWeight: FontWeight.w400,
-                        //     textcolor: KorangeLightColor,
-                        //   ),
-                        // ),
-                        SizedBox(height: 54),
-
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: CustomText(
-                            text: localizations.hS_t2,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            textcolor: KblackColor,
-                          ),
-                        ),
-                        SizedBox(height: 16),
-
-                        Column(
-                          children: [
-                            contactCard(
-                              "images/phone.png",
-                              localizations.hS_t3,
-                              "+91 9000464851",
-                              onTap: () {
-                                _callNumber("+91 9000464851");
-                              },
-                            ),
-                            SizedBox(height: 12),
-                            contactCard(
-                              "images/sendemail.png",
-                              localizations.hS_t4,
-                              "hello@nyzoride.com",
-                              onTap: () {
-                                _sendEmail("hello@nyzoride.com");
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),

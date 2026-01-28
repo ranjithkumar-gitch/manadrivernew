@@ -388,6 +388,17 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
 
   double paidAmount = 0.0;
 
+  Stream<int> ownerUnreadMessageCountStream(String bookingId, String ownerId) {
+    return FirebaseFirestore.instance
+        .collection('privateChats')
+        .doc(bookingId)
+        .collection('messages')
+        .where('senderId', isNotEqualTo: ownerId)
+        .where('status', isEqualTo: 'sent')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
+  }
+
   @override
   Widget build(BuildContext context) {
     final bookingId = widget.bookingData['bookingId'] ?? '';
@@ -792,35 +803,110 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                         rideStatus != 'Cancelled') ...[
                                       Container(
                                         height: 50,
-                                        width: 1,
+                                        width: 1.5,
                                         color: Colors.grey.shade300,
                                       ),
                                       const SizedBox(width: 12),
                                       Row(
                                         children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder:
-                                                      (_) => ChatScreen(
-                                                        bookingId: bookingId,
-                                                        driverData: d,
-                                                        driverId: liveDriverId,
-                                                        ownerId: ownerId,
-                                                        ownerName: driverName,
-                                                        ownerProfile:
-                                                            ownerProfile,
+                                          StreamBuilder<int>(
+                                            stream:
+                                                ownerUnreadMessageCountStream(
+                                                  bookingId,
+                                                  SharedPrefServices.getUserId()
+                                                      .toString(),
+                                                ),
+                                            builder: (context, snapshot) {
+                                              final unreadCount =
+                                                  snapshot.data ?? 0;
+                                              final hasUnread = unreadCount > 0;
+
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder:
+                                                          (_) => ChatScreen(
+                                                            bookingId:
+                                                                bookingId,
+                                                            driverData: d,
+                                                            driverId:
+                                                                liveDriverId,
+                                                            ownerId: ownerId,
+                                                            ownerName:
+                                                                driverName,
+                                                            ownerProfile:
+                                                                ownerProfile,
+                                                          ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Stack(
+                                                  clipBehavior: Clip.none,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chat.png",
+                                                      width: 40,
+                                                      height: 40,
+                                                    ),
+
+                                                    if (hasUnread)
+                                                      Positioned(
+                                                        top: -6,
+                                                        right: -6,
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                horizontal: 6,
+                                                                vertical: 2,
+                                                              ),
+                                                          decoration: BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  12,
+                                                                ),
+                                                            border: Border.all(
+                                                              color:
+                                                                  Colors.white,
+                                                              width: 1,
+                                                            ),
+                                                          ),
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                                minWidth: 16,
+                                                                minHeight: 16,
+                                                              ),
+                                                          child: Text(
+                                                            unreadCount > 9
+                                                                ? '9+'
+                                                                : unreadCount
+                                                                    .toString(),
+                                                            style:
+                                                                const TextStyle(
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize: 10,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                            textAlign:
+                                                                TextAlign
+                                                                    .center,
+                                                          ),
+                                                        ),
                                                       ),
+                                                  ],
                                                 ),
                                               );
                                             },
-                                            child: Image.asset(
-                                              "images/chat.png",
-                                            ),
                                           ),
-                                          const SizedBox(width: 5),
+
+                                          const SizedBox(width: 8),
+
                                           GestureDetector(
                                             onTap: () async {
                                               final phone = d['phone'] ?? '';
@@ -838,6 +924,8 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                             },
                                             child: Image.asset(
                                               "images/call.png",
+                                              width: 40,
+                                              height: 40,
                                             ),
                                           ),
                                         ],

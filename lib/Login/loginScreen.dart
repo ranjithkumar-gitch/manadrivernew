@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +70,8 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                       child: Column(
                         children: [
                           const SizedBox(height: 100),
-                           Spacer(),
+                          Spacer(),
+
                           // const SizedBox(height: 40),
                           // Image.asset(
                           //   'images/nyzo_ride.png',
@@ -81,7 +81,6 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                           // ),
 
                           // const SizedBox(height: 40),
-                         
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Column(

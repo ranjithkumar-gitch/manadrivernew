@@ -27,17 +27,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    // _controller = AnimationController(
-    //   vsync: this,
-    //   duration: const Duration(seconds: 4),
-    // );
 
-    // _scaleAnimation = Tween<double>(
-    //   begin: 0.0,
-    //   end: 1.0,
-    // ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
-
-    // _controller.forward();
     startSplashFlow();
 
     print('DOCID ${SharedPrefServices.getDocId().toString()}');
@@ -145,21 +135,25 @@ class _SplashScreenState extends State<SplashScreen>
     RemoteMessage? message =
         await FirebaseMessaging.instance.getInitialMessage();
 
-    if (message != null) {
-      print("App opened via notification");
-    }
-
     await Future.delayed(const Duration(seconds: 1));
 
-    await SharedPrefServices.init();
     bool isLoggedIn = SharedPrefServices.getislogged();
     String role = SharedPrefServices.getRoleCode().toString();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusManager.instance.primaryFocus?.unfocus();
-    });
-    print("isLoggedIn: $isLoggedIn");
-    print("role: $role");
+    if (message != null) {
+      if (isLoggedIn && role == "Owner") {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => BottomNavigation()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LanguageSelectionScreen()),
+        );
+      }
+      return;
+    }
 
     if (isLoggedIn && role == "Owner") {
       Navigator.pushReplacement(
@@ -169,10 +163,43 @@ class _SplashScreenState extends State<SplashScreen>
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => LanguageSelectionScreen()),
+        MaterialPageRoute(builder: (_) => const LanguageSelectionScreen()),
       );
     }
   }
+
+  // Future<void> _navigateNext() async {
+  //   RemoteMessage? message =
+  //       await FirebaseMessaging.instance.getInitialMessage();
+
+  //   if (message != null) {
+  //     print("App opened via notification");
+  //   }
+
+  //   await Future.delayed(const Duration(seconds: 1));
+
+  //   await SharedPrefServices.init();
+  //   bool isLoggedIn = SharedPrefServices.getislogged();
+  //   String role = SharedPrefServices.getRoleCode().toString();
+
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     FocusManager.instance.primaryFocus?.unfocus();
+  //   });
+  //   print("isLoggedIn: $isLoggedIn");
+  //   print("role: $role");
+
+  //   if (isLoggedIn && role == "Owner") {
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(builder: (_) => BottomNavigation()),
+  //     );
+  //   } else {
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(builder: (_) => LanguageSelectionScreen()),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
