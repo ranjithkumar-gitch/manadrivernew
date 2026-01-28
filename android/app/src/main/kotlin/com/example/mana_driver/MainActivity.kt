@@ -1,4 +1,4 @@
-package com.example.nyzo
+package com.naresh.nyzo
 
 import io.flutter.embedding.android.FlutterActivity
 

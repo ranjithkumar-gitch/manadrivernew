@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.nyzo"
+    namespace = "com.naresh.nyzo"
     compileSdk = 36
     ndkVersion = "27.0.12077973"
 
@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.nyzo"
+        applicationId = "com.naresh.nyzo"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCeUXWCR972pTy5Id2g6uHdPDd26w3eqHw',
-    appId: '1:759100098277:android:01581f4f5c2f6b6fc2360c',
+    appId: '1:759100098277:android:0d501721fa779b1ac2360c',
     messagingSenderId: '759100098277',
     projectId: 'nyzoride-69ab6',
     storageBucket: 'nyzoride-69ab6.firebasestorage.app',
@@ -59,10 +59,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAWxOdmQHIt98P0yNmmgSKNg7-yCuWeREI',
-    appId: '1:759100098277:ios:33264b2c9fabd838c2360c',
+    appId: '1:759100098277:ios:1def8890b63c690dc2360c',
     messagingSenderId: '759100098277',
     projectId: 'nyzoride-69ab6',
     storageBucket: 'nyzoride-69ab6.firebasestorage.app',
-    iosBundleId: 'com.example.nyzo',
+    iosBundleId: 'com.naresh.nyzo',
   );
 }

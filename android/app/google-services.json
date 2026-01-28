@@ -7,9 +7,47 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:759100098277:android:01581f4f5c2f6b6fc2360c",
+        "mobilesdk_app_id": "1:759100098277:android:32a1fb93c8480997c2360c",
         "android_client_info": {
-          "package_name": "com.example.nyzo"
+          "package_name": "com.example.rydynadmin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeUXWCR972pTy5Id2g6uHdPDd26w3eqHw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759100098277:android:0d501721fa779b1ac2360c",
+        "android_client_info": {
+          "package_name": "com.naresh.nyzo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeUXWCR972pTy5Id2g6uHdPDd26w3eqHw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759100098277:android:444dc6a22757a3e2c2360c",
+        "android_client_info": {
+          "package_name": "com.naresh.nyzoCaptain"
         }
       },
       "oauth_client": [],
