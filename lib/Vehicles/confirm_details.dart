@@ -218,7 +218,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
           final driverDoc =
               await FirebaseFirestore.instance
                   .collection('drivers')
-                  .doc(widget.bookingData['driverId'])
+                  .doc(widget.bookingData['driverdocId'])
                   .get();
 
           final driverToken = driverDoc['fcmToken'] ?? "";
@@ -234,8 +234,12 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const PaymentGateway()),
+          MaterialPageRoute(builder: (context) => BottomNavigation()),
         );
+
+        // ScaffoldMessenger.of(
+        //   context,
+        // ).showSnackBar(SnackBar(content: Text(lang.thankYouReviewSubmitted)));
       }
     } catch (e) {
       debugPrint("Error saving transaction: $e");
@@ -407,6 +411,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     final ownerName = SharedPrefServices.getFirstName() ?? 'Owner';
     final ownerProfile = SharedPrefServices.getProfileImage() ?? '';
     final data = widget.bookingData;
+    final driverdocId = widget.bookingdocID;
     final lang = AppLocalizations.of(context)!;
 
     print('$bookingId,$driverData,$ownerId');
@@ -3021,6 +3026,7 @@ bool isLoading = false;
 
 void _showRatingDialog(BuildContext context, data) {
   int selectedStars = 0;
+  bool dialogIsLoading = false;
   final TextEditingController commentController = TextEditingController();
   final lang = AppLocalizations.of(context)!;
   final List<FeedbackOption> feedbackOptions = [
@@ -3037,9 +3043,10 @@ void _showRatingDialog(BuildContext context, data) {
 
   showDialog(
     context: context,
+    barrierDismissible: false,
     builder: (BuildContext context) {
       return StatefulBuilder(
-        builder: (context, setState) {
+        builder: (context, setDialogState) {
           return AlertDialog(
             backgroundColor: kwhiteColor,
             shape: RoundedRectangleBorder(
@@ -3077,7 +3084,7 @@ void _showRatingDialog(BuildContext context, data) {
                           size: 28,
                         ),
                         onPressed: () {
-                          setState(() {
+                          setDialogState(() {
                             selectedStars = index + 1;
                           });
                         },
@@ -3104,7 +3111,7 @@ void _showRatingDialog(BuildContext context, data) {
                           );
                           return GestureDetector(
                             onTap: () {
-                              setState(() {
+                              setDialogState(() {
                                 if (isSelected) {
                                   selectedFeedback.remove(option.label);
                                 } else {
@@ -3187,7 +3194,7 @@ void _showRatingDialog(BuildContext context, data) {
 
                   const SizedBox(height: 20),
 
-                  isLoading
+                  dialogIsLoading
                       ? const Center(
                         child: CircularProgressIndicator(color: Colors.orange),
                       )
@@ -3196,6 +3203,7 @@ void _showRatingDialog(BuildContext context, data) {
                           text: lang.submit,
                           onPressed: () async {
                             if (selectedStars == 0) {
+                              print(data['driverdocId']);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(lang.pleaseSelectRating),
@@ -3203,79 +3211,121 @@ void _showRatingDialog(BuildContext context, data) {
                               );
                               return;
                             }
-                            setState(() {
-                              isLoading = true;
+                            setDialogState(() {
+                              dialogIsLoading = true;
                             });
-                            await FirebaseFirestore.instance
-                                .collection('reviews')
-                                .add({
-                                  'bookingId': data['bookingId'],
-                                  'driverId': data['driverId'],
-                                  'ownerId': data['ownerId'],
-                                  'rating': selectedStars,
-                                  'feedback': selectedFeedback.toList(),
-                                  'comment': commentController.text.trim(),
-                                  'createdAt': FieldValue.serverTimestamp(),
+                            try {
+                              await FirebaseFirestore.instance
+                                  .collection('reviews')
+                                  .add({
+                                    'bookingId': data['bookingId'],
+                                    'driverId': data['driverId'],
+                                    'ownerId': data['ownerId'],
+                                    'rating': selectedStars,
+                                    'feedback': selectedFeedback.toList(),
+                                    'comment': commentController.text.trim(),
+                                    'createdAt': FieldValue.serverTimestamp(),
+                                  });
+
+                              final driverDocId =
+                                  data['driverdocId'] ?? data['driverId'];
+
+                              print('Updating driver with docId: $driverDocId');
+
+                              final driverRef = FirebaseFirestore.instance
+                                  .collection('drivers')
+                                  .doc(driverDocId);
+
+                              // Verify driver exists before updating
+                              final driverSnapshot = await driverRef.get();
+                              if (!driverSnapshot.exists) {
+                                print('Driver document does not exist');
+                                throw Exception('Driver not found');
+                              }
+
+                              await FirebaseFirestore.instance.runTransaction((
+                                transaction,
+                              ) async {
+                                final snapshot = await transaction.get(
+                                  driverRef,
+                                );
+
+                                int totalReviews =
+                                    snapshot.data()?['totalReviews'] ?? 0;
+                                int totalRating =
+                                    snapshot.data()?['totalRating'] ?? 0;
+
+                                print(
+                                  'Before update - Reviews: $totalReviews, Total Rating: $totalRating',
+                                );
+
+                                totalReviews += 1;
+                                totalRating += selectedStars;
+
+                                double averageRating =
+                                    totalRating / totalReviews;
+
+                                print(
+                                  'After update - Reviews: $totalReviews, Total Rating: $totalRating, Average: $averageRating',
+                                );
+
+                                transaction.update(driverRef, {
+                                  'totalReviews': totalReviews,
+                                  'totalRating': totalRating,
+                                  'averageRating': averageRating,
+                                });
+                              });
+
+                              final driverSnap = await driverRef.get();
+                              print(
+                                'Driver data after update: ${driverSnap.data()}',
+                              );
+
+                              final driverToken =
+                                  driverSnap['fcmToken'] as String? ?? "";
+
+                              if (driverToken.isNotEmpty) {
+                                await fcmService.sendNotification(
+                                  recipientFCMToken: driverToken,
+                                  title: "⭐ New Review Received",
+                                  body:
+                                      "You received a ${selectedStars}★ rating from the customer.",
+                                );
+                              }
+
+                              if (context.mounted) {
+                                setDialogState(() {
+                                  dialogIsLoading = false;
                                 });
 
-                            final driverRef = FirebaseFirestore.instance
-                                .collection('drivers')
-                                .doc(data['driverdocId']);
+                                Navigator.pop(context);
 
-                            FirebaseFirestore.instance.runTransaction((
-                              transaction,
-                            ) async {
-                              final snapshot = await transaction.get(driverRef);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(lang.thankYouReviewSubmitted),
+                                  ),
+                                );
 
-                              int totalReviews =
-                                  snapshot.data()?['totalReviews'] ?? 0;
-                              int totalRating =
-                                  snapshot.data()?['totalRating'] ?? 0;
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => BottomNavigation(),
+                                  ),
+                                );
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                setDialogState(() {
+                                  dialogIsLoading = false;
+                                });
 
-                              totalReviews += 1;
-                              totalRating += selectedStars;
-
-                              double averageRating = totalRating / totalReviews;
-
-                              transaction.update(driverRef, {
-                                'totalReviews': totalReviews,
-                                'totalRating': totalRating,
-                                'averageRating': averageRating,
-                              });
-                            });
-                            final driverSnap =
-                                await FirebaseFirestore.instance
-                                    .collection('drivers')
-                                    .doc(data['driverdocId'])
-                                    .get();
-
-                            final driverToken = driverSnap['fcmToken'] ?? "";
-
-                            if (driverToken.isNotEmpty) {
-                              await fcmService.sendNotification(
-                                recipientFCMToken: driverToken,
-                                title: "⭐ New Review Received",
-                                body:
-                                    "You received a ${selectedStars}★ rating from the customer.",
-                              );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Error: ${e.toString()}'),
+                                  ),
+                                );
+                              }
                             }
-                            setState(() {
-                              isLoading = false;
-                            });
-                            Navigator.pop(context);
-
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => BottomNavigation(),
-                              ),
-                            );
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(lang.thankYouReviewSubmitted),
-                              ),
-                            );
                           },
 
                           width: 220,
