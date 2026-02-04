@@ -231,16 +231,14 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
         }
       }
 
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => BottomNavigation()),
-        );
+      if (!mounted) return;
 
-        // ScaffoldMessenger.of(
-        //   context,
-        // ).showSnackBar(SnackBar(content: Text(lang.thankYouReviewSubmitted)));
-      }
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => BottomNavigation()),
+        (route) => false,
+      );
     } catch (e) {
       debugPrint("Error saving transaction: $e");
     }
