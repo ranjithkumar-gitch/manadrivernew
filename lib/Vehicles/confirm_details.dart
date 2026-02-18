@@ -2541,28 +2541,57 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
 
   void applyCoupon(String code, String value) {
     setState(() {
-      isCouponApplied = true;
-
-      appliedCouponCode = code;
-      appliedCouponValue = value;
-
       double total = double.tryParse(totalPrice) ?? 0;
+
+      double discount = 0;
 
       if (value.contains('%')) {
         double percent = double.parse(value.replaceAll('%', ''));
-        appliedDiscount = (total * percent) / 100;
+        discount = (total * percent) / 100;
       } else {
-        appliedDiscount = double.tryParse(value) ?? 0;
+        discount = double.tryParse(value) ?? 0;
       }
 
-      if (appliedDiscount > total) {
-        appliedDiscount = total;
+      double finalAmount = total - discount;
+
+      // 🔥 Ensure minimum payable ₹1
+      if (finalAmount <= 0) {
+        discount = total - 1; // leave ₹1 payable
+        finalAmount = 1;
       }
 
-      double result = total - appliedDiscount;
-      finalTotal = result.toStringAsFixed(2);
+      isCouponApplied = true;
+      appliedCouponCode = code;
+      appliedCouponValue = value;
+      appliedDiscount = discount;
+      finalTotal = finalAmount.toStringAsFixed(2);
     });
   }
+
+  // void applyCoupon(String code, String value) {
+  //   setState(() {
+  //     isCouponApplied = true;
+
+  //     appliedCouponCode = code;
+  //     appliedCouponValue = value;
+
+  //     double total = double.tryParse(totalPrice) ?? 0;
+
+  //     if (value.contains('%')) {
+  //       double percent = double.parse(value.replaceAll('%', ''));
+  //       appliedDiscount = (total * percent) / 100;
+  //     } else {
+  //       appliedDiscount = double.tryParse(value) ?? 0;
+  //     }
+
+  //     if (appliedDiscount > total) {
+  //       appliedDiscount = total;
+  //     }
+
+  //     double result = total - appliedDiscount;
+  //     finalTotal = result.toStringAsFixed(2);
+  //   });
+  // }
 
   void _showCouponsBottomSheet() {
     showModalBottomSheet(
@@ -2633,22 +2662,79 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                       return ListView(
                         padding: EdgeInsets.zero,
                         children:
-                            snapshot.data!.docs.map((doc) {
-                              final data = doc.data() as Map<String, dynamic>;
+                            snapshot.data!.docs
+                                .where((doc) {
+                                  final data =
+                                      doc.data() as Map<String, dynamic>;
 
-                              final title = data['offerCode'] ?? 'No Code';
-                              final endDate = data['endDate'] ?? '';
-                              final offerValue = data['offerValue'] ?? '';
+                                  if (data['endDate'] == null) return false;
 
-                              return ticketCoupon(
-                                title,
-                                endDate,
-                                offerValue,
-                                () {
-                                  applyCoupon(title, offerValue);
-                                },
-                              );
-                            }).toList(),
+                                  DateTime now = DateTime.now();
+                                  DateTime endDate;
+
+                                  if (data['endDate'] is Timestamp) {
+                                    endDate =
+                                        (data['endDate'] as Timestamp).toDate();
+                                  } else {
+                                    endDate = DateTime.parse(data['endDate']);
+                                  }
+
+                                  return !endDate.isBefore(now);
+                                })
+                                .map((doc) {
+                                  final data =
+                                      doc.data() as Map<String, dynamic>;
+
+                                  final title = data['offerCode'] ?? 'No Code';
+                                  final endDate = data['endDate'] ?? '';
+                                  final offerValue = data['offerValue'] ?? '';
+                                  double total =
+                                      double.tryParse(totalPrice) ?? 0;
+
+                                  double discount = 0;
+
+                                  if (offerValue.toString().contains('%')) {
+                                    double percent = double.parse(
+                                      offerValue.toString().replaceAll('%', ''),
+                                    );
+                                    discount = (total * percent) / 100;
+                                  } else {
+                                    discount =
+                                        double.tryParse(
+                                          offerValue.toString(),
+                                        ) ??
+                                        0;
+                                  }
+
+                                  double finalAmount = total - discount;
+
+                                  bool isValid = finalAmount > 0;
+
+                                  return Opacity(
+                                    opacity: isValid ? 1.0 : 0.4,
+                                    child: IgnorePointer(
+                                      ignoring: !isValid,
+                                      child: ticketCoupon(
+                                        title,
+                                        endDate,
+                                        offerValue,
+                                        () {
+                                          applyCoupon(title, offerValue);
+                                        },
+                                      ),
+                                    ),
+                                  );
+
+                                  // return ticketCoupon(
+                                  //   title,
+                                  //   endDate,
+                                  //   offerValue,
+                                  //   () {
+                                  //     applyCoupon(title, offerValue);
+                                  //   },
+                                  // );
+                                })
+                                .toList(),
                       );
                     },
                   ),
