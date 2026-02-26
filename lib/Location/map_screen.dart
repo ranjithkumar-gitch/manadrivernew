@@ -3,10 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
-import 'package:mana_driver/Location/location.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customText.dart';
+import 'package:nyzoride/Bottom_NavigationBar/bottomNavigationBar.dart';
+import 'package:nyzoride/Location/location.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customText.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MapPickScreen extends StatefulWidget {

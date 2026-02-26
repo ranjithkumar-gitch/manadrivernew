@@ -1,12 +1,12 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mana_driver/AppBar/appBar.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/Vehicles/confirm_details.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customText.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:nyzoride/AppBar/appBar.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/Vehicles/confirm_details.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customText.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
 
 class MyRidesScreen extends StatefulWidget {
   @override

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:country_picker/country_picker.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
 
 class PhoneNumberInputField extends StatelessWidget {
   final TextEditingController controller;

@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mana_driver/Bottom_NavigationBar/Myrides.dart';
-import 'package:mana_driver/Bottom_NavigationBar/homeScreen.dart';
-import 'package:mana_driver/Bottom_NavigationBar/menuScreen.dart';
-import 'package:mana_driver/Bottom_NavigationBar/transactionsScreen.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:nyzoride/Bottom_NavigationBar/Myrides.dart';
+import 'package:nyzoride/Bottom_NavigationBar/homeScreen.dart';
+import 'package:nyzoride/Bottom_NavigationBar/menuScreen.dart';
+import 'package:nyzoride/Bottom_NavigationBar/transactionsScreen.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
 
 class BottomNavigation extends StatefulWidget {
   final int initialIndex;

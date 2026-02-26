@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/Vehicles/add_new_vehicle.dart';
-import 'package:mana_driver/Vehicles/vehicle_details.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customText.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:nyzoride/Bottom_NavigationBar/bottomNavigationBar.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/Vehicles/add_new_vehicle.dart';
+import 'package:nyzoride/Vehicles/vehicle_details.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customText.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
 
 class MyVehicle extends StatefulWidget {
   const MyVehicle({super.key});

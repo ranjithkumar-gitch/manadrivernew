@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mana_driver/AppBar/notificationScreen.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customText.dart';
-
+import 'package:nyzoride/AppBar/notificationScreen.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customText.dart';
 
 class CustomMainAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title; 
+  final String title;
 
   const CustomMainAppBar({super.key, required this.title});
 
@@ -25,7 +24,6 @@ class CustomMainAppBar extends StatelessWidget implements PreferredSizeWidget {
           fontWeight: FontWeight.w600,
         ),
       ),
-      
     );
   }
 

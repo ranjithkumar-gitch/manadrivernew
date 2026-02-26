@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mana_driver/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/colors.dart';
 
 class CustomCancelButton extends StatelessWidget {
   final String text;
@@ -43,7 +43,7 @@ class CustomCancelButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(70),
           ),
           backgroundColor: Colors.white,
-          padding: padding,    
+          padding: padding,
         ),
         child: Text(
           text,

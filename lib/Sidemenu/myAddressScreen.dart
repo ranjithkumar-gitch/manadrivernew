@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
 
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customButton.dart';
-import 'package:mana_driver/Widgets/customText.dart';
-import 'package:mana_driver/Widgets/customTextField.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customButton.dart';
+import 'package:nyzoride/Widgets/customText.dart';
+import 'package:nyzoride/Widgets/customTextField.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyAddressScreen extends StatefulWidget {
@@ -165,8 +165,6 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                             }
                           }
                         },
-
-                       
                       ),
                     ),
               ],

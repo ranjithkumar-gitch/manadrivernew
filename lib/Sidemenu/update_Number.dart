@@ -4,17 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mana_driver/Login/loginScreen.dart';
-import 'package:mana_driver/Login/otpscreen.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/Widgets/customButton.dart';
-import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
-import 'package:mana_driver/Widgets/mobileNumberInputField.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:nyzoride/Login/loginScreen.dart';
+import 'package:nyzoride/Login/otpscreen.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/Widgets/customButton.dart';
+import 'package:nyzoride/Widgets/customoutlinedbutton.dart';
+import 'package:nyzoride/Widgets/mobileNumberInputField.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
 import 'package:pinput/pinput.dart';
 
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customText.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customText.dart';
 
 import 'package:country_picker/country_picker.dart';
 

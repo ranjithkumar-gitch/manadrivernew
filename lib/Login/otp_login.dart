@@ -6,21 +6,21 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
+import 'package:nyzoride/Bottom_NavigationBar/bottomNavigationBar.dart';
 
-import 'package:mana_driver/Login/selectLanguage.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
-import 'package:mana_driver/service.dart';
+import 'package:nyzoride/Login/selectLanguage.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
+import 'package:nyzoride/service.dart';
 
-import 'package:mana_driver/viewmodels/login_viewmodel.dart';
+import 'package:nyzoride/viewmodels/login_viewmodel.dart';
 
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customButton.dart';
-import 'package:mana_driver/Widgets/customText.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customButton.dart';
+import 'package:nyzoride/Widgets/customText.dart';
 
 class OtpLogin extends StatefulWidget {
   final String phoneNumber;

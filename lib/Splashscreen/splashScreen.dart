@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
-import 'package:mana_driver/Login/selectLanguage.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customText.dart';
+import 'package:nyzoride/Bottom_NavigationBar/bottomNavigationBar.dart';
+import 'package:nyzoride/Login/selectLanguage.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customText.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:mana_driver/firebase_api.dart';
-import 'package:mana_driver/service.dart';
+import 'package:nyzoride/firebase_api.dart';
+import 'package:nyzoride/service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   final fcmService = FCMService();
-  
+
   @override
   void initState() {
     super.initState();
@@ -87,8 +87,6 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> setupFCMToken() async {
-  
-
     final token = await FirebaseMessaging.instance.getToken();
     print('FCM Token on Splash: $token');
 
@@ -168,8 +166,6 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     const colorizeColors = [
@@ -192,7 +188,6 @@ class _SplashScreenState extends State<SplashScreen>
         children: [
           Expanded(
             child: Center(
-             
               child: Image.asset(
                 'images/nyzo_ride_.png',
                 height: 200,

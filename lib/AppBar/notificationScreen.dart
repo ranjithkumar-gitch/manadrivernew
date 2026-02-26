@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:mana_driver/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/colors.dart';
 
-import 'package:mana_driver/Widgets/customText.dart';
+import 'package:nyzoride/Widgets/customText.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});

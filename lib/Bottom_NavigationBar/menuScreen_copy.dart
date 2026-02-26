@@ -3,29 +3,29 @@ import 'package:country_picker/country_picker.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mana_driver/Login/loginScreen.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/Sidemenu/aboutManaDriver.dart';
-import 'package:mana_driver/Sidemenu/cancellationPolicyScreen.dart';
-import 'package:mana_driver/Sidemenu/favoriteDriverScreen.dart';
-import 'package:mana_driver/Sidemenu/helpAndSupportScreen.dart';
-import 'package:mana_driver/Sidemenu/myAddressScreen.dart';
-import 'package:mana_driver/Sidemenu/offersScreen.dart';
-import 'package:mana_driver/Sidemenu/privacy_policy.dart';
-import 'package:mana_driver/Sidemenu/profilePage.dart';
-import 'package:mana_driver/Sidemenu/referScreen.dart';
-import 'package:mana_driver/Sidemenu/termsAndConditions.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customButton.dart';
-import 'package:mana_driver/Widgets/customText.dart';
+import 'package:nyzoride/Login/loginScreen.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/Sidemenu/aboutManaDriver.dart';
+import 'package:nyzoride/Sidemenu/cancellationPolicyScreen.dart';
+import 'package:nyzoride/Sidemenu/favoriteDriverScreen.dart';
+import 'package:nyzoride/Sidemenu/helpAndSupportScreen.dart';
+import 'package:nyzoride/Sidemenu/myAddressScreen.dart';
+import 'package:nyzoride/Sidemenu/offersScreen.dart';
+import 'package:nyzoride/Sidemenu/privacy_policy.dart';
+import 'package:nyzoride/Sidemenu/profilePage.dart';
+import 'package:nyzoride/Sidemenu/referScreen.dart';
+import 'package:nyzoride/Sidemenu/termsAndConditions.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customButton.dart';
+import 'package:nyzoride/Widgets/customText.dart';
 
-import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
-import 'package:mana_driver/Widgets/mobileNumberInputField.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:nyzoride/Widgets/customoutlinedbutton.dart';
+import 'package:nyzoride/Widgets/mobileNumberInputField.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
 
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
-import 'package:mana_driver/services/locale_provider.dart';
+import 'package:nyzoride/services/locale_provider.dart';
 
 class MenuScreen_copy extends StatefulWidget {
   const MenuScreen_copy({super.key});
@@ -52,7 +52,6 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
     {'image': 'images/logout.png', 'title': 'Logout'},
   ];
 
-  
   String maskEmail(String email) {
     if (email.isEmpty) return "";
 
@@ -155,15 +154,13 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    
+
     return SafeArea(
       child: Stack(
         children: [
           SingleChildScrollView(
             child: LayoutBuilder(
               builder: (context, constraints) {
-              
-
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
@@ -207,7 +204,6 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
                       ),
                       const Divider(color: KdeviderColor),
 
-                     
                       InkWell(
                         onTap:
                             () => _showUpdateMobileDialog(
@@ -270,7 +266,6 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
                       ),
                       const Divider(color: KdeviderColor),
 
-                     
                       InkWell(
                         onTap: () {
                           Navigator.push(
@@ -336,7 +331,6 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
                         ),
                       ),
 
-                     
                       const Divider(color: KdeviderColor),
                       InkWell(
                         onTap: () {
@@ -691,8 +685,6 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
                     },
                   ),
                 ),
-
-               
               ],
             ),
             actions: _dialogActions(
@@ -720,8 +712,6 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
           ),
     );
   }
-
- 
 
   void _showDeleteAccountDialog({
     required String txt1,
@@ -762,7 +752,6 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
               c: c,
               onConfirm: () async {
                 try {
-                 
                   final docId = SharedPrefServices.getDocId();
 
                   if (docId != null) {

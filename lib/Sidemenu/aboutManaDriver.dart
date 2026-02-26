@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customText.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customText.dart';
 
-import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
 
 class AboutManaDriverScreen extends StatelessWidget {
   @override

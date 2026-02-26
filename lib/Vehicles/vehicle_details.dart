@@ -2,14 +2,14 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:mana_driver/Vehicles/edit_vehicle_details.dart';
+import 'package:nyzoride/Vehicles/edit_vehicle_details.dart';
 
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customButton.dart';
-import 'package:mana_driver/Widgets/customText.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customButton.dart';
+import 'package:nyzoride/Widgets/customText.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:nyzoride/Widgets/customoutlinedbutton.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
 
 class VehicleDetailsScreen extends StatelessWidget {
   final data;
@@ -130,7 +130,6 @@ class VehicleDetailsScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-               
                 Container(
                   width: 130,
                   height: 97,
@@ -191,7 +190,6 @@ class VehicleDetailsScreen extends StatelessWidget {
                       ),
 
                       SizedBox(height: 8),
-                     
                     ],
                   ),
                 ),
@@ -226,17 +224,13 @@ class VehicleDetailsScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                 
                 ],
               ),
             ),
 
             const SizedBox(height: 16),
 
-          
             const SizedBox(height: 30),
-
-            
           ],
         ),
       ),
@@ -995,8 +989,6 @@ Widget addressCard(String title, String address) {
     ),
   );
 }
-
-
 
 class _SpecItem extends StatelessWidget {
   final String iconPath;

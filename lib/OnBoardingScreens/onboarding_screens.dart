@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mana_driver/Login/selectLanguage.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customText.dart';
+import 'package:nyzoride/Login/selectLanguage.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customText.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {

@@ -3,8 +3,8 @@ import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/models/loginState.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/models/loginState.dart';
 import '../services/repository.dart';
 
 class LoginViewModel extends ChangeNotifier {
@@ -174,6 +174,3 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-
-  

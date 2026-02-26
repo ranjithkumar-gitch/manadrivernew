@@ -3,21 +3,21 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mana_driver/Bottom_NavigationBar/Myrides.dart';
-import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
-import 'package:mana_driver/Location/driverAssigned.dart';
-import 'package:mana_driver/Login/otpscreen.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/Sidemenu/cancellationPolicyScreen.dart';
-import 'package:mana_driver/Vehicles/chat.dart';
-import 'package:mana_driver/Vehicles/full_image_view.dart';
-import 'package:mana_driver/Vehicles/payment_gateway.dart';
+import 'package:nyzoride/Bottom_NavigationBar/Myrides.dart';
+import 'package:nyzoride/Bottom_NavigationBar/bottomNavigationBar.dart';
+import 'package:nyzoride/Location/driverAssigned.dart';
+import 'package:nyzoride/Login/otpscreen.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/Sidemenu/cancellationPolicyScreen.dart';
+import 'package:nyzoride/Vehicles/chat.dart';
+import 'package:nyzoride/Vehicles/full_image_view.dart';
+import 'package:nyzoride/Vehicles/payment_gateway.dart';
 import 'package:intl/intl.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customButton.dart';
-import 'package:mana_driver/Widgets/customText.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
-import 'package:mana_driver/service.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customButton.dart';
+import 'package:nyzoride/Widgets/customText.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
+import 'package:nyzoride/service.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -2567,8 +2567,6 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
       finalTotal = finalAmount.toStringAsFixed(2);
     });
   }
-
-  
 
   void _showCouponsBottomSheet() {
     showModalBottomSheet(

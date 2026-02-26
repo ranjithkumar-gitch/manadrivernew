@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
-import 'package:mana_driver/Location/map_screen.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customText.dart';
+import 'package:nyzoride/Location/map_screen.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customText.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 
@@ -782,7 +782,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 12),
             const Divider(),
             Expanded(

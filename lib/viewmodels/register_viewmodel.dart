@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/services/repository.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/services/repository.dart';
 
 import '../models/user_model.dart';
 
@@ -40,8 +40,6 @@ class RegisterViewModel extends ChangeNotifier {
       if (lastName.trim().isEmpty) throw Exception('Last name required');
       // if (email.trim().isEmpty) throw Exception('Email required');
       if (phone.trim().isEmpty) throw Exception('Phone required');
-
-      
 
       final now = DateTime.now();
       final formattedDate =

@@ -13,12 +13,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:intl/intl.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/Vehicles/full_image_view.dart';
-import 'package:mana_driver/Widgets/colors.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/Vehicles/full_image_view.dart';
+import 'package:nyzoride/Widgets/colors.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
-import 'package:mana_driver/service.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
+import 'package:nyzoride/service.dart';
 
 class ChatScreen extends StatefulWidget {
   final String bookingId;
@@ -129,8 +129,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       'lastSeen': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
   }
-
-  
 
   Future<void> _setUserOnline() async {
     final userId = await SharedPrefServices.getUserId();
@@ -397,7 +395,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                           color: Colors.black87,
                         ),
                       ),
-                    
                     ],
                   ),
                 ],
@@ -782,5 +779,3 @@ class ChatBubble extends StatelessWidget {
     );
   }
 }
-
-

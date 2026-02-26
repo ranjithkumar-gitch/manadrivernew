@@ -4,16 +4,16 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:mana_driver/Login/loginScreen.dart';
-import 'package:mana_driver/Login/otpscreen.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customButton.dart';
-import 'package:mana_driver/Widgets/customText.dart';
+import 'package:nyzoride/Login/loginScreen.dart';
+import 'package:nyzoride/Login/otpscreen.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customButton.dart';
+import 'package:nyzoride/Widgets/customText.dart';
 import 'package:country_picker/country_picker.dart';
-import 'package:mana_driver/Widgets/customTextField.dart';
-import 'package:mana_driver/Widgets/mobileNumberInputField.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
-import 'package:mana_driver/viewmodels/register_viewmodel.dart';
+import 'package:nyzoride/Widgets/customTextField.dart';
+import 'package:nyzoride/Widgets/mobileNumberInputField.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
+import 'package:nyzoride/viewmodels/register_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:libphonenumber_plugin/libphonenumber_plugin.dart';
 

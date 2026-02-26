@@ -6,12 +6,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/Bottom_NavigationBar/bottomNavigationBar.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
 
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customText.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customText.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
 
 class EditVehicleDetails extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -1224,4 +1224,3 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
     );
   }
 }
-   

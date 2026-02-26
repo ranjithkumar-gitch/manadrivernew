@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
-import 'package:mana_driver/Location/driverAssigned.dart';
+import 'package:nyzoride/Bottom_NavigationBar/bottomNavigationBar.dart';
+import 'package:nyzoride/Location/driverAssigned.dart';
 
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customText.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customText.dart';
 
 class PaymentGateway extends StatefulWidget {
   const PaymentGateway({super.key});
@@ -45,7 +45,6 @@ class _PaymentGatewayState extends State<PaymentGateway> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-            
               Center(
                 child: CustomText(
                   text: "Payment",
@@ -149,7 +148,6 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                
               ],
             ),
           ),

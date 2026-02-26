@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/Sidemenu/edit_Profilescreen.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customButton.dart';
-import 'package:mana_driver/Widgets/customText.dart';
-import 'package:mana_driver/Widgets/customTextField.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/Sidemenu/edit_Profilescreen.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customButton.dart';
+import 'package:nyzoride/Widgets/customText.dart';
+import 'package:nyzoride/Widgets/customTextField.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -21,12 +21,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
-  
   @override
   void initState() {
     super.initState();
     _loadUserFromPrefs();
-    
   }
 
   Future<void> _loadUserFromPrefs() async {
@@ -35,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     emailController.text = await SharedPrefServices.getEmail() ?? '';
     phoneController.text = await SharedPrefServices.getNumber() ?? '';
 
-    setState(() {}); 
+    setState(() {});
   }
 
   String _getUserInitials() {

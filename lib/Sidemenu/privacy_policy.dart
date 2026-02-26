@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customText.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customText.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PrivacyPolicy extends StatefulWidget {
@@ -328,7 +328,6 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
               child: support(localizations.nyzoRidePhone, localizations.phone),
             ),
 
-          
             const SizedBox(height: 40),
           ],
         ),

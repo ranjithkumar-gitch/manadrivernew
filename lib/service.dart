@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/http.dart' as http;
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
 
 class FCMService {
   Future<String> _getAccessToken() async {

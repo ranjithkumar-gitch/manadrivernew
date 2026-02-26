@@ -4,16 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mana_driver/Bottom_NavigationBar/bottomNavigationBar.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/Bottom_NavigationBar/bottomNavigationBar.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
 
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customButton.dart';
-import 'package:mana_driver/Widgets/customText.dart';
-import 'package:mana_driver/Widgets/customTextField.dart';
-import 'package:mana_driver/viewmodels/login_viewmodel.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customButton.dart';
+import 'package:nyzoride/Widgets/customText.dart';
+import 'package:nyzoride/Widgets/customTextField.dart';
+import 'package:nyzoride/viewmodels/login_viewmodel.dart';
 import 'package:provider/provider.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final String firstName;

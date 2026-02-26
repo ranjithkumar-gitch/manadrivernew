@@ -5,17 +5,17 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mana_driver/Location/location.dart';
-import 'package:mana_driver/SharedPreferences/shared_preferences.dart';
-import 'package:mana_driver/Sidemenu/helpAndSupportScreen.dart';
-import 'package:mana_driver/Vehicles/confirm_details.dart';
-import 'package:mana_driver/Vehicles/my_vehicle.dart';
-import 'package:mana_driver/Widgets/colors.dart';
-import 'package:mana_driver/Widgets/customButton.dart';
-import 'package:mana_driver/Widgets/customText.dart';
-import 'package:mana_driver/Widgets/customoutlinedbutton.dart';
-import 'package:mana_driver/l10n/app_localizations.dart';
-import 'package:mana_driver/service.dart';
+import 'package:nyzoride/Location/location.dart';
+import 'package:nyzoride/SharedPreferences/shared_preferences.dart';
+import 'package:nyzoride/Sidemenu/helpAndSupportScreen.dart';
+import 'package:nyzoride/Vehicles/confirm_details.dart';
+import 'package:nyzoride/Vehicles/my_vehicle.dart';
+import 'package:nyzoride/Widgets/colors.dart';
+import 'package:nyzoride/Widgets/customButton.dart';
+import 'package:nyzoride/Widgets/customText.dart';
+import 'package:nyzoride/Widgets/customoutlinedbutton.dart';
+import 'package:nyzoride/l10n/app_localizations.dart';
+import 'package:nyzoride/service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -171,8 +171,6 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
   }
-
-  
 
   @override
   void dispose() {
@@ -1213,8 +1211,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final cleaned = distanceStr.toLowerCase().replaceAll('km', '').trim();
     double dist = double.tryParse(cleaned) ?? 0.0;
 
-   
-
     double rate = 0.0;
     double billableDistance = dist;
 
@@ -1252,8 +1248,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     };
   }
-
-  
 
   void showBookingBottomSheet(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
@@ -1468,8 +1462,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         );
                                       }
                                     },
-
-                                   
                                   ),
                                 ),
 
@@ -1538,8 +1530,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   selectedTripTime = "Schedule";
                                   // selectedTripMode = "Hourly Trip";
                                 });
-
-                               
                               },
                             ),
                           ],
@@ -3007,7 +2997,3 @@ class CarModel {
     required this.price,
   });
 }
-
- 
-
-
