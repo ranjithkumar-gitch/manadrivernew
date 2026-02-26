@@ -328,14 +328,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
               child: support(localizations.nyzoRidePhone, localizations.phone),
             ),
 
-            // GestureDetector(
-            //   onTap: () => _sendEmail("hello@nyzoride.com"),
-            //   child: support("hello@nyzoride.com", "Email:"),
-            // ),
-            // GestureDetector(
-            //   onTap: () => _callNumber("9000464851"),
-            //   child: support("9000464851", "Phone:"),
-            // ),
+          
             const SizedBox(height: 40),
           ],
         ),

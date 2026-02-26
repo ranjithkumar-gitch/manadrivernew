@@ -782,39 +782,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                 ),
               ],
             ),
-            // onPressed:
-            // (currentLocationController.text.isNotEmpty &&
-            //         dropLocationController.text.isNotEmpty &&
-            //         (!showSecondDrop ||
-            //             secondDropController.text.isNotEmpty))
-            //     ? () {
-            //       print(
-            //         "Pickup: ${currentLocationController.text} | Lat: $pickupLat | Lng: $pickupLng",
-            //       );
-            //       print(
-            //         "Drop1: ${dropLocationController.text} | Lat: $dropLat | Lng: $dropLng",
-            //       );
-            //       if (showSecondDrop) {
-            //         print(
-            //           "Drop2: ${secondDropController.text} | Lat: $drop2Lat | Lng: $drop2Lng",
-            //         );
-            //       }
-            //       FocusManager.instance.primaryFocus?.unfocus();
-            //       Navigator.pop(context, {
-            //         "current": currentLocationController.text,
-            //         "drop": dropLocationController.text,
-            //         "drop2": secondDropController.text,
-            //         "pickupLat": pickupLat,
-            //         "pickupLng": pickupLng,
-            //         "dropLat": dropLat,
-            //         "dropLng": dropLng,
-            //         "drop2Lat": drop2Lat,
-            //         "drop2Lng": drop2Lng,
-            //         "distance": distanceText ?? "",
-            //         "duration": durationText ?? "",
-            //       });
-            //     }
-            //     : null,
+            
             const SizedBox(height: 12),
             const Divider(),
             Expanded(

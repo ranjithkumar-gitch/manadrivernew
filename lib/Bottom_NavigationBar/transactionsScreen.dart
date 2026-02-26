@@ -52,19 +52,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           ),
         ),
         actions: [
-          // Row(
-          //   children: [
-          //     Image.asset("images/filter.png"),
-          //     const SizedBox(width: 4),
-          //     CustomText(
-          //       text: localizations.filter,
-          //       fontSize: 14,
-          //       textcolor: korangeColor,
-          //       fontWeight: FontWeight.w400,
-          //     ),
-          //   ],
-          // ),
-          // const SizedBox(width: 15),
+        
         ],
       ),
 

@@ -45,17 +45,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // Align(
-              //   alignment: Alignment.centerLeft,
-              //   child: InkWell(
-              //     onTap: () => Navigator.pop(context),
-              //     child: Image.asset(
-              //       "images/chevronLeft.png",
-              //       width: 24,
-              //       height: 24,
-              //     ),
-              //   ),
-              // ),
+            
               Center(
                 child: CustomText(
                   text: "Payment",
@@ -159,15 +149,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                // SizedBox(
-                //   width: 250,
-                //   child: CustomText(
-                //     text: "Driver assigned soon please\nwhile wait for confirm",
-                //     fontSize: 16,
-                //     fontWeight: FontWeight.w500,
-                //     textcolor: KblackColor,
-                //   ),
-                // ),
+                
               ],
             ),
           ),

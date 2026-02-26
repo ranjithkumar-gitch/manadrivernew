@@ -172,23 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // void _startAutoScroll() {
-  //   _autoScrollTimer = Timer.periodic(Duration(seconds: 4), (timer) {
-  //     if (_pageController.hasClients) {
-  //       if (_currentPage < carList.length - 1) {
-  //         _currentPage++;
-  //       } else {
-  //         _currentPage = 0;
-  //       }
-
-  //       _pageController.animateToPage(
-  //         _currentPage,
-  //         duration: Duration(milliseconds: 500),
-  //         curve: Curves.easeInOut,
-  //       );
-  //     }
-  //   });
-  // }
+  
 
   @override
   void dispose() {
@@ -1229,16 +1213,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final cleaned = distanceStr.toLowerCase().replaceAll('km', '').trim();
     double dist = double.tryParse(cleaned) ?? 0.0;
 
-    // if (isHourlyTrip) {
-    //   return {
-    //     'distance': dist,
-    //     'rate': 549,
-    //     'total': 549.0,
-    //     'breakup': [
-    //       {'km': dist, 'rate': 549, 'amount': 549},
-    //     ],
-    //   };
-    // }
+   
 
     double rate = 0.0;
     double billableDistance = dist;
@@ -1278,58 +1253,7 @@ class _HomeScreenState extends State<HomeScreen> {
     };
   }
 
-  // Map<String, dynamic> calculateFare(
-  //   String distanceStr, {
-  //   bool isRoundTrip = false,
-  //   bool isHourlyTrip = false,
-  // }) {
-  //   final cleaned = distanceStr.toLowerCase().replaceAll('km', '').trim();
-  //   double dist = double.tryParse(cleaned) ?? 0.0;
-
-  //   if (isHourlyTrip) {
-  //     return {
-  //       'distance': dist,
-  //       'rate': 549,
-  //       'total': 549.0,
-  //       'breakup': [
-  //         {'km': dist, 'rate': 549, 'amount': 549},
-  //       ],
-  //     };
-  //   }
-  //   if (isRoundTrip) {
-  //     dist = dist * 2;
-  //   }
-  //   double rate = 0.0;
-
-  //   if (isRoundTrip) {
-  //     if (dist <= 100) {
-  //       rate = 11.0;
-  //     } else {
-  //       rate = 10.0;
-  //     }
-  //   }
-
-  //   if (!isRoundTrip) {
-  //     if (dist <= 100) {
-  //       rate = 12.0;
-  //     } else if (dist <= 200) {
-  //       rate = 11.0;
-  //     } else {
-  //       rate = 10.0;
-  //     }
-  //   }
-
-  //   double total = dist * rate;
-
-  //   return {
-  //     'distance': dist,
-  //     'rate': rate,
-  //     'total': double.parse(total.toStringAsFixed(2)),
-  //     'breakup': [
-  //       {'km': dist, 'rate': rate, 'amount': total},
-  //     ],
-  //   };
-  // }
+  
 
   void showBookingBottomSheet(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
@@ -1545,24 +1469,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       }
                                     },
 
-                                    // onTap: () {
-                                    //   setState(() {
-                                    //     selectedTripMode = "Hourly Trip";
-                                    //   });
-
-                                    //   showCityLimitsDialog(
-                                    //     context,
-                                    //     selectedCityHours,
-                                    //     (int selectedHour) {
-                                    //       setState(() {
-                                    //         selectedCityHours = selectedHour;
-                                    //         selectedHourlyPrice =
-                                    //             hourlyPriceMap[selectedHour] ??
-                                    //             399;
-                                    //       });
-                                    //     },
-                                    //   );
-                                    // },
+                                   
                                   ),
                                 ),
 
@@ -1632,17 +1539,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   // selectedTripMode = "Hourly Trip";
                                 });
 
-                                // showCityLimitsDialog(
-                                //   context,
-                                //   selectedCityHours,
-                                //   (hour) {
-                                //     setState(() {
-                                //       selectedCityHours = hour;
-                                //       selectedHourlyPrice =
-                                //           hourlyPriceMap[hour]!;
-                                //     });
-                                //   },
-                                // );
+                               
                               },
                             ),
                           ],
@@ -3111,237 +3008,6 @@ class CarModel {
   });
 }
 
- // void showPaymentSheet(BuildContext context, Map<String, dynamic> fareMap) {
-  //   final List<Map<String, dynamic>> parts = List<Map<String, dynamic>>.from(
-  //     fareMap['breakup'] ?? [],
-  //   );
-  //   final double total = (fareMap['total'] ?? 0.0) as double;
-  //   showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-  //     ),
-  //     builder: (_) {
-  //       return Container(
-  //         margin: EdgeInsets.all(10),
-  //         // adjust height if many breakup rows
-  //         constraints: BoxConstraints(maxHeight: 420),
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             SizedBox(height: 15),
-  //             const CustomText(
-  //               text: "Payment Breakup",
-  //               fontSize: 16,
-  //               fontWeight: FontWeight.w600,
-  //               textcolor: KblackColor,
-  //             ),
-  //             const SizedBox(height: 12),
-
-  //             // breakup rows
-  //             ...parts.map((p) {
-  //               final label = p['label'] ?? '';
-  //               final km = p['km'] ?? 0.0;
-  //               final rate = p['rate'] ?? 0.0;
-  //               final amt = p['amount'] ?? 0.0;
-  //               return Padding(
-  //                 padding: const EdgeInsets.symmetric(vertical: 6.0),
-  //                 child: Row(
-  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                   children: [
-  //                     Expanded(
-  //                       child: Column(
-  //                         crossAxisAlignment: CrossAxisAlignment.start,
-  //                         children: [
-  //                           CustomText(
-  //                             text: label,
-  //                             fontSize: 14,
-  //                             fontWeight: FontWeight.w500,
-  //                             textcolor: KblackColor,
-  //                           ),
-  //                           SizedBox(height: 4),
-  //                           Text(
-  //                             "${km.toString()} km × ₹${rate.toStringAsFixed(2)} / km",
-  //                             style: GoogleFonts.poppins(
-  //                               fontSize: 12,
-  //                               color: kgreyColor,
-  //                             ),
-  //                           ),
-  //                         ],
-  //                       ),
-  //                     ),
-  //                     CustomText(
-  //                       text: _fmt(amt as double),
-  //                       fontSize: 14,
-  //                       fontWeight: FontWeight.w500,
-  //                       textcolor: KblackColor,
-  //                     ),
-  //                   ],
-  //                 ),
-  //               );
-  //             }).toList(),
-
-  //             const SizedBox(height: 12),
-  //             const DottedLine(dashColor: kseegreyColor),
-  //             const SizedBox(height: 8),
-
-  //             Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 CustomText(
-  //                   text: "Total Price",
-  //                   fontSize: 16,
-  //                   fontWeight: FontWeight.w700,
-  //                   textcolor: korangeColor,
-  //                 ),
-  //                 CustomText(
-  //                   text: _fmt(total),
-  //                   fontSize: 16,
-  //                   fontWeight: FontWeight.w700,
-  //                   textcolor: korangeColor,
-  //                 ),
-  //               ],
-  //             ),
-  //             const SizedBox(height: 8),
-  //             const DottedLine(dashColor: kseegreyColor),
-  //             SizedBox(height: 10),
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-// void _startWatchAutoScroll() {
-  //   _watchAutoScrollTimer = Timer.periodic(Duration(seconds: 4), (timer) {
-  //     if (_watchPageController.hasClients) {
-  //       if (_watchCurrentPage < watchLearnImages.length - 1) {
-  //         _watchCurrentPage++;
-  //       } else {
-  //         _watchCurrentPage = 0;
-  //       }
-
-  //       _watchPageController.animateToPage(
-  //         _watchCurrentPage,
-  //         duration: Duration(milliseconds: 500),
-  //         curve: Curves.easeInOut,
-  //       );
-  //     }
-  //   });
-  // }
-// imp //ortant code for car list view in home screen
- // SizedBox(
-                      //   height: 130,
-                      //   child: PageView.builder(
-                      //     itemCount: carList.length,
-                      //     controller: _pageController,
-                      //     itemBuilder: (context, index) {
-                      //       final car = carList[index];
-                      //       return Container(
-                      //         margin: const EdgeInsets.only(right: 8),
-                      //         decoration: BoxDecoration(
-                      //           border: Border.all(
-                      //             color: korangeColor,
-                      //             width: 1.2,
-                      //           ),
-                      //           borderRadius: BorderRadius.circular(16),
-                      //         ),
-                      //         child: Padding(
-                      //           padding: const EdgeInsets.all(8),
-                      //           child: Row(
-                      //             crossAxisAlignment: CrossAxisAlignment.center,
-                      //             children: [
-                      //               Container(
-                      //                 width: 90,
-                      //                 height: 90,
-                      //                 decoration: BoxDecoration(
-                      //                   borderRadius: BorderRadius.circular(16),
-                      //                   color: Colors.grey.shade100,
-                      //                 ),
-                      //                 child: Center(
-                      //                   child: ClipRRect(
-                      //                     borderRadius: BorderRadius.circular(
-                      //                       12,
-                      //                     ),
-                      //                     child:
-                      //                         (car['images'] != null &&
-                      //                                 car['images'] is List &&
-                      //                                 car['images'].isNotEmpty)
-                      //                             ? Image.network(
-                      //                               car['images'][0],
-                      //                               fit: BoxFit.cover,
-                      //                               width: 130,
-                      //                               errorBuilder:
-                      //                                   (
-                      //                                     context,
-                      //                                     error,
-                      //                                     stackTrace,
-                      //                                   ) => const Icon(
-                      //                                     Icons.car_crash,
-                      //                                   ),
-                      //                             )
-                      //                             : const Icon(
-                      //                               Icons.directions_car,
-                      //                             ),
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //               const SizedBox(width: 10),
-                      //               Expanded(
-                      //                 child: Column(
-                      //                   mainAxisSize: MainAxisSize.min,
-                      //                   crossAxisAlignment:
-                      //                       CrossAxisAlignment.start,
-                      //                   children: [
-                      //                     CustomText(
-                      //                       text:
-                      //                           '${car['brand']} ${car['model']}',
-                      //                       fontSize: 14,
-                      //                       fontWeight: FontWeight.w600,
-                      //                       textcolor: KblackColor,
-                      //                     ),
-                      //                     const SizedBox(height: 5),
-                      //                     Wrap(
-                      //                       spacing: 6,
-                      //                       children: [
-                      //                         _infoChip(car['transmission']),
-                      //                         _infoChip(car['fuelType']),
-                      //                         _infoChip(car['category']),
-                      //                       ],
-                      //                     ),
-                      //                     const SizedBox(height: 5),
-                      //                     _infoChip(car['vehicleNumber']),
-                      //                   ],
-                      //                 ),
-                      //               ),
-                      //               GestureDetector(
-                      //                 onTap: () {
-                      //                   Navigator.push(
-                      //                     context,
-                      //                     MaterialPageRoute(
-                      //                       builder:
-                      //                           (_) => VehicleDetailsScreen(
-                      //                             data: car,
-                      //                             docId: car['id'],
-                      //                           ),
-                      //                     ),
-                      //                   );
-                      //                 },
-                      //                 child: const Align(
-                      //                   alignment: Alignment.center,
-                      //                   child: Icon(
-                      //                     Icons.arrow_forward_ios,
-                      //                     size: 18,
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       );
-                      //     },
-                      //   ),
-                      // ),
+ 
 
 

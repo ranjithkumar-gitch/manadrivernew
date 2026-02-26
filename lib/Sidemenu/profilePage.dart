@@ -21,32 +21,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   final vm = context.read<LoginViewModel>();
-  //   final user = vm.loggedInUser;
-  //   if (user != null) {
-  //     firstnameController.text = user['firstName'] ?? '';
-  //     lastnameController.text = user['lastName'] ?? '';
-
-  //     emailController.text = user['email'] ?? '';
-  //     phoneController.text = user['phone'] ?? '';
-  //   }
-  // }
+  
   @override
   void initState() {
     super.initState();
     _loadUserFromPrefs();
-    // final vm = context.read<LoginViewModel>();
-    // final user = vm.loggedInUser;
-    // if (user != null) {
-    //   firstnameController.text = user['firstName'] ?? '';
-    //   lastnameController.text = user['lastName'] ?? '';
-
-    //   emailController.text = user['email'] ?? '';
-    //   phoneController.text = user['phone'] ?? '';
-    // }
+    
   }
 
   Future<void> _loadUserFromPrefs() async {
@@ -55,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     emailController.text = await SharedPrefServices.getEmail() ?? '';
     phoneController.text = await SharedPrefServices.getNumber() ?? '';
 
-    setState(() {}); // update UI after assigning
+    setState(() {}); 
   }
 
   String _getUserInitials() {

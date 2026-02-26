@@ -41,9 +41,7 @@ class RegisterViewModel extends ChangeNotifier {
       // if (email.trim().isEmpty) throw Exception('Email required');
       if (phone.trim().isEmpty) throw Exception('Phone required');
 
-      // final snapshot =
-      //     await FirebaseFirestore.instance.collection('users').get();
-      // final totalCount = snapshot.docs.length;
+      
 
       final now = DateTime.now();
       final formattedDate =

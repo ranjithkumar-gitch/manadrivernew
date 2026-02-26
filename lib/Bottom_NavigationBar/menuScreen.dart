@@ -56,12 +56,6 @@ class _MenuScreenState extends State<MenuScreen> {
     {'image': 'images/logout.png', 'title': 'Logout'},
   ];
 
-  // @override
-  // void instate() {
-  //   super.initState();
-  //   //  getProfileData();
-  // }
-
   String maskEmail(String email) {
     if (email.isEmpty) return "";
 
@@ -220,39 +214,6 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                       const Divider(color: KdeviderColor),
 
-                      // InkWell(
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (_) => FavouriteDriversScreen(),
-                      //       ),
-                      //     );
-                      //   },
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.all(3),
-                      //     child: Row(
-                      //       children: [
-                      //         Image.asset(
-                      //           "images/favorite.png",
-                      //           width: 24,
-                      //           height: 24,
-                      //         ),
-                      //         const SizedBox(width: 12),
-                      //         Expanded(
-                      //           child: CustomText(
-                      //             text: localizations.menuFavDrivers,
-                      //             fontSize: 16,
-                      //             fontWeight: FontWeight.w400,
-                      //             textcolor: KblackColor,
-                      //           ),
-                      //         ),
-                      //         Image.asset("images/chevronRight.png", width: 20),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-                      // const Divider(color: KdeviderColor),
                       InkWell(
                         onTap: () {
                           Navigator.push(
@@ -260,15 +221,7 @@ class _MenuScreenState extends State<MenuScreen> {
                             MaterialPageRoute(builder: (_) => UpdateNumber()),
                           );
                         },
-                        // => _showUpdateMobileDialog(
-                        //   uMN: localizations.menuUpdateMobileNumber,
-                        //   eM: localizations.menuEnterMobile,
-                        //   eOTP: localizations.menuEnterOTP,
-                        //   dR: localizations.menuDontRecieved,
-                        //   rS: localizations.menuResend,
-                        //   c: localizations.menuCancel,
-                        //   u: localizations.menuUpdate,
-                        // ),
+
                         child: Padding(
                           padding: const EdgeInsets.all(3),
                           child: Row(
@@ -320,71 +273,6 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                       const Divider(color: KdeviderColor),
 
-                      // InkWell(
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(builder: (_) => OffersScreen()),
-                      //     );
-                      //   },
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.all(3),
-                      //     child: Row(
-                      //       children: [
-                      //         Image.asset(
-                      //           "images/offers.png",
-                      //           width: 24,
-                      //           height: 24,
-                      //         ),
-                      //         const SizedBox(width: 12),
-                      //         Expanded(
-                      //           child: CustomText(
-                      //             text: localizations.menuOffers,
-                      //             fontSize: 16,
-                      //             fontWeight: FontWeight.w400,
-                      //             textcolor: KblackColor,
-                      //           ),
-                      //         ),
-                      //         Image.asset("images/chevronRight.png", width: 20),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-
-                      // const Divider(color: KdeviderColor),
-                      // InkWell(
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (_) => ReferFriendScreen(),
-                      //       ),
-                      //     );
-                      //   },
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.all(3),
-                      //     child: Row(
-                      //       children: [
-                      //         Image.asset(
-                      //           "images/refer.png",
-                      //           width: 24,
-                      //           height: 24,
-                      //         ),
-                      //         const SizedBox(width: 12),
-                      //         Expanded(
-                      //           child: CustomText(
-                      //             text: localizations.menuReferaFriend,
-                      //             fontSize: 16,
-                      //             fontWeight: FontWeight.w400,
-                      //             textcolor: KblackColor,
-                      //           ),
-                      //         ),
-                      //         Image.asset("images/chevronRight.png", width: 20),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-                      // const Divider(color: KdeviderColor),
                       InkWell(
                         onTap: () {
                           Navigator.push(
@@ -450,37 +338,6 @@ class _MenuScreenState extends State<MenuScreen> {
                         ),
                       ),
 
-                      // const Divider(color: KdeviderColor),
-                      // InkWell(
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(builder: (_) => HelpAndSupport()),
-                      //     );
-                      //   },
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.all(3),
-                      //     child: Row(
-                      //       children: [
-                      //         Image.asset(
-                      //           "images/support.png",
-                      //           width: 24,
-                      //           height: 24,
-                      //         ),
-                      //         const SizedBox(width: 12),
-                      //         Expanded(
-                      //           child: CustomText(
-                      //             text: localizations.menuHelpSupport,
-                      //             fontSize: 16,
-                      //             fontWeight: FontWeight.w400,
-                      //             textcolor: KblackColor,
-                      //           ),
-                      //         ),
-                      //         Image.asset("images/chevronRight.png", width: 20),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
                       const Divider(color: KdeviderColor),
                       InkWell(
                         onTap: () {
@@ -941,26 +798,6 @@ class _MenuScreenState extends State<MenuScreen> {
                     },
                   ),
                 ),
-
-                // onChanged: (newValue) {
-                //   if (newValue == null) return;
-                //   setState(() {
-                //     selectedLanguage = newValue;
-                //   });
-
-                //   final localeProvider = Provider.of<LocaleProvider>(
-                //     context,
-                //     listen: false,
-                //   );
-
-                //   if (newValue == 'English') {
-                //     localeProvider.setLocale(const Locale('en'));
-                //   } else if (newValue == 'Hindi') {
-                //     localeProvider.setLocale(const Locale('hi'));
-                //   } else if (newValue == 'Telugu') {
-                //     localeProvider.setLocale(const Locale('te'));
-                //   }
-                // },
               ],
             ),
             actions: _dialogActions(
@@ -988,23 +825,6 @@ class _MenuScreenState extends State<MenuScreen> {
           ),
     );
   }
-
-  // onConfirm: () {
-  //   if (selectedLanguage != null) {
-  //     final localeProvider = Provider.of<LocaleProvider>(
-  //       context,
-  //       listen: false,
-  //     );
-  //     if (selectedLanguage == 'English') {
-  //       localeProvider.setLocale(const Locale('en'));
-  //     } else if (selectedLanguage == 'Hindi') {
-  //       localeProvider.setLocale(const Locale('hi'));
-  //     } else if (selectedLanguage == 'Telugu') {
-  //       localeProvider.setLocale(const Locale('te'));
-  //     }
-  //   }
-  //   Navigator.pop(context);
-  // },
 
   void _showDeleteAccountDialog({
     required String txt1,

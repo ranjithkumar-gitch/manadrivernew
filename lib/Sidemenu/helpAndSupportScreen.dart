@@ -61,18 +61,7 @@ class _HelpAndSupportState extends State<HelpAndSupport> {
                           ),
                         ),
                       ),
-                      // Align(
-                      //   alignment: Alignment.centerLeft,
-                      //   child: InkWell(
-                      //     onTap: () => Navigator.pop(context),
-                      //     child: Image.asset(
-                      //       "images/chevronLeft.png",
-                      //       width: 24,
-                      //       height: 24,
-                      //       color: kwhiteColor,
-                      //     ),
-                      //   ),
-                      // ),
+                     
                       Center(
                         child: Text(
                           localizations.menuHelpSupport,

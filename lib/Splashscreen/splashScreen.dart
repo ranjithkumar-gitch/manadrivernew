@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   final fcmService = FCMService();
-  // final FirebaseApi _firebaseApi = FirebaseApi();
+  
   @override
   void initState() {
     super.initState();
@@ -87,7 +87,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> setupFCMToken() async {
-    // await _firebaseApi.initNotifications();
+  
 
     final token = await FirebaseMessaging.instance.getToken();
     print('FCM Token on Splash: $token');
@@ -168,38 +168,7 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
-  // Future<void> _navigateNext() async {
-  //   RemoteMessage? message =
-  //       await FirebaseMessaging.instance.getInitialMessage();
-
-  //   if (message != null) {
-  //     print("App opened via notification");
-  //   }
-
-  //   await Future.delayed(const Duration(seconds: 1));
-
-  //   await SharedPrefServices.init();
-  //   bool isLoggedIn = SharedPrefServices.getislogged();
-  //   String role = SharedPrefServices.getRoleCode().toString();
-
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     FocusManager.instance.primaryFocus?.unfocus();
-  //   });
-  //   print("isLoggedIn: $isLoggedIn");
-  //   print("role: $role");
-
-  //   if (isLoggedIn && role == "Owner") {
-  //     Navigator.pushReplacement(
-  //       context,
-  //       MaterialPageRoute(builder: (_) => BottomNavigation()),
-  //     );
-  //   } else {
-  //     Navigator.pushReplacement(
-  //       context,
-  //       MaterialPageRoute(builder: (_) => LanguageSelectionScreen()),
-  //     );
-  //   }
-  // }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -223,26 +192,7 @@ class _SplashScreenState extends State<SplashScreen>
         children: [
           Expanded(
             child: Center(
-              // child: ScaleTransition(
-              //   scale: _scaleAnimation,
-              //   child: Column(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     crossAxisAlignment: CrossAxisAlignment.center,
-              //     children: [
-              //       Text(
-              //         'nyzo',
-              //         style: GoogleFonts.poppins(
-              //           textStyle: TextStyle(
-              //             fontSize: 32,
-              //             fontWeight: FontWeight.bold,
-              //             color: Colors.white,
-              //             letterSpacing: 1.0,
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
+             
               child: Image.asset(
                 'images/nyzo_ride_.png',
                 height: 200,

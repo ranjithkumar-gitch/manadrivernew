@@ -780,19 +780,7 @@ void _showCanceldailog(BuildContext context) {
                   textAlign: TextAlign.center,
                 ),
               ),
-              // SizedBox(
-              //   width: 250,
-              //   child: Center(
-              //     child: CustomText(
-              //       text:
-              //           "Your request has been processed.We're sorry to see you go!",
-
-              //       fontSize: 14,
-              //       fontWeight: FontWeight.w400,
-              //       textcolor: kgreyColor,
-              //     ),
-              //   ),
-              // ),
+             
             ],
           ),
         ),

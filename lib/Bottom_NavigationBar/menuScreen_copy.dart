@@ -52,12 +52,7 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
     {'image': 'images/logout.png', 'title': 'Logout'},
   ];
 
-  // @override
-  // void instate() {
-  //   super.initState();
-  //   //  getProfileData();
-  // }
-
+  
   String maskEmail(String email) {
     if (email.isEmpty) return "";
 
@@ -160,19 +155,14 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    // final vm = context.watch<LoginViewModel>();
-    // final userName =
-    //     "${vm.loggedInUser?['firstName'] ?? ''} ${vm.loggedInUser?['lastName'] ?? ''}"
-    //         .trim();
-
-    // final userEmail = vm.loggedInUser?['email'] ?? "";
+    
     return SafeArea(
       child: Stack(
         children: [
           SingleChildScrollView(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                // double screenWidth = constraints.maxWidth;
+              
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -217,39 +207,7 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
                       ),
                       const Divider(color: KdeviderColor),
 
-                      // InkWell(
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (_) => FavouriteDriversScreen(),
-                      //       ),
-                      //     );
-                      //   },
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.all(3),
-                      //     child: Row(
-                      //       children: [
-                      //         Image.asset(
-                      //           "images/favorite.png",
-                      //           width: 24,
-                      //           height: 24,
-                      //         ),
-                      //         const SizedBox(width: 12),
-                      //         Expanded(
-                      //           child: CustomText(
-                      //             text: localizations.menuFavDrivers,
-                      //             fontSize: 16,
-                      //             fontWeight: FontWeight.w400,
-                      //             textcolor: KblackColor,
-                      //           ),
-                      //         ),
-                      //         Image.asset("images/chevronRight.png", width: 20),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-                      // const Divider(color: KdeviderColor),
+                     
                       InkWell(
                         onTap:
                             () => _showUpdateMobileDialog(
@@ -312,71 +270,7 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
                       ),
                       const Divider(color: KdeviderColor),
 
-                      // InkWell(
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(builder: (_) => OffersScreen()),
-                      //     );
-                      //   },
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.all(3),
-                      //     child: Row(
-                      //       children: [
-                      //         Image.asset(
-                      //           "images/offers.png",
-                      //           width: 24,
-                      //           height: 24,
-                      //         ),
-                      //         const SizedBox(width: 12),
-                      //         Expanded(
-                      //           child: CustomText(
-                      //             text: localizations.menuOffers,
-                      //             fontSize: 16,
-                      //             fontWeight: FontWeight.w400,
-                      //             textcolor: KblackColor,
-                      //           ),
-                      //         ),
-                      //         Image.asset("images/chevronRight.png", width: 20),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-
-                      // const Divider(color: KdeviderColor),
-                      // InkWell(
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (_) => ReferFriendScreen(),
-                      //       ),
-                      //     );
-                      //   },
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.all(3),
-                      //     child: Row(
-                      //       children: [
-                      //         Image.asset(
-                      //           "images/refer.png",
-                      //           width: 24,
-                      //           height: 24,
-                      //         ),
-                      //         const SizedBox(width: 12),
-                      //         Expanded(
-                      //           child: CustomText(
-                      //             text: localizations.menuReferaFriend,
-                      //             fontSize: 16,
-                      //             fontWeight: FontWeight.w400,
-                      //             textcolor: KblackColor,
-                      //           ),
-                      //         ),
-                      //         Image.asset("images/chevronRight.png", width: 20),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-                      // const Divider(color: KdeviderColor),
+                     
                       InkWell(
                         onTap: () {
                           Navigator.push(
@@ -442,37 +336,7 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
                         ),
                       ),
 
-                      // const Divider(color: KdeviderColor),
-                      // InkWell(
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(builder: (_) => HelpAndSupport()),
-                      //     );
-                      //   },
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.all(3),
-                      //     child: Row(
-                      //       children: [
-                      //         Image.asset(
-                      //           "images/support.png",
-                      //           width: 24,
-                      //           height: 24,
-                      //         ),
-                      //         const SizedBox(width: 12),
-                      //         Expanded(
-                      //           child: CustomText(
-                      //             text: localizations.menuHelpSupport,
-                      //             fontSize: 16,
-                      //             fontWeight: FontWeight.w400,
-                      //             textcolor: KblackColor,
-                      //           ),
-                      //         ),
-                      //         Image.asset("images/chevronRight.png", width: 20),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
+                     
                       const Divider(color: KdeviderColor),
                       InkWell(
                         onTap: () {
@@ -828,25 +692,7 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
                   ),
                 ),
 
-                // onChanged: (newValue) {
-                //   if (newValue == null) return;
-                //   setState(() {
-                //     selectedLanguage = newValue;
-                //   });
-
-                //   final localeProvider = Provider.of<LocaleProvider>(
-                //     context,
-                //     listen: false,
-                //   );
-
-                //   if (newValue == 'English') {
-                //     localeProvider.setLocale(const Locale('en'));
-                //   } else if (newValue == 'Hindi') {
-                //     localeProvider.setLocale(const Locale('hi'));
-                //   } else if (newValue == 'Telugu') {
-                //     localeProvider.setLocale(const Locale('te'));
-                //   }
-                // },
+               
               ],
             ),
             actions: _dialogActions(
@@ -875,22 +721,7 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
     );
   }
 
-  // onConfirm: () {
-  //   if (selectedLanguage != null) {
-  //     final localeProvider = Provider.of<LocaleProvider>(
-  //       context,
-  //       listen: false,
-  //     );
-  //     if (selectedLanguage == 'English') {
-  //       localeProvider.setLocale(const Locale('en'));
-  //     } else if (selectedLanguage == 'Hindi') {
-  //       localeProvider.setLocale(const Locale('hi'));
-  //     } else if (selectedLanguage == 'Telugu') {
-  //       localeProvider.setLocale(const Locale('te'));
-  //     }
-  //   }
-  //   Navigator.pop(context);
-  // },
+ 
 
   void _showDeleteAccountDialog({
     required String txt1,
@@ -931,7 +762,7 @@ class _MenuScreen_copyState extends State<MenuScreen_copy> {
               c: c,
               onConfirm: () async {
                 try {
-                  // final prefs = await SharedPreferences.getInstance();
+                 
                   final docId = SharedPrefServices.getDocId();
 
                   if (docId != null) {

@@ -2568,30 +2568,7 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
     });
   }
 
-  // void applyCoupon(String code, String value) {
-  //   setState(() {
-  //     isCouponApplied = true;
-
-  //     appliedCouponCode = code;
-  //     appliedCouponValue = value;
-
-  //     double total = double.tryParse(totalPrice) ?? 0;
-
-  //     if (value.contains('%')) {
-  //       double percent = double.parse(value.replaceAll('%', ''));
-  //       appliedDiscount = (total * percent) / 100;
-  //     } else {
-  //       appliedDiscount = double.tryParse(value) ?? 0;
-  //     }
-
-  //     if (appliedDiscount > total) {
-  //       appliedDiscount = total;
-  //     }
-
-  //     double result = total - appliedDiscount;
-  //     finalTotal = result.toStringAsFixed(2);
-  //   });
-  // }
+  
 
   void _showCouponsBottomSheet() {
     showModalBottomSheet(

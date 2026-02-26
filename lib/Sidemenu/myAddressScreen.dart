@@ -166,46 +166,7 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                           }
                         },
 
-                        // onPressed: () async {
-                        //   if (_formKey.currentState!.validate()) {
-                        //     setState(() {
-                        //       isLoading = true;
-                        //     });
-
-                        //     try {
-                        //       await FirebaseFirestore.instance
-                        //           .collection("addresses")
-                        //           .add({
-                        //             'userId':
-                        //                 SharedPrefServices.getUserId()
-                        //                     .toString(),
-                        //             "title": titleCtrl.text,
-                        //             "Address": addressCtrl.text,
-                        //             "state": stateCtrl.text,
-                        //             "city": cityCtrl.text,
-                        //             "country": countryCtrl.text,
-                        //             "zipcode": zipCtrl.text,
-                        //             "createdAt": FieldValue.serverTimestamp(),
-                        //           });
-
-                        //       titleCtrl.clear();
-                        //       addressCtrl.clear();
-                        //       stateCtrl.clear();
-                        //       cityCtrl.clear();
-                        //       countryCtrl.clear();
-                        //       zipCtrl.clear();
-
-                        //       Navigator.pop(context);
-                        //     } catch (e) {
-                        //       setState(() {
-                        //         isLoading = false;
-                        //       });
-                        //       ScaffoldMessenger.of(context).showSnackBar(
-                        //         SnackBar(content: Text("Error: $e")),
-                        //       );
-                        //     }
-                        //   }
-                        // },
+                       
                       ),
                     ),
               ],

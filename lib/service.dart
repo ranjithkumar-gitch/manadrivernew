@@ -93,20 +93,3 @@ class FCMService {
     }
   }
 }
-
-
-  //   static String _serviceAccountJson = '''
-  // {
-  //   "type": "service_account",
-  //   "project_id": "mana-driver",
-  //   "private_key_id": "${SharedPrefServices.getPrimaryKey()}",
-  //   "private_key": "${SharedPrefServices.getPrivateKey()}",
-  //   "client_email": "${SharedPrefServices.getClientEmail()}",
-  //   "client_id": "${SharedPrefServices.getClientId()}",
-  //   "auth_uri": "${SharedPrefServices.getAuthUri()}",
-  //   "token_uri": "${SharedPrefServices.getTokenUri()}",
-  //   "auth_provider_x509_cert_url": "${SharedPrefServices.getAuthProvider()}",
-  //   "client_x509_cert_url": "${SharedPrefServices.getClientUrl()}",
-  //   "universe_domain": "${SharedPrefServices.getUniverseDomain()}"
-  // }
-  // ''';

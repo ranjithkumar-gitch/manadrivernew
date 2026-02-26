@@ -1224,37 +1224,4 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
     );
   }
 }
-   // List<String> updatedImageUrls = [];
-
-      // // 1️⃣ Delete marked images from DB (Firestore & optionally Storage)
-      // // 1️⃣ Delete marked images from Storage
-      // for (String url in imagesToDelete) {
-      //   try {
-      //     final ref = FirebaseStorage.instance.refFromURL(url);
-      //     await ref.delete();
-      //     print("Deleted from Firebase Storage: $url"); // ✅ successful delete
-      //   } catch (e) {
-      //     print("Error deleting image from storage: $e");
-      //   }
-      // }
-
-      // // 2️⃣ Upload newly picked images
-      // for (int i = 0; i < images.length; i++) {
-      //   if (images[i] != null) {
-      //     String fileName =
-      //         "${SharedPrefServices.getUserId()}_Vehicles/${DateTime.now().millisecondsSinceEpoch}_$i.jpg";
-      //     final ref = FirebaseStorage.instance.ref().child(fileName);
-      //     final snapshot = await ref.putFile(images[i]!);
-      //     final downloadUrl = await snapshot.ref.getDownloadURL();
-      //     updatedImageUrls.add(downloadUrl);
-      //     print("Uploaded new image: $downloadUrl"); // ✅ print uploaded image
-      //   }
-      // }
-
-      // // 3️⃣ Add remaining existing images that weren’t deleted
-      // for (var url in imageUrls) {
-      //   if (url != null && url.isNotEmpty) {
-      //     updatedImageUrls.add(url);
-      //     print("Kept existing image: $url"); // ✅ print kept image
-      //   }
-      // }
+   

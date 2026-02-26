@@ -66,19 +66,6 @@ class _OtpLoginState extends State<OtpLogin> {
       }
     });
   }
-  // Future<void> _checkUserRole() async {
-  //   final role = await SharedPrefServices.getRoleCode();
-
-  //   if (role != "Owner" && mounted) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text("This screen is only for Owners."),
-  //         backgroundColor: Colors.redAccent,
-  //       ),
-  //     );
-  //     Navigator.pop(context); // or redirect to login/home
-  //   }
-  // }
 
   Future<void> _resendOtp() async {
     if (_isResending) return;
@@ -281,14 +268,6 @@ class _OtpLoginState extends State<OtpLogin> {
                                             : (TapGestureRecognizer()
                                               ..onTap = _resendOtp),
                                   ),
-
-                                  // TextSpan(
-                                  //   text: localizations.resendOtp,
-                                  //   style: TextStyle(
-                                  //     color: korangeColor,
-                                  //     fontWeight: FontWeight.w600,
-                                  //   ),
-                                  // ),
                                 ],
                               ),
                             ),
@@ -444,67 +423,3 @@ class _OtpLoginState extends State<OtpLogin> {
     );
   }
 }
-
-
-                            // if (role == "Owner") {
-                              //   print(" ROLE IS OWNER");
-
-                              //   final docId = SharedPrefServices.getDocId();
-                              //   print(" Owner DocId = $docId");
-
-                              //   if (docId != null && docId.isNotEmpty) {
-                              //     print(" Fetching owner Firestore document");
-
-                              //     final snap =
-                              //         await FirebaseFirestore.instance
-                              //             .collection("users")
-                              //             .doc(docId)
-                              //             .get();
-
-                              //     if (snap.exists) {
-                              //       print(" Owner document exists");
-
-                              //       final ownertoken =
-                              //           snap.data()?["fcmToken"] ?? "";
-                              //       print(" Owner FCM Token = $ownertoken");
-
-                              //       if (ownertoken.isNotEmpty) {
-                              //         await fcmService.sendNotification(
-                              //           recipientFCMToken: ownertoken,
-                              //           title: localizations.welcomeBack,
-                              //           body: localizations.loggedInReady,
-                              //         );
-                              //         print(" Login success notification sent");
-                              //       } else {
-                              //         print(" Owner FCM token EMPTY");
-                              //       }
-                              //     } else {
-                              //       print(" Owner document NOT FOUND");
-                              //     }
-                              //   } else {
-                              //     print(" DocId is NULL or EMPTY");
-                              //   }
-
-                              //   print(" Navigating to BottomNavigation");
-                              //   Navigator.pushReplacement(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //       builder: (_) => BottomNavigation(),
-                              //     ),
-                              //   );
-                              // } else {
-                              //   print(" ROLE IS NOT OWNER (role = $role)");
-                              //   print(" Navigating to LanguageSelectionScreen");
-
-                              //   Navigator.pushReplacement(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //       builder: (_) => LanguageSelectionScreen(),
-                              //     ),
-                              //   );
-                              // }
-
-
-
-
- 

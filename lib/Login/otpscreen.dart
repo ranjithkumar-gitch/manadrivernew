@@ -236,13 +236,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                               ..onTap = _resendOtp),
                                   ),
 
-                                  // TextSpan(
-                                  //   text: localizations.resendOtp,
-                                  //   style: TextStyle(
-                                  //     color: korangeColor,
-                                  //     fontWeight: FontWeight.w600,
-                                  //   ),
-                                  // ),
+
                                 ],
                               ),
                             ),
