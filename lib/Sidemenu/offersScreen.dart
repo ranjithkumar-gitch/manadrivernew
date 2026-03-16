@@ -52,18 +52,20 @@ class OffersScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-          child: SizedBox(
-            width: double.infinity,
-            child: Align(
-              alignment: Alignment.center,
-              child: CustomText(
-                text: localizations.offer_dummy_text,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                textcolor: kseegreyColor,
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: Align(
+                alignment: Alignment.center,
+                child: CustomText(
+                  text: localizations.offer_dummy_text,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  textcolor: kseegreyColor,
+                ),
               ),
             ),
           ),

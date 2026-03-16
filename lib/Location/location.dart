@@ -394,165 +394,55 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-              decoration: BoxDecoration(
-                color: kwhiteColor,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: kbordergreyColor),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15),
-                    child: Column(
-                      children: [
-                        Image.asset("images/greencircle.png"),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: kwhiteColor,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: kbordergreyColor),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: Column(
+                        children: [
+                          Image.asset("images/greencircle.png"),
 
-                        _buildVerticalLine(extended: showSecondDrop),
+                          _buildVerticalLine(extended: showSecondDrop),
 
-                        if (showSecondDrop)
-                          Image.asset("images/redCircle.png")
-                        else
-                          Image.asset("images/redCircle.png"),
-                      ],
+                          if (showSecondDrop)
+                            Image.asset("images/redCircle.png")
+                          else
+                            Image.asset("images/redCircle.png"),
+                        ],
+                      ),
                     ),
-                  ),
 
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        TextField(
-                          focusNode: currentFocus,
-                          controller: currentLocationController,
-                          onChanged: (value) => _onChanged(value, true),
-                          textInputAction: TextInputAction.next,
-                          onSubmitted:
-                              (_) => FocusScope.of(
-                                context,
-                              ).requestFocus(dropFocus),
-                          decoration: InputDecoration(
-                            hintText: localizations.pickupLocation,
-                            hintStyle: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: KblackColor,
-                            ),
-                            border: InputBorder.none,
-                          ),
-                        ),
-
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Divider(
-                                color: kbordergreyColor,
-                                thickness: 1.3,
-                              ),
-                            ),
-                            const SizedBox(width: 15),
-                            SizedBox(
-                              height: 30,
-                              width: 68,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      showSecondDrop
-                                          ? Colors.red
-                                          : korangeColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(22),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 5,
-                                  ),
-                                ),
-                                // onPressed: () {
-                                //   setState(() {
-                                //     showSecondDrop = !showSecondDrop;
-                                //     if (!showSecondDrop)
-                                //       secondDropController.clear();
-                                //   });
-                                // },
-                                onPressed: () async {
-                                  setState(() {
-                                    showSecondDrop = !showSecondDrop;
-
-                                    if (!showSecondDrop) {
-                                      secondDropController.clear();
-                                      drop2Lat = "";
-                                      drop2Lng = "";
-                                    }
-                                  });
-
-                                  await _calculateDistance();
-                                },
-
-                                child: CustomText(
-                                  text:
-                                      showSecondDrop
-                                          ? localizations.delete
-                                          : localizations.add,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: kwhiteColor,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        TextField(
-                          focusNode: dropFocus,
-                          controller: dropLocationController,
-                          onChanged: (value) => _onChanged(value, false),
-                          textInputAction: TextInputAction.search,
-                          onSubmitted: (_) {
-                            Navigator.pop(context, {
-                              "current": currentLocationController.text,
-                              "drop": dropLocationController.text,
-                            });
-                          },
-                          decoration: InputDecoration(
-                            hintText:
-                                showSecondDrop
-                                    ? localizations.dropLocation1
-                                    : localizations.dropLocation,
-                            hintStyle: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: KblackColor,
-                            ),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                        if (showSecondDrop)
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        children: [
                           TextField(
-                            focusNode: secondDropFocus,
-                            controller: secondDropController,
-                            onChanged:
-                                (value) => _onChanged(
-                                  value,
-                                  false,
-                                  isSecondDrop: true,
-                                ),
-                            textInputAction: TextInputAction.done,
-
-                            onSubmitted: (_) {
-                              Navigator.pop(context, {
-                                "current": currentLocationController.text,
-                                "drop": dropLocationController.text,
-                                "drop2": secondDropController.text,
-                              });
-                            },
+                            focusNode: currentFocus,
+                            controller: currentLocationController,
+                            onChanged: (value) => _onChanged(value, true),
+                            textInputAction: TextInputAction.next,
+                            onSubmitted:
+                                (_) => FocusScope.of(
+                                  context,
+                                ).requestFocus(dropFocus),
                             decoration: InputDecoration(
-                              hintText: localizations.dropLocation2,
+                              hintText: localizations.pickupLocation,
                               hintStyle: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
@@ -561,76 +451,177 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                               border: InputBorder.none,
                             ),
                           ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            if (distanceText != null && durationText != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomText(
-                      text: "${localizations.distance} $distanceText",
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      textcolor: Colors.black87,
-                    ),
-                    CustomText(
-                      text:
-                          "${localizations.time} ${convertMinutes(durationText!)}",
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      textcolor: Colors.black87,
+
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Divider(
+                                  color: kbordergreyColor,
+                                  thickness: 1.3,
+                                ),
+                              ),
+                              const SizedBox(width: 15),
+                              SizedBox(
+                                height: 30,
+                                width: 68,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        showSecondDrop
+                                            ? Colors.red
+                                            : korangeColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(22),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 5,
+                                    ),
+                                  ),
+                                  // onPressed: () {
+                                  //   setState(() {
+                                  //     showSecondDrop = !showSecondDrop;
+                                  //     if (!showSecondDrop)
+                                  //       secondDropController.clear();
+                                  //   });
+                                  // },
+                                  onPressed: () async {
+                                    setState(() {
+                                      showSecondDrop = !showSecondDrop;
+
+                                      if (!showSecondDrop) {
+                                        secondDropController.clear();
+                                        drop2Lat = "";
+                                        drop2Lng = "";
+                                      }
+                                    });
+
+                                    await _calculateDistance();
+                                  },
+
+                                  child: CustomText(
+                                    text:
+                                        showSecondDrop
+                                            ? localizations.delete
+                                            : localizations.add,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    textcolor: kwhiteColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          TextField(
+                            focusNode: dropFocus,
+                            controller: dropLocationController,
+                            onChanged: (value) => _onChanged(value, false),
+                            textInputAction: TextInputAction.search,
+                            onSubmitted: (_) {
+                              Navigator.pop(context, {
+                                "current": currentLocationController.text,
+                                "drop": dropLocationController.text,
+                              });
+                            },
+                            decoration: InputDecoration(
+                              hintText:
+                                  showSecondDrop
+                                      ? localizations.dropLocation1
+                                      : localizations.dropLocation,
+                              hintStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: KblackColor,
+                              ),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                          if (showSecondDrop)
+                            TextField(
+                              focusNode: secondDropFocus,
+                              controller: secondDropController,
+                              onChanged:
+                                  (value) => _onChanged(
+                                    value,
+                                    false,
+                                    isSecondDrop: true,
+                                  ),
+                              textInputAction: TextInputAction.done,
+
+                              onSubmitted: (_) {
+                                Navigator.pop(context, {
+                                  "current": currentLocationController.text,
+                                  "drop": dropLocationController.text,
+                                  "drop2": secondDropController.text,
+                                });
+                              },
+                              decoration: InputDecoration(
+                                hintText: localizations.dropLocation2,
+                                hintStyle: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: KblackColor,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(height: 16),
+              if (distanceText != null && durationText != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomText(
+                        text: "${localizations.distance} $distanceText",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        textcolor: Colors.black87,
+                      ),
+                      CustomText(
+                        text:
+                            "${localizations.time} ${convertMinutes(durationText!)}",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        textcolor: Colors.black87,
+                      ),
+                    ],
+                  ),
+                ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () {
-                    bool isPickup = currentFocus.hasFocus;
-                    bool isDrop = dropFocus.hasFocus;
-                    bool isSecondDrop = secondDropFocus.hasFocus;
-                    if (!isPickup && !isDrop && !isSecondDrop) {
-                      showDialog(
-                        context: context,
-                        builder:
-                            (context) => AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              content: Text(
-                                localizations.selectPickupOrDrop,
-                                style: GoogleFonts.poppins(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      bool isPickup = currentFocus.hasFocus;
+                      bool isDrop = dropFocus.hasFocus;
+                      bool isSecondDrop = secondDropFocus.hasFocus;
+                      if (!isPickup && !isDrop && !isSecondDrop) {
+                        showDialog(
+                          context: context,
+                          builder:
+                              (context) => AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                              ),
-                              title: Center(
-                                child: Text(
-                                  localizations.chooseLocationType,
+                                content: Text(
+                                  localizations.selectPickupOrDrop,
                                   style: GoogleFonts.poppins(
-                                    color: korangeColor,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
                                   ),
                                 ),
-                              ),
-
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
+                                title: Center(
                                   child: Text(
-                                    localizations.ok,
+                                    localizations.chooseLocationType,
                                     style: GoogleFonts.poppins(
                                       color: korangeColor,
                                       fontSize: 15,
@@ -638,181 +629,199 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
-                      );
-                      return;
-                    }
 
-                    _openMap(isPickup: isPickup, isSecondDrop: isSecondDrop);
-                  },
-                  child: Container(
-                    height: 40,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: korangeColor),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.location_on, color: korangeColor, size: 18),
-                        const SizedBox(width: 3),
-                        CustomText(
-                          text:
-                              showSecondDrop
-                                  ? (currentLocationController
-                                              .text
-                                              .isNotEmpty &&
-                                          dropLocationController
-                                              .text
-                                              .isNotEmpty &&
-                                          secondDropController.text.isEmpty
-                                      ? localizations.selectDrop2OnMap
-                                      : localizations.selectOnMap)
-                                  : localizations.selectOnMap,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          textcolor: korangeColor,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                SizedBox(
-                  height: 40,
-                  width: 100,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (distanceText == null || durationText == null) {
-                        _showInvalidLocationDialog(
-                          "Unable to calculate distance and duration. Please select the pickup and drop locations again.",
-                        );
-                        return;
-                      }
-                      if (currentLocationController.text.isEmpty) {
-                        _showInvalidLocationDialog(
-                          "Please select pickup location",
-                        );
-                        return;
-                      }
-
-                      if (pickupLat.isEmpty || pickupLng.isEmpty) {
-                        _showInvalidLocationDialog(
-                          "Please select pickup location from suggestions or map",
-                        );
-                        return;
-                      }
-
-                      if (dropLocationController.text.isEmpty) {
-                        _showInvalidLocationDialog(
-                          "Please select drop location",
-                        );
-                        return;
-                      }
-
-                      if (dropLat.isEmpty || dropLng.isEmpty) {
-                        _showInvalidLocationDialog(
-                          "Please select drop location from suggestions or map",
-                        );
-                        return;
-                      }
-
-                      if (showSecondDrop) {
-                        if (secondDropController.text.isEmpty) {
-                          _showInvalidLocationDialog(
-                            "Please select second drop location",
-                          );
-                          return;
-                        }
-
-                        if (drop2Lat.isEmpty || drop2Lng.isEmpty) {
-                          _showInvalidLocationDialog(
-                            "Please select second drop location from suggestions or map",
-                          );
-                          return;
-                        }
-                      }
-
-                      FocusManager.instance.primaryFocus?.unfocus();
-
-                      Navigator.pop(context, {
-                        "current": currentLocationController.text,
-                        "drop": dropLocationController.text,
-                        "drop2": secondDropController.text,
-                        "pickupLat": pickupLat,
-                        "pickupLng": pickupLng,
-                        "dropLat": dropLat,
-                        "dropLng": dropLng,
-                        "drop2Lat": drop2Lat,
-                        "drop2Lng": drop2Lng,
-                        "distance": distanceText ?? "",
-                        "duration": durationText ?? "",
-                      });
-                    },
-
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          (currentLocationController.text.isNotEmpty &&
-                                  dropLocationController.text.isNotEmpty &&
-                                  (!showSecondDrop ||
-                                      secondDropController.text.isNotEmpty) &&
-                                  distanceText != null &&
-                                  durationText != null)
-                              ? korangeColor
-                              : Colors.grey.shade500,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(22),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
-                    ),
-                    child: CustomText(
-                      text: localizations.done,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      textcolor: kwhiteColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 12),
-            const Divider(),
-            Expanded(
-              child:
-                  predictions.isNotEmpty
-                      ? ListView.builder(
-                        itemCount: predictions.length,
-                        itemBuilder: (context, index) {
-                          var p = predictions[index];
-                          return ListTile(
-                            leading: const Icon(
-                              Icons.location_on,
-                              color: korangeColor,
-                            ),
-                            title: Text(
-                              p.fullText,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text(
+                                      localizations.ok,
+                                      style: GoogleFonts.poppins(
+                                        color: korangeColor,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            onTap: () => _onSuggestionTap(p),
-                          );
-                        },
-                      )
-                      : Center(
-                        child: Text(localizations.startTypingSuggestions),
+                        );
+                        return;
+                      }
+
+                      _openMap(isPickup: isPickup, isSecondDrop: isSecondDrop);
+                    },
+                    child: Container(
+                      height: 40,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 12,
                       ),
-            ),
-          ],
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: korangeColor),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            color: korangeColor,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 3),
+                          CustomText(
+                            text:
+                                showSecondDrop
+                                    ? (currentLocationController
+                                                .text
+                                                .isNotEmpty &&
+                                            dropLocationController
+                                                .text
+                                                .isNotEmpty &&
+                                            secondDropController.text.isEmpty
+                                        ? localizations.selectDrop2OnMap
+                                        : localizations.selectOnMap)
+                                    : localizations.selectOnMap,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            textcolor: korangeColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(
+                    height: 40,
+                    width: 100,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (distanceText == null || durationText == null) {
+                          _showInvalidLocationDialog(
+                            "Unable to calculate distance and duration. Please select the pickup and drop locations again.",
+                          );
+                          return;
+                        }
+                        if (currentLocationController.text.isEmpty) {
+                          _showInvalidLocationDialog(
+                            "Please select pickup location",
+                          );
+                          return;
+                        }
+
+                        if (pickupLat.isEmpty || pickupLng.isEmpty) {
+                          _showInvalidLocationDialog(
+                            "Please select pickup location from suggestions or map",
+                          );
+                          return;
+                        }
+
+                        if (dropLocationController.text.isEmpty) {
+                          _showInvalidLocationDialog(
+                            "Please select drop location",
+                          );
+                          return;
+                        }
+
+                        if (dropLat.isEmpty || dropLng.isEmpty) {
+                          _showInvalidLocationDialog(
+                            "Please select drop location from suggestions or map",
+                          );
+                          return;
+                        }
+
+                        if (showSecondDrop) {
+                          if (secondDropController.text.isEmpty) {
+                            _showInvalidLocationDialog(
+                              "Please select second drop location",
+                            );
+                            return;
+                          }
+
+                          if (drop2Lat.isEmpty || drop2Lng.isEmpty) {
+                            _showInvalidLocationDialog(
+                              "Please select second drop location from suggestions or map",
+                            );
+                            return;
+                          }
+                        }
+
+                        FocusManager.instance.primaryFocus?.unfocus();
+
+                        Navigator.pop(context, {
+                          "current": currentLocationController.text,
+                          "drop": dropLocationController.text,
+                          "drop2": secondDropController.text,
+                          "pickupLat": pickupLat,
+                          "pickupLng": pickupLng,
+                          "dropLat": dropLat,
+                          "dropLng": dropLng,
+                          "drop2Lat": drop2Lat,
+                          "drop2Lng": drop2Lng,
+                          "distance": distanceText ?? "",
+                          "duration": durationText ?? "",
+                        });
+                      },
+
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            (currentLocationController.text.isNotEmpty &&
+                                    dropLocationController.text.isNotEmpty &&
+                                    (!showSecondDrop ||
+                                        secondDropController.text.isNotEmpty) &&
+                                    distanceText != null &&
+                                    durationText != null)
+                                ? korangeColor
+                                : Colors.grey.shade500,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(22),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                      ),
+                      child: CustomText(
+                        text: localizations.done,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        textcolor: kwhiteColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 12),
+              const Divider(),
+              Expanded(
+                child:
+                    predictions.isNotEmpty
+                        ? ListView.builder(
+                          itemCount: predictions.length,
+                          itemBuilder: (context, index) {
+                            var p = predictions[index];
+                            return ListTile(
+                              leading: const Icon(
+                                Icons.location_on,
+                                color: korangeColor,
+                              ),
+                              title: Text(
+                                p.fullText,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              onTap: () => _onSuggestionTap(p),
+                            );
+                          },
+                        )
+                        : Center(
+                          child: Text(localizations.startTypingSuggestions),
+                        ),
+              ),
+            ],
+          ),
         ),
       ),
     );

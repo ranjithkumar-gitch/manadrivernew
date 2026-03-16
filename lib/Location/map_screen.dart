@@ -218,255 +218,262 @@ class _MapPickScreenState extends State<MapPickScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-          pickedLocation == null
-              ? const Center(child: CircularProgressIndicator())
-              : Stack(
-                children: [
-                  GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: pickedLocation!,
-                      zoom: 15,
-                    ),
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: false,
-                    zoomControlsEnabled: false,
-                    onMapCreated: (controller) {
-                      mapController = controller;
-                      isMapReady = true;
-                      mapController.animateCamera(
-                        CameraUpdate.newLatLngZoom(pickedLocation!, 15),
-                      );
-                    },
-                    onCameraMove: (position) {
-                      pickedLocation = position.target;
-                      latLngController.text =
-                          "${pickedLocation!.latitude}, ${pickedLocation!.longitude}";
-                    },
-                    onCameraIdle: () {
-                      if (pickedLocation != null) {
-                        _getAddressFromLatLng(pickedLocation!);
-                      }
-                    },
-                  ),
-
-                  Positioned(
-                    top: 70,
-                    left: 12,
-                    right: 12,
-                    child: Card(
-                      elevation: 4,
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
+      body: SafeArea(
+        child:
+            pickedLocation == null
+                ? const Center(child: CircularProgressIndicator())
+                : Stack(
+                  children: [
+                    GoogleMap(
+                      initialCameraPosition: CameraPosition(
+                        target: pickedLocation!,
+                        zoom: 15,
                       ),
-                      child: TextField(
-                        controller: searchController,
-                        decoration: InputDecoration(
-                          hintText: "Search location here",
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 14,
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              isSearched ? Icons.clear : Icons.search,
-                              color: isSearched ? Colors.red : korangeColor,
-                            ),
-                            onPressed: () {
-                              if (isSearched) {
-                                searchController.clear();
-                                setState(() {
-                                  isSearched = false;
-                                });
-                                _getCurrentLocation();
-                              } else {
-                                _searchLocation();
-                                setState(() {
-                                  isSearched = true;
-                                });
-                              }
-                            },
-                          ),
-                        ),
-                        onSubmitted: (val) {
-                          _searchLocation();
-                          setState(() {
-                            isSearched = true;
-                          });
-                        },
-                      ),
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: false,
+                      zoomControlsEnabled: false,
+                      onMapCreated: (controller) {
+                        mapController = controller;
+                        isMapReady = true;
+                        mapController.animateCamera(
+                          CameraUpdate.newLatLngZoom(pickedLocation!, 15),
+                        );
+                      },
+                      onCameraMove: (position) {
+                        pickedLocation = position.target;
+                        latLngController.text =
+                            "${pickedLocation!.latitude}, ${pickedLocation!.longitude}";
+                      },
+                      onCameraIdle: () {
+                        if (pickedLocation != null) {
+                          _getAddressFromLatLng(pickedLocation!);
+                        }
+                      },
                     ),
-                  ),
 
-                  Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 22,
-                          height: 22,
-                          decoration: BoxDecoration(
-                            color: widget.isPickup ? Colors.green : Colors.red,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.circle,
-                              color: Colors.white,
-                              size: 8,
-                            ),
-                          ),
-                        ),
-                        Container(width: 2.5, height: 12, color: Colors.black),
-                        Container(
-                          width: 15,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade400,
-                            borderRadius: BorderRadius.circular(19),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Buttons
-                  Positioned(
-                    left: 14,
-                    right: 14,
-                    bottom: 290,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          elevation: 4,
-                          child: CircleAvatar(
-                            backgroundColor: korangeColor,
-                            child: IconButton(
-                              icon: const Icon(
-                                Icons.arrow_back,
-                                color: Colors.white,
-                              ),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                          ),
-                        ),
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          elevation: 4,
-                          child: CircleAvatar(
-                            backgroundColor: korangeColor,
-                            child: IconButton(
-                              icon: const Icon(
-                                Icons.my_location,
-                                color: Colors.white,
-                              ),
-                              onPressed: _getCurrentLocation,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Bottom sheet
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: const BoxDecoration(
+                    Positioned(
+                      top: 70,
+                      left: 12,
+                      right: 12,
+                      child: Card(
+                        elevation: 4,
                         color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(20),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 8,
-                            offset: Offset(0, -2),
+                        child: TextField(
+                          controller: searchController,
+                          decoration: InputDecoration(
+                            hintText: "Search location here",
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 14,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                isSearched ? Icons.clear : Icons.search,
+                                color: isSearched ? Colors.red : korangeColor,
+                              ),
+                              onPressed: () {
+                                if (isSearched) {
+                                  searchController.clear();
+                                  setState(() {
+                                    isSearched = false;
+                                  });
+                                  _getCurrentLocation();
+                                } else {
+                                  _searchLocation();
+                                  setState(() {
+                                    isSearched = true;
+                                  });
+                                }
+                              },
+                            ),
                           ),
-                        ],
+                          onSubmitted: (val) {
+                            _searchLocation();
+                            setState(() {
+                              isSearched = true;
+                            });
+                          },
+                        ),
                       ),
+                    ),
+
+                    Center(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomText(
-                            text:
-                                widget.isPickup
-                                    ? 'Select Pickup Location'
-                                    : widget.isSecondDrop
-                                    ? 'Select Drop 2 Location'
-                                    : 'Select Drop Location',
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            textcolor: Colors.black,
-                          ),
-
-                          const SizedBox(height: 16),
-                          TextField(
-                            readOnly: true,
-                            decoration: InputDecoration(
-                              labelText: "Location Name",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                          Container(
+                            width: 22,
+                            height: 22,
+                            decoration: BoxDecoration(
+                              color:
+                                  widget.isPickup ? Colors.green : Colors.red,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 2),
                             ),
-                            controller: locationNameController,
-                          ),
-                          const SizedBox(height: 16),
-                          TextField(
-                            readOnly: true,
-                            decoration: InputDecoration(
-                              labelText: "Latitude, Longitude",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            controller: latLngController,
-                          ),
-                          const SizedBox(height: 15),
-                          SizedBox(
-                            height: 50,
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: _onConfirm,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: korangeColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(22),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 5,
-                                ),
-                              ),
-                              child: CustomText(
-                                text:
-                                    widget.isPickup
-                                        ? "Select Pickup"
-                                        : widget.isSecondDrop
-                                        ? "Select Drop 2"
-                                        : "Select Drop",
-                                fontSize: 16,
-                                textcolor: Colors.white,
-                                fontWeight: FontWeight.w600,
+                            child: const Center(
+                              child: Icon(
+                                Icons.circle,
+                                color: Colors.white,
+                                size: 8,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 15),
+                          Container(
+                            width: 2.5,
+                            height: 12,
+                            color: Colors.black,
+                          ),
+                          Container(
+                            width: 15,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade400,
+                              borderRadius: BorderRadius.circular(19),
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                ],
-              ),
+                    // Buttons
+                    Positioned(
+                      left: 14,
+                      right: 14,
+                      bottom: 290,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            elevation: 4,
+                            child: CircleAvatar(
+                              backgroundColor: korangeColor,
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                            ),
+                          ),
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            elevation: 4,
+                            child: CircleAvatar(
+                              backgroundColor: korangeColor,
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.my_location,
+                                  color: Colors.white,
+                                ),
+                                onPressed: _getCurrentLocation,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Bottom sheet
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(20),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 8,
+                              offset: Offset(0, -2),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomText(
+                              text:
+                                  widget.isPickup
+                                      ? 'Select Pickup Location'
+                                      : widget.isSecondDrop
+                                      ? 'Select Drop 2 Location'
+                                      : 'Select Drop Location',
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              textcolor: Colors.black,
+                            ),
+
+                            const SizedBox(height: 16),
+                            TextField(
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                labelText: "Location Name",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              controller: locationNameController,
+                            ),
+                            const SizedBox(height: 16),
+                            TextField(
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                labelText: "Latitude, Longitude",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              controller: latLngController,
+                            ),
+                            const SizedBox(height: 15),
+                            SizedBox(
+                              height: 50,
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: _onConfirm,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: korangeColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 5,
+                                  ),
+                                ),
+                                child: CustomText(
+                                  text:
+                                      widget.isPickup
+                                          ? "Select Pickup"
+                                          : widget.isSecondDrop
+                                          ? "Select Drop 2"
+                                          : "Select Drop",
+                                  fontSize: 16,
+                                  textcolor: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+      ),
     );
   }
 }

@@ -4,14 +4,10 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
-
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -56,4 +52,15 @@ class DefaultFirebaseOptions {
     storageBucket: 'nyzoride-69ab6.firebasestorage.app',
     iosBundleId: 'com.naresh.nyzo',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyD0JuH1GKxzNxuS0OmQn3PWsbtN9GUsV6g',
+    appId: '1:759100098277:web:1f28bdc7943778cfc2360c',
+    messagingSenderId: '759100098277',
+    projectId: 'nyzoride-69ab6',
+    authDomain: 'nyzoride-69ab6.firebaseapp.com',
+    storageBucket: 'nyzoride-69ab6.firebasestorage.app',
+    measurementId: 'G-MXG58RQEKP',
+  );
+
 }

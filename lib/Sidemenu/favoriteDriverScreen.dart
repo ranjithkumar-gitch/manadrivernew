@@ -52,14 +52,16 @@ class FavouriteDriversScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-        child: Center(
-          child: CustomText(
-            text: localizations.fav_dummy_text,
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            textcolor: kseegreyColor,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+          child: Center(
+            child: CustomText(
+              text: localizations.fav_dummy_text,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              textcolor: kseegreyColor,
+            ),
           ),
         ),
       ),

@@ -189,12 +189,14 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Center(
-        child: CustomText(
-          text: "",
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          textcolor: Colors.white,
+      body: SafeArea(
+        child: Center(
+          child: CustomText(
+            text: "",
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            textcolor: Colors.white,
+          ),
         ),
       ),
     );

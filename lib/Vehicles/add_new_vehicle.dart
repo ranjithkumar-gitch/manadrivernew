@@ -416,404 +416,409 @@ class _AddNewVehicleState extends State<AddNewVehicle> {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-                CustomText(
-                  text: localizations.addOnceUseEveryTime,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  textcolor: KblackColor,
-                ),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+                  CustomText(
+                    text: localizations.addOnceUseEveryTime,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    textcolor: KblackColor,
+                  ),
 
-                const SizedBox(height: 15),
-                CustomText(
-                  text: localizations.uploadVehicleImages,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  textcolor: KblackColor,
-                ),
+                  const SizedBox(height: 15),
+                  CustomText(
+                    text: localizations.uploadVehicleImages,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    textcolor: KblackColor,
+                  ),
 
-                const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(
-                    2,
-                    (index) => Padding(
-                      padding: const EdgeInsets.only(left: 7, right: 12),
-                      child: GestureDetector(
-                        onTap: () => _pickImage(index),
-                        child: DottedBorder(
-                          options: RoundedRectDottedBorderOptions(
-                            radius: const Radius.circular(10),
-                            dashPattern: [5, 5],
-                            color: kgreyColor,
-                            strokeWidth: 2,
-                            padding: const EdgeInsets.all(0),
-                          ),
-                          child: Container(
-                            width: 140,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: KdeviderColor,
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: List.generate(
+                      2,
+                      (index) => Padding(
+                        padding: const EdgeInsets.only(left: 7, right: 12),
+                        child: GestureDetector(
+                          onTap: () => _pickImage(index),
+                          child: DottedBorder(
+                            options: RoundedRectDottedBorderOptions(
+                              radius: const Radius.circular(10),
+                              dashPattern: [5, 5],
+                              color: kgreyColor,
+                              strokeWidth: 2,
+                              padding: const EdgeInsets.all(0),
                             ),
-                            child:
-                                images[index] == null
-                                    ? const Icon(Icons.add, color: kgreyColor)
-                                    : Stack(
-                                      clipBehavior: Clip.none,
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            10,
+                            child: Container(
+                              width: 140,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: KdeviderColor,
+                              ),
+                              child:
+                                  images[index] == null
+                                      ? const Icon(Icons.add, color: kgreyColor)
+                                      : Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                            child: Image.file(
+                                              images[index]!,
+                                              width: 140,
+                                              height: 100,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
-                                          child: Image.file(
-                                            images[index]!,
-                                            width: 140,
-                                            height: 100,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: -5,
-                                          right: 0,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                images.removeAt(index);
-                                                images.add(null);
-                                              });
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: korangeColor,
-                                                shape: BoxShape.circle,
-                                              ),
-                                              padding: const EdgeInsets.all(3),
-                                              child: const Icon(
-                                                Icons.delete,
-                                                size: 14,
-                                                color: Colors.white,
+                                          Positioned(
+                                            top: -5,
+                                            right: 0,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  images.removeAt(index);
+                                                  images.add(null);
+                                                });
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: korangeColor,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                padding: const EdgeInsets.all(
+                                                  3,
+                                                ),
+                                                child: const Icon(
+                                                  Icons.delete,
+                                                  size: 14,
+                                                  color: Colors.white,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
+                                        ],
+                                      ),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
 
-                const SizedBox(height: 25),
-                buildDropdownField(
-                  label: localizations.vehicleBrand,
-                  hint: localizations.selectBrand,
-                  items:
-                      (() {
-                        final List<String> brands =
-                            vehicleData
-                                .map((e) => e['brand'] as String)
-                                .toSet()
-                                .toList()
-                              ..sort(
-                                (a, b) =>
-                                    a.toLowerCase().compareTo(b.toLowerCase()),
-                              );
-
-                        if (!brands.contains("Others")) {
-                          brands.add("Others");
-                        }
-                        return brands;
-                      })(),
-                  value: selectedBrand,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedBrand = value;
-                      selectedModel = null;
-                      selectedCategory = null;
-                      if (value != "Others") {
-                        availableModels =
-                            vehicleData
-                                .where((e) => e['brand'] == value)
-                                .map((e) => e['model'] as String)
-                                .toList();
-                      } else {
-                        availableModels = [];
-                      }
-                    });
-                  },
-                ),
-                if (selectedBrand != null && selectedBrand != "Others") ...[
+                  const SizedBox(height: 25),
                   buildDropdownField(
-                    label: localizations.vehicleModel,
-                    hint: localizations.selectModel,
-                    items: availableModels,
-                    value: selectedModel,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedModel = value;
-
-                        selectedCategory =
-                            vehicleData
-                                .firstWhere(
-                                  (e) =>
-                                      e['brand'] == selectedBrand &&
-                                      e['model'] == selectedModel,
-                                )['category']
-                                .toString();
-                      });
-                    },
-                  ),
-
-                  TextFormField(
-                    readOnly: true,
-                    controller: TextEditingController(
-                      text: selectedCategory ?? "",
-                    ),
-
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: korangeColor,
-                    ),
-                    decoration: InputDecoration(
-                      labelText: localizations.vehicleCategory,
-                      hintText: localizations.vehicleCategory,
-                      hintStyle: TextStyle(
-                        color: kseegreyColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      labelStyle: TextStyle(
-                        color: kgreyColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: kbordergreyColor),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: kbordergreyColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: kbordergreyColor,
-                          width: 1.5,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                ],
-
-                if (selectedBrand == "Others") ...[
-                  TextFormField(
-                    controller: customModelController,
-                    keyboardType: TextInputType.text,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: korangeColor,
-                    ),
-                    decoration: InputDecoration(
-                      labelText: localizations.enterVehicleModel,
-                      hintText: localizations.enterVehicleModel,
-                      hintStyle: TextStyle(
-                        color: kseegreyColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      labelStyle: TextStyle(
-                        color: kgreyColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: kbordergreyColor),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: kbordergreyColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: kbordergreyColor,
-                          width: 1.5,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  DropdownButtonFormField<String>(
-                    icon: Icon(Icons.keyboard_arrow_down, color: KblackColor),
-                    decoration: InputDecoration(
-                      labelText: localizations.vehicleCategory,
-                      labelStyle: TextStyle(
-                        color: kgreyColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: kbordergreyColor),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: kbordergreyColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: kbordergreyColor,
-                          width: 1.5,
-                        ),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    hint: CustomText(
-                      text: localizations.selectVehicleCategory,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      textcolor: kseegreyColor,
-                    ),
-                    value: selectedCustomCategory,
-                    isExpanded: true,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedCustomCategory = value;
-                      });
-                    },
+                    label: localizations.vehicleBrand,
+                    hint: localizations.selectBrand,
                     items:
-                        ["Light", "Premium", "Commercial"]
-                            .map(
-                              (item) => DropdownMenuItem(
-                                value: item,
-                                child: CustomText(
-                                  text: item,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  textcolor: korangeColor,
-                                ),
-                              ),
-                            )
-                            .toList(),
+                        (() {
+                          final List<String> brands =
+                              vehicleData
+                                  .map((e) => e['brand'] as String)
+                                  .toSet()
+                                  .toList()
+                                ..sort(
+                                  (a, b) => a.toLowerCase().compareTo(
+                                    b.toLowerCase(),
+                                  ),
+                                );
+
+                          if (!brands.contains("Others")) {
+                            brands.add("Others");
+                          }
+                          return brands;
+                        })(),
+                    value: selectedBrand,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedBrand = value;
+                        selectedModel = null;
+                        selectedCategory = null;
+                        if (value != "Others") {
+                          availableModels =
+                              vehicleData
+                                  .where((e) => e['brand'] == value)
+                                  .map((e) => e['model'] as String)
+                                  .toList();
+                        } else {
+                          availableModels = [];
+                        }
+                      });
+                    },
                   ),
-                  SizedBox(height: 15),
-                ],
+                  if (selectedBrand != null && selectedBrand != "Others") ...[
+                    buildDropdownField(
+                      label: localizations.vehicleModel,
+                      hint: localizations.selectModel,
+                      items: availableModels,
+                      value: selectedModel,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedModel = value;
 
-                buildTextField(
-                  localizations.enterVehicleNumber,
-                  localizations.enterVehicleNumber,
-                  vehicleNumberController,
-                  textCapitalization: TextCapitalization.characters,
-                ),
+                          selectedCategory =
+                              vehicleData
+                                  .firstWhere(
+                                    (e) =>
+                                        e['brand'] == selectedBrand &&
+                                        e['model'] == selectedModel,
+                                  )['category']
+                                  .toString();
+                        });
+                      },
+                    ),
 
-                buildDropdownFields(
-                  localizations.fuelType,
-                  localizations.selectFuelType,
-                  [
-                    localizations.petrol,
-                    localizations.diesel,
-                    localizations.electric,
-                    localizations.cng,
-                  ],
-                  selectedFuelType,
-                  (value) {
-                    setState(() {
-                      selectedFuelType = value;
-                    });
-                  },
-                ),
+                    TextFormField(
+                      readOnly: true,
+                      controller: TextEditingController(
+                        text: selectedCategory ?? "",
+                      ),
 
-                buildDropdownFields(
-                  localizations.transmission,
-                  localizations.selectTransmission,
-                  [
-                    localizations.manual,
-                    localizations.automatic,
-                    localizations.semiAutomatic,
-                  ],
-                  selectedTransmission,
-                  (value) {
-                    setState(() {
-                      selectedTransmission = value;
-                    });
-                  },
-                ),
-
-                buildDropdownFields(
-                  localizations.acAvailable,
-                  localizations.isAcAvailable,
-                  [localizations.yes, localizations.no],
-                  selectedAc,
-                  (value) {
-                    setState(() {
-                      selectedAc = value;
-                    });
-                  },
-                ),
-
-                const SizedBox(height: 35),
-                Center(
-                  child: SizedBox(
-                    width: 220,
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: korangeColor,
-                        disabledBackgroundColor: korangeColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(40),
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: korangeColor,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: localizations.vehicleCategory,
+                        hintText: localizations.vehicleCategory,
+                        hintStyle: TextStyle(
+                          color: kseegreyColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
                         ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 5,
+                        labelStyle: TextStyle(
+                          color: kgreyColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: kbordergreyColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: kbordergreyColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                            color: kbordergreyColor,
+                            width: 1.5,
+                          ),
                         ),
                       ),
-                      onPressed: _isLoading ? null : _addVehicle,
+                    ),
+                    SizedBox(height: 15),
+                  ],
 
-                      child:
-                          _isLoading
-                              ? SizedBox(
-                                width: 22,
-                                height: 22,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2.5,
-                                  color: Colors.white,
+                  if (selectedBrand == "Others") ...[
+                    TextFormField(
+                      controller: customModelController,
+                      keyboardType: TextInputType.text,
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: korangeColor,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: localizations.enterVehicleModel,
+                        hintText: localizations.enterVehicleModel,
+                        hintStyle: TextStyle(
+                          color: kseegreyColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        labelStyle: TextStyle(
+                          color: kgreyColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: kbordergreyColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: kbordergreyColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                            color: kbordergreyColor,
+                            width: 1.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    DropdownButtonFormField<String>(
+                      icon: Icon(Icons.keyboard_arrow_down, color: KblackColor),
+                      decoration: InputDecoration(
+                        labelText: localizations.vehicleCategory,
+                        labelStyle: TextStyle(
+                          color: kgreyColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: kbordergreyColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: kbordergreyColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                            color: kbordergreyColor,
+                            width: 1.5,
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      hint: CustomText(
+                        text: localizations.selectVehicleCategory,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        textcolor: kseegreyColor,
+                      ),
+                      value: selectedCustomCategory,
+                      isExpanded: true,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedCustomCategory = value;
+                        });
+                      },
+                      items:
+                          ["Light", "Premium", "Commercial"]
+                              .map(
+                                (item) => DropdownMenuItem(
+                                  value: item,
+                                  child: CustomText(
+                                    text: item,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    textcolor: korangeColor,
+                                  ),
                                 ),
                               )
-                              : CustomText(
-                                text: localizations.addVehicle,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                textcolor: kwhiteColor,
-                              ),
+                              .toList(),
+                    ),
+                    SizedBox(height: 15),
+                  ],
+
+                  buildTextField(
+                    localizations.enterVehicleNumber,
+                    localizations.enterVehicleNumber,
+                    vehicleNumberController,
+                    textCapitalization: TextCapitalization.characters,
+                  ),
+
+                  buildDropdownFields(
+                    localizations.fuelType,
+                    localizations.selectFuelType,
+                    [
+                      localizations.petrol,
+                      localizations.diesel,
+                      localizations.electric,
+                      localizations.cng,
+                    ],
+                    selectedFuelType,
+                    (value) {
+                      setState(() {
+                        selectedFuelType = value;
+                      });
+                    },
+                  ),
+
+                  buildDropdownFields(
+                    localizations.transmission,
+                    localizations.selectTransmission,
+                    [
+                      localizations.manual,
+                      localizations.automatic,
+                      localizations.semiAutomatic,
+                    ],
+                    selectedTransmission,
+                    (value) {
+                      setState(() {
+                        selectedTransmission = value;
+                      });
+                    },
+                  ),
+
+                  buildDropdownFields(
+                    localizations.acAvailable,
+                    localizations.isAcAvailable,
+                    [localizations.yes, localizations.no],
+                    selectedAc,
+                    (value) {
+                      setState(() {
+                        selectedAc = value;
+                      });
+                    },
+                  ),
+
+                  const SizedBox(height: 35),
+                  Center(
+                    child: SizedBox(
+                      width: 220,
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: korangeColor,
+                          disabledBackgroundColor: korangeColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
+                        ),
+                        onPressed: _isLoading ? null : _addVehicle,
+
+                        child:
+                            _isLoading
+                                ? SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.5,
+                                    color: Colors.white,
+                                  ),
+                                )
+                                : CustomText(
+                                  text: localizations.addVehicle,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  textcolor: kwhiteColor,
+                                ),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-              ],
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
-          ),
-          if (_isLoading)
-            Center(child: CircularProgressIndicator(color: korangeColor)),
-        ],
+            if (_isLoading)
+              Center(child: CircularProgressIndicator(color: korangeColor)),
+          ],
+        ),
       ),
     );
   }

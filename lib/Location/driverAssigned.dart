@@ -65,472 +65,478 @@ class DriverAssignedScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Row(
-            children: [
-              const CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage("images/user.png"),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const CustomText(
-                      text: "Ranjth Kumar",
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      textcolor: korangeColor,
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Image.asset("images/rating.png"),
-                        const SizedBox(width: 4),
-                        const Text("4.8"),
-                        const SizedBox(width: 16),
-                        Image.asset("images/rides.png"),
-
-                        const SizedBox(width: 4),
-                        const Text("Rides"),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Container(height: 50, width: 1, color: Colors.grey.shade300),
-              const SizedBox(width: 12),
-              Row(
-                children: [
-                  Image.asset("images/chat.png"),
-                  const SizedBox(width: 5),
-
-                  Image.asset("images/call.png"),
-                ],
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-          const Divider(thickness: 3, color: KlightgreyColor),
-
-          Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: Row(
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Row(
               children: [
-                Image.asset("images/car2.png", height: 24, width: 24),
+                const CircleAvatar(
+                  radius: 50,
+                  backgroundImage: AssetImage("images/user.png"),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomText(
-                        text: "White Maruti Suzuki Swift",
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        textcolor: KblackColor,
+                      const CustomText(
+                        text: "Ranjth Kumar",
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        textcolor: korangeColor,
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Row(
                         children: [
+                          Image.asset("images/rating.png"),
+                          const SizedBox(width: 4),
+                          const Text("4.8"),
+                          const SizedBox(width: 16),
+                          Image.asset("images/rides.png"),
+
+                          const SizedBox(width: 4),
+                          const Text("Rides"),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Container(height: 50, width: 1, color: Colors.grey.shade300),
+                const SizedBox(width: 12),
+                Row(
+                  children: [
+                    Image.asset("images/chat.png"),
+                    const SizedBox(width: 5),
+
+                    Image.asset("images/call.png"),
+                  ],
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+            const Divider(thickness: 3, color: KlightgreyColor),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: Row(
+                children: [
+                  Image.asset("images/car2.png", height: 24, width: 24),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomText(
+                          text: "White Maruti Suzuki Swift",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          textcolor: KblackColor,
+                        ),
+                        SizedBox(height: 4),
+                        Row(
+                          children: [
+                            CustomText(
+                              text: "TG 05 MN 3940",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              textcolor: kseegreyColor,
+                            ),
+                            const SizedBox(width: 12),
+                            Container(
+                              height: 20,
+                              width: 1,
+                              color: kseegreyColor,
+                            ),
+                            SizedBox(width: 12),
+                            CustomText(
+                              text: "Hatchback",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              textcolor: kseegreyColor,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Image.asset("images/chevronRight.png"),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 12),
+            const Divider(thickness: 3, color: KlightgreyColor),
+
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  children: [
+                    Image.asset("images/review.png", height: 50, width: 50),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
                           CustomText(
-                            text: "TG 05 MN 3940",
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            textcolor: kseegreyColor,
+                            text: "Write a review?",
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            textcolor: korangeColor,
                           ),
-                          const SizedBox(width: 12),
-                          Container(height: 20, width: 1, color: kseegreyColor),
-                          SizedBox(width: 12),
                           CustomText(
-                            text: "Hatchback",
+                            text: "How was your experience?",
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             textcolor: kseegreyColor,
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-                Image.asset("images/chevronRight.png"),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 12),
-          const Divider(thickness: 3, color: KlightgreyColor),
-
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                children: [
-                  Image.asset("images/review.png", height: 50, width: 50),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        CustomText(
-                          text: "Write a review?",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          textcolor: korangeColor,
-                        ),
-                        CustomText(
-                          text: "How was your experience?",
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          textcolor: kseegreyColor,
-                        ),
-                      ],
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _showRatingDialog(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: korangeColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(46),
+                    ElevatedButton(
+                      onPressed: () => _showRatingDialog(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: korangeColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(46),
+                        ),
+                      ),
+                      child: const CustomText(
+                        text: "Give a rate",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        textcolor: kwhiteColor,
                       ),
                     ),
-                    child: const CustomText(
-                      text: "Give a rate",
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      textcolor: kwhiteColor,
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 6),
+            const Divider(thickness: 3, color: KlightgreyColor),
+
+            const CustomText(
+              text: "Address Details",
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              textcolor: korangeColor,
+            ),
+
+            const SizedBox(height: 12),
+
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      _buildDot(Colors.red),
+                      const SizedBox(width: 8),
+                      const CustomText(
+                        text: "Current Location",
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        textcolor: kseegreyColor,
+                      ),
+                    ],
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: TextField(
+                      controller: currentLocationController,
+                      decoration: const InputDecoration(
+                        hintText:
+                            "Sy.No.98, Main Rd, Near JLN House \nSerilingampally, Kondapur, 500084",
+                        hintStyle: TextStyle(color: KblackColor),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+
+                  Row(
+                    children: [
+                      _buildDot(Colors.green),
+                      const SizedBox(width: 8),
+                      const CustomText(
+                        text: "Drop Location",
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        textcolor: kseegreyColor,
+                      ),
+                    ],
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: TextField(
+                      controller: dropLocationController,
+                      decoration: const InputDecoration(
+                        hintText:
+                            "Capital Park , Jain Sadguru’s Building, Madhapur 500081",
+                        hintStyle: TextStyle(color: KblackColor),
+                        border: InputBorder.none,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
+            const Divider(thickness: 3, color: KlightgreyColor),
 
-          const SizedBox(height: 6),
-          const Divider(thickness: 3, color: KlightgreyColor),
+            const SizedBox(height: 16),
+            const CustomText(
+              text: "Slot Details",
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              textcolor: korangeColor,
+            ),
+            const SizedBox(height: 12),
 
-          const CustomText(
-            text: "Address Details",
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            textcolor: korangeColor,
-          ),
-
-          const SizedBox(height: 12),
-
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Column(
               children: [
                 Row(
                   children: [
-                    _buildDot(Colors.red),
+                    Image.asset(
+                      "images/calender_drvr.png",
+                      height: 20,
+                      width: 20,
+                    ),
                     const SizedBox(width: 8),
                     const CustomText(
-                      text: "Current Location",
-                      fontSize: 12,
+                      text: "26 July 2025",
+                      fontSize: 14,
                       fontWeight: FontWeight.w400,
-                      textcolor: kseegreyColor,
+                      textcolor: KblackColor,
                     ),
                   ],
                 ),
-
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: TextField(
-                    controller: currentLocationController,
-                    decoration: const InputDecoration(
-                      hintText:
-                          "Sy.No.98, Main Rd, Near JLN House \nSerilingampally, Kondapur, 500084",
-                      hintStyle: TextStyle(color: KblackColor),
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-
+                const SizedBox(height: 10),
                 Row(
                   children: [
-                    _buildDot(Colors.green),
+                    Image.asset("images/time.png", height: 20, width: 20),
                     const SizedBox(width: 8),
                     const CustomText(
-                      text: "Drop Location",
-                      fontSize: 12,
+                      text: "03:30 PM",
+                      fontSize: 14,
                       fontWeight: FontWeight.w400,
-                      textcolor: kseegreyColor,
+                      textcolor: KblackColor,
                     ),
                   ],
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: TextField(
-                    controller: dropLocationController,
-                    decoration: const InputDecoration(
-                      hintText:
-                          "Capital Park , Jain Sadguru’s Building, Madhapur 500081",
-                      hintStyle: TextStyle(color: KblackColor),
-                      border: InputBorder.none,
-                    ),
-                  ),
                 ),
               ],
             ),
-          ),
-          const Divider(thickness: 3, color: KlightgreyColor),
+            const SizedBox(height: 16),
+            const Divider(thickness: 3, color: KlightgreyColor),
 
-          const SizedBox(height: 16),
-          const CustomText(
-            text: "Slot Details",
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            textcolor: korangeColor,
-          ),
-          const SizedBox(height: 12),
+            const CustomText(
+              text: "Contact Details",
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              textcolor: korangeColor,
+            ),
+            const SizedBox(height: 12),
 
-          Column(
-            children: [
-              Row(
-                children: [
-                  Image.asset(
-                    "images/calender_drvr.png",
-                    height: 20,
-                    width: 20,
-                  ),
-                  const SizedBox(width: 8),
-                  const CustomText(
-                    text: "26 July 2025",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textcolor: KblackColor,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Image.asset("images/time.png", height: 20, width: 20),
-                  const SizedBox(width: 8),
-                  const CustomText(
-                    text: "03:30 PM",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textcolor: KblackColor,
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          const Divider(thickness: 3, color: KlightgreyColor),
-
-          const CustomText(
-            text: "Contact Details",
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            textcolor: korangeColor,
-          ),
-          const SizedBox(height: 12),
-
-          Row(
-            children: [
-              Image.asset("images/person.png", height: 20, width: 20),
-              const SizedBox(width: 8),
-              const CustomText(
-                text: "Ranjith Kumar",
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                textcolor: KblackColor,
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-
-          Row(
-            children: [
-              Image.asset("images/call_drvr.png", height: 20, width: 20),
-              const SizedBox(width: 8),
-              const CustomText(
-                text: "+91 9876543210",
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                textcolor: KblackColor,
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-
-          Row(
-            children: [
-              Image.asset("images/email_drvr.png", height: 20, width: 20),
-              const SizedBox(width: 8),
-              const CustomText(
-                text: "ranjith@example.com",
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                textcolor: KblackColor,
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          const Divider(thickness: 3, color: KlightgreyColor),
-
-          // Payment Summary
-          const CustomText(
-            text: "Payment Summary",
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            textcolor: korangeColor,
-          ),
-          const SizedBox(height: 12),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              CustomText(
-                text: "Service Price",
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                textcolor: KblackColor,
-              ),
-              CustomText(
-                text: "₹1,799.00",
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                textcolor: KblackColor,
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              CustomText(
-                text: "Add-on’s",
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                textcolor: KblackColor,
-              ),
-              CustomText(
-                text: "₹119.00",
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                textcolor: KblackColor,
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              CustomText(
-                text: "Fee & Taxes",
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                textcolor: KblackColor,
-              ),
-              CustomText(
-                text: "₹100.00",
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                textcolor: KblackColor,
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              CustomText(
-                text: "Wallet Points",
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                textcolor: KblackColor,
-              ),
-              CustomText(
-                text: "₹00.00",
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                textcolor: KblackColor,
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-
-          const DottedLine(dashColor: kseegreyColor),
-          const SizedBox(height: 20),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              CustomText(
-                text: "Total Price",
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                textcolor: korangeColor,
-              ),
-              CustomText(
-                text: "₹2,080.00",
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                textcolor: korangeColor,
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-
-          const DottedLine(dashColor: kseegreyColor),
-          const SizedBox(height: 50),
-
-          Center(
-            child: SizedBox(
-              width: 220,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: korangeColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 5,
-                  ),
-                ),
-                onPressed: () {
-                  showCancelReasonBottomSheet(context);
-                },
-                child: CustomText(
-                  text: "Cancel Ride",
+            Row(
+              children: [
+                Image.asset("images/person.png", height: 20, width: 20),
+                const SizedBox(width: 8),
+                const CustomText(
+                  text: "Ranjith Kumar",
                   fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  textcolor: kwhiteColor,
+                  fontWeight: FontWeight.w400,
+                  textcolor: KblackColor,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            Row(
+              children: [
+                Image.asset("images/call_drvr.png", height: 20, width: 20),
+                const SizedBox(width: 8),
+                const CustomText(
+                  text: "+91 9876543210",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  textcolor: KblackColor,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            Row(
+              children: [
+                Image.asset("images/email_drvr.png", height: 20, width: 20),
+                const SizedBox(width: 8),
+                const CustomText(
+                  text: "ranjith@example.com",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  textcolor: KblackColor,
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            const Divider(thickness: 3, color: KlightgreyColor),
+
+            // Payment Summary
+            const CustomText(
+              text: "Payment Summary",
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              textcolor: korangeColor,
+            ),
+            const SizedBox(height: 12),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                CustomText(
+                  text: "Service Price",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  textcolor: KblackColor,
+                ),
+                CustomText(
+                  text: "₹1,799.00",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  textcolor: KblackColor,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                CustomText(
+                  text: "Add-on’s",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  textcolor: KblackColor,
+                ),
+                CustomText(
+                  text: "₹119.00",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  textcolor: KblackColor,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                CustomText(
+                  text: "Fee & Taxes",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  textcolor: KblackColor,
+                ),
+                CustomText(
+                  text: "₹100.00",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  textcolor: KblackColor,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                CustomText(
+                  text: "Wallet Points",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  textcolor: KblackColor,
+                ),
+                CustomText(
+                  text: "₹00.00",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  textcolor: KblackColor,
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            const DottedLine(dashColor: kseegreyColor),
+            const SizedBox(height: 20),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                CustomText(
+                  text: "Total Price",
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  textcolor: korangeColor,
+                ),
+                CustomText(
+                  text: "₹2,080.00",
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  textcolor: korangeColor,
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            const DottedLine(dashColor: kseegreyColor),
+            const SizedBox(height: 50),
+
+            Center(
+              child: SizedBox(
+                width: 220,
+                height: 50,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: korangeColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                  ),
+                  onPressed: () {
+                    showCancelReasonBottomSheet(context);
+                  },
+                  child: CustomText(
+                    text: "Cancel Ride",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    textcolor: kwhiteColor,
+                  ),
                 ),
               ),
             ),
-          ),
 
-          // CustomButton(
-          //   text: 'Cancel Ride',
-          //   onPressed: () {
-          //     showCancelReasonBottomSheet(context);
-          //   },
-          //   width: 220,
-          //   height: 50,
-          // ),
-          const SizedBox(height: 20),
-        ],
+            // CustomButton(
+            //   text: 'Cancel Ride',
+            //   onPressed: () {
+            //     showCancelReasonBottomSheet(context);
+            //   },
+            //   width: 220,
+            //   height: 50,
+            // ),
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }

@@ -404,246 +404,254 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         ),
       ),
 
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream:
-                  FirebaseFirestore.instance
-                      .collection('privateChats')
-                      .doc(widget.bookingId)
-                      .collection('messages')
-                      .orderBy('timestamp', descending: false)
-                      .snapshots(),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream:
+                    FirebaseFirestore.instance
+                        .collection('privateChats')
+                        .doc(widget.bookingId)
+                        .collection('messages')
+                        .orderBy('timestamp', descending: false)
+                        .snapshots(),
 
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                final messages = snapshot.data!.docs;
-
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (_scrollController.hasClients) {
-                    _scrollController.jumpTo(
-                      _scrollController.position.maxScrollExtent,
-                    );
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
                   }
-                });
 
-                return ListView.builder(
-                  controller: _scrollController,
+                  final messages = snapshot.data!.docs;
 
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (_scrollController.hasClients) {
+                      _scrollController.jumpTo(
+                        _scrollController.position.maxScrollExtent,
+                      );
+                    }
+                  });
 
-                  itemCount: messages.length,
+                  return ListView.builder(
+                    controller: _scrollController,
 
-                  itemBuilder: (context, index) {
-                    final doc = messages[index];
+                    padding: const EdgeInsets.symmetric(vertical: 10),
 
-                    final msg = doc.data() as Map<String, dynamic>;
+                    itemCount: messages.length,
 
-                    final bool isSentByMe = msg['senderId'] == currentUserId;
+                    itemBuilder: (context, index) {
+                      final doc = messages[index];
 
-                    final timestamp = msg['timestamp'] as Timestamp?;
+                      final msg = doc.data() as Map<String, dynamic>;
 
-                    final messageTime =
-                        timestamp != null ? timestamp.toDate() : DateTime.now();
+                      final bool isSentByMe = msg['senderId'] == currentUserId;
 
-                    final status = msg['status'] ?? 'sent';
+                      final timestamp = msg['timestamp'] as Timestamp?;
 
-                    final messageText = msg['message'] ?? '';
+                      final messageTime =
+                          timestamp != null
+                              ? timestamp.toDate()
+                              : DateTime.now();
 
-                    final imageUrl = msg['imageUrl'] ?? '';
+                      final status = msg['status'] ?? 'sent';
 
-                    _markAsSeen(doc);
+                      final messageText = msg['message'] ?? '';
 
-                    return ChatBubble(
-                      message: messageText,
+                      final imageUrl = msg['imageUrl'] ?? '';
 
-                      imageUrl: imageUrl,
+                      _markAsSeen(doc);
 
-                      isSentByMe: isSentByMe,
+                      return ChatBubble(
+                        message: messageText,
 
-                      timestamp: messageTime,
+                        imageUrl: imageUrl,
 
-                      isDelivered: status == 'delivered' || status == 'seen',
+                        isSentByMe: isSentByMe,
 
-                      isRead: status == 'seen',
-                    );
-                  },
-                );
-              },
+                        timestamp: messageTime,
+
+                        isDelivered: status == 'delivered' || status == 'seen',
+
+                        isRead: status == 'seen',
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
 
-          if (selectedImage != null)
-            Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              width: 120,
-              height: 120,
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.file(
-                      selectedImage!,
-                      width: 120,
-                      height: 120,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-
-                  if (isImageUploading)
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black26,
-                        borderRadius: BorderRadius.circular(10),
+            if (selectedImage != null)
+              Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                width: 120,
+                height: 120,
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.file(
+                        selectedImage!,
+                        width: 120,
+                        height: 120,
+                        fit: BoxFit.cover,
                       ),
-                      child: const Center(
-                        child: CircularProgressIndicator(
-                          color: korangeColor,
-                          strokeWidth: 3,
+                    ),
+
+                    if (isImageUploading)
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black26,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: korangeColor,
+                            strokeWidth: 3,
+                          ),
+                        ),
+                      ),
+                    Positioned(
+                      top: 4,
+                      right: 4,
+                      child: GestureDetector(
+                        onTap: () => setState(() => selectedImage = null),
+                        child: const CircleAvatar(
+                          radius: 12,
+                          backgroundColor: korangeColor,
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.white,
+                            size: 14,
+                          ),
                         ),
                       ),
                     ),
-                  Positioned(
-                    top: 4,
-                    right: 4,
-                    child: GestureDetector(
-                      onTap: () => setState(() => selectedImage = null),
-                      child: const CircleAvatar(
-                        radius: 12,
-                        backgroundColor: korangeColor,
-                        child: Icon(Icons.close, color: Colors.white, size: 14),
+                  ],
+                ),
+              ),
+
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+
+              decoration: BoxDecoration(
+                color: Colors.white,
+
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade300,
+
+                    blurRadius: 5,
+
+                    offset: const Offset(0, -1),
+                  ),
+                ],
+              ),
+
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.add_a_photo, color: Colors.grey),
+
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+
+                        builder:
+                            (context) => SafeArea(
+                              child: Wrap(
+                                children: [
+                                  ListTile(
+                                    leading: const Icon(
+                                      Icons.camera_alt,
+
+                                      color: korangeColor,
+                                    ),
+
+                                    title: Text(lang.camera),
+
+                                    onTap: () {
+                                      Navigator.pop(context);
+
+                                      _pickImage(ImageSource.camera);
+                                    },
+                                  ),
+
+                                  ListTile(
+                                    leading: const Icon(
+                                      Icons.photo_library,
+
+                                      color: korangeColor,
+                                    ),
+
+                                    title: Text(lang.gallery),
+
+                                    onTap: () {
+                                      Navigator.pop(context);
+
+                                      _pickImage(ImageSource.gallery);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                      );
+                    },
+                  ),
+
+                  Expanded(
+                    child: TextField(
+                      controller: messageController,
+
+                      maxLines: null,
+
+                      decoration: InputDecoration(
+                        hintText: lang.typeMessage,
+
+                        hintStyle: const TextStyle(color: Colors.grey),
+
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25),
+
+                          borderSide: BorderSide.none,
+                        ),
+
+                        filled: true,
+
+                        fillColor: Colors.grey.shade100,
+
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+
+                          vertical: 10,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 8),
+
+                  GestureDetector(
+                    onTap: _sendMessage,
+
+                    child: CircleAvatar(
+                      backgroundColor: korangeColor,
+
+                      radius: 22,
+
+                      child: const Icon(
+                        Icons.send,
+
+                        color: Colors.white,
+
+                        size: 22,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-
-            decoration: BoxDecoration(
-              color: Colors.white,
-
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade300,
-
-                  blurRadius: 5,
-
-                  offset: const Offset(0, -1),
-                ),
-              ],
-            ),
-
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.add_a_photo, color: Colors.grey),
-
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-
-                      builder:
-                          (context) => SafeArea(
-                            child: Wrap(
-                              children: [
-                                ListTile(
-                                  leading: const Icon(
-                                    Icons.camera_alt,
-
-                                    color: korangeColor,
-                                  ),
-
-                                  title: Text(lang.camera),
-
-                                  onTap: () {
-                                    Navigator.pop(context);
-
-                                    _pickImage(ImageSource.camera);
-                                  },
-                                ),
-
-                                ListTile(
-                                  leading: const Icon(
-                                    Icons.photo_library,
-
-                                    color: korangeColor,
-                                  ),
-
-                                  title: Text(lang.gallery),
-
-                                  onTap: () {
-                                    Navigator.pop(context);
-
-                                    _pickImage(ImageSource.gallery);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                    );
-                  },
-                ),
-
-                Expanded(
-                  child: TextField(
-                    controller: messageController,
-
-                    maxLines: null,
-
-                    decoration: InputDecoration(
-                      hintText: lang.typeMessage,
-
-                      hintStyle: const TextStyle(color: Colors.grey),
-
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25),
-
-                        borderSide: BorderSide.none,
-                      ),
-
-                      filled: true,
-
-                      fillColor: Colors.grey.shade100,
-
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-
-                        vertical: 10,
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 8),
-
-                GestureDetector(
-                  onTap: _sendMessage,
-
-                  child: CircleAvatar(
-                    backgroundColor: korangeColor,
-
-                    radius: 22,
-
-                    child: const Icon(
-                      Icons.send,
-
-                      color: Colors.white,
-
-                      size: 22,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

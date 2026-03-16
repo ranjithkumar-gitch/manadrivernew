@@ -123,115 +123,117 @@ class VehicleDetailsScreen extends StatelessWidget {
         ],
       ),
 
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 130,
-                  height: 97,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child:
-                        (data['images'] != null &&
-                                data['images'] is List &&
-                                data['images'].isNotEmpty)
-                            ? CarouselSlider(
-                              items:
-                                  (data['images'] as List<dynamic>).map((
-                                    imgUrl,
-                                  ) {
-                                    return Image.network(
-                                      imgUrl,
-                                      fit: BoxFit.cover,
-                                      width: 130,
-                                      errorBuilder:
-                                          (context, error, stackTrace) =>
-                                              const Icon(Icons.car_crash),
-                                    );
-                                  }).toList(),
-                              options: CarouselOptions(
-                                viewportFraction: 1,
-                                height: 97,
-                                autoPlay: true,
-                                enableInfiniteScroll: true,
-                                autoPlayInterval: const Duration(seconds: 3),
-                                scrollDirection: Axis.horizontal,
-                              ),
-                            )
-                            : const Icon(Icons.directions_car),
-                  ),
-                ),
-
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomText(
-                        text: '${data['brand']} ${data['model']}',
-                        textcolor: KblackColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      ),
-
-                      CustomText(
-                        text: localizations.exceptionalPerformance,
-                        textcolor: kgreyColor,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
-                      ),
-
-                      SizedBox(height: 8),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 20),
-
-            _sectionCard(
-              title: localizations.keySpecifications,
-              child: Column(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // _SpecItem(
-                      //   iconPath: 'images/mileage.png',
-                      //   label: "Mileage",
-                      //   value: "24kmpl",
-                      // ),
-                      SizedBox(width: 15),
-                      _SpecItem(
-                        iconPath: 'images/fuel.png',
-                        label: localizations.fuelType,
-                        value: data['fuelType'] ?? "",
-                      ),
-                      _SpecItem(
-                        iconPath: 'images/settings.png',
-                        label: localizations.transmission,
-                        value: data['transmission'] ?? "",
-                      ),
-                    ],
+                  Container(
+                    width: 130,
+                    height: 97,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child:
+                          (data['images'] != null &&
+                                  data['images'] is List &&
+                                  data['images'].isNotEmpty)
+                              ? CarouselSlider(
+                                items:
+                                    (data['images'] as List<dynamic>).map((
+                                      imgUrl,
+                                    ) {
+                                      return Image.network(
+                                        imgUrl,
+                                        fit: BoxFit.cover,
+                                        width: 130,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                const Icon(Icons.car_crash),
+                                      );
+                                    }).toList(),
+                                options: CarouselOptions(
+                                  viewportFraction: 1,
+                                  height: 97,
+                                  autoPlay: true,
+                                  enableInfiniteScroll: true,
+                                  autoPlayInterval: const Duration(seconds: 3),
+                                  scrollDirection: Axis.horizontal,
+                                ),
+                              )
+                              : const Icon(Icons.directions_car),
+                    ),
                   ),
-                  const SizedBox(height: 12),
+
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomText(
+                          text: '${data['brand']} ${data['model']}',
+                          textcolor: KblackColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+
+                        CustomText(
+                          text: localizations.exceptionalPerformance,
+                          textcolor: kgreyColor,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                        ),
+
+                        SizedBox(height: 8),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 20),
 
-            const SizedBox(height: 30),
-          ],
+              _sectionCard(
+                title: localizations.keySpecifications,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // _SpecItem(
+                        //   iconPath: 'images/mileage.png',
+                        //   label: "Mileage",
+                        //   value: "24kmpl",
+                        // ),
+                        SizedBox(width: 15),
+                        _SpecItem(
+                          iconPath: 'images/fuel.png',
+                          label: localizations.fuelType,
+                          value: data['fuelType'] ?? "",
+                        ),
+                        _SpecItem(
+                          iconPath: 'images/settings.png',
+                          label: localizations.transmission,
+                          value: data['transmission'] ?? "",
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );

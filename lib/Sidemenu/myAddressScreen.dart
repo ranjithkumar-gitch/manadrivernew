@@ -221,100 +221,102 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: StreamBuilder<QuerySnapshot>(
-          stream:
-              FirebaseFirestore.instance
-                  .collection("addresses")
-                  .where(
-                    'userId',
-                    isEqualTo: SharedPrefServices.getUserId().toString(),
-                  )
-                  .orderBy("createdAt", descending: true)
-                  .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) return const CircularProgressIndicator();
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: StreamBuilder<QuerySnapshot>(
+            stream:
+                FirebaseFirestore.instance
+                    .collection("addresses")
+                    .where(
+                      'userId',
+                      isEqualTo: SharedPrefServices.getUserId().toString(),
+                    )
+                    .orderBy("createdAt", descending: true)
+                    .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return const CircularProgressIndicator();
 
-            final docs = snapshot.data!.docs;
+              final docs = snapshot.data!.docs;
 
-            if (docs.isEmpty) {
-              return Center(
-                child: CustomText(
-                  text: "No address added yet",
-                  textcolor: kseegreyColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              );
-            }
-
-            return ListView.builder(
-              itemCount: docs.length,
-              itemBuilder: (context, index) {
-                final data = docs[index].data() as Map<String, dynamic>;
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: KaddresscardborderColor),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      Radio<int>(
-                        value: index,
-                        groupValue: selectedAddress,
-                        activeColor: korangeColor,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedAddress = value!;
-                          });
-                        },
-                      ),
-                      const SizedBox(width: 5),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomText(
-                              text: data["title"] ?? "Address",
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              textcolor: korangeColor,
-                            ),
-                            CustomText(
-                              text:
-                                  "${data["Address"]},${data["city"]},${data["state"]},${data["country"]} - ${data["zipcode"]}",
-                              textcolor: kseegreyColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      PopupMenuButton<String>(
-                        color: kwhiteColor,
-                        onSelected: (value) {
-                          if (value == "delete") {
-                            deleteDialog(context, docs[index].id);
-                          }
-                        },
-                        itemBuilder:
-                            (context) => const [
-                              PopupMenuItem(
-                                value: "delete",
-                                child: Text("Delete"),
-                              ),
-                            ],
-                      ),
-                    ],
+              if (docs.isEmpty) {
+                return Center(
+                  child: CustomText(
+                    text: "No address added yet",
+                    textcolor: kseegreyColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
                   ),
                 );
-              },
-            );
-          },
+              }
+
+              return ListView.builder(
+                itemCount: docs.length,
+                itemBuilder: (context, index) {
+                  final data = docs[index].data() as Map<String, dynamic>;
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: KaddresscardborderColor),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        Radio<int>(
+                          value: index,
+                          groupValue: selectedAddress,
+                          activeColor: korangeColor,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedAddress = value!;
+                            });
+                          },
+                        ),
+                        const SizedBox(width: 5),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomText(
+                                text: data["title"] ?? "Address",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                textcolor: korangeColor,
+                              ),
+                              CustomText(
+                                text:
+                                    "${data["Address"]},${data["city"]},${data["state"]},${data["country"]} - ${data["zipcode"]}",
+                                textcolor: kseegreyColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        PopupMenuButton<String>(
+                          color: kwhiteColor,
+                          onSelected: (value) {
+                            if (value == "delete") {
+                              deleteDialog(context, docs[index].id);
+                            }
+                          },
+                          itemBuilder:
+                              (context) => const [
+                                PopupMenuItem(
+                                  value: "delete",
+                                  child: Text("Delete"),
+                                ),
+                              ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
       bottomNavigationBar: Padding(

@@ -343,95 +343,97 @@ class _MyRidesScreenState extends State<MyRidesScreen>
       // appBar: const CustomMainAppBar(),
       appBar: CustomMainAppBar(title: localizations.bottomNavMyRides),
 
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: Material(
-              color: Colors.white,
-              elevation: 0,
-              child: TabBar(
-                tabAlignment: TabAlignment.start,
-                padding: EdgeInsets.zero,
-                labelPadding: EdgeInsets.only(left: 15),
-                controller: _tabController,
-                isScrollable: true,
-                dividerColor: Colors.transparent,
-                indicatorColor: Colors.transparent,
-                tabs: [
-                  buildTab(localizations.all, 0),
-                  buildTab(localizations.newRide, 1),
-                  buildTab(localizations.accepted, 2),
-                  buildTab(localizations.ongoing, 3),
-                  buildTab(localizations.completed, 4),
-                  buildTab(localizations.cancelled, 5),
-                ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Material(
+                color: Colors.white,
+                elevation: 0,
+                child: TabBar(
+                  tabAlignment: TabAlignment.start,
+                  padding: EdgeInsets.zero,
+                  labelPadding: EdgeInsets.only(left: 15),
+                  controller: _tabController,
+                  isScrollable: true,
+                  dividerColor: Colors.transparent,
+                  indicatorColor: Colors.transparent,
+                  tabs: [
+                    buildTab(localizations.all, 0),
+                    buildTab(localizations.newRide, 1),
+                    buildTab(localizations.accepted, 2),
+                    buildTab(localizations.ongoing, 3),
+                    buildTab(localizations.completed, 4),
+                    buildTab(localizations.cancelled, 5),
+                  ],
+                ),
               ),
             ),
-          ),
 
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream:
-                  FirebaseFirestore.instance
-                      .collection('bookings')
-                      .where('ownerId', isEqualTo: currentUserId)
-                      .orderBy('createdAt', descending: true)
-                      .snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
-                }
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream:
+                    FirebaseFirestore.instance
+                        .collection('bookings')
+                        .where('ownerId', isEqualTo: currentUserId)
+                        .orderBy('createdAt', descending: true)
+                        .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator());
+                  }
 
-                final allBookings =
-                    snapshot.data!.docs.map((doc) {
-                      final data = doc.data() as Map<String, dynamic>;
-                      data['bookingId'] = doc.id;
-                      return data;
-                    }).toList();
+                  final allBookings =
+                      snapshot.data!.docs.map((doc) {
+                        final data = doc.data() as Map<String, dynamic>;
+                        data['bookingId'] = doc.id;
+                        return data;
+                      }).toList();
 
-                List<Map<String, dynamic>> filteredBookings;
-                if (selectedTabIndex == 1) {
-                  filteredBookings =
-                      allBookings.where((b) => b['status'] == 'New').toList();
-                } else if (selectedTabIndex == 2) {
-                  filteredBookings =
-                      allBookings
-                          .where((b) => b['status'] == 'Accepted')
-                          .toList();
-                } else if (selectedTabIndex == 3) {
-                  filteredBookings =
-                      allBookings
-                          .where((b) => b['status'] == 'Ongoing')
-                          .toList();
-                } else if (selectedTabIndex == 4) {
-                  filteredBookings =
-                      allBookings
-                          .where((b) => b['status'] == 'Completed')
-                          .toList();
-                } else if (selectedTabIndex == 5) {
-                  filteredBookings =
-                      allBookings
-                          .where((b) => b['status'] == 'Cancelled')
-                          .toList();
-                } else {
-                  filteredBookings = allBookings;
-                }
+                  List<Map<String, dynamic>> filteredBookings;
+                  if (selectedTabIndex == 1) {
+                    filteredBookings =
+                        allBookings.where((b) => b['status'] == 'New').toList();
+                  } else if (selectedTabIndex == 2) {
+                    filteredBookings =
+                        allBookings
+                            .where((b) => b['status'] == 'Accepted')
+                            .toList();
+                  } else if (selectedTabIndex == 3) {
+                    filteredBookings =
+                        allBookings
+                            .where((b) => b['status'] == 'Ongoing')
+                            .toList();
+                  } else if (selectedTabIndex == 4) {
+                    filteredBookings =
+                        allBookings
+                            .where((b) => b['status'] == 'Completed')
+                            .toList();
+                  } else if (selectedTabIndex == 5) {
+                    filteredBookings =
+                        allBookings
+                            .where((b) => b['status'] == 'Cancelled')
+                            .toList();
+                  } else {
+                    filteredBookings = allBookings;
+                  }
 
-                if (filteredBookings.isEmpty) {
-                  return Center(child: Text(localizations.noRidesAvailable));
-                }
+                  if (filteredBookings.isEmpty) {
+                    return Center(child: Text(localizations.noRidesAvailable));
+                  }
 
-                return ListView.builder(
-                  itemCount: filteredBookings.length,
-                  itemBuilder: (context, index) {
-                    return buildCard(filteredBookings[index]);
-                  },
-                );
-              },
+                  return ListView.builder(
+                    itemCount: filteredBookings.length,
+                    itemBuilder: (context, index) {
+                      return buildCard(filteredBookings[index]);
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

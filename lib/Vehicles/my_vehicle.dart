@@ -104,175 +104,176 @@ class _MyVehicleState extends State<MyVehicle> {
           ),
         ),
       ),
-      body:
-          isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : carList.isEmpty
-              ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomText(
-                      text: localizations.noVehiclesFound,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      textcolor: Colors.grey,
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
-              )
-              : Container(
-                margin: const EdgeInsets.symmetric(horizontal: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    CustomText(
-                      text: localizations.recentAddedVehicles,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      textcolor: KblackColor,
-                    ),
-                    const SizedBox(height: 5),
-                    CustomText(
-                      text: localizations.listAddedVehicles,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w300,
-                      textcolor: kgreyColor,
-                    ),
-                    const SizedBox(height: 20),
+      body: SafeArea(
+        child:
+            isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : carList.isEmpty
+                ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomText(
+                        text: localizations.noVehiclesFound,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        textcolor: Colors.grey,
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
+                )
+                : Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 20),
+                      CustomText(
+                        text: localizations.recentAddedVehicles,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        textcolor: KblackColor,
+                      ),
+                      const SizedBox(height: 5),
+                      CustomText(
+                        text: localizations.listAddedVehicles,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w300,
+                        textcolor: kgreyColor,
+                      ),
+                      const SizedBox(height: 20),
 
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: carList.length,
-                        itemBuilder: (context, index) {
-                          final car = carList[index];
-                          return Column(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  print(car['id']);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => VehicleDetailsScreen(
-                                            data: car,
-                                            docId: car['id'],
-                                          ),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(bottom: 12),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: KdeviderColor,
-                                      width: 1.2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: 90,
-                                          height: 90,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              16,
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: carList.length,
+                          itemBuilder: (context, index) {
+                            final car = carList[index];
+                            return Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    print(car['id']);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => VehicleDetailsScreen(
+                                              data: car,
+                                              docId: car['id'],
                                             ),
-                                            color: Colors.grey.shade100,
-                                          ),
-                                          child: Center(
-                                            child: ClipRRect(
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom: 12),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: KdeviderColor,
+                                        width: 1.2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 90,
+                                            height: 90,
+                                            decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(16),
-                                              child:
-                                                  car['images'].isNotEmpty
-                                                      ? Image.network(
-                                                        car['images'][0],
-                                                        height: 100,
-                                                        width: 100,
-                                                        fit: BoxFit.cover,
-                                                        errorBuilder: (
-                                                          context,
-                                                          error,
-                                                          stackTrace,
-                                                        ) {
-                                                          return Image.asset(
-                                                            "images/car.png",
-                                                            height: 100,
-                                                            width: 100,
-                                                            fit: BoxFit.cover,
-                                                          );
-                                                        },
-                                                      )
-                                                      : Image.asset(
-                                                        "images/car.png",
-                                                        height: 100,
-                                                        width: 100,
-                                                        fit: BoxFit.cover,
-                                                      ),
+                                              color: Colors.grey.shade100,
+                                            ),
+                                            child: Center(
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                                child:
+                                                    car['images'].isNotEmpty
+                                                        ? Image.network(
+                                                          car['images'][0],
+                                                          height: 100,
+                                                          width: 100,
+                                                          fit: BoxFit.cover,
+                                                          errorBuilder: (
+                                                            context,
+                                                            error,
+                                                            stackTrace,
+                                                          ) {
+                                                            return Image.asset(
+                                                              "images/car.png",
+                                                              height: 100,
+                                                              width: 100,
+                                                              fit: BoxFit.cover,
+                                                            );
+                                                          },
+                                                        )
+                                                        : Image.asset(
+                                                          "images/car.png",
+                                                          height: 100,
+                                                          width: 100,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              CustomText(
-                                                text:
-                                                    '${car['brand']} ${car['model']}',
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600,
-                                                textcolor: KblackColor,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              Wrap(
-                                                spacing: 6,
-                                                children: [
-                                                  _infoChip(
-                                                    car['transmission'],
-                                                  ),
-                                                  _infoChip(car['fuelType']),
-                                                ],
-                                              ),
-                                              const SizedBox(height: 8),
-                                              _infoChip(car['vehicleNumber']),
-                                            ],
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                CustomText(
+                                                  text:
+                                                      '${car['brand']} ${car['model']}',
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600,
+                                                  textcolor: KblackColor,
+                                                ),
+                                                const SizedBox(height: 5),
+                                                Wrap(
+                                                  spacing: 6,
+                                                  children: [
+                                                    _infoChip(
+                                                      car['transmission'],
+                                                    ),
+                                                    _infoChip(car['fuelType']),
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 8),
+                                                _infoChip(car['vehicleNumber']),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.delete,
-                                            color: Colors.red,
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () {
+                                              _showLogoutDialog(context, car);
+                                            },
                                           ),
-                                          onPressed: () {
-                                            _showLogoutDialog(context, car);
-                                          },
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              if (index == carList.length - 1)
-                                const SizedBox(height: 100),
-                            ],
-                          );
-                        },
+                                if (index == carList.length - 1)
+                                  const SizedBox(height: 100),
+                              ],
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: SizedBox(
         width: 220,

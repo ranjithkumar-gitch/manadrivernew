@@ -57,46 +57,48 @@ class ReferFriendScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            SizedBox(
-              width: 230,
-              height: 230,
-              child: Image.asset('images/refer_frd.png', fit: BoxFit.cover),
-            ),
-            const SizedBox(height: 16),
-
-            Center(
-              child: CustomText(
-                text: localizations.rat_Txt1,
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                textcolor: kwhiteColor,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              SizedBox(
+                width: 230,
+                height: 230,
+                child: Image.asset('images/refer_frd.png', fit: BoxFit.cover),
               ),
-            ),
-            const SizedBox(height: 24),
+              const SizedBox(height: 16),
 
-            Column(
-              children: [
-                StepItem(number: 1, text: localizations.rat_Txt2),
-                SizedBox(height: 10),
-                StepItem(number: 2, text: localizations.rat_Txt3),
-                SizedBox(height: 10),
-                StepItem(number: 3, text: localizations.rat_Txt4),
-              ],
-            ),
+              Center(
+                child: CustomText(
+                  text: localizations.rat_Txt1,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  textcolor: kwhiteColor,
+                ),
+              ),
+              const SizedBox(height: 24),
 
-            const Spacer(),
+              Column(
+                children: [
+                  StepItem(number: 1, text: localizations.rat_Txt2),
+                  SizedBox(height: 10),
+                  StepItem(number: 2, text: localizations.rat_Txt3),
+                  SizedBox(height: 10),
+                  StepItem(number: 3, text: localizations.rat_Txt4),
+                ],
+              ),
 
-            CustomButton(
-              text: localizations.rat_Txt5,
-              onPressed: () {},
-              width: 220,
-              height: 53,
-            ),
-          ],
+              const Spacer(),
+
+              CustomButton(
+                text: localizations.rat_Txt5,
+                onPressed: () {},
+                width: 220,
+                height: 53,
+              ),
+            ],
+          ),
         ),
       ),
     );

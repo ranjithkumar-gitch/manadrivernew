@@ -54,36 +54,38 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         actions: [],
       ),
 
-      body: StreamBuilder<List<Map<String, dynamic>>>(
-        stream: _transactionsStream(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(color: korangeColor),
+      body: SafeArea(
+        child: StreamBuilder<List<Map<String, dynamic>>>(
+          stream: _transactionsStream(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(color: korangeColor),
+              );
+            }
+
+            final userTransactions = snapshot.data!;
+
+            if (userTransactions.isEmpty) {
+              return Center(
+                child: CustomText(
+                  text: localizations.noTransactionsFound,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  textcolor: KblackColor,
+                ),
+              );
+            }
+
+            return ListView.builder(
+              padding: const EdgeInsets.all(16.0),
+              itemCount: userTransactions.length,
+              itemBuilder: (context, index) {
+                return _buildTransactionCard(userTransactions[index]);
+              },
             );
-          }
-
-          final userTransactions = snapshot.data!;
-
-          if (userTransactions.isEmpty) {
-            return Center(
-              child: CustomText(
-                text: localizations.noTransactionsFound,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                textcolor: KblackColor,
-              ),
-            );
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(16.0),
-            itemCount: userTransactions.length,
-            itemBuilder: (context, index) {
-              return _buildTransactionCard(userTransactions[index]);
-            },
-          );
-        },
+          },
+        ),
       ),
     );
   }

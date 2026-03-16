@@ -283,120 +283,122 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
       ),
 
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        CircleAvatar(
-                          radius: 55,
-                          backgroundColor: KlightgreyColor,
-                          backgroundImage:
-                              image != null
-                                  ? FileImage(image!)
-                                  : (SharedPrefServices.getProfileImage() !=
-                                          null &&
-                                      SharedPrefServices.getProfileImage()!
-                                          .isNotEmpty)
-                                  ? NetworkImage(
-                                        SharedPrefServices.getProfileImage()!,
-                                      )
-                                      as ImageProvider
-                                  : null,
-                          child:
-                              (image == null &&
-                                      (SharedPrefServices.getProfileImage() ==
-                                              null ||
-                                          SharedPrefServices.getProfileImage()!
-                                              .isEmpty))
-                                  ? Text(
-                                    _getUserInitials(),
-                                    style: const TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xFFC7D5E7),
-                                    ),
-                                  )
-                                  : null,
-                        ),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          CircleAvatar(
+                            radius: 55,
+                            backgroundColor: KlightgreyColor,
+                            backgroundImage:
+                                image != null
+                                    ? FileImage(image!)
+                                    : (SharedPrefServices.getProfileImage() !=
+                                            null &&
+                                        SharedPrefServices.getProfileImage()!
+                                            .isNotEmpty)
+                                    ? NetworkImage(
+                                          SharedPrefServices.getProfileImage()!,
+                                        )
+                                        as ImageProvider
+                                    : null,
+                            child:
+                                (image == null &&
+                                        (SharedPrefServices.getProfileImage() ==
+                                                null ||
+                                            SharedPrefServices.getProfileImage()!
+                                                .isEmpty))
+                                    ? Text(
+                                      _getUserInitials(),
+                                      style: const TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFFC7D5E7),
+                                      ),
+                                    )
+                                    : null,
+                          ),
 
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: GestureDetector(
-                            onTap: _pickImage,
-                            child: CircleAvatar(
-                              backgroundColor: korangeColor,
-                              radius: 18,
-                              child: Image.asset("images/camera.png"),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: GestureDetector(
+                              onTap: _pickImage,
+                              child: CircleAvatar(
+                                backgroundColor: korangeColor,
+                                radius: 18,
+                                child: Image.asset("images/camera.png"),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 40),
-                  CustomTextField(
-                    controller: firstnameController,
-                    labelText: localizations.p_firstName,
-                  ),
-                  const SizedBox(height: 20),
-
-                  CustomTextField(
-                    controller: lastnameController,
-                    labelText: localizations.p_lastName,
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  CustomTextField(
-                    controller: emailController,
-                    labelText: localizations.p_email,
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  CustomTextField(
-                    controller: phoneController,
-                    labelText: localizations.p_phoneNumner,
-                    readOnly: true,
-                    suffix: Text(
-                      localizations.p_verified,
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                        ],
                       ),
                     ),
-                  ),
 
-                  SizedBox(height: 100),
-                  Center(
-                    child: CustomButton(
-                      text:
-                          isSaving
-                              ? localizations.menuSaving
-                              : localizations.menuSave,
-                      onPressed: isSaving ? null : saveProfile,
-                      width: double.infinity,
-                      height: 50,
+                    const SizedBox(height: 40),
+                    CustomTextField(
+                      controller: firstnameController,
+                      labelText: localizations.p_firstName,
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 20),
+
+                    CustomTextField(
+                      controller: lastnameController,
+                      labelText: localizations.p_lastName,
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    CustomTextField(
+                      controller: emailController,
+                      labelText: localizations.p_email,
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    CustomTextField(
+                      controller: phoneController,
+                      labelText: localizations.p_phoneNumner,
+                      readOnly: true,
+                      suffix: Text(
+                        localizations.p_verified,
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 100),
+                    Center(
+                      child: CustomButton(
+                        text:
+                            isSaving
+                                ? localizations.menuSaving
+                                : localizations.menuSave,
+                        onPressed: isSaving ? null : saveProfile,
+                        width: double.infinity,
+                        height: 50,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          if (isSaving)
-            Center(child: CircularProgressIndicator(color: korangeColor)),
-        ],
+            if (isSaving)
+              Center(child: CircularProgressIndicator(color: korangeColor)),
+          ],
+        ),
       ),
     );
   }

@@ -602,502 +602,718 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
           ),
         ),
 
-        body: StreamBuilder<DocumentSnapshot>(
-          stream:
-              FirebaseFirestore.instance
-                  .collection('bookings')
-                  .doc(widget.bookingData['bookingId'])
-                  .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            }
+        body: SafeArea(
+          child: StreamBuilder<DocumentSnapshot>(
+            stream:
+                FirebaseFirestore.instance
+                    .collection('bookings')
+                    .doc(widget.bookingData['bookingId'])
+                    .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            final liveData = snapshot.data!.data() as Map<String, dynamic>;
-            final chatDeleted = liveData['chatDeleted'] ?? false;
+              final liveData = snapshot.data!.data() as Map<String, dynamic>;
+              final chatDeleted = liveData['chatDeleted'] ?? false;
 
-            if ((status == 'Completed' || status == 'Cancelled') &&
-                chatDeleted == false) {
-              ChatCleanupService.deleteChatIfBookingCompleted(
-                widget.bookingData['bookingId'],
-              );
-            }
+              if ((status == 'Completed' || status == 'Cancelled') &&
+                  chatDeleted == false) {
+                ChatCleanupService.deleteChatIfBookingCompleted(
+                  widget.bookingData['bookingId'],
+                );
+              }
 
-            final liveDriverId = liveData['driverdocId']?.toString() ?? '';
+              final liveDriverId = liveData['driverdocId']?.toString() ?? '';
 
-            final rideStatus = liveData['status'] ?? 'New';
+              final rideStatus = liveData['status'] ?? 'New';
 
-            final paymentStatus = liveData['paymentStatus'] ?? '';
+              final paymentStatus = liveData['paymentStatus'] ?? '';
 
-            final ownerOTP = liveData['ownerOTP']?.toString() ?? '';
+              final ownerOTP = liveData['ownerOTP']?.toString() ?? '';
 
-            DateTime createdAtTime =
-                (liveData['createdAt'] as Timestamp).toDate();
+              DateTime createdAtTime =
+                  (liveData['createdAt'] as Timestamp).toDate();
 
-            final DateTime now = DateTime.now();
-            final int diffSeconds =
-                300 - now.difference(createdAtTime).inSeconds;
+              final DateTime now = DateTime.now();
+              final int diffSeconds =
+                  300 - now.difference(createdAtTime).inSeconds;
 
-            final bool isTimerOver = diffSeconds <= 0;
+              final bool isTimerOver = diffSeconds <= 0;
 
-            final drop2Location = liveData['drop2'] ?? '';
-            final pickupLocation = liveData['pickup'] ?? '';
-            final dropLocation = liveData['drop'] ?? '';
-            final pickupLat = liveData['pickupLat'].toString();
-            final pickupLng = liveData['pickupLng'].toString();
-            final dropLat = liveData['dropLat'].toString();
-            final dropLng = liveData['dropLng'].toString();
-            final drop2Lat = liveData['drop2Lat'].toString();
-            final drop2Lng = liveData['drop2Lng'].toString();
-            String tripMode = liveData['tripMode'] ?? '';
-            String tripTime = liveData['tripTime'] ?? '';
-            String distance = liveData['distance'] ?? '';
-            String citylimithours = liveData['cityLimitHours'].toString();
-            String date = liveData['date'] ?? 'DD/MM/YYYY';
-            String arrivalDate = liveData['arrivalDate'] ?? 'DD/MM/YYYY';
-            String arrivalTime = liveData['arrivalTime'] ?? 'DD/MM/YYYY';
-            String time = liveData['time'] ?? 'HH:MM';
-            String servicePrice = liveData['serviceFare']?.toString() ?? '0.00';
-            String convenienceFee =
-                liveData['convenienceFee']?.toString() ?? '0.00';
-            String duration = liveData['duration'] ?? '';
-            String totalPrice = liveData['fare']?.toString() ?? '0.00';
-            String convertDate(String date) {
-              List<String> parts = date.split("-");
-              return "${parts[2]}-${parts[1]}-${parts[0]}";
-            }
+              final drop2Location = liveData['drop2'] ?? '';
+              final pickupLocation = liveData['pickup'] ?? '';
+              final dropLocation = liveData['drop'] ?? '';
+              final pickupLat = liveData['pickupLat'].toString();
+              final pickupLng = liveData['pickupLng'].toString();
+              final dropLat = liveData['dropLat'].toString();
+              final dropLng = liveData['dropLng'].toString();
+              final drop2Lat = liveData['drop2Lat'].toString();
+              final drop2Lng = liveData['drop2Lng'].toString();
+              String tripMode = liveData['tripMode'] ?? '';
+              String tripTime = liveData['tripTime'] ?? '';
+              String distance = liveData['distance'] ?? '';
+              String citylimithours = liveData['cityLimitHours'].toString();
+              String date = liveData['date'] ?? 'DD/MM/YYYY';
+              String arrivalDate = liveData['arrivalDate'] ?? 'DD/MM/YYYY';
+              String arrivalTime = liveData['arrivalTime'] ?? 'DD/MM/YYYY';
+              String time = liveData['time'] ?? 'HH:MM';
+              String servicePrice =
+                  liveData['serviceFare']?.toString() ?? '0.00';
+              String convenienceFee =
+                  liveData['convenienceFee']?.toString() ?? '0.00';
+              String duration = liveData['duration'] ?? '';
+              String totalPrice = liveData['fare']?.toString() ?? '0.00';
+              String convertDate(String date) {
+                List<String> parts = date.split("-");
+                return "${parts[2]}-${parts[1]}-${parts[0]}";
+              }
 
-            final email = SharedPrefServices.getEmail()?.trim() ?? '';
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 10),
+              final email = SharedPrefServices.getEmail()?.trim() ?? '';
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10),
 
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child:
-                        liveDriverId.isEmpty
-                            ? Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 40,
-                                  backgroundColor: Colors.grey,
-                                  child: Image.asset(
-                                    'images/avathar1.jpeg',
-                                    fit: BoxFit.cover,
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child:
+                          liveDriverId.isEmpty
+                              ? Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 40,
+                                    backgroundColor: Colors.grey,
+                                    child: Image.asset(
+                                      'images/avathar1.jpeg',
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 12),
-                                CustomText(
-                                  text: lang.driverNotAssigned,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                  textcolor: korangeColor,
-                                ),
-                              ],
-                            )
-                            : StreamBuilder<DocumentSnapshot>(
-                              stream:
-                                  FirebaseFirestore.instance
-                                      .collection('drivers')
-                                      .doc(liveDriverId)
-                                      .snapshots(),
-                              builder: (context, driverSnap) {
-                                if (driverSnap.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Row(
-                                    children: [
-                                      CircleAvatar(
-                                        radius: 40,
-                                        backgroundColor: Colors.grey,
-                                        child: Image.asset(
-                                          'images/avathar1.jpeg',
-                                          fit: BoxFit.cover,
+                                  SizedBox(width: 12),
+                                  CustomText(
+                                    text: lang.driverNotAssigned,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    textcolor: korangeColor,
+                                  ),
+                                ],
+                              )
+                              : StreamBuilder<DocumentSnapshot>(
+                                stream:
+                                    FirebaseFirestore.instance
+                                        .collection('drivers')
+                                        .doc(liveDriverId)
+                                        .snapshots(),
+                                builder: (context, driverSnap) {
+                                  if (driverSnap.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 40,
+                                          backgroundColor: Colors.grey,
+                                          child: Image.asset(
+                                            'images/avathar1.jpeg',
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(width: 12),
-                                      CustomText(
-                                        text: lang.loadingDriver,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
-                                        textcolor: kgreyColor,
-                                      ),
-                                    ],
-                                  );
-                                }
+                                        SizedBox(width: 12),
+                                        CustomText(
+                                          text: lang.loadingDriver,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500,
+                                          textcolor: kgreyColor,
+                                        ),
+                                      ],
+                                    );
+                                  }
 
-                                if (!driverSnap.hasData ||
-                                    !driverSnap.data!.exists) {
+                                  if (!driverSnap.hasData ||
+                                      !driverSnap.data!.exists) {
+                                    return Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 40,
+                                          backgroundColor: Colors.grey,
+                                        ),
+                                        SizedBox(width: 12),
+                                        Text(
+                                          lang.driverNotAssigned,
+                                          style: TextStyle(
+                                            color: Colors.orange,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }
+
+                                  final d =
+                                      driverSnap.data!.data()
+                                          as Map<String, dynamic>;
+
                                   return Row(
                                     children: [
-                                      CircleAvatar(
-                                        radius: 40,
-                                        backgroundColor: Colors.grey,
-                                      ),
-                                      SizedBox(width: 12),
-                                      Text(
-                                        lang.driverNotAssigned,
-                                        style: TextStyle(color: Colors.orange),
-                                      ),
-                                    ],
-                                  );
-                                }
-
-                                final d =
-                                    driverSnap.data!.data()
-                                        as Map<String, dynamic>;
-
-                                return Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTap:
-                                          (d['profileUrl'] != null &&
-                                                  d['profileUrl']
-                                                      .toString()
-                                                      .isNotEmpty)
-                                              ? () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder:
-                                                        (_) => FullImageView(
-                                                          imagePath:
-                                                              d['profileUrl'],
-                                                          isAsset: false,
-                                                        ),
-                                                  ),
-                                                );
-                                              }
-                                              : null,
-                                      child: CircleAvatar(
-                                        radius: 40,
-                                        backgroundImage:
+                                      GestureDetector(
+                                        onTap:
                                             (d['profileUrl'] != null &&
                                                     d['profileUrl']
                                                         .toString()
                                                         .isNotEmpty)
-                                                ? NetworkImage(d['profileUrl'])
-                                                : const AssetImage(
-                                                      'images/avathar1.jpeg',
-                                                    )
-                                                    as ImageProvider,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          CustomText(
-                                            text:
-                                                "${d['firstName'] ?? ''} ${d['lastName'] ?? ''}"
-                                                    .trim(),
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                            textcolor: korangeColor,
-                                          ),
-                                          const SizedBox(height: 4),
-                                        ],
-                                      ),
-                                    ),
-                                    if (rideStatus != 'Completed' &&
-                                        rideStatus != 'Cancelled') ...[
-                                      Container(
-                                        height: 50,
-                                        width: 1.5,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Row(
-                                        children: [
-                                          StreamBuilder<int>(
-                                            stream:
-                                                ownerUnreadMessageCountStream(
-                                                  bookingId,
-                                                  SharedPrefServices.getUserId()
-                                                      .toString(),
-                                                ),
-                                            builder: (context, snapshot) {
-                                              final unreadCount =
-                                                  snapshot.data ?? 0;
-                                              final hasUnread = unreadCount > 0;
-
-                                              return GestureDetector(
-                                                onTap: () {
+                                                ? () {
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                       builder:
-                                                          (_) => ChatScreen(
-                                                            bookingId:
-                                                                bookingId,
-                                                            driverData: d,
-                                                            driverId:
-                                                                liveDriverId,
-                                                            ownerId: ownerId,
-                                                            ownerName:
-                                                                driverName,
-                                                            ownerProfile:
-                                                                ownerProfile,
+                                                          (_) => FullImageView(
+                                                            imagePath:
+                                                                d['profileUrl'],
+                                                            isAsset: false,
                                                           ),
                                                     ),
                                                   );
-                                                },
-                                                child: Stack(
-                                                  clipBehavior: Clip.none,
-                                                  children: [
-                                                    Image.asset(
-                                                      "images/chat.png",
-                                                      width: 40,
-                                                      height: 40,
-                                                    ),
+                                                }
+                                                : null,
+                                        child: CircleAvatar(
+                                          radius: 40,
+                                          backgroundImage:
+                                              (d['profileUrl'] != null &&
+                                                      d['profileUrl']
+                                                          .toString()
+                                                          .isNotEmpty)
+                                                  ? NetworkImage(
+                                                    d['profileUrl'],
+                                                  )
+                                                  : const AssetImage(
+                                                        'images/avathar1.jpeg',
+                                                      )
+                                                      as ImageProvider,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            CustomText(
+                                              text:
+                                                  "${d['firstName'] ?? ''} ${d['lastName'] ?? ''}"
+                                                      .trim(),
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600,
+                                              textcolor: korangeColor,
+                                            ),
+                                            const SizedBox(height: 4),
+                                          ],
+                                        ),
+                                      ),
+                                      if (rideStatus != 'Completed' &&
+                                          rideStatus != 'Cancelled') ...[
+                                        Container(
+                                          height: 50,
+                                          width: 1.5,
+                                          color: Colors.grey.shade300,
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Row(
+                                          children: [
+                                            StreamBuilder<int>(
+                                              stream:
+                                                  ownerUnreadMessageCountStream(
+                                                    bookingId,
+                                                    SharedPrefServices.getUserId()
+                                                        .toString(),
+                                                  ),
+                                              builder: (context, snapshot) {
+                                                final unreadCount =
+                                                    snapshot.data ?? 0;
+                                                final hasUnread =
+                                                    unreadCount > 0;
 
-                                                    if (hasUnread)
-                                                      Positioned(
-                                                        top: -6,
-                                                        right: -6,
-                                                        child: Container(
-                                                          padding:
-                                                              const EdgeInsets.symmetric(
-                                                                horizontal: 6,
-                                                                vertical: 2,
-                                                              ),
-                                                          decoration: BoxDecoration(
-                                                            color: Colors.red,
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  12,
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder:
+                                                            (_) => ChatScreen(
+                                                              bookingId:
+                                                                  bookingId,
+                                                              driverData: d,
+                                                              driverId:
+                                                                  liveDriverId,
+                                                              ownerId: ownerId,
+                                                              ownerName:
+                                                                  driverName,
+                                                              ownerProfile:
+                                                                  ownerProfile,
+                                                            ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Stack(
+                                                    clipBehavior: Clip.none,
+                                                    children: [
+                                                      Image.asset(
+                                                        "images/chat.png",
+                                                        width: 40,
+                                                        height: 40,
+                                                      ),
+
+                                                      if (hasUnread)
+                                                        Positioned(
+                                                          top: -6,
+                                                          right: -6,
+                                                          child: Container(
+                                                            padding:
+                                                                const EdgeInsets.symmetric(
+                                                                  horizontal: 6,
+                                                                  vertical: 2,
                                                                 ),
-                                                            border: Border.all(
-                                                              color:
-                                                                  Colors.white,
-                                                              width: 1,
+                                                            decoration: BoxDecoration(
+                                                              color: Colors.red,
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    12,
+                                                                  ),
+                                                              border: Border.all(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                width: 1,
+                                                              ),
+                                                            ),
+                                                            constraints:
+                                                                const BoxConstraints(
+                                                                  minWidth: 16,
+                                                                  minHeight: 16,
+                                                                ),
+                                                            child: Text(
+                                                              unreadCount > 9
+                                                                  ? '9+'
+                                                                  : unreadCount
+                                                                      .toString(),
+                                                              style: const TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                fontSize: 10,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
                                                             ),
                                                           ),
-                                                          constraints:
-                                                              const BoxConstraints(
-                                                                minWidth: 16,
-                                                                minHeight: 16,
-                                                              ),
-                                                          child: Text(
-                                                            unreadCount > 9
-                                                                ? '9+'
-                                                                : unreadCount
-                                                                    .toString(),
-                                                            style:
-                                                                const TextStyle(
-                                                                  color:
-                                                                      Colors
-                                                                          .white,
-                                                                  fontSize: 10,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                            textAlign:
-                                                                TextAlign
-                                                                    .center,
-                                                          ),
                                                         ),
-                                                      ),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          ),
-
-                                          const SizedBox(width: 8),
-
-                                          GestureDetector(
-                                            onTap: () async {
-                                              final phone = d['phone'] ?? '';
-                                              if (phone.isNotEmpty) {
-                                                final Uri callUri = Uri(
-                                                  scheme: 'tel',
-                                                  path: phone,
+                                                    ],
+                                                  ),
                                                 );
-                                                if (await canLaunchUrl(
-                                                  callUri,
-                                                )) {
-                                                  await launchUrl(callUri);
-                                                }
-                                              }
-                                            },
-                                            child: Image.asset(
-                                              "images/call.png",
-                                              width: 40,
-                                              height: 40,
+                                              },
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ],
-                                );
-                              },
-                            ),
-                  ),
 
-                  const Divider(thickness: 3, color: KlightgreyColor),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      right: 15,
-                      left: 15,
-                      top: 8,
-                      bottom: 8,
+                                            const SizedBox(width: 8),
+
+                                            GestureDetector(
+                                              onTap: () async {
+                                                final phone = d['phone'] ?? '';
+                                                if (phone.isNotEmpty) {
+                                                  final Uri callUri = Uri(
+                                                    scheme: 'tel',
+                                                    path: phone,
+                                                  );
+                                                  if (await canLaunchUrl(
+                                                    callUri,
+                                                  )) {
+                                                    await launchUrl(callUri);
+                                                  }
+                                                }
+                                              },
+                                              child: Image.asset(
+                                                "images/call.png",
+                                                width: 40,
+                                                height: 40,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ],
+                                  );
+                                },
+                              ),
                     ),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: kbordergreyColor, width: 1),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+
+                    const Divider(thickness: 3, color: KlightgreyColor),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        right: 15,
+                        left: 15,
+                        top: 8,
+                        bottom: 8,
                       ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: kbordergreyColor,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: kbordergreyColor, width: 1),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
                                 color: kbordergreyColor,
-                                width: 1,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: kbordergreyColor,
+                                  width: 1,
+                                ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child:
+                                    vehicleImage.startsWith('http')
+                                        ? Image.network(
+                                          vehicleImage,
+                                          fit: BoxFit.cover,
+                                        )
+                                        : Image.asset(
+                                          vehicleImage,
+                                          fit: BoxFit.cover,
+                                        ),
                               ),
                             ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child:
-                                  vehicleImage.startsWith('http')
-                                      ? Image.network(
-                                        vehicleImage,
-                                        fit: BoxFit.cover,
-                                      )
-                                      : Image.asset(
-                                        vehicleImage,
-                                        fit: BoxFit.cover,
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomText(
+                                    text: vehicleName,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    textcolor: KblackColor,
+                                  ),
+                                  SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      CustomText(
+                                        text: transmission,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        textcolor: kseegreyColor,
                                       ),
+                                      const SizedBox(width: 12),
+                                      Container(
+                                        height: 20,
+                                        width: 1,
+                                        color: kseegreyColor,
+                                      ),
+                                      SizedBox(width: 8),
+                                      CustomText(
+                                        text: category,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        textcolor: kseegreyColor,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 5),
+
+                    if (rideStatus == 'Completed' &&
+                        paymentStatus == 'Success' &&
+                        reviewsList.isEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15, right: 15),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
                               children: [
-                                CustomText(
-                                  text: vehicleName,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  textcolor: KblackColor,
+                                Image.asset(
+                                  "images/review.png",
+                                  height: 50,
+                                  width: 50,
                                 ),
-                                SizedBox(height: 4),
-                                Row(
-                                  children: [
-                                    CustomText(
-                                      text: transmission,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                      textcolor: kseegreyColor,
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText(
+                                        text: lang.writeReview,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        textcolor: korangeColor,
+                                      ),
+                                      CustomText(
+                                        text: lang.experienceQuestion,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        textcolor: kseegreyColor,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed:
+                                      () => _showRatingDialog(context, data),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: korangeColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(46),
                                     ),
-                                    const SizedBox(width: 12),
-                                    Container(
-                                      height: 20,
-                                      width: 1,
-                                      color: kseegreyColor,
-                                    ),
-                                    SizedBox(width: 8),
-                                    CustomText(
-                                      text: category,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                      textcolor: kseegreyColor,
-                                    ),
-                                  ],
+                                  ),
+                                  child: CustomText(
+                                    text: lang.giveRating,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    textcolor: kwhiteColor,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 5),
-
-                  if (rideStatus == 'Completed' &&
-                      paymentStatus == 'Success' &&
-                      reviewsList.isEmpty) ...[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15, right: 15),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
                         ),
-
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Row(
+                      ),
+                      SizedBox(height: 10),
+                    ] else if (rideStatus == 'Accepted') ...[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15, right: 15),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey.shade300),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.1),
+                                blurRadius: 3,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Image.asset(
-                                "images/review.png",
-                                height: 50,
-                                width: 50,
+                              CustomText(
+                                text: lang.verificationCodeRide,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                textcolor: korangeColor,
                               ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomText(
-                                      text: lang.writeReview,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      textcolor: korangeColor,
-                                    ),
-                                    CustomText(
-                                      text: lang.experienceQuestion,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                      textcolor: kseegreyColor,
-                                    ),
-                                  ],
-                                ),
+                              const SizedBox(height: 10),
+
+                              CustomText(
+                                text: lang.shareOtpDriver,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                textcolor: KblackColor.withOpacity(0.6),
                               ),
-                              ElevatedButton(
-                                onPressed:
-                                    () => _showRatingDialog(context, data),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: korangeColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(46),
+
+                              const SizedBox(height: 20),
+
+                              Center(
+                                child: Container(
+                                  width: double.infinity,
+                                  margin: const EdgeInsets.only(
+                                    right: 20,
+                                    left: 20,
                                   ),
-                                ),
-                                child: CustomText(
-                                  text: lang.giveRating,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  textcolor: kwhiteColor,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 18,
+                                    horizontal: 40,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: korangeColor.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: korangeColor,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      CustomText(
+                                        text: lang.fourDigitOtp,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        textcolor: KblackColor.withOpacity(0.7),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      CustomText(
+                                        text: ownerOTP,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        textcolor: korangeColor,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                  ] else if (rideStatus == 'Accepted') ...[
+                      const SizedBox(height: 12),
+                    ] else if (rideStatus == 'New') ...[
+                      StreamBuilder<int>(
+                        stream: Stream.periodic(
+                          const Duration(seconds: 1),
+                          (i) => i,
+                        ),
+                        builder: (context, snapshot) {
+                          final createdAtTs = liveData['createdAt'];
+                          if (createdAtTs == null) return const SizedBox();
+
+                          final createdAt = (createdAtTs as Timestamp).toDate();
+                          final now = DateTime.now();
+
+                          final diffSeconds =
+                              now.difference(createdAt).inSeconds;
+                          final isTimerOver = diffSeconds >= 300;
+
+                          final remainingSeconds = (300 - diffSeconds).clamp(
+                            0,
+                            300,
+                          );
+                          final minutes = (remainingSeconds ~/ 60)
+                              .toString()
+                              .padLeft(2, '0');
+                          final seconds = (remainingSeconds % 60)
+                              .toString()
+                              .padLeft(2, '0');
+
+                          final progress = remainingSeconds / 300;
+
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 15, right: 15),
+                            child: Container(
+                              padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Colors.grey.shade300),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    blurRadius: 3,
+                                    offset: const Offset(0, 1),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        if (!isTimerOver)
+                                          CircularProgressIndicator(
+                                            value: remainingSeconds / 300,
+                                            strokeWidth: 4,
+                                            backgroundColor:
+                                                Colors.grey.shade300,
+                                            valueColor: AlwaysStoppedAnimation(
+                                              korangeColor,
+                                            ),
+                                          )
+                                        else
+                                          Icon(
+                                            Icons.warning_amber_outlined,
+                                            color: korangeColor,
+                                            size: 26,
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  const SizedBox(width: 12),
+
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        CustomText(
+                                          text:
+                                              isTimerOver
+                                                  ? lang.noCaptainsAvailable
+                                                  : lang.rideRequestReceived,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          textcolor: korangeColor,
+                                        ),
+                                        const SizedBox(height: 4),
+                                        CustomText(
+                                          text:
+                                              isTimerOver
+                                                  ? lang.noCaptainsAccepted
+                                                  : lang.waitingForCaptains,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w400,
+                                          textcolor: kseegreyColor,
+                                        ),
+
+                                        if (!isTimerOver) ...[
+                                          SizedBox(height: 8),
+                                          CustomText(
+                                            text:
+                                                "${lang.timeLeft} $minutes:$seconds",
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            textcolor: korangeColor,
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+
                     Padding(
-                      padding: const EdgeInsets.only(left: 15, right: 15),
+                      padding: const EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                        top: 0,
+                        bottom: 10,
+                      ),
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -1116,311 +1332,27 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CustomText(
-                              text: lang.verificationCodeRide,
-                              fontSize: 16,
+                              text: lang.routeInformation,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                               textcolor: korangeColor,
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 15),
 
-                            CustomText(
-                              text: lang.shareOtpDriver,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                              textcolor: KblackColor.withOpacity(0.6),
-                            ),
-
-                            const SizedBox(height: 20),
-
-                            Center(
-                              child: Container(
-                                width: double.infinity,
-                                margin: const EdgeInsets.only(
-                                  right: 20,
-                                  left: 20,
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 18,
-                                  horizontal: 40,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: korangeColor.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: korangeColor,
-                                    width: 1.5,
-                                  ),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
                                   children: [
+                                    _buildDot(Colors.green),
+                                    const SizedBox(width: 10),
                                     CustomText(
-                                      text: lang.fourDigitOtp,
-                                      fontSize: 14,
+                                      text: lang.pickupLocation,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.w500,
-                                      textcolor: KblackColor.withOpacity(0.7),
+                                      textcolor: Colors.green,
                                     ),
-                                    const SizedBox(height: 6),
-                                    CustomText(
-                                      text: ownerOTP,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      textcolor: korangeColor,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                  ] else if (rideStatus == 'New') ...[
-                    StreamBuilder<int>(
-                      stream: Stream.periodic(
-                        const Duration(seconds: 1),
-                        (i) => i,
-                      ),
-                      builder: (context, snapshot) {
-                        final createdAtTs = liveData['createdAt'];
-                        if (createdAtTs == null) return const SizedBox();
 
-                        final createdAt = (createdAtTs as Timestamp).toDate();
-                        final now = DateTime.now();
-
-                        final diffSeconds = now.difference(createdAt).inSeconds;
-                        final isTimerOver = diffSeconds >= 300;
-
-                        final remainingSeconds = (300 - diffSeconds).clamp(
-                          0,
-                          300,
-                        );
-                        final minutes = (remainingSeconds ~/ 60)
-                            .toString()
-                            .padLeft(2, '0');
-                        final seconds = (remainingSeconds % 60)
-                            .toString()
-                            .padLeft(2, '0');
-
-                        final progress = remainingSeconds / 300;
-
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 15),
-                          child: Container(
-                            padding: const EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.grey.shade300),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.1),
-                                  blurRadius: 3,
-                                  offset: const Offset(0, 1),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  height: 50,
-                                  width: 50,
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      if (!isTimerOver)
-                                        CircularProgressIndicator(
-                                          value: remainingSeconds / 300,
-                                          strokeWidth: 4,
-                                          backgroundColor: Colors.grey.shade300,
-                                          valueColor: AlwaysStoppedAnimation(
-                                            korangeColor,
-                                          ),
-                                        )
-                                      else
-                                        Icon(
-                                          Icons.warning_amber_outlined,
-                                          color: korangeColor,
-                                          size: 26,
-                                        ),
-                                    ],
-                                  ),
-                                ),
-
-                                const SizedBox(width: 12),
-
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      CustomText(
-                                        text:
-                                            isTimerOver
-                                                ? lang.noCaptainsAvailable
-                                                : lang.rideRequestReceived,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        textcolor: korangeColor,
-                                      ),
-                                      const SizedBox(height: 4),
-                                      CustomText(
-                                        text:
-                                            isTimerOver
-                                                ? lang.noCaptainsAccepted
-                                                : lang.waitingForCaptains,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w400,
-                                        textcolor: kseegreyColor,
-                                      ),
-
-                                      if (!isTimerOver) ...[
-                                        SizedBox(height: 8),
-                                        CustomText(
-                                          text:
-                                              "${lang.timeLeft} $minutes:$seconds",
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          textcolor: korangeColor,
-                                        ),
-                                      ],
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                  ],
-
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 15,
-                      right: 15,
-                      top: 0,
-                      bottom: 10,
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey.shade300),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            blurRadius: 3,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
-                      ),
-                      padding: const EdgeInsets.all(15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomText(
-                            text: lang.routeInformation,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            textcolor: korangeColor,
-                          ),
-                          const SizedBox(height: 15),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  _buildDot(Colors.green),
-                                  const SizedBox(width: 10),
-                                  CustomText(
-                                    text: lang.pickupLocation,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    textcolor: Colors.green,
-                                  ),
-
-                                  const SizedBox(width: 6),
-                                  const Icon(
-                                    Icons.access_time,
-                                    size: 15,
-                                    color: Colors.grey,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  CustomText(
-                                    text: time,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: Colors.grey,
-                                  ),
-                                ],
-                              ),
-
-                              GestureDetector(
-                                onTap: () {
-                                  _openMapWithCurrentLocation(
-                                    pickupLat,
-                                    pickupLng,
-                                  );
-                                },
-                                child: const Icon(
-                                  Icons.pin_drop,
-                                  size: 22,
-                                  color: KredColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 15,
-                              top: 0,
-                              bottom: 10,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 4),
-                                CustomText(
-                                  text: pickupLocation,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400,
-                                  textcolor: KblackColor,
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          const SizedBox(height: 10),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  _buildDot(
-                                    drop2Location.isEmpty
-                                        ? KredColor
-                                        : korangeColor,
-                                  ),
-                                  const SizedBox(width: 10),
-                                  CustomText(
-                                    text:
-                                        drop2Location.isEmpty
-                                            ? lang.dropLocation
-                                            : lang.dropLocation1,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    textcolor:
-                                        drop2Location.isEmpty
-                                            ? KredColor
-                                            : korangeColor,
-                                  ),
-
-                                  if (drop2Location.isEmpty) ...[
                                     const SizedBox(width: 6),
                                     const Icon(
                                       Icons.access_time,
@@ -1429,865 +1361,374 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                     ),
                                     const SizedBox(width: 4),
                                     CustomText(
-                                      text:
-                                          "ETA: ${_calculateETA(time, duration)}",
+                                      text: time,
                                       fontSize: 13,
                                       fontWeight: FontWeight.w400,
                                       textcolor: Colors.grey,
                                     ),
                                   ],
+                                ),
+
+                                GestureDetector(
+                                  onTap: () {
+                                    _openMapWithCurrentLocation(
+                                      pickupLat,
+                                      pickupLng,
+                                    );
+                                  },
+                                  child: const Icon(
+                                    Icons.pin_drop,
+                                    size: 22,
+                                    color: KredColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 15,
+                                top: 0,
+                                bottom: 10,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 4),
+                                  CustomText(
+                                    text: pickupLocation,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                    textcolor: KblackColor,
+                                  ),
                                 ],
                               ),
-
-                              GestureDetector(
-                                onTap: () {
-                                  _openMapWithCurrentLocation(dropLat, dropLng);
-                                },
-                                child: const Icon(
-                                  Icons.pin_drop,
-                                  size: 22,
-                                  color: KredColor,
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 15,
-                              top: 5,
-                              bottom: 10,
                             ),
-                            child: CustomText(
-                              text: dropLocation,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              textcolor: KblackColor,
-                            ),
-                          ),
 
-                          if (drop2Location.isNotEmpty)
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            const SizedBox(height: 10),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Row(
-                                      children: [
-                                        _buildDot(Colors.red),
-                                        const SizedBox(width: 8),
-                                        CustomText(
-                                          text: lang.dropLocation2,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          textcolor: KredColor,
-                                        ),
-                                        const SizedBox(width: 6),
-                                        const Icon(
-                                          Icons.access_time,
-                                          size: 15,
-                                          color: Colors.grey,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        CustomText(
-                                          text:
-                                              "ETA: ${_calculateETA(time, duration)}",
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w400,
-                                          textcolor: Colors.grey,
-                                        ),
-                                      ],
+                                    _buildDot(
+                                      drop2Location.isEmpty
+                                          ? KredColor
+                                          : korangeColor,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    CustomText(
+                                      text:
+                                          drop2Location.isEmpty
+                                              ? lang.dropLocation
+                                              : lang.dropLocation1,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      textcolor:
+                                          drop2Location.isEmpty
+                                              ? KredColor
+                                              : korangeColor,
                                     ),
 
-                                    GestureDetector(
-                                      onTap: () {
-                                        _openMapWithCurrentLocation(
-                                          drop2Lat,
-                                          drop2Lng,
-                                        );
-                                      },
-                                      child: const Icon(
-                                        Icons.pin_drop,
-                                        size: 22,
-                                        color: KredColor,
+                                    if (drop2Location.isEmpty) ...[
+                                      const SizedBox(width: 6),
+                                      const Icon(
+                                        Icons.access_time,
+                                        size: 15,
+                                        color: Colors.grey,
                                       ),
-                                    ),
+                                      const SizedBox(width: 4),
+                                      CustomText(
+                                        text:
+                                            "ETA: ${_calculateETA(time, duration)}",
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w400,
+                                        textcolor: Colors.grey,
+                                      ),
+                                    ],
                                   ],
                                 ),
 
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 15,
-                                    top: 5,
-                                    bottom: 10,
-                                  ),
-                                  child: CustomText(
-                                    text: drop2Location,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: KblackColor,
+                                GestureDetector(
+                                  onTap: () {
+                                    _openMapWithCurrentLocation(
+                                      dropLat,
+                                      dropLng,
+                                    );
+                                  },
+                                  child: const Icon(
+                                    Icons.pin_drop,
+                                    size: 22,
+                                    color: KredColor,
                                   ),
                                 ),
                               ],
                             ),
 
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              CustomText(
-                                text: '${lang.rideId} : ',
-                                fontSize: 12,
-
-                                fontWeight: FontWeight.w400,
-                                textcolor: KorangeColorNew,
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 15,
+                                top: 5,
+                                bottom: 10,
                               ),
-                              CustomText(
-                                text: widget.bookingData['bookingId'],
-                                fontSize: 12,
+                              child: CustomText(
+                                text: dropLocation,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w400,
                                 textcolor: KblackColor,
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 15),
-                          DottedLine(
-                            dashColor: kbordergreyColor,
-                            dashLength: 7,
-                          ),
+                            ),
 
-                          const SizedBox(height: 10),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
+                            if (drop2Location.isNotEmpty)
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  CustomText(
-                                    text: lang.distance,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: kseegreyColor,
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          _buildDot(Colors.red),
+                                          const SizedBox(width: 8),
+                                          CustomText(
+                                            text: lang.dropLocation2,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                            textcolor: KredColor,
+                                          ),
+                                          const SizedBox(width: 6),
+                                          const Icon(
+                                            Icons.access_time,
+                                            size: 15,
+                                            color: Colors.grey,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          CustomText(
+                                            text:
+                                                "ETA: ${_calculateETA(time, duration)}",
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w400,
+                                            textcolor: Colors.grey,
+                                          ),
+                                        ],
+                                      ),
+
+                                      GestureDetector(
+                                        onTap: () {
+                                          _openMapWithCurrentLocation(
+                                            drop2Lat,
+                                            drop2Lng,
+                                          );
+                                        },
+                                        child: const Icon(
+                                          Icons.pin_drop,
+                                          size: 22,
+                                          color: KredColor,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 4),
-                                  CustomText(
-                                    text: distance,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    textcolor: KblackColor,
+
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 15,
+                                      top: 5,
+                                      bottom: 10,
+                                    ),
+                                    child: CustomText(
+                                      text: drop2Location,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: KblackColor,
+                                    ),
                                   ),
                                 ],
                               ),
-                              Container(
-                                height: 40,
-                                width: 1,
-                                color: Colors.grey.shade300,
-                              ),
-                              Column(
-                                children: [
-                                  CustomText(
-                                    text: lang.duration,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: kseegreyColor,
-                                  ),
-                                  SizedBox(height: 4),
-                                  CustomText(
-                                    text: duration,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    textcolor: KblackColor,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          DottedLine(
-                            dashColor: kbordergreyColor,
-                            dashLength: 7,
-                          ),
 
-                          const SizedBox(height: 15),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                CustomText(
+                                  text: '${lang.rideId} : ',
+                                  fontSize: 12,
 
-                          Center(
-                            child: SizedBox(
-                              width: 180,
-                              height: 45,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: korangeColor,
-
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  elevation: 0,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KorangeColorNew,
                                 ),
+                                CustomText(
+                                  text: widget.bookingData['bookingId'],
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  textcolor: KblackColor,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 15),
+                            DottedLine(
+                              dashColor: kbordergreyColor,
+                              dashLength: 7,
+                            ),
 
-                                onPressed: () async {
-                                  String destinationLat =
-                                      drop2Location.isNotEmpty
-                                          ? drop2Lat
-                                          : dropLat;
-                                  String destinationLng =
-                                      drop2Location.isNotEmpty
-                                          ? drop2Lng
-                                          : dropLng;
+                            const SizedBox(height: 10),
 
-                                  try {
-                                    LocationPermission permission =
-                                        await Geolocator.checkPermission();
-                                    if (permission ==
-                                        LocationPermission.denied) {
-                                      permission =
-                                          await Geolocator.requestPermission();
-                                    }
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Column(
+                                  children: [
+                                    CustomText(
+                                      text: lang.distance,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: kseegreyColor,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    CustomText(
+                                      text: distance,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      textcolor: KblackColor,
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  height: 40,
+                                  width: 1,
+                                  color: Colors.grey.shade300,
+                                ),
+                                Column(
+                                  children: [
+                                    CustomText(
+                                      text: lang.duration,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: kseegreyColor,
+                                    ),
+                                    SizedBox(height: 4),
+                                    CustomText(
+                                      text: duration,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      textcolor: KblackColor,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            DottedLine(
+                              dashColor: kbordergreyColor,
+                              dashLength: 7,
+                            ),
 
-                                    Position position =
-                                        await Geolocator.getCurrentPosition(
-                                          desiredAccuracy:
-                                              LocationAccuracy.high,
-                                        );
+                            const SizedBox(height: 15),
 
-                                    double currentLat = position.latitude;
-                                    double currentLng = position.longitude;
+                            Center(
+                              child: SizedBox(
+                                width: 180,
+                                height: 45,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: korangeColor,
 
-                                    final Uri googleMapsUrl = Uri.parse(
-                                      "https://www.google.com/maps/dir/?api=1"
-                                      "&origin=$currentLat,$currentLng"
-                                      "&destination=$destinationLat,$destinationLng"
-                                      "&travelmode=driving",
-                                    );
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                    elevation: 0,
+                                  ),
 
-                                    if (await canLaunchUrl(googleMapsUrl)) {
-                                      await launchUrl(
-                                        googleMapsUrl,
-                                        mode: LaunchMode.externalApplication,
+                                  onPressed: () async {
+                                    String destinationLat =
+                                        drop2Location.isNotEmpty
+                                            ? drop2Lat
+                                            : dropLat;
+                                    String destinationLng =
+                                        drop2Location.isNotEmpty
+                                            ? drop2Lng
+                                            : dropLng;
+
+                                    try {
+                                      LocationPermission permission =
+                                          await Geolocator.checkPermission();
+                                      if (permission ==
+                                          LocationPermission.denied) {
+                                        permission =
+                                            await Geolocator.requestPermission();
+                                      }
+
+                                      Position position =
+                                          await Geolocator.getCurrentPosition(
+                                            desiredAccuracy:
+                                                LocationAccuracy.high,
+                                          );
+
+                                      double currentLat = position.latitude;
+                                      double currentLng = position.longitude;
+
+                                      final Uri googleMapsUrl = Uri.parse(
+                                        "https://www.google.com/maps/dir/?api=1"
+                                        "&origin=$currentLat,$currentLng"
+                                        "&destination=$destinationLat,$destinationLng"
+                                        "&travelmode=driving",
                                       );
-                                    } else {
+
+                                      if (await canLaunchUrl(googleMapsUrl)) {
+                                        await launchUrl(
+                                          googleMapsUrl,
+                                          mode: LaunchMode.externalApplication,
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              lang.unableToOpenGoogleMaps,
+                                            ),
+                                            behavior: SnackBarBehavior.floating,
+                                            backgroundColor: Colors.redAccent,
+                                          ),
+                                        );
+                                      }
+                                    } catch (e) {
+                                      print("Error getting directions: $e");
                                       ScaffoldMessenger.of(
                                         context,
                                       ).showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            lang.unableToOpenGoogleMaps,
+                                            "${lang.errorOpeningDirections} ${e.toString()}",
                                           ),
                                           behavior: SnackBarBehavior.floating,
                                           backgroundColor: Colors.redAccent,
                                         ),
                                       );
                                     }
-                                  } catch (e) {
-                                    print("Error getting directions: $e");
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          "${lang.errorOpeningDirections} ${e.toString()}",
-                                        ),
-                                        behavior: SnackBarBehavior.floating,
-                                        backgroundColor: Colors.redAccent,
-                                      ),
-                                    );
-                                  }
-                                },
+                                  },
 
-                                child: CustomText(
-                                  text: lang.getDirections,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  textcolor: kwhiteColor,
+                                  child: CustomText(
+                                    text: lang.getDirections,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    textcolor: kwhiteColor,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 15,
-                      vertical: 0,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: Colors.grey.shade300,
-                              width: 1,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.1),
-                                blurRadius: 3,
-                                offset: const Offset(0, 1),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomText(
-                                text: lang.tripDetails,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                textcolor: korangeColor,
-                              ),
-                              const SizedBox(height: 12),
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    "images/calender_drvr.png",
-                                    height: 20,
-                                    width: 20,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  CustomText(
-                                    text: tripMode,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: KblackColor,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    "images/time.png",
-                                    height: 20,
-                                    width: 20,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  CustomText(
-                                    text: tripTime,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: KblackColor,
-                                  ),
-                                ],
-                              ),
-                              if (tripMode == "Hourly Trip" &&
-                                  citylimithours.isNotEmpty) ...[
-                                const SizedBox(height: 12),
-                                Row(
-                                  children: [
-                                    Image.asset(
-                                      "images/time.png",
-                                      height: 20,
-                                      width: 20,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    CustomText(
-                                      text: '$citylimithours ${lang.hours}',
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      textcolor: KblackColor,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: 10),
-
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: Colors.grey.shade300,
-                              width: 1,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.1),
-                                blurRadius: 3,
-                                offset: const Offset(0, 1),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomText(
-                                text: lang.slotDetails,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                textcolor: korangeColor,
-                              ),
-                              const SizedBox(height: 8),
-
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      if (tripMode == "Round Trip")
-                                        CustomText(
-                                          text: lang.departure,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          textcolor: Colors.grey.shade700,
-                                        ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Image.asset(
-                                            "images/calender_drvr.png",
-                                            height: 20,
-                                            width: 20,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          CustomText(
-                                            text: convertDate(date),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            textcolor: KblackColor,
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 12),
-                                      Row(
-                                        children: [
-                                          Image.asset(
-                                            "images/time.png",
-                                            height: 20,
-                                            width: 20,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          CustomText(
-                                            text: time,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            textcolor: KblackColor,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  if (tripMode == "Round Trip")
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        CustomText(
-                                          text: lang.arrival,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          textcolor: Colors.grey.shade700,
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Row(
-                                          children: [
-                                            Image.asset(
-                                              "images/calender_drvr.png",
-                                              height: 20,
-                                              width: 20,
-                                            ),
-                                            const SizedBox(width: 8),
-                                            CustomText(
-                                              text: convertDate(arrivalDate),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
-                                              textcolor: KblackColor,
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Row(
-                                          children: [
-                                            Image.asset(
-                                              "images/time.png",
-                                              height: 20,
-                                              width: 20,
-                                            ),
-                                            const SizedBox(width: 8),
-                                            CustomText(
-                                              text: arrivalTime,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
-                                              textcolor: KblackColor,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: 10),
-
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: Colors.grey.shade300,
-                              width: 1,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.1),
-                                blurRadius: 3,
-                                offset: const Offset(0, 1),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomText(
-                                text: lang.contactDetails,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                textcolor: korangeColor,
-                              ),
-                              const SizedBox(height: 12),
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    "images/person.png",
-                                    height: 20,
-                                    width: 20,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  CustomText(
-                                    text:
-                                        ((SharedPrefServices.getFirstName() ??
-                                                        '') +
-                                                    " " +
-                                                    (SharedPrefServices.getLastName() ??
-                                                        ''))
-                                                .trim()
-                                                .isNotEmpty
-                                            ? ((SharedPrefServices.getFirstName() ??
-                                                        '') +
-                                                    " " +
-                                                    (SharedPrefServices.getLastName() ??
-                                                        ''))
-                                                .trim()
-                                            : driverName,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: KblackColor,
-                                  ),
-                                ],
-                              ),
-                              if (email.isNotEmpty)
-                                Column(
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          "images/email_drvr.png",
-                                          height: 20,
-                                          width: 20,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        CustomText(
-                                          text: email,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          textcolor: KblackColor,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-
-                              const SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    "images/call_drvr.png",
-                                    height: 20,
-                                    width: 20,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  CustomText(
-                                    text:
-                                        SharedPrefServices.getNumber()
-                                            .toString(),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: KblackColor,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-
-                        if (liveData['driverdocId'] != null &&
-                            liveData['driverdocId']
-                                .toString()
-                                .trim()
-                                .isNotEmpty)
-                          StreamBuilder<DocumentSnapshot>(
-                            stream:
-                                FirebaseFirestore.instance
-                                    .collection('drivers')
-                                    .doc(liveData['driverdocId'])
-                                    .snapshots(),
-                            builder: (context, driverSnap) {
-                              if (driverSnap.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const SizedBox();
-                              }
-
-                              if (!driverSnap.hasData ||
-                                  !driverSnap.data!.exists) {
-                                return const SizedBox();
-                              }
-
-                              final driver =
-                                  driverSnap.data!.data()
-                                      as Map<String, dynamic>;
-                              final String driverEmail =
-                                  driver['email']?.toString().trim() ?? '';
-
-                              return Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(15),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: Colors.grey.shade300,
-                                    width: 1,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.1),
-                                      blurRadius: 3,
-                                      offset: const Offset(0, 1),
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomText(
-                                      text: lang.driverDetails,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      textcolor: korangeColor,
-                                    ),
-                                    const SizedBox(height: 12),
-
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          "images/person.png",
-                                          height: 20,
-                                          width: 20,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        CustomText(
-                                          text:
-                                              "${driver['firstName'] ?? ''} ${driver['lastName'] ?? ''}",
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          textcolor: KblackColor,
-                                        ),
-                                      ],
-                                    ),
-
-                                    if (driverEmail.isNotEmpty) ...[
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Image.asset(
-                                            "images/email_drvr.png",
-                                            height: 20,
-                                            width: 20,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          CustomText(
-                                            text: driverEmail,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            textcolor: KblackColor,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-
-                                    const SizedBox(height: 10),
-
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          "images/call_drvr.png",
-                                          height: 20,
-                                          width: 20,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        CustomText(
-                                          text: driver['phone'] ?? '',
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          textcolor: KblackColor,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-
-                        SizedBox(height: 10),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: Colors.grey.shade300,
-                              width: 1,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.1),
-                                blurRadius: 3,
-                                offset: const Offset(0, 1),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomText(
-                                text: lang.paymentSummary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                textcolor: korangeColor,
-                              ),
-                              const SizedBox(height: 12),
-
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  CustomText(
-                                    text: lang.servicePrice,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: KblackColor,
-                                  ),
-                                  CustomText(
-                                    text:
-                                        "₹${(double.tryParse(servicePrice) ?? 0).toStringAsFixed(2)}",
-
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: KblackColor,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  CustomText(
-                                    text: lang.convenienceFee,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: KblackColor,
-                                  ),
-                                  CustomText(
-                                    text:
-                                        "₹${(double.tryParse(convenienceFee) ?? 0).toStringAsFixed(2)}",
-
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    textcolor: KblackColor,
-                                  ),
-                                ],
-                              ),
-
-                              if (isCouponApplied ||
-                                  (data['couponApplied'] == true)) ...[
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    CustomText(
-                                      text: lang.couponApplied,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                      textcolor: Colors.green,
-                                    ),
-                                    CustomText(
-                                      text:
-                                          "-₹${(isCouponApplied ? appliedDiscount : (data['appliedDiscount'] ?? 0)).toStringAsFixed(2)}",
-
-                                      // "-₹${appliedDiscount.toStringAsFixed(2)}",
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      textcolor: Colors.green,
-                                    ),
-                                  ],
-                                ),
-                              ],
-
-                              const SizedBox(height: 10),
-                              const DottedLine(dashColor: kseegreyColor),
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  CustomText(
-                                    text: lang.totalPrice,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    textcolor: korangeColor,
-                                  ),
-                                  CustomText(
-                                    text:
-                                        "₹${((double.tryParse(totalPrice) ?? 0) - appliedDiscount).toStringAsFixed(2)}",
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    textcolor: korangeColor,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              const DottedLine(dashColor: kseegreyColor),
-                            ],
-                          ),
-                        ),
-
-                        SizedBox(height: 10),
-                        if (reviewsList.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 0,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Container(
                             width: double.infinity,
                             padding: const EdgeInsets.all(15),
@@ -2306,153 +1747,729 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                                 ),
                               ],
                             ),
-                            child:
-                                reviewsList.isEmpty
-                                    ? CustomText(
-                                      text: lang.noReviewAvailable,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                  text: lang.tripDetails,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  textcolor: korangeColor,
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      "images/calender_drvr.png",
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    CustomText(
+                                      text: tripMode,
                                       fontSize: 14,
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w400,
                                       textcolor: KblackColor,
-                                    )
-                                    : Column(
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      "images/time.png",
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    CustomText(
+                                      text: tripTime,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: KblackColor,
+                                    ),
+                                  ],
+                                ),
+                                if (tripMode == "Hourly Trip" &&
+                                    citylimithours.isNotEmpty) ...[
+                                  const SizedBox(height: 12),
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        "images/time.png",
+                                        height: 20,
+                                        width: 20,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      CustomText(
+                                        text: '$citylimithours ${lang.hours}',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        textcolor: KblackColor,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 10),
+
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.grey.shade300,
+                                width: 1,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  blurRadius: 3,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                  text: lang.slotDetails,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  textcolor: korangeColor,
+                                ),
+                                const SizedBox(height: 8),
+
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        CustomText(
-                                          text: lang.yourReview,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                          textcolor: korangeColor,
+                                        if (tripMode == "Round Trip")
+                                          CustomText(
+                                            text: lang.departure,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            textcolor: Colors.grey.shade700,
+                                          ),
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          children: [
+                                            Image.asset(
+                                              "images/calender_drvr.png",
+                                              height: 20,
+                                              width: 20,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            CustomText(
+                                              text: convertDate(date),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              textcolor: KblackColor,
+                                            ),
+                                          ],
                                         ),
                                         const SizedBox(height: 12),
-
                                         Row(
                                           children: [
+                                            Image.asset(
+                                              "images/time.png",
+                                              height: 20,
+                                              width: 20,
+                                            ),
+                                            const SizedBox(width: 8),
                                             CustomText(
-                                              text: lang.rating,
+                                              text: time,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w400,
                                               textcolor: KblackColor,
-                                            ),
-                                            SizedBox(width: 4),
-                                            Row(
-                                              children: List.generate(
-                                                reviewsList[0]['rating'],
-                                                (i) => const Icon(
-                                                  Icons.star,
-                                                  color: Colors.orange,
-                                                  size: 18,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 4),
-                                            CustomText(
-                                              text:
-                                                  reviewsList[0]['rating']
-                                                      .toString(),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                              textcolor: KblackColor,
-                                            ),
-                                          ],
-                                        ),
-
-                                        const SizedBox(height: 10),
-
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            CustomText(
-                                              text: lang.feedback,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
-                                              textcolor: KblackColor,
-                                            ),
-                                            SizedBox(width: 4),
-                                            Expanded(
-                                              child: CustomText(
-                                                text:
-                                                    (reviewsList[0]['feedback']
-                                                            as List)
-                                                        .join(", "),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400,
-                                                textcolor: KblackColor,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-
-                                        const SizedBox(height: 10),
-
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            CustomText(
-                                              text: lang.comment,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
-                                              textcolor: KblackColor,
-                                            ),
-                                            SizedBox(width: 4),
-                                            Expanded(
-                                              child: CustomText(
-                                                text:
-                                                    reviewsList[0]['comment'] ??
-                                                    "",
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400,
-                                                textcolor: KblackColor,
-                                              ),
                                             ),
                                           ],
                                         ),
                                       ],
                                     ),
+                                    if (tripMode == "Round Trip")
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          CustomText(
+                                            text: lang.arrival,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            textcolor: Colors.grey.shade700,
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Row(
+                                            children: [
+                                              Image.asset(
+                                                "images/calender_drvr.png",
+                                                height: 20,
+                                                width: 20,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              CustomText(
+                                                text: convertDate(arrivalDate),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                                textcolor: KblackColor,
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 12),
+                                          Row(
+                                            children: [
+                                              Image.asset(
+                                                "images/time.png",
+                                                height: 20,
+                                                width: 20,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              CustomText(
+                                                text: arrivalTime,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                                textcolor: KblackColor,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                      ],
-                    ),
-                  ),
 
-                  if (!(rideStatus == 'Completed' &&
-                      paymentStatus == 'Success')) ...[
-                    const SizedBox(height: 20),
-                  ],
-                  if (!(rideStatus == 'Completed' &&
-                      paymentStatus == 'Success')) ...[
-                    _buildCard(
-                      context,
-                      imagePath: 'images/copoun_image.png',
-                      text: lang.couponsOffers,
-                      onTap: () {
-                        _showCouponsBottomSheet();
-                      },
-                    ),
-                  ],
-                  if (rideStatus == 'New' || rideStatus == 'Accepted') ...[
-                    const SizedBox(height: 15),
-                    _buildCard(
-                      context,
-                      imagePath: 'images/cancel_image.png',
-                      text: lang.cancellationPolicy,
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder:
-                                (context) => const CancellationPolicyScreen(),
+                          const SizedBox(height: 10),
+
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.grey.shade300,
+                                width: 1,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  blurRadius: 3,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                  text: lang.contactDetails,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  textcolor: korangeColor,
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      "images/person.png",
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    CustomText(
+                                      text:
+                                          ((SharedPrefServices.getFirstName() ??
+                                                          '') +
+                                                      " " +
+                                                      (SharedPrefServices.getLastName() ??
+                                                          ''))
+                                                  .trim()
+                                                  .isNotEmpty
+                                              ? ((SharedPrefServices.getFirstName() ??
+                                                          '') +
+                                                      " " +
+                                                      (SharedPrefServices.getLastName() ??
+                                                          ''))
+                                                  .trim()
+                                              : driverName,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: KblackColor,
+                                    ),
+                                  ],
+                                ),
+                                if (email.isNotEmpty)
+                                  Column(
+                                    children: [
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Image.asset(
+                                            "images/email_drvr.png",
+                                            height: 20,
+                                            width: 20,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          CustomText(
+                                            text: email,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            textcolor: KblackColor,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      "images/call_drvr.png",
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    CustomText(
+                                      text:
+                                          SharedPrefServices.getNumber()
+                                              .toString(),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: KblackColor,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        );
-                      },
-                    ),
-                  ],
+                          const SizedBox(height: 10),
 
-                  const SizedBox(height: 130),
-                ],
-              ),
-            );
-          },
+                          if (liveData['driverdocId'] != null &&
+                              liveData['driverdocId']
+                                  .toString()
+                                  .trim()
+                                  .isNotEmpty)
+                            StreamBuilder<DocumentSnapshot>(
+                              stream:
+                                  FirebaseFirestore.instance
+                                      .collection('drivers')
+                                      .doc(liveData['driverdocId'])
+                                      .snapshots(),
+                              builder: (context, driverSnap) {
+                                if (driverSnap.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const SizedBox();
+                                }
+
+                                if (!driverSnap.hasData ||
+                                    !driverSnap.data!.exists) {
+                                  return const SizedBox();
+                                }
+
+                                final driver =
+                                    driverSnap.data!.data()
+                                        as Map<String, dynamic>;
+                                final String driverEmail =
+                                    driver['email']?.toString().trim() ?? '';
+
+                                return Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(15),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: Colors.grey.shade300,
+                                      width: 1,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.1),
+                                        blurRadius: 3,
+                                        offset: const Offset(0, 1),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText(
+                                        text: lang.driverDetails,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        textcolor: korangeColor,
+                                      ),
+                                      const SizedBox(height: 12),
+
+                                      Row(
+                                        children: [
+                                          Image.asset(
+                                            "images/person.png",
+                                            height: 20,
+                                            width: 20,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          CustomText(
+                                            text:
+                                                "${driver['firstName'] ?? ''} ${driver['lastName'] ?? ''}",
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            textcolor: KblackColor,
+                                          ),
+                                        ],
+                                      ),
+
+                                      if (driverEmail.isNotEmpty) ...[
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          children: [
+                                            Image.asset(
+                                              "images/email_drvr.png",
+                                              height: 20,
+                                              width: 20,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            CustomText(
+                                              text: driverEmail,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              textcolor: KblackColor,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+
+                                      const SizedBox(height: 10),
+
+                                      Row(
+                                        children: [
+                                          Image.asset(
+                                            "images/call_drvr.png",
+                                            height: 20,
+                                            width: 20,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          CustomText(
+                                            text: driver['phone'] ?? '',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            textcolor: KblackColor,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+
+                          SizedBox(height: 10),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.grey.shade300,
+                                width: 1,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  blurRadius: 3,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                  text: lang.paymentSummary,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  textcolor: korangeColor,
+                                ),
+                                const SizedBox(height: 12),
+
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CustomText(
+                                      text: lang.servicePrice,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: KblackColor,
+                                    ),
+                                    CustomText(
+                                      text:
+                                          "₹${(double.tryParse(servicePrice) ?? 0).toStringAsFixed(2)}",
+
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: KblackColor,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CustomText(
+                                      text: lang.convenienceFee,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: KblackColor,
+                                    ),
+                                    CustomText(
+                                      text:
+                                          "₹${(double.tryParse(convenienceFee) ?? 0).toStringAsFixed(2)}",
+
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      textcolor: KblackColor,
+                                    ),
+                                  ],
+                                ),
+
+                                if (isCouponApplied ||
+                                    (data['couponApplied'] == true)) ...[
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      CustomText(
+                                        text: lang.couponApplied,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                        textcolor: Colors.green,
+                                      ),
+                                      CustomText(
+                                        text:
+                                            "-₹${(isCouponApplied ? appliedDiscount : (data['appliedDiscount'] ?? 0)).toStringAsFixed(2)}",
+
+                                        // "-₹${appliedDiscount.toStringAsFixed(2)}",
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        textcolor: Colors.green,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+
+                                const SizedBox(height: 10),
+                                const DottedLine(dashColor: kseegreyColor),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CustomText(
+                                      text: lang.totalPrice,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      textcolor: korangeColor,
+                                    ),
+                                    CustomText(
+                                      text:
+                                          "₹${((double.tryParse(totalPrice) ?? 0) - appliedDiscount).toStringAsFixed(2)}",
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      textcolor: korangeColor,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                const DottedLine(dashColor: kseegreyColor),
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(height: 10),
+                          if (reviewsList.isNotEmpty)
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: Colors.grey.shade300,
+                                  width: 1,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    blurRadius: 3,
+                                    offset: const Offset(0, 1),
+                                  ),
+                                ],
+                              ),
+                              child:
+                                  reviewsList.isEmpty
+                                      ? CustomText(
+                                        text: lang.noReviewAvailable,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        textcolor: KblackColor,
+                                      )
+                                      : Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          CustomText(
+                                            text: lang.yourReview,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            textcolor: korangeColor,
+                                          ),
+                                          const SizedBox(height: 12),
+
+                                          Row(
+                                            children: [
+                                              CustomText(
+                                                text: lang.rating,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                                textcolor: KblackColor,
+                                              ),
+                                              SizedBox(width: 4),
+                                              Row(
+                                                children: List.generate(
+                                                  reviewsList[0]['rating'],
+                                                  (i) => const Icon(
+                                                    Icons.star,
+                                                    color: Colors.orange,
+                                                    size: 18,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 4),
+                                              CustomText(
+                                                text:
+                                                    reviewsList[0]['rating']
+                                                        .toString(),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                                textcolor: KblackColor,
+                                              ),
+                                            ],
+                                          ),
+
+                                          const SizedBox(height: 10),
+
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              CustomText(
+                                                text: lang.feedback,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                                textcolor: KblackColor,
+                                              ),
+                                              SizedBox(width: 4),
+                                              Expanded(
+                                                child: CustomText(
+                                                  text:
+                                                      (reviewsList[0]['feedback']
+                                                              as List)
+                                                          .join(", "),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                  textcolor: KblackColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          const SizedBox(height: 10),
+
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              CustomText(
+                                                text: lang.comment,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                                textcolor: KblackColor,
+                                              ),
+                                              SizedBox(width: 4),
+                                              Expanded(
+                                                child: CustomText(
+                                                  text:
+                                                      reviewsList[0]['comment'] ??
+                                                      "",
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                  textcolor: KblackColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                            ),
+                        ],
+                      ),
+                    ),
+
+                    if (!(rideStatus == 'Completed' &&
+                        paymentStatus == 'Success')) ...[
+                      const SizedBox(height: 20),
+                    ],
+                    if (!(rideStatus == 'Completed' &&
+                        paymentStatus == 'Success')) ...[
+                      _buildCard(
+                        context,
+                        imagePath: 'images/copoun_image.png',
+                        text: lang.couponsOffers,
+                        onTap: () {
+                          _showCouponsBottomSheet();
+                        },
+                      ),
+                    ],
+                    if (rideStatus == 'New' || rideStatus == 'Accepted') ...[
+                      const SizedBox(height: 15),
+                      _buildCard(
+                        context,
+                        imagePath: 'images/cancel_image.png',
+                        text: lang.cancellationPolicy,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const CancellationPolicyScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+
+                    const SizedBox(height: 130),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: StreamBuilder<DocumentSnapshot>(
@@ -2622,14 +2639,30 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                         );
                       }
 
-                      if (snapshot.data!.docs.isEmpty) {
+                      final validOffers =
+                          snapshot.data!.docs.where((doc) {
+                            final data = doc.data() as Map<String, dynamic>;
+
+                            if (data['endDate'] == null) return false;
+
+                            DateTime now = DateTime.now();
+                            DateTime endDate;
+
+                            if (data['endDate'] is Timestamp) {
+                              endDate = (data['endDate'] as Timestamp).toDate();
+                            } else {
+                              endDate = DateTime.parse(data['endDate']);
+                            }
+
+                            return !endDate.isBefore(now);
+                          }).toList();
+
+                      if (validOffers.isEmpty) {
                         return Center(
                           child: Text(
-                            lang.noOffersAvailable,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade600,
-                            ),
+                            'No offers available at the moment.',
+                            style: TextStyle(fontSize: 14, color: KblackColor),
+                            textAlign: TextAlign.center,
                           ),
                         );
                       }
@@ -2637,79 +2670,45 @@ class _ConfirmDetailsState extends State<ConfirmDetails> {
                       return ListView(
                         padding: EdgeInsets.zero,
                         children:
-                            snapshot.data!.docs
-                                .where((doc) {
-                                  final data =
-                                      doc.data() as Map<String, dynamic>;
+                            validOffers.map((doc) {
+                              final data = doc.data() as Map<String, dynamic>;
 
-                                  if (data['endDate'] == null) return false;
+                              final title = data['offerCode'] ?? 'No Code';
+                              final endDate = data['endDate'] ?? '';
+                              final offerValue = data['offerValue'] ?? '';
+                              double total = double.tryParse(totalPrice) ?? 0;
 
-                                  DateTime now = DateTime.now();
-                                  DateTime endDate;
+                              double discount = 0;
 
-                                  if (data['endDate'] is Timestamp) {
-                                    endDate =
-                                        (data['endDate'] as Timestamp).toDate();
-                                  } else {
-                                    endDate = DateTime.parse(data['endDate']);
-                                  }
+                              if (offerValue.toString().contains('%')) {
+                                double percent = double.parse(
+                                  offerValue.toString().replaceAll('%', ''),
+                                );
+                                discount = (total * percent) / 100;
+                              } else {
+                                discount =
+                                    double.tryParse(offerValue.toString()) ?? 0;
+                              }
 
-                                  return !endDate.isBefore(now);
-                                })
-                                .map((doc) {
-                                  final data =
-                                      doc.data() as Map<String, dynamic>;
+                              double finalAmount = total - discount;
 
-                                  final title = data['offerCode'] ?? 'No Code';
-                                  final endDate = data['endDate'] ?? '';
-                                  final offerValue = data['offerValue'] ?? '';
-                                  double total =
-                                      double.tryParse(totalPrice) ?? 0;
+                              bool isValid = finalAmount > 0;
 
-                                  double discount = 0;
-
-                                  if (offerValue.toString().contains('%')) {
-                                    double percent = double.parse(
-                                      offerValue.toString().replaceAll('%', ''),
-                                    );
-                                    discount = (total * percent) / 100;
-                                  } else {
-                                    discount =
-                                        double.tryParse(
-                                          offerValue.toString(),
-                                        ) ??
-                                        0;
-                                  }
-
-                                  double finalAmount = total - discount;
-
-                                  bool isValid = finalAmount > 0;
-
-                                  return Opacity(
-                                    opacity: isValid ? 1.0 : 0.4,
-                                    child: IgnorePointer(
-                                      ignoring: !isValid,
-                                      child: ticketCoupon(
-                                        title,
-                                        endDate,
-                                        offerValue,
-                                        () {
-                                          applyCoupon(title, offerValue);
-                                        },
-                                      ),
-                                    ),
-                                  );
-
-                                  // return ticketCoupon(
-                                  //   title,
-                                  //   endDate,
-                                  //   offerValue,
-                                  //   () {
-                                  //     applyCoupon(title, offerValue);
-                                  //   },
-                                  // );
-                                })
-                                .toList(),
+                              return Opacity(
+                                opacity: isValid ? 1.0 : 0.4,
+                                child: IgnorePointer(
+                                  ignoring: !isValid,
+                                  child: ticketCoupon(
+                                    title,
+                                    endDate,
+                                    offerValue,
+                                    () {
+                                      applyCoupon(title, offerValue);
+                                    },
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                       );
                     },
                   ),

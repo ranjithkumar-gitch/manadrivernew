@@ -93,113 +93,116 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  CircleAvatar(
-                    radius: 55,
-                    backgroundColor: KlightgreyColor,
-                    backgroundImage:
-                        SharedPrefServices.getProfileImage() != null &&
-                                SharedPrefServices.getProfileImage()!.isNotEmpty
-                            ? NetworkImage(
-                              SharedPrefServices.getProfileImage()!,
-                            )
-                            : null,
-                    child:
-                        (SharedPrefServices.getProfileImage() == null ||
-                                SharedPrefServices.getProfileImage()!.isEmpty)
-                            ? Text(
-                              _getUserInitials(),
-                              style: const TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFFC7D5E7),
-                              ),
-                            )
-                            : null,
-                  ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    CircleAvatar(
+                      radius: 55,
+                      backgroundColor: KlightgreyColor,
+                      backgroundImage:
+                          SharedPrefServices.getProfileImage() != null &&
+                                  SharedPrefServices.getProfileImage()!
+                                      .isNotEmpty
+                              ? NetworkImage(
+                                SharedPrefServices.getProfileImage()!,
+                              )
+                              : null,
+                      child:
+                          (SharedPrefServices.getProfileImage() == null ||
+                                  SharedPrefServices.getProfileImage()!.isEmpty)
+                              ? Text(
+                                _getUserInitials(),
+                                style: const TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFFC7D5E7),
+                                ),
+                              )
+                              : null,
+                    ),
 
-                  // Positioned(
-                  //   right: 0,
-                  //   bottom: 0,
-                  //   child: CircleAvatar(
-                  //     backgroundColor: korangeColor,
-                  //     radius: 18,
-                  //     child: Image.asset("images/camera.png"),
-                  //   ),
-                  // ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 40),
-            CustomTextField(
-              controller: firstnameController,
-              readOnly: true,
-              labelText: localizations.p_firstName,
-            ),
-
-            const SizedBox(height: 20),
-            CustomTextField(
-              controller: lastnameController,
-              readOnly: true,
-              labelText: localizations.p_lastName,
-            ),
-
-            const SizedBox(height: 20),
-
-            CustomTextField(
-              controller: emailController,
-              labelText: localizations.p_email,
-              readOnly: true,
-            ),
-
-            const SizedBox(height: 20),
-
-            CustomTextField(
-              controller: phoneController,
-              labelText: localizations.p_phoneNumner,
-              readOnly: true,
-              suffix: Text(
-                localizations.p_verified,
-                style: TextStyle(
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                    // Positioned(
+                    //   right: 0,
+                    //   bottom: 0,
+                    //   child: CircleAvatar(
+                    //     backgroundColor: korangeColor,
+                    //     radius: 18,
+                    //     child: Image.asset("images/camera.png"),
+                    //   ),
+                    // ),
+                  ],
                 ),
               ),
-            ),
 
-            const Spacer(),
-            Center(
-              child: CustomButton(
-                text: localizations.p_editProfile,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (_) => EditProfileScreen(
-                            firstName: firstnameController.text,
-                            lastName: lastnameController.text,
-                            email: emailController.text,
-                            phone: phoneController.text,
-                          ),
-                    ),
-                  );
-                },
-                width: 220,
-                height: 53,
+              const SizedBox(height: 40),
+              CustomTextField(
+                controller: firstnameController,
+                readOnly: true,
+                labelText: localizations.p_firstName,
               ),
-            ),
-          ],
+
+              const SizedBox(height: 20),
+              CustomTextField(
+                controller: lastnameController,
+                readOnly: true,
+                labelText: localizations.p_lastName,
+              ),
+
+              const SizedBox(height: 20),
+
+              CustomTextField(
+                controller: emailController,
+                labelText: localizations.p_email,
+                readOnly: true,
+              ),
+
+              const SizedBox(height: 20),
+
+              CustomTextField(
+                controller: phoneController,
+                labelText: localizations.p_phoneNumner,
+                readOnly: true,
+                suffix: Text(
+                  localizations.p_verified,
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+
+              const Spacer(),
+              Center(
+                child: CustomButton(
+                  text: localizations.p_editProfile,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (_) => EditProfileScreen(
+                              firstName: firstnameController.text,
+                              lastName: lastnameController.text,
+                              email: emailController.text,
+                              phone: phoneController.text,
+                            ),
+                      ),
+                    );
+                  },
+                  width: 220,
+                  height: 53,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

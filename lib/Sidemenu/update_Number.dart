@@ -248,216 +248,102 @@ class _UpdateNumberState extends State<UpdateNumber> {
         ),
       ),
 
-      body:
-          selectedCountry == null
-              ? const Center(child: CircularProgressIndicator())
-              : Stack(
-                children: [
-                  SingleChildScrollView(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 15),
-
-                        PhoneNumberInputField(
-                          readOnly: true,
-                          controller: phoneController,
-                          selectedCountry: selectedCountry!,
-                          onCountryChanged: (_) {},
-                        ),
-
-                        const SizedBox(height: 15),
-
-                        CustomText(
-                          text: localizations.generateOtpInfo,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          textcolor: KblackColor,
-                        ),
-
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: GestureDetector(
-                            onTap:
-                                (!_canGenerateOtp || _isLoading)
-                                    ? null
-                                    : () async {
-                                      setState(() => _isLoading = true);
-
-                                      String phoneNumberWithCode =
-                                          "+${selectedCountry!.phoneCode}${phoneController.text.trim()}";
-
-                                      await FirebaseAuth.instance
-                                          .verifyPhoneNumber(
-                                            phoneNumber: phoneNumberWithCode,
-                                            timeout: const Duration(
-                                              seconds: 40,
-                                            ),
-
-                                            verificationCompleted: (_) {},
-
-                                            verificationFailed: (e) {
-                                              setState(
-                                                () => _isLoading = false,
-                                              );
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    e.message ?? "OTP failed",
-                                                  ),
-                                                ),
-                                              );
-                                            },
-
-                                            codeSent: (
-                                              verificationId,
-                                              resendToken,
-                                            ) {
-                                              setState(() {
-                                                _verificationId =
-                                                    verificationId;
-                                                _isLoading = false;
-                                              });
-
-                                              _startOtpValidityTimer();
-
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                const SnackBar(
-                                                  content: Text("OTP sent"),
-                                                ),
-                                              );
-                                            },
-
-                                            codeAutoRetrievalTimeout: (
-                                              verificationId,
-                                            ) {
-                                              _verificationId = verificationId;
-                                            },
-                                          );
-                                    },
-                            child:
-                                _isLoading
-                                    ? const SizedBox(
-                                      height: 18,
-                                      width: 18,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: korangeColor,
-                                      ),
-                                    )
-                                    : CustomText(
-                                      text:
-                                          !_canGenerateOtp
-                                              ? "${localizations.generateOtpIn} 00:${_secondsLeft.toString().padLeft(2, '0')}"
-                                              : localizations.generateOtp,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      textcolor:
-                                          !_canGenerateOtp
-                                              ? Colors.grey
-                                              : korangeColor,
-                                    ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 10),
-
-                        Pinput(
-                          controller: otpController,
-                          length: 6,
-                          keyboardType: TextInputType.number,
-                          defaultPinTheme: _pinTheme(),
-                          focusedPinTheme: _focusedPinTheme(),
-
-                          onCompleted: (pin) async {
-                            if (_isOtpExpired) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "OTP expired. Please generate a new OTP.",
-                                  ),
-                                ),
-                              );
-                              return;
-                            }
-
-                            try {
-                              final credential = PhoneAuthProvider.credential(
-                                verificationId: _verificationId!,
-                                smsCode: pin,
-                              );
-
-                              await FirebaseAuth.instance.signInWithCredential(
-                                credential,
-                              );
-
-                              setState(() {
-                                _otpVerified = true;
-                                _canGenerateOtp = false;
-                                _secondsLeft = 0;
-                              });
-
-                              _otpTimer?.cancel();
-                            } catch (_) {
-                              setState(() => _otpVerified = false);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("Invalid OTP")),
-                              );
-                            }
-                          },
-                        ),
-
-                        if (_otpVerified) ...[
-                          const SizedBox(height: 20),
-
-                          CustomText(
-                            text: localizations.enterNewMobileNumber,
-                            textcolor: KblackColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-
-                          const SizedBox(height: 10),
+      body: SafeArea(
+        child:
+            selectedCountry == null
+                ? const Center(child: CircularProgressIndicator())
+                : Stack(
+                  children: [
+                    SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 15),
 
                           PhoneNumberInputField(
-                            readOnly: false,
-                            controller: newPhoneController,
+                            readOnly: true,
+                            controller: phoneController,
                             selectedCountry: selectedCountry!,
                             onCountryChanged: (_) {},
                           ),
-                          const SizedBox(height: 10),
 
-                          GestureDetector(
-                            onTap:
-                                newPhoneController.text.trim().isEmpty ||
-                                        _isGeneratingNewOtp
-                                    ? null
-                                    : () async {
-                                      print("NEW OTP BUTTON CLICKED");
+                          const SizedBox(height: 15),
 
-                                      setState(
-                                        () => _isGeneratingNewOtp = true,
-                                      );
+                          CustomText(
+                            text: localizations.generateOtpInfo,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            textcolor: KblackColor,
+                          ),
 
-                                      await _sendNewOtpViaNotification(
-                                        SharedPrefServices.getfcmToken()
-                                            .toString(),
-                                      );
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: GestureDetector(
+                              onTap:
+                                  (!_canGenerateOtp || _isLoading)
+                                      ? null
+                                      : () async {
+                                        setState(() => _isLoading = true);
 
-                                      setState(
-                                        () => _isGeneratingNewOtp = false,
-                                      );
-                                    },
+                                        String phoneNumberWithCode =
+                                            "+${selectedCountry!.phoneCode}${phoneController.text.trim()}";
 
-                            child: Align(
-                              alignment: Alignment.centerRight,
+                                        await FirebaseAuth.instance
+                                            .verifyPhoneNumber(
+                                              phoneNumber: phoneNumberWithCode,
+                                              timeout: const Duration(
+                                                seconds: 40,
+                                              ),
+
+                                              verificationCompleted: (_) {},
+
+                                              verificationFailed: (e) {
+                                                setState(
+                                                  () => _isLoading = false,
+                                                );
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      e.message ?? "OTP failed",
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+
+                                              codeSent: (
+                                                verificationId,
+                                                resendToken,
+                                              ) {
+                                                setState(() {
+                                                  _verificationId =
+                                                      verificationId;
+                                                  _isLoading = false;
+                                                });
+
+                                                _startOtpValidityTimer();
+
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text("OTP sent"),
+                                                  ),
+                                                );
+                                              },
+
+                                              codeAutoRetrievalTimeout: (
+                                                verificationId,
+                                              ) {
+                                                _verificationId =
+                                                    verificationId;
+                                              },
+                                            );
+                                      },
                               child:
-                                  _isGeneratingNewOtp
+                                  _isLoading
                                       ? const SizedBox(
                                         height: 18,
                                         width: 18,
@@ -468,14 +354,13 @@ class _UpdateNumberState extends State<UpdateNumber> {
                                       )
                                       : CustomText(
                                         text:
-                                            !_canGenerateNewOtp
-                                                ? "${localizations.generateOtpIn} 00:${_newOtpSecondsLeft.toString().padLeft(2, '0')}"
-                                                : localizations
-                                                    .generateOtpVerifyNew,
+                                            !_canGenerateOtp
+                                                ? "${localizations.generateOtpIn} 00:${_secondsLeft.toString().padLeft(2, '0')}"
+                                                : localizations.generateOtp,
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                         textcolor:
-                                            !_canGenerateNewOtp
+                                            !_canGenerateOtp
                                                 ? Colors.grey
                                                 : korangeColor,
                                       ),
@@ -483,82 +368,207 @@ class _UpdateNumberState extends State<UpdateNumber> {
                           ),
 
                           const SizedBox(height: 10),
+
                           Pinput(
-                            controller: newOTPController,
+                            controller: otpController,
                             length: 6,
                             keyboardType: TextInputType.number,
                             defaultPinTheme: _pinTheme(),
                             focusedPinTheme: _focusedPinTheme(),
 
-                            onCompleted: (pin) {
-                              if (_isNewOtpExpired) {
+                            onCompleted: (pin) async {
+                              if (_isOtpExpired) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text(
-                                      "OTP expired. Generate again.",
+                                      "OTP expired. Please generate a new OTP.",
                                     ),
                                   ),
                                 );
                                 return;
                               }
 
-                              if (pin == _newGeneratedOtp) {
-                                setState(() => _newOtpVerified = true);
-                              } else {
-                                setState(() => _newOtpVerified = false);
+                              try {
+                                final credential = PhoneAuthProvider.credential(
+                                  verificationId: _verificationId!,
+                                  smsCode: pin,
+                                );
+
+                                await FirebaseAuth.instance
+                                    .signInWithCredential(credential);
+
+                                setState(() {
+                                  _otpVerified = true;
+                                  _canGenerateOtp = false;
+                                  _secondsLeft = 0;
+                                });
+
+                                _otpTimer?.cancel();
+                              } catch (_) {
+                                setState(() => _otpVerified = false);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(content: Text("Invalid OTP")),
                                 );
                               }
                             },
                           ),
-                        ],
 
-                        const SizedBox(height: 30),
+                          if (_otpVerified) ...[
+                            const SizedBox(height: 20),
 
-                        Row(
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                                height: 45,
-                                child: CustomCancelButton(
-                                  text: localizations.cancel,
-                                  onPressed: () => Navigator.pop(context),
-                                ),
+                            CustomText(
+                              text: localizations.enterNewMobileNumber,
+                              textcolor: KblackColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+
+                            const SizedBox(height: 10),
+
+                            PhoneNumberInputField(
+                              readOnly: false,
+                              controller: newPhoneController,
+                              selectedCountry: selectedCountry!,
+                              onCountryChanged: (_) {},
+                            ),
+                            const SizedBox(height: 10),
+
+                            GestureDetector(
+                              onTap:
+                                  newPhoneController.text.trim().isEmpty ||
+                                          _isGeneratingNewOtp
+                                      ? null
+                                      : () async {
+                                        print("NEW OTP BUTTON CLICKED");
+
+                                        setState(
+                                          () => _isGeneratingNewOtp = true,
+                                        );
+
+                                        await _sendNewOtpViaNotification(
+                                          SharedPrefServices.getfcmToken()
+                                              .toString(),
+                                        );
+
+                                        setState(
+                                          () => _isGeneratingNewOtp = false,
+                                        );
+                                      },
+
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child:
+                                    _isGeneratingNewOtp
+                                        ? const SizedBox(
+                                          height: 18,
+                                          width: 18,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: korangeColor,
+                                          ),
+                                        )
+                                        : CustomText(
+                                          text:
+                                              !_canGenerateNewOtp
+                                                  ? "${localizations.generateOtpIn} 00:${_newOtpSecondsLeft.toString().padLeft(2, '0')}"
+                                                  : localizations
+                                                      .generateOtpVerifyNew,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          textcolor:
+                                              !_canGenerateNewOtp
+                                                  ? Colors.grey
+                                                  : korangeColor,
+                                        ),
                               ),
                             ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: SizedBox(
-                                height: 45,
-                                child: CustomButton(
-                                  text: localizations.update,
 
-                                  onPressed:
-                                      !_newOtpVerified || _isUpdating
-                                          ? null
-                                          : () async {
-                                            setState(() => _isUpdating = true);
-                                            await _updateMobileAndLogout();
-                                            setState(() => _isUpdating = false);
-                                          },
-                                ),
-                              ),
+                            const SizedBox(height: 10),
+                            Pinput(
+                              controller: newOTPController,
+                              length: 6,
+                              keyboardType: TextInputType.number,
+                              defaultPinTheme: _pinTheme(),
+                              focusedPinTheme: _focusedPinTheme(),
+
+                              onCompleted: (pin) {
+                                if (_isNewOtpExpired) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        "OTP expired. Generate again.",
+                                      ),
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                if (pin == _newGeneratedOtp) {
+                                  setState(() => _newOtpVerified = true);
+                                } else {
+                                  setState(() => _newOtpVerified = false);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text("Invalid OTP"),
+                                    ),
+                                  );
+                                }
+                              },
                             ),
                           ],
-                        ),
-                      ],
-                    ),
-                  ),
 
-                  if (_isUpdating)
-                    const Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(korangeColor),
+                          const SizedBox(height: 30),
+
+                          Row(
+                            children: [
+                              Expanded(
+                                child: SizedBox(
+                                  height: 45,
+                                  child: CustomCancelButton(
+                                    text: localizations.cancel,
+                                    onPressed: () => Navigator.pop(context),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: SizedBox(
+                                  height: 45,
+                                  child: CustomButton(
+                                    text: localizations.update,
+
+                                    onPressed:
+                                        !_newOtpVerified || _isUpdating
+                                            ? null
+                                            : () async {
+                                              setState(
+                                                () => _isUpdating = true,
+                                              );
+                                              await _updateMobileAndLogout();
+                                              setState(
+                                                () => _isUpdating = false,
+                                              );
+                                            },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                ],
-              ),
+
+                    if (_isUpdating)
+                      const Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            korangeColor,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+      ),
     );
   }
 

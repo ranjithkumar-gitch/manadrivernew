@@ -19,14 +19,16 @@ class FullImageView extends StatelessWidget {
         backgroundColor: Colors.black,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Center(
-        child: PhotoView(
-          imageProvider:
-              isAsset
-                  ? AssetImage(imagePath)
-                  : NetworkImage(imagePath) as ImageProvider,
-          minScale: PhotoViewComputedScale.contained,
-          maxScale: PhotoViewComputedScale.covered * 3,
+      body: SafeArea(
+        child: Center(
+          child: PhotoView(
+            imageProvider:
+                isAsset
+                    ? AssetImage(imagePath)
+                    : NetworkImage(imagePath) as ImageProvider,
+            minScale: PhotoViewComputedScale.contained,
+            maxScale: PhotoViewComputedScale.covered * 3,
+          ),
         ),
       ),
     );

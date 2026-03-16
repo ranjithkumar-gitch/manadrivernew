@@ -618,444 +618,447 @@ class _EditVehicleDetailsState extends State<EditVehicleDetails> {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-                Builder(
-                  builder: (context) {
-                    return GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            childAspectRatio: 70 / 60,
-                          ),
-                      itemCount: maxImages,
-                      itemBuilder: (context, index) {
-                        final File? imgFile = images[index];
-                        final String? imgUrl = imageUrls[index];
-                        final hasImage =
-                            imgFile != null ||
-                            (imgUrl != null && imgUrl.isNotEmpty);
+      body: SafeArea(
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+                  Builder(
+                    builder: (context) {
+                      return GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              childAspectRatio: 70 / 60,
+                            ),
+                        itemCount: maxImages,
+                        itemBuilder: (context, index) {
+                          final File? imgFile = images[index];
+                          final String? imgUrl = imageUrls[index];
+                          final hasImage =
+                              imgFile != null ||
+                              (imgUrl != null && imgUrl.isNotEmpty);
 
-                        return Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            hasImage
-                                ? Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: KdeviderColor,
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child:
-                                        imgFile != null
-                                            ? Image.file(
-                                              imgFile,
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                              fit: BoxFit.cover,
-                                            )
-                                            : Image.network(
-                                              imgUrl!,
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                              fit: BoxFit.cover,
-                                            ),
-                                  ),
-                                )
-                                : DottedBorder(
-                                  options: RoundedRectDottedBorderOptions(
-                                    radius: const Radius.circular(10),
-                                    dashPattern: [5, 5],
-                                    color: kgreyColor,
-                                    strokeWidth: 2,
-                                    padding: const EdgeInsets.all(0),
-                                  ),
-                                  child: Container(
+                          return Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              hasImage
+                                  ? Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: KdeviderColor,
                                     ),
-                                    child: Center(
-                                      child: GestureDetector(
-                                        onTap: () => _pickImage(index),
-                                        child: Icon(
-                                          Icons.add,
-                                          color: kgreyColor,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child:
+                                          imgFile != null
+                                              ? Image.file(
+                                                imgFile,
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                fit: BoxFit.cover,
+                                              )
+                                              : Image.network(
+                                                imgUrl!,
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                fit: BoxFit.cover,
+                                              ),
+                                    ),
+                                  )
+                                  : DottedBorder(
+                                    options: RoundedRectDottedBorderOptions(
+                                      radius: const Radius.circular(10),
+                                      dashPattern: [5, 5],
+                                      color: kgreyColor,
+                                      strokeWidth: 2,
+                                      padding: const EdgeInsets.all(0),
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: KdeviderColor,
+                                      ),
+                                      child: Center(
+                                        child: GestureDetector(
+                                          onTap: () => _pickImage(index),
+                                          child: Icon(
+                                            Icons.add,
+                                            color: kgreyColor,
+                                          ),
                                         ),
+                                      ),
+                                    ),
+                                  ),
+
+                              if (hasImage)
+                                Positioned(
+                                  top: 6,
+                                  left: 6,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        if (imgFile != null) {
+                                          images[index] = null;
+                                        } else if (imgUrl != null &&
+                                            imgUrl.isNotEmpty) {
+                                          imagesToDelete.add(imgUrl);
+                                          print(
+                                            "Image marked for deletion: $imgUrl",
+                                          );
+                                          imageUrls[index] = null;
+                                        }
+                                      });
+                                    },
+
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      padding: const EdgeInsets.all(4),
+                                      child: const Icon(
+                                        Icons.delete,
+                                        size: 16,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
                                 ),
 
-                            if (hasImage)
-                              Positioned(
-                                top: 6,
-                                left: 6,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (imgFile != null) {
-                                        images[index] = null;
-                                      } else if (imgUrl != null &&
-                                          imgUrl.isNotEmpty) {
-                                        imagesToDelete.add(imgUrl);
-                                        print(
-                                          "Image marked for deletion: $imgUrl",
-                                        );
-                                        imageUrls[index] = null;
-                                      }
-                                    });
-                                  },
-
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    padding: const EdgeInsets.all(4),
-                                    child: const Icon(
-                                      Icons.delete,
-                                      size: 16,
-                                      color: Colors.white,
+                              if (imgUrl != null && imgUrl.isNotEmpty)
+                                Positioned(
+                                  top: 6,
+                                  right: 6,
+                                  child: GestureDetector(
+                                    onTap: () => _pickImage(index),
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        color: Colors.orange,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      padding: const EdgeInsets.all(4),
+                                      child: const Icon(
+                                        Icons.edit,
+                                        size: 16,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
 
-                            if (imgUrl != null && imgUrl.isNotEmpty)
-                              Positioned(
-                                top: 6,
-                                right: 6,
-                                child: GestureDetector(
-                                  onTap: () => _pickImage(index),
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      color: Colors.orange,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    padding: const EdgeInsets.all(4),
-                                    child: const Icon(
-                                      Icons.edit,
-                                      size: 16,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-
-                const SizedBox(height: 25),
-                buildDropdownField(
-                  label: localizations.vehicleBrand,
-                  hint: localizations.selectBrand,
-                  items:
-                      (() {
-                        final List<String> brands =
-                            vehicleData
-                                .map((e) => e['brand'] as String)
-                                .toSet()
-                                .toList()
-                              ..sort(
-                                (a, b) =>
-                                    a.toLowerCase().compareTo(b.toLowerCase()),
-                              );
-
-                        if (!brands.contains("Others")) {
-                          brands.add("Others");
-                        }
-                        return brands;
-                      })(),
-                  value: selectedBrand,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedBrand = value;
-                      selectedModel = null;
-                      selectedCategory = null;
-
-                      if (value != "Others") {
-                        availableModels =
-                            vehicleData
-                                .where((e) => e['brand'] == value)
-                                .map((e) => e['model'] as String)
-                                .toList();
-                      } else {
-                        availableModels = [];
-                      }
-                    });
-                  },
-                ),
-                if (selectedBrand != null && selectedBrand != "Others") ...[
+                  const SizedBox(height: 25),
                   buildDropdownField(
-                    label: localizations.vehicleModel,
-                    hint: localizations.selectModel,
-                    items: availableModels,
-                    value: selectedModel,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedModel = value;
-
-                        selectedCategory =
-                            vehicleData
-                                .firstWhere(
-                                  (e) =>
-                                      e['brand'] == selectedBrand &&
-                                      e['model'] == selectedModel,
-                                )['category']
-                                .toString();
-                      });
-                    },
-                  ),
-
-                  TextFormField(
-                    readOnly: true,
-                    controller: TextEditingController(
-                      text: selectedCategory ?? "",
-                    ),
-
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: korangeColor,
-                    ),
-                    decoration: InputDecoration(
-                      labelText: localizations.vehicleCategory,
-                      hintText: localizations.vehicleCategory,
-                      hintStyle: TextStyle(
-                        color: kseegreyColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      labelStyle: TextStyle(
-                        color: kgreyColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: kbordergreyColor),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: kbordergreyColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: kbordergreyColor,
-                          width: 1.5,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                ],
-
-                if (selectedBrand == "Others") ...[
-                  TextFormField(
-                    controller: customModelController,
-                    keyboardType: TextInputType.text,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: korangeColor,
-                    ),
-                    decoration: InputDecoration(
-                      labelText: localizations.enterVehicleModel,
-                      hintText: localizations.enterVehicleModel,
-                      hintStyle: TextStyle(
-                        color: kseegreyColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      labelStyle: TextStyle(
-                        color: kgreyColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: kbordergreyColor),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: kbordergreyColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: kbordergreyColor,
-                          width: 1.5,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  DropdownButtonFormField<String>(
-                    icon: Icon(Icons.keyboard_arrow_down, color: KblackColor),
-                    decoration: InputDecoration(
-                      labelText: localizations.vehicleCategory,
-                      labelStyle: TextStyle(
-                        color: kgreyColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: kbordergreyColor),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: kbordergreyColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: kbordergreyColor,
-                          width: 1.5,
-                        ),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    hint: CustomText(
-                      text: localizations.selectVehicleCategory,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      textcolor: kseegreyColor,
-                    ),
-                    value: selectedCustomCategory,
-                    isExpanded: true,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedCustomCategory = value;
-                      });
-                    },
+                    label: localizations.vehicleBrand,
+                    hint: localizations.selectBrand,
                     items:
-                        ["Light", "Premium", "Commercial"]
-                            .map(
-                              (item) => DropdownMenuItem(
-                                value: item,
-                                child: CustomText(
-                                  text: item,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  textcolor: korangeColor,
-                                ),
-                              ),
-                            )
-                            .toList(),
+                        (() {
+                          final List<String> brands =
+                              vehicleData
+                                  .map((e) => e['brand'] as String)
+                                  .toSet()
+                                  .toList()
+                                ..sort(
+                                  (a, b) => a.toLowerCase().compareTo(
+                                    b.toLowerCase(),
+                                  ),
+                                );
+
+                          if (!brands.contains("Others")) {
+                            brands.add("Others");
+                          }
+                          return brands;
+                        })(),
+                    value: selectedBrand,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedBrand = value;
+                        selectedModel = null;
+                        selectedCategory = null;
+
+                        if (value != "Others") {
+                          availableModels =
+                              vehicleData
+                                  .where((e) => e['brand'] == value)
+                                  .map((e) => e['model'] as String)
+                                  .toList();
+                        } else {
+                          availableModels = [];
+                        }
+                      });
+                    },
                   ),
-                  SizedBox(height: 15),
-                ],
+                  if (selectedBrand != null && selectedBrand != "Others") ...[
+                    buildDropdownField(
+                      label: localizations.vehicleModel,
+                      hint: localizations.selectModel,
+                      items: availableModels,
+                      value: selectedModel,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedModel = value;
 
-                buildTextField(
-                  localizations.enterVehicleNumber,
-                  localizations.enterVehicleNumber,
-                  vehicleNumberController,
-                ),
-
-                buildDropdownFields(
-                  localizations.fuelType,
-                  localizations.selectFuelType,
-                  ["Petrol", "Diesel", "Electric", "CNG"],
-                  selectedFuelType,
-                  (value) {
-                    setState(() {
-                      selectedFuelType = value;
-                    });
-                  },
-                ),
-
-                buildDropdownFields(
-                  localizations.transmission,
-                  localizations.selectTransmission,
-                  ["Manual", "Automatic", "Semi-Automatic"],
-                  selectedTransmission,
-                  (value) {
-                    setState(() {
-                      selectedTransmission = value;
-                    });
-                  },
-                ),
-
-                buildDropdownFields(
-                  localizations.acAvailable,
-                  localizations.isAcAvailable,
-                  ["Yes", "No"],
-                  selectedAc,
-                  (value) {
-                    setState(() {
-                      selectedAc = value;
-                    });
-                  },
-                ),
-
-                const SizedBox(height: 35),
-                Center(
-                  child: SizedBox(
-                    width: 220,
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: korangeColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(40),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 5,
-                        ),
-                      ),
-                      onPressed: () {
-                        print(widget.docId);
-                        print("Updating Vehicle with values:");
-                        print("Brand: $selectedBrand");
-                        print("Model: $selectedModel");
-                        print("Category: $selectedCategory");
-                        print(
-                          "Vehicle Number: ${vehicleNumberController.text.trim()}",
-                        );
-                        print("Fuel Type: $selectedFuelType");
-                        print("Transmission: $selectedTransmission");
-                        print(
-                          "Images: ${imageUrls.where((u) => u != null).cast<String>().toList()}",
-                        );
-
-                        print("AC Available: $selectedAc");
-                        _updateVehicle(widget.docId);
+                          selectedCategory =
+                              vehicleData
+                                  .firstWhere(
+                                    (e) =>
+                                        e['brand'] == selectedBrand &&
+                                        e['model'] == selectedModel,
+                                  )['category']
+                                  .toString();
+                        });
                       },
-                      child: CustomText(
-                        text: localizations.updateVehicleDetails,
+                    ),
+
+                    TextFormField(
+                      readOnly: true,
+                      controller: TextEditingController(
+                        text: selectedCategory ?? "",
+                      ),
+
+                      style: GoogleFonts.poppins(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        textcolor: kwhiteColor,
+                        color: korangeColor,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: localizations.vehicleCategory,
+                        hintText: localizations.vehicleCategory,
+                        hintStyle: TextStyle(
+                          color: kseegreyColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        labelStyle: TextStyle(
+                          color: kgreyColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: kbordergreyColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: kbordergreyColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                            color: kbordergreyColor,
+                            width: 1.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                  ],
+
+                  if (selectedBrand == "Others") ...[
+                    TextFormField(
+                      controller: customModelController,
+                      keyboardType: TextInputType.text,
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: korangeColor,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: localizations.enterVehicleModel,
+                        hintText: localizations.enterVehicleModel,
+                        hintStyle: TextStyle(
+                          color: kseegreyColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        labelStyle: TextStyle(
+                          color: kgreyColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: kbordergreyColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: kbordergreyColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                            color: kbordergreyColor,
+                            width: 1.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    DropdownButtonFormField<String>(
+                      icon: Icon(Icons.keyboard_arrow_down, color: KblackColor),
+                      decoration: InputDecoration(
+                        labelText: localizations.vehicleCategory,
+                        labelStyle: TextStyle(
+                          color: kgreyColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: kbordergreyColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: kbordergreyColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                            color: kbordergreyColor,
+                            width: 1.5,
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      hint: CustomText(
+                        text: localizations.selectVehicleCategory,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        textcolor: kseegreyColor,
+                      ),
+                      value: selectedCustomCategory,
+                      isExpanded: true,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedCustomCategory = value;
+                        });
+                      },
+                      items:
+                          ["Light", "Premium", "Commercial"]
+                              .map(
+                                (item) => DropdownMenuItem(
+                                  value: item,
+                                  child: CustomText(
+                                    text: item,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    textcolor: korangeColor,
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                    ),
+                    SizedBox(height: 15),
+                  ],
+
+                  buildTextField(
+                    localizations.enterVehicleNumber,
+                    localizations.enterVehicleNumber,
+                    vehicleNumberController,
+                  ),
+
+                  buildDropdownFields(
+                    localizations.fuelType,
+                    localizations.selectFuelType,
+                    ["Petrol", "Diesel", "Electric", "CNG"],
+                    selectedFuelType,
+                    (value) {
+                      setState(() {
+                        selectedFuelType = value;
+                      });
+                    },
+                  ),
+
+                  buildDropdownFields(
+                    localizations.transmission,
+                    localizations.selectTransmission,
+                    ["Manual", "Automatic", "Semi-Automatic"],
+                    selectedTransmission,
+                    (value) {
+                      setState(() {
+                        selectedTransmission = value;
+                      });
+                    },
+                  ),
+
+                  buildDropdownFields(
+                    localizations.acAvailable,
+                    localizations.isAcAvailable,
+                    ["Yes", "No"],
+                    selectedAc,
+                    (value) {
+                      setState(() {
+                        selectedAc = value;
+                      });
+                    },
+                  ),
+
+                  const SizedBox(height: 35),
+                  Center(
+                    child: SizedBox(
+                      width: 220,
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: korangeColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
+                        ),
+                        onPressed: () {
+                          print(widget.docId);
+                          print("Updating Vehicle with values:");
+                          print("Brand: $selectedBrand");
+                          print("Model: $selectedModel");
+                          print("Category: $selectedCategory");
+                          print(
+                            "Vehicle Number: ${vehicleNumberController.text.trim()}",
+                          );
+                          print("Fuel Type: $selectedFuelType");
+                          print("Transmission: $selectedTransmission");
+                          print(
+                            "Images: ${imageUrls.where((u) => u != null).cast<String>().toList()}",
+                          );
+
+                          print("AC Available: $selectedAc");
+                          _updateVehicle(widget.docId);
+                        },
+                        child: CustomText(
+                          text: localizations.updateVehicleDetails,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          textcolor: kwhiteColor,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-              ],
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
-          ),
-          if (_isLoading)
-            Center(child: CircularProgressIndicator(color: korangeColor)),
-        ],
+            if (_isLoading)
+              Center(child: CircularProgressIndicator(color: korangeColor)),
+          ],
+        ),
       ),
     );
   }

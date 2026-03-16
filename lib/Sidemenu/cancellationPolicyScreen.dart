@@ -52,23 +52,25 @@ class CancellationPolicyScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SectionTitle(localizations.cP_q1),
-            SectionDescription(localizations.freeCancellationInfo),
-            const SizedBox(height: 20),
-            SectionTitle(localizations.cP_q2),
-            SectionDescription(localizations.cP_a2),
-            SectionDescription(localizations.cP_a22),
-            SectionDescription(localizations.cP_a23),
-            const SizedBox(height: 20),
-            SectionTitle(localizations.cP_q5),
-            SectionDescription(localizations.cP_a5),
-            const SizedBox(height: 40),
-          ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SectionTitle(localizations.cP_q1),
+              SectionDescription(localizations.freeCancellationInfo),
+              const SizedBox(height: 20),
+              SectionTitle(localizations.cP_q2),
+              SectionDescription(localizations.cP_a2),
+              SectionDescription(localizations.cP_a22),
+              SectionDescription(localizations.cP_a23),
+              const SizedBox(height: 20),
+              SectionTitle(localizations.cP_q5),
+              SectionDescription(localizations.cP_a5),
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );

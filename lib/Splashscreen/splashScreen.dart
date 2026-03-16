@@ -184,41 +184,43 @@ class _SplashScreenState extends State<SplashScreen>
 
     return Scaffold(
       backgroundColor: korangeColor,
-      body: Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: Image.asset(
-                'images/nyzo_ride_.png',
-                height: 200,
-                width: 200,
-                fit: BoxFit.contain,
-              ),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(bottom: 40),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomText(
-                  text: 'MADE IN INDIA',
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
-                  textcolor: kwhiteColor,
-                ),
-                const SizedBox(width: 5),
-                Image.asset(
-                  'images/flag.png',
-                  width: 21,
-                  height: 17,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: Image.asset(
+                  'images/nyzo_ride_.png',
+                  height: 200,
+                  width: 200,
                   fit: BoxFit.contain,
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+
+            Padding(
+              padding: const EdgeInsets.only(bottom: 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomText(
+                    text: 'MADE IN INDIA',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    textcolor: kwhiteColor,
+                  ),
+                  const SizedBox(width: 5),
+                  Image.asset(
+                    'images/flag.png',
+                    width: 21,
+                    height: 17,
+                    fit: BoxFit.contain,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
