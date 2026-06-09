@@ -41,6 +41,7 @@ class _OtpLoginState extends State<OtpLogin> {
   bool _isLoading = false;
   String? _currentVerificationId;
   bool _isResending = false;
+  int? _resendToken;
 
   int _secondsLeft = 40;
   Timer? _timer;
@@ -75,32 +76,37 @@ class _OtpLoginState extends State<OtpLogin> {
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: "+91${widget.phoneNumber}",
-        timeout: const Duration(seconds: 40),
+        timeout: const Duration(seconds: 120),
+        forceResendingToken: _resendToken,
 
         verificationCompleted: (PhoneAuthCredential credential) async {},
 
         verificationFailed: (FirebaseAuthException e) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(e.message ?? "Resend failed")));
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(e.message ?? "Resend failed")),
+            );
+          }
         },
 
         codeSent: (String verificationId, int? resendToken) {
-          setState(() {
-            _currentVerificationId = verificationId;
-            _otpErrorMessage = null;
-          });
-          _startTimer();
-
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text("OTP resent")));
+          if (mounted) {
+            setState(() {
+              _currentVerificationId = verificationId;
+              _resendToken = resendToken;
+              _otpErrorMessage = null;
+            });
+            _startTimer();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("OTP resent")),
+            );
+          }
         },
 
         codeAutoRetrievalTimeout: (_) {},
       );
     } finally {
-      setState(() => _isResending = false);
+      if (mounted) setState(() => _isResending = false);
     }
   }
 
@@ -281,6 +287,8 @@ class _OtpLoginState extends State<OtpLogin> {
                         : CustomButton(
                           text: localizations.verifyOtp,
                           onPressed: () async {
+                            if (_isLoading) return; // debounce duplicate taps
+
                             print(" VERIFY OTP CLICKED");
 
                             if (otpController.text.length != 6) {

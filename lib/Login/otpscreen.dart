@@ -51,6 +51,7 @@ class _OtpScreenState extends State<OtpScreen> {
   bool _isLoading = false;
   String? _currentVerificationId;
   bool _isResending = false;
+  int? _resendToken;
   String? _otpErrorMessage;
 
   int _secondsLeft = 40;
@@ -83,8 +84,9 @@ class _OtpScreenState extends State<OtpScreen> {
 
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: "+91${widget.phoneNumber}",
-        timeout: const Duration(seconds: 40),
+        phoneNumber: widget.phoneNumberWithCode,
+        timeout: const Duration(seconds: 120),
+        forceResendingToken: _resendToken,
 
         verificationCompleted: (PhoneAuthCredential credential) async {},
 
@@ -97,6 +99,7 @@ class _OtpScreenState extends State<OtpScreen> {
         codeSent: (String verificationId, int? resendToken) {
           setState(() {
             _currentVerificationId = verificationId;
+            _resendToken = resendToken;
             _otpErrorMessage = null;
           });
           _startTimer();
@@ -263,11 +266,13 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   Future<void> _verifyOtp() async {
+    if (_isLoading) return; // debounce — block duplicate taps
+
     final localizations = AppLocalizations.of(context)!;
 
     final otp = otpController.text.trim();
 
-    if (otpController.text.length != 6) {
+    if (otp.length != 6) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Enter valid OTP")));
@@ -275,10 +280,11 @@ class _OtpScreenState extends State<OtpScreen> {
       return;
     }
 
+    setState(() => _isLoading = true); // disable button before any async work
+
     try {
       final PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: _currentVerificationId!,
-
         smsCode: otp,
       );
 
@@ -292,20 +298,19 @@ class _OtpScreenState extends State<OtpScreen> {
         message = "OTP expired. Please request a new one.";
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-
-          behavior: SnackBarBehavior.floating,
-
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+        setState(() => _isLoading = false);
+      }
 
       return;
     }
-
-    setState(() => _isLoading = true);
 
     try {
       final vm = Provider.of<RegisterViewModel>(context, listen: false);

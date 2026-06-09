@@ -152,7 +152,7 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                                               .verifyPhoneNumber(
                                                 phoneNumber: phoneWithCode,
                                                 timeout: const Duration(
-                                                  seconds: 60,
+                                                  seconds: 120,
                                                 ),
                                                 verificationCompleted: (
                                                   credential,
@@ -294,16 +294,16 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
 
                           const SizedBox(height: 20),
 
-                          Text(
-                            'APK Release v1.0.5',
-                            style: GoogleFonts.poppins(
-                              color: kgreyColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          // Text(
+                          //   'APK Release v1.0.5',
+                          //   style: GoogleFonts.poppins(
+                          //     color: kgreyColor,
+                          //     fontSize: 14,
+                          //     fontWeight: FontWeight.w500,
+                          //   ),
+                          // ),
 
-                          const SizedBox(height: 20),
+                          // const SizedBox(height: 20),
                         ],
                       ),
                     ),

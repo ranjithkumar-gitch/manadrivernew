@@ -267,7 +267,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   Future<void> _openMap({
     required bool isPickup,
     bool isSecondDrop = false,
-  }) async {
+   }) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
